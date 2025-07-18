@@ -18,4 +18,10 @@
     <option value="{{ $brand->slug }}">{{ $brand->name[app()->getLocale()] }}</option>
 @endforeach
 
+
+@foreach($vehicle->images as $image)
+    <img src="{{ asset('storage/' . $image->path) }}" class="w-32 h-32 object-cover rounded">
+@endforeach
+
+
 </x-app-layout>

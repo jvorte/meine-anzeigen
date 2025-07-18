@@ -5,10 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 
 class Brand extends Model
-{    protected $fillable = ['brand_id', 'name', 'slug'];
-
-    public function brand()
+{
+    
+    protected $fillable = ['name'];
+    public function models()
     {
-        return $this->belongsTo(Brand::class);
+        return $this->hasMany(ModelCar::class);
     }
 }

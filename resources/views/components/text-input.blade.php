@@ -1,4 +1,10 @@
-@props(['name', 'label', 'value' => null])
+@props(['name', 'label' => null, 'value' => null])
+@if($label)
+    <label for="{{ $name }}" class="block text-sm font-semibold text-gray-800 mb-1">
+        {{ $label }}
+    </label>
+@endif
+
 
 <div class="mb-4">
     <label for="{{ $name }}" class="block text-sm font-semibold text-gray-800 mb-1">

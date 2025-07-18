@@ -6,7 +6,15 @@ use App\Http\Controllers\AdController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CarController;
+use App\Http\Controllers\VehicleController;
 
+
+// routes/web.php ή routes/api.php (αν είναι μέσω fetch API)
+Route::get('/models/{brandId}', function ($brandId) {
+    return \App\Models\CarModel::where('brand_id', $brandId)->pluck('name', 'id');
+});
+
+Route::post('/vehicles', [VehicleController::class, 'store'])->name('vehicles.store');
 
 
 Route::get('/categories/{slug}', [CategoryController::class, 'show'])->name('categories.show');
