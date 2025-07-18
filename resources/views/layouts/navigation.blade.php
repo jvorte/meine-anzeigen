@@ -5,19 +5,20 @@
                 <!-- Logo -->
                 <div class="shrink-0 flex items-center">
                     <a href="{{ route('dashboard') }}">
-                        <x-application-logo class="block h-9 w-auto fill-current text-gray-800 dark:text-gray-200" />
+                        <x-application-logo class="block w-32 h-auto fill-current" />
                     </a>
                 </div>
 
                 <!-- Navigation Links -->
-                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex text-gray-800 dark:text-gray-200">
+                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex text-gray-500">
                     <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                         {{ __('Anzeigen') }}
                     </x-nav-link>
 
                     @auth
-                        <x-nav-link :href="route('ads.create')" :active="request()->routeIs('ads.create')">
-                            {{ __('Neue Anzeige') }}
+                        <x-nav-link :href="route('ads.create')" :active="request()->routeIs('ads.create')" >
+                           <svg xmlns="http://www.w3.org/2000/svg" style="color: red" class="me-1" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-square-plus-icon lucide-square-plus"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M8 12h8"/><path d="M12 8v8"/></svg> 
+                           {{ __('Neue Anzeige') }}
                         </x-nav-link>
                     @endauth
                 </div>
@@ -28,8 +29,8 @@
                 @auth
                     <x-dropdown align="right" width="48">
                         <x-slot name="trigger">
-                            <button class="inline-flex items-center px-3 py-2 border border-transparent text-sm font-medium rounded-md text-gray-500 dark:text-gray-400 bg-white dark:bg-gray-800 hover:text-gray-700 dark:hover:text-gray-300 focus:outline-none transition ease-in-out duration-150">
-                                <div>{{ Auth::user()->name }}</div>
+                            <button class="inline-flex items-center px-3 py-2 border border-transparent text-sm font-medium rounded-md text-gray-500 dark:text-gray-400 bg-white  hover:text-gray-700 dark:hover:text-gray-300 focus:outline-none transition ease-in-out duration-150">
+                                <div>Willkommen, {{ Auth::user()->name }}</div>
                                 <div class="ms-1">
                                     <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
                                         <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
@@ -75,7 +76,9 @@
                 {{ __('Anzeigen') }}
             </x-responsive-nav-link>
             @auth
+            
                 <x-responsive-nav-link :href="route('ads.create')" :active="request()->routeIs('ads.create')">
+                    
                     {{ __('Neue Anzeige') }}
                 </x-responsive-nav-link>
             @endauth

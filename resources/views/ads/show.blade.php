@@ -12,4 +12,10 @@
             <p>{{ $ad->description_en }}</p>
         </div>
     </div>
+
+
+    @foreach ($vehicleBrands as $brand)
+    <option value="{{ $brand->slug }}">{{ $brand->name[app()->getLocale()] }}</option>
+@endforeach
+
 </x-app-layout>

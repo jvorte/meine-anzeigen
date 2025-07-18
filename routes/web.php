@@ -11,17 +11,7 @@ use App\Http\Controllers\CarController;
 
 Route::get('/categories/{slug}', [CategoryController::class, 'show'])->name('categories.show');
 
-
-
-
 Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
-
-
-
-Route::get('/dashboard', [DashboardController::class, 'index'])
-    ->middleware(['auth'])
-    ->name('dashboard');
-
 
 Route::middleware(['auth'])->group(function () {
     Route::get('/ads/create', [AdController::class, 'create'])->name('ads.create');

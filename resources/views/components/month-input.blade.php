@@ -5,11 +5,12 @@
         {{ $label }}
     </label>
     <input 
-        type="text" 
+        type="month" 
         name="{{ $name }}" 
         id="{{ $name }}"
         value="{{ old($name, $value) }}"
-        class="w-full p-3 border border-gray-600 rounded-lg bg-white text-gray-900 placeholder-gray-400 shadow-sm 
-               focus:border-indigo-600 focus:ring focus:ring-indigo-300 focus:ring-opacity-50 transition duration-150 ease-in-out"
+        class="mt-1 block w-full p-3 border border-gray-600 rounded-lg shadow-sm bg-white text-gray-900
+               focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-600 sm:text-sm
+               transition duration-150 ease-in-out"
     />
 </div>
