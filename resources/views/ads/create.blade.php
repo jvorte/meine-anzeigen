@@ -48,15 +48,19 @@
                 @endforeach
             </div>
 
-            {{-- Formular --}}
+
+
+
+           
+
+  {{------------------------ Felder für Fahrzeuge------------------------------ --}}
+                 {{-- Formular --}}
             <form method="POST" action="{{ route('vehicles.store') }}" enctype="multipart/form-data"
                 class="space-y-8 bg-white p-6 rounded-xl" x-show="selectedCategory" x-transition.opacity.duration.300ms>
 
                 @csrf
                 <input type="hidden" name="category_slug" x-model="selectedCategory" />
-
-
-                {{-- Header mit Kategorie und zurück Button --}}
+                     {{-- Header mit Kategorie und zurück Button --}}
                 <div class="flex justify-between items-center mb-4">
                     <h3 class="text-lg font-semibold text-gray-700">
                         Kategorie: <span x-text="selectedCategoryName"></span>
@@ -67,7 +71,7 @@
                     </button>
                 </div>
 
-                {{-- Felder für Fahrzeuge --}}
+
                 <div x-show="selectedCategory === 'fahrzeuge'" x-transition>
                     <input type="hidden" name="brand_id" x-model="selectedBrandId" />
                     <input type="hidden" name="car_model_id" x-model="selectedModelId" />
@@ -100,7 +104,7 @@
                         </div>
                     </div>
 
-                    {{-- Weitere Felder wie Basisdaten, Typ & Zustand, Motor, etc. --}}
+
 
                     {{-- Basisdaten --}}
                     <div class="border-t pt-6">
@@ -193,141 +197,6 @@
                     </div>
                 </div>
 
-                {{-- ==============================fahrzeugeteile==================================== --}}
-                <div x-show="selectedCategory === 'fahrzeugeteile'" x-transition>
-
-
-                    {{-- τιτλος --}}
-                    <div class="border-t pt-6">
-                        <h4 class="text-md font-semibold text-gray-600 mb-4">Kategorie & Modell</h4>
-                        <div class="grid md:grid-cols-2 gap-4">
-                            <div>
-                                <label class="block">Kategorie</label>
-                                <select name="category" class="form-input w-full">
-                                    <option>Gebraucht</option>
-                                    <option>Neu</option>
-                                    <option>Neuwertig</option>
-                                </select>
-                            </div>
-                            @php
-                                $brands = [
-                                    'vw' => ['Golf', 'Polo', 'Passat'],
-                                    'bmw' => ['3er', '5er', 'X5'],
-                                    'audi' => ['A3', 'A4', 'Q5'],
-                                ];
-                            @endphp
-
-                            <div x-data="{
-                                            brands: {{ json_encode($brands) }},
-                                            selectedBrand: '',
-                                            selectedModel: '',
-                                            get models() {
-                                                return this.selectedBrand ? this.brands[this.selectedBrand] : [];
-                                            }
-                                        }">
-                                <div class="mb-4">
-                                    <label class="block text-sm font-medium text-gray-700 mb-1">Marke</label>
-                                    <select name="brand" x-model="selectedBrand" class="form-select w-full">
-                                        <option value="">Bitte wählen</option>
-                                        @foreach(array_keys($brands) as $brand)
-                                            <option value="{{ $brand }}">{{ strtoupper($brand) }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-
-                                <div class="mb-4" x-show="selectedBrand">
-                                    <label class="block text-sm font-medium text-gray-700 mb-1">Modell</label>
-                                    <select name="model" x-model="selectedModel" class="form-select w-full">
-                                        <option value="">Bitte wählen</option>
-                                        <template x-for="model in models" :key="model">
-                                            <option x-text="model" :value="model"></option>
-                                        </template>
-                                    </select>
-                                </div>
-                            </div>
-
-                        </div>
-                    </div>
-                    {{-- =================================================================== --}}
-                    {{-- Gruppe: Basisdaten --}}
-                    <div class="border-t pt-6">
-                        <h4 class="text-md font-semibold text-gray-600 mb-4">Basisdaten</h4>
-                        <div class="grid md:grid-cols-4 gap-4">
-                            <x-number-input name="price_from" label="Preis" />
-
-                            <x-month-input name="registration_to" label="Jahre" />
-                        </div>
-                    </div>
-                    {{-- =================================================================== --}}
-
-                    <div>
-                        <label for="title" class="block text-sm font-semibold text-gray-800 mb-1">Titel</label>
-                        <input type="text" name="title" id="title" required
-                            class="w-full p-2 border border-gray-600 rounded-md shadow-sm bg-white focus:border-indigo-600 focus:ring-2 focus:ring-indigo-500 focus:ring-opacity-50">
-                    </div>
-                    {{-- κειμενο --}}
-
-                    {{-- Beschreibung --}}
-                    <div>
-                        <label for="description"
-                            class="block text-sm font-semibold text-gray-800 mb-1">Beschreibung</label>
-                        <textarea name="description" id="description" rows="5"
-                            placeholder="Zusätzliche Informationen zum Fahrzeug..." class="w-full p-3 border border-gray-600 rounded-md shadow-sm bg-white text-gray-900
-               focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-600
-               transition duration-150 ease-in-out">{{ old('description') }}</textarea>
-                    </div>
-
-                    {{-- Gruppe: Fotos --}}
-                    <div class="border-t pt-6">
-                        <h4 class="text-md font-semibold text-gray-600 mb-4">Fotos</h4>
-
-                        <div x-data="imageUploader()" class="space-y-2">
-                            <input type="file" name="images[]" multiple accept="image/*" @change="handleFiles"
-                                class="w-full text-sm text-gray-600">
-
-                            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-2" x-show="previews.length">
-                                <template x-for="(src, index) in previews" :key="index">
-                                    <div class="relative">
-                                        <img :src="src" class="w-full h-32 object-cover rounded-md shadow">
-                                        <button type="button" @click="remove(index)"
-                                            class="absolute top-1 right-1 bg-white text-red-600 text-xs rounded-full px-2 shadow">
-                                            ✕
-                                        </button>
-                                    </div>
-                                </template>
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
-                {{-- ==========================end fahrzeugeteile======================================= --}}
-
-
-                {{-- ================================elektronik================================= --}}
-                <div x-show="selectedCategory === 'elektronik'" x-transition>
-                </div>
-                {{-- =========================end elektronik======================================== --}}
-
-
-                {{-- =============================haushalt==================================== --}}
-                <div x-show="selectedCategory === 'haushalt'" x-transition>
-                </div>
-                {{-- ==========================end =haushalt====================================== --}}
-
-
-                {{-- ==============================immobilien=================================== --}}
-                <div x-show="selectedCategory === 'immobilien'" x-transition class="space-y-6">
-                </div>
-                {{-- ============================end immobilien===================================== --}}
-
-
-                {{-- ==========================dienstleistungen======================================= --}}
-                <div x-show="selectedCategory === 'dienstleistungen'" x-transition class="space-y-6">
-                </div>
-
-                {{-- =====================end dienstleistungen======================================== --}}
-
-
 
                 <div class="pt-6">
                     <button type="submit"
@@ -335,8 +204,126 @@
                         Anzeige erstellen
                     </button>
                 </div>
-            </form>
+        
 
+            {{-- ===========================end===fahrzeuge==================================== --}}
+
+
+
+            {{-- ==============================fahrzeugeteile==================================== --}}
+            <div x-show="selectedCategory === 'fahrzeugeteile'" x-transition>
+                {{-- τιτλος --}}
+                @php
+                    $brands = \App\Models\Brand::orderBy('name')->get();
+                @endphp
+                <div class="border-t pt-6">
+                    <h4 class="text-md font-semibold text-gray-600 mb-4">Kategorie & Modell</h4>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Marke</label>
+                        <select name="brand_id" x-model="selectedBrandId" class="form-select w-full">
+                            <option value="">Bitte wählen</option>
+                            @foreach ($brands as $brand)
+                                <option value="{{ $brand->id }}">{{ $brand->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    {{-- Modell --}}
+                    <div x-show="models.length" class="mt-4">
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Modell</label>
+                        <select name="car_model_id" x-model="selectedModelId" class="form-select w-full">
+                            <option value="">Bitte wählen</option>
+                            <template x-for="model in models" :key="model.id">
+                                <option :value="model.id" x-text="model.name"></option>
+                            </template>
+                        </select>
+                    </div>
+                </div>
+
+
+                {{-- Gruppe: Basisdaten --}}
+                <div class="border-t pt-6">
+                    <h4 class="text-md font-semibold text-gray-600 mb-4">Basisdaten</h4>
+                    <div class="grid md:grid-cols-4 gap-4">
+                        <x-number-input name="price_from" label="Preis" />
+
+                        <x-month-input name="registration_to" label="Jahre" />
+                    </div>
+                </div>
+       
+
+                <div>
+                    <label for="title" class="block text-sm font-semibold text-gray-800 mb-1">Titel</label>
+                    <input type="text" name="title" id="title" required
+                        class="w-full p-2 border border-gray-600 rounded-md shadow-sm bg-white focus:border-indigo-600 focus:ring-2 focus:ring-indigo-500 focus:ring-opacity-50">
+                </div>
+                {{-- κειμενο --}}
+
+                {{-- Beschreibung --}}
+                <div>
+                    <label for="description" class="block text-sm font-semibold text-gray-800 mb-1">Beschreibung</label>
+                    <textarea name="description" id="description" rows="5"
+                        placeholder="Zusätzliche Informationen zum Fahrzeug..." class="w-full p-3 border border-gray-600 rounded-md shadow-sm bg-white text-gray-900
+               focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-600
+               transition duration-150 ease-in-out">{{ old('description') }}</textarea>
+                </div>
+
+                {{-- Gruppe: Fotos --}}
+                <div class="border-t pt-6">
+                    <h4 class="text-md font-semibold text-gray-600 mb-4">Fotos</h4>
+
+                    <div x-data="imageUploader()" class="space-y-2">
+                        <input type="file" name="images[]" multiple accept="image/*" @change="handleFiles"
+                            class="w-full text-sm text-gray-600">
+
+                        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-2" x-show="previews.length">
+                            <template x-for="(src, index) in previews" :key="index">
+                                <div class="relative">
+                                    <img :src="src" class="w-full h-32 object-cover rounded-md shadow">
+                                    <button type="button" @click="remove(index)"
+                                        class="absolute top-1 right-1 bg-white text-red-600 text-xs rounded-full px-2 shadow">
+                                        ✕
+                                    </button>
+                                </div>
+                            </template>
+                        </div>
+                    </div>
+                </div>
+                       <div class="pt-6">
+                <button type="submit"
+                    class="bg-blue-600 text-white px-5 py-2 rounded hover:bg-blue-700 focus:ring-2 focus:ring-offset-2 focus:ring-blue-400 transition">
+                    Anzeige erstellen
+                </button>
+            </div>
+            </div>
+     
+
+            {{-- ==========================end fahrzeugeteile======================================= --}}
+
+
+            {{-- ================================elektronik================================= --}}
+            <div x-show="selectedCategory === 'elektronik'" x-transition>
+            </div>
+            {{-- =========================end elektronik======================================== --}}
+
+
+            {{-- =============================haushalt==================================== --}}
+            <div x-show="selectedCategory === 'haushalt'" x-transition>
+            </div>
+            {{-- ==========================end =haushalt====================================== --}}
+
+
+            {{-- ==============================immobilien=================================== --}}
+            <div x-show="selectedCategory === 'immobilien'" x-transition class="space-y-6">
+            </div>
+            {{-- ============================end immobilien===================================== --}}
+
+
+            {{-- ==========================dienstleistungen======================================= --}}
+            <div x-show="selectedCategory === 'dienstleistungen'" x-transition class="space-y-6">
+            </div>
+
+            {{-- =====================end dienstleistungen======================================== --}}
 
         </div>
     </div>
