@@ -11,7 +11,7 @@ class CreateVehicleImagesTable extends Migration
         Schema::create('vehicle_images', function (Blueprint $table) {
             $table->id();
             $table->foreignId('vehicle_id')->constrained()->onDelete('cascade');
-            $table->string('path');  // Αποθήκευση του path της εικόνας
+            $table->string('path');
             $table->timestamps();
         });
     }

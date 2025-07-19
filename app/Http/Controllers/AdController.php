@@ -2,11 +2,17 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Ad;
+
 use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use OpenAI\Laravel\Facades\OpenAI;
+use App\Http\Requests\StoreVehicleRequest;
+use Illuminate\Support\Facades\Storage;
+use App\Models\Ad; // Αν υπάρχει το μοντέλο
+use App\Models\VehicleImage;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Log;
 
 class AdController extends Controller
 {
@@ -16,29 +22,6 @@ public function create()
     return view('ads.create', compact('categories'));
 }
 
-public function store(Request $request)
-{
-    $request->validate([
-        'title' => 'required|string|max:255',
-        'category_id' => 'required|exists:categories,id',
-    ]);
-
-    $title = $request->input('title');
-    $categoryId = $request->input('category_id');
-
-    $description_de = $this->generateDescription($title, 'de');
-    $description_en = $this->generateDescription($title, 'en');
-
-    $ad = Ad::create([
-        'title' => $title,
-        'description_de' => $description_de,
-        'description_en' => $description_en,
-        'user_id' => Auth::id(),
-        'category_id' => $categoryId,
-    ]);
-
-    return redirect()->route('ads.show', $ad);
-}
 
 
     private function generateDescription(string $title, string $language): string
@@ -57,6 +40,8 @@ public function store(Request $request)
 
         return trim($response->choices[0]->message->content);
     }
+
+    
 
     public function show(Ad $ad)
     {

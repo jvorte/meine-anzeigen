@@ -11,20 +11,32 @@ return new class extends Migration
      */
     public function up(): void
     {
-     Schema::create('vehicles', function (Blueprint $table) {
+Schema::create('vehicles', function (Blueprint $table) {
     $table->id();
-    $table->foreignId('user_id')->constrained()->onDelete('cascade');
-    $table->foreignId('brand_id')->nullable()->constrained();
-    $table->foreignId('car_model_id')->nullable()->constrained('car_models');
     $table->string('title');
+    $table->string('slug')->unique();
     $table->text('description')->nullable();
-    $table->integer('price')->nullable();
-    $table->integer('mileage')->nullable();
+    $table->string('category_slug');
+    $table->foreignId('brand_id')->nullable()->constrained();
+    $table->foreignId('car_model_id')->nullable()->constrained();
+    $table->unsignedInteger('price')->nullable();
+    $table->unsignedInteger('mileage')->nullable();
+    $table->string('registration')->nullable(); // YYYY-MM
+    $table->string('vehicle_type')->nullable();
+    $table->string('condition')->nullable();
+    $table->string('warranty')->nullable();
+    $table->unsignedInteger('power')->nullable();
     $table->string('fuel_type')->nullable();
     $table->string('transmission')->nullable();
-    $table->string('location')->nullable();
+    $table->string('drive')->nullable();
+    $table->string('color')->nullable();
+    $table->unsignedTinyInteger('doors')->nullable();
+    $table->unsignedTinyInteger('seats')->nullable();
+    $table->string('seller_type')->nullable();
+    $table->foreignId('user_id')->constrained()->cascadeOnDelete();
     $table->timestamps();
 });
+
 
     }
 

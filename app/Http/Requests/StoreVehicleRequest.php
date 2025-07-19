@@ -6,28 +6,34 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class StoreVehicleRequest extends FormRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     */
     public function authorize(): bool
     {
-        return false;
+        return true; // ή auth()->check() αν θέλεις authenticated users μόνο
     }
 
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
-     */
-    public function rules(): array
+ public function rules()
 {
     return [
-        'title' => 'required|string|max:255',
-        'description' => 'nullable|string',
-        'brand_id' => 'required|exists:brands,id',
-        'car_model_id' => 'nullable|exists:car_models,id',
-        'price' => 'nullable|numeric|min:0',
-        'images.*' => 'nullable|image|max:5120', // max 5MB ανά εικόνα
+        'category_slug'   => 'required|string',
+        'brand_id'        => 'nullable|exists:brands,id',
+        'car_model_id'    => 'nullable|exists:car_models,id',
+        'price_from'      => 'required|numeric',
+        'mileage_from'    => 'nullable|numeric',
+        'registration_to' => 'nullable|date',
+        'vehicle_type'    => 'nullable|string',
+        'condition'       => 'nullable|string',
+        'warranty'        => 'nullable|string',
+        'power_from'      => 'nullable|numeric',
+        'fuel_type'       => 'required|string',
+        'transmission'    => 'required|string',
+        'drive'           => 'nullable|string',
+        'color'           => 'nullable|string',
+        'doors_from'      => 'nullable|integer',
+        'seats_from'      => 'nullable|integer',
+        'seller_type'     => 'required|string',
+        'title'           => 'required|string|max:255',
+        'description'     => 'required|string',
+        'images.*'        => 'nullable|image|max:5120', // 5MB ανά εικόνα
     ];
 }
 

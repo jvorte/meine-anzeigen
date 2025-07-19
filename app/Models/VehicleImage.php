@@ -6,11 +6,12 @@ use Illuminate\Database\Eloquent\Model;
 
 class VehicleImage extends Model
 {
-    protected $fillable = ['vehicle_id', 'path'];
+    protected $fillable = [
+        'vehicle_id', 'path',
+    ];
 
-public function vehicle()
-{
-    return $this->belongsTo(Vehicle::class);
-}
-
+    public function vehicle()
+    {
+        return $this->belongsTo(Vehicle::class);
+    }
 }
