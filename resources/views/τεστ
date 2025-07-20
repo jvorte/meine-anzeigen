@@ -1,4 +1,4 @@
-   {{-- Fahrzeugeteile (σε επόμενη φάση με την ίδια λογική) --}}
+ {{-- Fahrzeugeteile (σε επόμενη φάση με την ίδια λογική) --}}
         <div x-show="selectedCategory === 'fahrzeugeteile'" x-transition>
 
 

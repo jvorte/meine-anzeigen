@@ -1,2 +1,4 @@
 update της λιστα μαρκες/ μοντελα
 php artisan import:vehicles
+
+php artisan db:seed
