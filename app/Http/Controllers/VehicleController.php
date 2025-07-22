@@ -15,19 +15,16 @@ use Illuminate\Support\Facades\Log;
 
 class VehicleController extends Controller
 {
+  public function createFahrzeuge()
+    {
+        // Πάρε brands για το select
+        $brands = \App\Models\Brand::orderBy('name')->get();
+
+        return view('ads.auto.create', compact('brands'));
+    }
 
 
-
-//     public function store(Request $request)
-// {
-//     dd($request->all());
-// }
-
-
-
-
-
-public function store(StoreVehicleRequest $request)
+public function storeFahrzeuge(StoreVehicleRequest $request)
 {
     // dd('μπήκαμε στο store', $request->all());
 
@@ -73,6 +70,39 @@ Log::info('Ad created:', $ad->toArray());
     }
 
     return redirect()->route('dashboard')->with('success', 'Anzeige erfolgreich erstellt.');
+}
+
+public function createMotorrad()
+{
+    // Ίδια λογική, διαφορετικό view ή ίδια φόρμα με άλλο category slug
+    return view('ads.motorrad.create');
+}
+
+public function storeMotorrad(Request $request)
+{
+
+    
+    // validation + αποθήκευση με category_slug = 'motorrad'
+}
+
+public function createNutzfahrzeug()
+{
+    return view('ads.nutzfahrzeug.create');
+}
+
+public function storeNutzfahrzeug(Request $request)
+{
+    // ...
+}
+
+public function createWohnmobile()
+{
+    return view('ads.wohnmobile.create');
+}
+
+public function storeWohnmobile(Request $request)
+{
+    // ...
 }
 
 

@@ -41,11 +41,24 @@ Route::middleware(['auth'])->group(function () {
     // Ad submission routes for specific categories
     Route::post('/vehicles', [VehicleController::class, 'store'])->name('vehicles.store');
     Route::post('/parts', [PartController::class, 'store'])->name('parts.store');
+    Route::get('/ads/parts/create', [PartController::class, 'create'])->name('ads.parts.create');
+
+    Route::get('/ads/electronics/create', [ElectronicsController::class, 'create'])->name('ads.electronics.create');
     Route::post('/electronics', [ElectronicsController::class, 'store'])->name('electronics.store'); // Corrected controller name
+
+    Route::get('/ads/household/create', [HouseholdController::class, 'create'])->name('ads.household.create');
     Route::post('/household', [HouseholdController::class, 'store'])->name('household.store');
+
+    Route::get('/ads/real-estate/create', [RealEstateController::class, 'create'])->name('ads.realestate.create');
     Route::post('/realestate', [RealEstateController::class, 'store'])->name('realestate.store');
+
+    Route::get('/ads/services/create', [ServiceController::class, 'create'])->name('ads.services.create');
     Route::post('/services', [ServiceController::class, 'store'])->name('services.store');
+
+    Route::get('/ads/boats/create', [BoatController::class, 'create'])->name('ads.boats.create');
     Route::post('/boote', [BoatController::class, 'store'])->name('boote.store'); // Added store route for boats
+
+    Route::get('/ads/others/create', [OtherController::class, 'create'])->name('ads.others.create');
     Route::post('/sonstiges', [OtherController::class, 'store'])->name('sonstiges.store'); // Added store route for others
 
     // Ad creation form route
@@ -56,8 +69,29 @@ Route::middleware(['auth'])->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
+// Fallback for generic ad show (if ads are not strictly categorized by URL)
+// This might be redundant if all ads are accessed via their category-specific routes
+Route::get('/ads/{ad}', [AdController::class, 'show'])->name('ads.show');
 
-// Public routes
+
+Route::get('/ads/fahrzeuge/create', [VehicleController::class, 'createFahrzeuge'])->name('ads.autos.create');
+Route::post('/ads/fahrzeuge', [VehicleController::class, 'storeFahrzeuge'])->name('ads.fahrzeuge.store');
+
+Route::get('/ads/motorrad/create', [VehicleController::class, 'createMotorrad'])->name('ads.motorrad.create');
+Route::post('/ads/motorrad', [VehicleController::class, 'storeMotorrad'])->name('ads.motorrad.store');
+
+Route::get('/ads/nutzfahrzeug/create', [VehicleController::class, 'createNutzfahrzeug'])->name('ads.nutzfahrzeug.create');
+Route::post('/ads/nutzfahrzeug', [VehicleController::class, 'storeNutzfahrzeug'])->name('ads.nutzfahrzeug.store');
+
+Route::get('/ads/wohnmobile/create', [VehicleController::class, 'createWohnmobile'])->name('ads.wohnmobile.create');
+Route::post('/ads/wohnmobile', [VehicleController::class, 'storeWohnmobile'])->name('ads.wohnmobile.store');
+
+
+
+
+
+
+// SHOW Public routes
 // Generic category show route - This handles /categories/{slug} for all categories
 Route::get('/categories/{slug}', [CategoryController::class, 'show'])->name('categories.show');
 
@@ -82,9 +116,7 @@ Route::prefix('categories')->name('categories.')->group(function () {
     Route::get('/sonstiges/{other}', [OtherController::class, 'show'])->name('sonstiges.show');
 });
 
-// Fallback for generic ad show (if ads are not strictly categorized by URL)
-// This might be redundant if all ads are accessed via their category-specific routes
-Route::get('/ads/{ad}', [AdController::class, 'show'])->name('ads.show');
+
 
 
 // Auth scaffolding routes (login, register, etc.)
