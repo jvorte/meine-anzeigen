@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\Log;
 
 class VehicleController extends Controller
 {
-  public function createFahrzeuge()
+  public function createAutos()
     {
         // Πάρε brands για το select
         $brands = \App\Models\Brand::orderBy('name')->get();

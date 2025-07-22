@@ -8,12 +8,18 @@ use App\Http\Controllers\CategoryController;
 // Import all specific ad type controllers
 use App\Http\Controllers\VehicleController;
 use App\Http\Controllers\PartController;
-use App\Http\Controllers\ElectronicsController; // Corrected from ElectronicsController
+use App\Http\Controllers\ElectronicsController;
 use App\Http\Controllers\HouseholdController;
 use App\Http\Controllers\RealEstateController;
 use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\BoatController;
 use App\Http\Controllers\OtherController;
+use App\Http\Controllers\MotorradAdController; 
+use App\Http\Controllers\CommercialVehicleController;
+use App\Http\Controllers\CamperController;
+use App\Http\Controllers\UsedVehiclePartController;
+
+
 
 
 /*
@@ -34,17 +40,44 @@ Route::get('/models/{brandId}', function ($brandId) {
 
 // Main Dashboard/Home Page
 Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
-Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard'); // Redundant, but kept for clarity if used elsewhere
+Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+
 
 // Routes with authentication
 Route::middleware(['auth'])->group(function () {
     // Ad submission routes for specific categories
+
+    // Motorrad Ad Routes (KEEP ONLY THIS BLOCK FOR MOTORRAD ADS)
+    Route::get('/ads/motorrad/create', [MotorradAdController::class, 'create'])->name('ads.motorrad.create');
+    Route::post('/ads/motorrad', [MotorradAdController::class, 'store'])->name('ads.motorrad.store');
+    Route::get('/ads/motorrad/{motorradAd}', [MotorradAdController::class, 'show'])->name('ads.motorrad.show');
+
+       // Commercial Vehicle Ad Routes
+    Route::get('/ads/commercial-vehicles/create', [CommercialVehicleController::class, 'create'])->name('ads.commercial-vehicles.create');
+    Route::post('/ads/commercial-vehicles', [CommercialVehicleController::class, 'store'])->name('ads.commercial-vehicles.store');
+    // Optional: Route for showing a single ad
+    Route::get('/ads/commercial-vehicles/{commercialVehicle}', [CommercialVehicleController::class, 'show'])->name('ads.commercial-vehicles.show');
+
+   // Camper Ad Creation and Storage Routes
+    // This route displays the form to create a new camper ad.
+    Route::get('/ads/camper/create', [CamperController::class, 'create'])->name('ads.camper.create');
+    // This route handles the form submission to store a new camper ad.
+    Route::post('/ads/camper', [CamperController::class, 'store'])->name('ads.camper.store');
+
+       // Used Vehicle Part Ad Routes
+    Route::get('/ads/used-vehicle-parts/create', [UsedVehiclePartController::class, 'create'])->name('ads.used-vehicle-parts.create');
+    Route::post('/ads/used-vehicle-parts', [UsedVehiclePartController::class, 'store'])->name('ads.used-vehicle-parts.store');
+    // Optional: Route for showing a single ad
+    Route::get('/ads/used-vehicle-parts/{usedVehiclePart}', [UsedVehiclePartController::class, 'show'])->name('ads.used-vehicle-parts.show');
+
+
+
     Route::post('/vehicles', [VehicleController::class, 'store'])->name('vehicles.store');
     Route::post('/parts', [PartController::class, 'store'])->name('parts.store');
     Route::get('/ads/parts/create', [PartController::class, 'create'])->name('ads.parts.create');
 
     Route::get('/ads/electronics/create', [ElectronicsController::class, 'create'])->name('ads.electronics.create');
-    Route::post('/electronics', [ElectronicsController::class, 'store'])->name('electronics.store'); // Corrected controller name
+    Route::post('/electronics', [ElectronicsController::class, 'store'])->name('electronics.store');
 
     Route::get('/ads/household/create', [HouseholdController::class, 'create'])->name('ads.household.create');
     Route::post('/household', [HouseholdController::class, 'store'])->name('household.store');
@@ -56,10 +89,10 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/services', [ServiceController::class, 'store'])->name('services.store');
 
     Route::get('/ads/boats/create', [BoatController::class, 'create'])->name('ads.boats.create');
-    Route::post('/boote', [BoatController::class, 'store'])->name('boote.store'); // Added store route for boats
+    Route::post('/boote', [BoatController::class, 'store'])->name('boote.store');
 
     Route::get('/ads/others/create', [OtherController::class, 'create'])->name('ads.others.create');
-    Route::post('/sonstiges', [OtherController::class, 'store'])->name('sonstiges.store'); // Added store route for others
+    Route::post('/sonstiges', [OtherController::class, 'store'])->name('sonstiges.store');
 
     // Ad creation form route
     Route::get('/ads/create', [AdController::class, 'create'])->name('ads.create');
@@ -69,26 +102,17 @@ Route::middleware(['auth'])->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
+
+
 // Fallback for generic ad show (if ads are not strictly categorized by URL)
-// This might be redundant if all ads are accessed via their category-specific routes
 Route::get('/ads/{ad}', [AdController::class, 'show'])->name('ads.show');
 
 
-Route::get('/ads/fahrzeuge/create', [VehicleController::class, 'createFahrzeuge'])->name('ads.autos.create');
+Route::get('/ads/autos/create', [VehicleController::class, 'createAutos'])->name('ads.autos.create');
 Route::post('/ads/fahrzeuge', [VehicleController::class, 'storeFahrzeuge'])->name('ads.fahrzeuge.store');
-
-Route::get('/ads/motorrad/create', [VehicleController::class, 'createMotorrad'])->name('ads.motorrad.create');
-Route::post('/ads/motorrad', [VehicleController::class, 'storeMotorrad'])->name('ads.motorrad.store');
-
-Route::get('/ads/nutzfahrzeug/create', [VehicleController::class, 'createNutzfahrzeug'])->name('ads.nutzfahrzeug.create');
-Route::post('/ads/nutzfahrzeug', [VehicleController::class, 'storeNutzfahrzeug'])->name('ads.nutzfahrzeug.store');
 
 Route::get('/ads/wohnmobile/create', [VehicleController::class, 'createWohnmobile'])->name('ads.wohnmobile.create');
 Route::post('/ads/wohnmobile', [VehicleController::class, 'storeWohnmobile'])->name('ads.wohnmobile.store');
-
-
-
-
 
 
 // SHOW Public routes
@@ -96,29 +120,16 @@ Route::post('/ads/wohnmobile', [VehicleController::class, 'storeWohnmobile'])->n
 Route::get('/categories/{slug}', [CategoryController::class, 'show'])->name('categories.show');
 
 // Specific ad detail pages for each model type
-// These are crucial for the "Details ansehen" links in categories/show.blade.php
 Route::prefix('categories')->name('categories.')->group(function () {
-    // Example: /categories/fahrzeuge/{vehicle}
     Route::get('/fahrzeuge/{vehicle}', [VehicleController::class, 'show'])->name('fahrzeuge.show');
-    // Example: /categories/boote/{boat}
     Route::get('/boote/{boat}', [BoatController::class, 'show'])->name('boote.show');
-    // Example: /categories/fahrzeugeteile/{part}
     Route::get('/fahrzeugeteile/{part}', [PartController::class, 'show'])->name('fahrzeugeteile.show');
-    // Example: /categories/elektronik/{electronic}
-    Route::get('/elektronik/{electronic}', [ElectronicsController::class, 'show'])->name('elektronik.show'); // Corrected controller name
-    // Example: /categories/haushalt/{household}
+    Route::get('/elektronik/{electronic}', [ElectronicsController::class, 'show'])->name('elektronik.show');
     Route::get('/haushalt/{household}', [HouseholdController::class, 'show'])->name('haushalt.show');
-    // Example: /categories/immobilien/{realEstate}
     Route::get('/immobilien/{realEstate}', [RealEstateController::class, 'show'])->name('immobilien.show');
-    // Example: /categories/dienstleistungen/{service}
     Route::get('/dienstleistungen/{service}', [ServiceController::class, 'show'])->name('dienstleistungen.show');
-    // Example: /categories/sonstiges/{other}
     Route::get('/sonstiges/{other}', [OtherController::class, 'show'])->name('sonstiges.show');
 });
 
-
-
-
 // Auth scaffolding routes (login, register, etc.)
 require __DIR__ . '/auth.php';
-

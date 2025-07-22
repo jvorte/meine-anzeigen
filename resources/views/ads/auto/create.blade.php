@@ -3,7 +3,8 @@
         <h2 class="text-xl font-semibold">Fahrzeuge Anzeige erstellen</h2>
     </x-slot>
 
-    <div class="max-w-4xl mx-auto p-6 bg-white rounded shadow">
+   <div class="max-w-6xl mx-auto p-6 bg-white rounded shadow">
+
 
         <form method="POST" action="{{ route('ads.fahrzeuge.store') }}" enctype="multipart/form-data" class="space-y-6">
             @csrf
