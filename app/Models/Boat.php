@@ -9,42 +9,55 @@ class Boat extends Model
 {
     use HasFactory;
 
-    // Define the table if it's not the plural form of the model name
-    protected $table = 'boats';
-
-    // Define fillable fields for mass assignment
     protected $fillable = [
+        'user_id',
         'title',
         'description',
-        'price', // Or 'price_from', 'price_to' depending on your needs
-        'year_of_manufacture',
-        'length_meters',
-        'engine_type',
+        'brand_id',
+        'car_model_id', // Using car_model_id for consistency, can be renamed to boat_model_id if a separate table is desired
+        'year_of_construction',
         'condition',
-        'location', // e.g., city, region
-        'images', // Store as JSON string or comma-separated if multiple
-        'user_id', // If ads are linked to users
-        // Add any other specific fields for boats
-    ];
-
-    // Cast 'images' attribute to array if you store multiple image paths as JSON
-    protected $casts = [
-        'images' => 'array',
+        'price',
+        'boat_type',
+        'material',
+        'total_length',
+        'total_width',
+        'berths',
+        'engine_type',
+        'engine_power',
+        'operating_hours',
+        'last_service',
     ];
 
     /**
-     * Get the category slug for routing.
-     * This helps in generating dynamic routes like /categories/boote/{id}
+     * Get the brand associated with the boat.
      */
-    public function getCategorySlugAttribute()
+    public function brand()
     {
-        return 'boote';
+        return $this->belongsTo(Brand::class);
     }
 
-    // If you have a User model and ads belong to users
+    /**
+     * Get the car model (used as boat model) associated with the boat.
+     */
+    public function carModel()
+    {
+        return $this->belongsTo(CarModel::class);
+    }
+
+    /**
+     * Get the images for the boat.
+     */
+    public function images()
+    {
+        return $this->hasMany(BoatImage::class);
+    }
+
+    /**
+     * Get the user that owns the boat ad.
+     */
     public function user()
     {
         return $this->belongsTo(User::class);
     }
 }
-

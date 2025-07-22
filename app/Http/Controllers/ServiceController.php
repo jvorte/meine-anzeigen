@@ -3,24 +3,39 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Service; // Make sure this path is correct
+use App\Models\Service;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Validation\Rule; // Import Rule for conditional validation (though not strictly needed for this form)
+use Illuminate\Support\Facades\Auth; // Import Auth facade
+use Illuminate\Support\Arr; // Import Arr helper for data manipulation
+use Illuminate\Validation\Rule; // Import Rule for advanced validation
 
 class ServiceController extends Controller
 {
     /**
+     * Show the form for creating a new service ad.
+     * This method prepares data needed for the form.
+     */
+    public function create()
+    {
+        // Define options for dropdowns, matching the Blade form
+        $dienstleistungKategorieOptions = ['reinigung', 'handwerk', 'it', 'beratung', 'transport', 'sonstiges'];
+        $verfugbarkeitOptions = ['sofort', 'nach_vereinbarung', 'während_wochentagen', 'wochenende'];
+
+        return view('ads.services.create', compact(
+            'dienstleistungKategorieOptions',
+            'verfugbarkeitOptions'
+        ));
+    }
+
+    /**
      * Store a newly created service ad in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * This method handles the form submission and saves data.
      */
     public function store(Request $request)
     {
         // 1. Validation
-        // This validation is based on the provided 'dienstleistungen' frontend HTML.
         $validatedData = $request->validate([
-            'category_slug' => ['required', 'string', 'max:255'], // Hidden input
+            'category_slug' => ['required', 'string', 'max:255', Rule::in(['dienstleistungen'])],
             'dienstleistung_kategorie' => ['required', 'string', 'max:255', Rule::in(['reinigung', 'handwerk', 'it', 'beratung', 'transport', 'sonstiges'])],
             'titel' => ['required', 'string', 'max:255'], // Titel der Dienstleistung
             'beschreibung' => ['required', 'string'], // Beschreibung
@@ -40,7 +55,6 @@ class ServiceController extends Controller
         if ($request->hasFile('bilder')) { // Frontend input name is 'bilder[]'
             foreach ($request->file('bilder') as $image) {
                 // Store image in 'public/service_images' directory
-                // This path will be stored in the database.
                 $path = $image->store('service_images', 'public');
                 $imagePaths[] = $path;
             }
@@ -48,6 +62,7 @@ class ServiceController extends Controller
 
         // 3. Create the Service record
         $service = Service::create([
+            'user_id' => Auth::id(), // Assign the authenticated user's ID
             'category_slug' => $validatedData['category_slug'],
             'dienstleistung_kategorie' => $validatedData['dienstleistung_kategorie'],
             'title' => $validatedData['titel'], // Map 'titel' from form to 'title' in DB
@@ -62,8 +77,17 @@ class ServiceController extends Controller
         ]);
 
         // 4. Redirect with a success message
-      return redirect()->route('dashboard')->with('success', 'Anzeige erfolgreich erstellt.');
-        // Alternatively, redirect to a specific route, e.g.:
-        // return redirect()->route('services.show', $service->id)->with('success', 'Dienstleistungs-Anzeige erfolgreich erstellt!');
+        return redirect()->route('dashboard')->with('success', 'Dienstleistungs-Anzeige erfolgreich erstellt!');
     }
+
+    /**
+     * Display the specified resource.
+     * This method is for showing a single service ad.
+     */
+    public function show(Service $service)
+    {
+        return view('ads.services.show', compact('service'));
+    }
+
+    // You can add edit, update, destroy methods as needed
 }

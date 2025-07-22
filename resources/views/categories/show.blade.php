@@ -1,39 +1,34 @@
 <x-app-layout>
     <x-slot name="header">
         {{-- Updated Header Section with Gradient and Prominent CTA --}}
-        <div class="flex flex-col md:flex-row items-center justify-between space-y-4 md:space-y-0 md:space-x-4 p-6 bg-gradient-to-r from-blue-50 to-white dark:from-gray-700 dark:to-gray-800 shadow-lg rounded-lg">
-            {{-- Main Heading and Description --}}
-            <div class="text-center md:text-left flex-grow">
-                <h2 class="text-3xl font-extrabold text-gray-900 dark:text-gray-100 leading-tight mb-2">
-                    {{ $category->name }} Anzeigen
-                </h2>
-                <p class="text-md text-gray-600 dark:text-gray-100">
-                    Entdecke alle Anzeigen in der Kategorie {{ $category->name }}.
-                </p>
-            </div>
+<div class="flex flex-col md:flex-row items-center justify-between space-y-4 md:space-y-0 md:space-x-4 p-6 bg-cover bg-center shadow-lg rounded-lg"  style="background-image: url('/storage/images/1.jpg');"> {{-- Replaced with a stable placeholder image --}}
+    {{-- Main Heading and Description --}}
+    <div class="text-center md:text-left flex-grow">
+        <h2 class="text-3xl font-extrabold text-gray-900 dark:text-gray-100 leading-tight mb-2">
+            Finde deine nächste Anzeige
+        </h2>
+        <p class="text-md text-gray-600 dark:text-gray-100">
+            Durchsuche Tausende von Anzeigen oder erstelle deine eigene.
+        </p>
+    </div>
 
-            {{-- Prominent Search Bar (can be adapted for category-specific search) --}}
-            <div class="w-full md:w-1/2 lg:w-2/5 relative">
-                <input type="text" placeholder="Suche in {{ $category->name }}..."
-                       class="w-full p-3 pl-10 border border-gray-300 rounded-full shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 transition-all duration-200 text-gray-900 dark:bg-gray-700 dark:text-gray-100 dark:border-gray-600"
-                       aria-label="Search in category">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400 absolute left-3 top-1/2 transform -translate-y-1/2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
-            </div>
 
-            {{-- New: Prominent "Anzeige erstellen" button --}}
-            <div class="mt-4 md:mt-0 md:ml-4">
-                <a href="{{ route('ads.create') }}" {{-- Assuming you have an 'ads.create' route for your ad creation form --}}
-                   class="inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-semibold rounded-full shadow-lg text-white bg-gradient-to-r from-blue-600 to-indigo-700 hover:from-blue-700 hover:to-indigo-800 transition-all duration-300 transform hover:scale-105">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
-                    Anzeige erstellen
-                </a>
-            </div>
+      {{-- Prominent Search Bar --}}
+    <div class="w-full md:w-1/2 lg:w-2/5 relative">
+        <input type="text" placeholder="Was suchst du? z.B. iPhone, Wohnung, Fahrrad..."
+               class="w-full p-3 pl-10 border border-gray-300 rounded-full shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 transition-all duration-200 text-black dark:bg-gray-100 dark:text-gray-900 dark:border-gray-600"
+               aria-label="Search ads">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400 absolute left-3 top-1/2 transform -translate-y-1/2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+    </div>
+
+          
+        
         </div>
 
         {{-- Category Navigation Links --}}
         <nav class="p-4 flex flex-wrap justify-center md:justify-start gap-x-4 gap-y-2 mt-4 pb-2 border-b border-gray-200 dark:border-gray-700">
             @foreach ($categories as $cat) {{-- Use $cat to avoid conflict with $category in the main content --}}
-                <a href="{{ route('categories.show', $cat->slug) }}" class="flex items-center space-x-1 text-gray-700 hover:text-indigo-600 transition-colors duration-200 px-3 py-1 rounded-full bg-gray-100 hover:bg-blue-100 dark:bg-gray-700 dark:hover:bg-blue-900 dark:text-gray-300 dark:hover:text-white">
+                <a href="{{ route('categories.show', $cat->slug) }}" class="flex items-center space-x-1 text-gray-700 hover:text-indigo-600 transition-colors duration-200 px-3 py-1 rounded-full dark:hover:bg-gray-400 dark:text-gray-700 dark:hover:text-white">
                     {{-- Dynamic SVG based on category slug --}}
                     @if ($cat->slug == 'fahrzeuge')
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-car-icon lucide-car"><path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.4 2.9A3.7 3.7 0 0 0 2 12v4c0 .6.4 1 1 1h2"/><circle cx="7" cy="17" r="2"/><path d="M9 17h6"/><circle cx="17" cy="17" r="2"/></svg>

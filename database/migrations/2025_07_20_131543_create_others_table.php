@@ -13,13 +13,18 @@ return new class extends Migration
     {
         Schema::create('others', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('user_id')->constrained()->onDelete('cascade'); // Link to users table
+            $table->string('category_slug')->default('sonstiges'); // To store the category slug
+
             $table->string('title');
-            $table->text('description')->nullable();
+            $table->text('description');
             $table->decimal('price', 10, 2)->nullable();
             $table->string('condition')->nullable();
-            $table->string('location')->nullable();
-            $table->json('images')->nullable(); // Store multiple image paths as JSON array
-            $table->foreignId('user_id')->nullable()->constrained()->onDelete('cascade'); // Link to users table
+            $table->string('location')->nullable(); // For general location/city
+            $table->string('contact_phone')->nullable(); // Optional contact phone
+
+            $table->json('images')->nullable(); // Store image paths as JSON array
+
             $table->timestamps();
         });
     }

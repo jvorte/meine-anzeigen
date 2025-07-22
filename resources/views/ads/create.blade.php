@@ -45,7 +45,7 @@
                     </div>
                 </a>
 
-                <a href="{{ route('ads.electronics.create') }}"
+                <a href="{{ route('ads.boats.create') }}"
                     class="flex items-center bg-white border border-gray-200 rounded-lg shadow-sm hover:bg-gray-100 transition group">
                     <img src="{{ asset('storage/images/boats.jpg') }}" dir="ltr" alt="boat"
                         class="w-48 h-48 object-cover rounded-s-lg  me-4">
@@ -69,7 +69,7 @@
 
 
 
-                <a href="{{ route('ads.electronics.create') }}"
+                <a href="{{ route('ads.household.create') }}"
                     class="flex items-center bg-white border border-gray-200 rounded-lg shadow-sm hover:bg-gray-100 transition group">
                         <img src="{{ asset('storage/images/chairs.jpg') }}" dir="ltr" alt="electronics"
                         class="w-48 h-48 object-cover rounded-s-lg  me-4">
@@ -81,7 +81,7 @@
 
 
 
-                <a href="{{ route('ads.electronics.create') }}"
+                <a href="{{ route('ads.realestate.create') }}"
                     class="flex items-center bg-white border border-gray-200 rounded-lg shadow-sm hover:bg-gray-100 transition group">
                      <img src="{{ asset('storage/images/real.jpg') }}" dir="ltr" alt="electronics"
                         class="w-48 h-48 object-cover rounded-s-lg  me-4">
@@ -93,7 +93,7 @@
 
 
 
-                <a href="{{ route('ads.electronics.create') }}"
+                <a href="{{ route('ads.servises.create') }}"
                     class="flex items-center bg-white border border-gray-200 rounded-lg shadow-sm hover:bg-gray-100 transition group">
                        <img src="{{ asset('storage/images/worker.jpg') }}" dir="ltr" alt="electronics"
                         class="w-48 h-48 object-cover rounded-s-lg  me-4">
@@ -103,7 +103,9 @@
                     </div>
                 </a>
 
-                <a href="{{ route('ads.electronics.create') }}"
+
+
+                <a href="{{ route('ads.others.create') }}"
                     class="flex items-center bg-white border border-gray-200 rounded-lg shadow-sm hover:bg-gray-100 transition group">
                      <img src="{{ asset('storage/images/boxes.jpg') }}" dir="ltr" alt="Sonstiges"
                         class="w-48 h-48 object-cover rounded-s-lg  me-4">

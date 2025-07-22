@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Electronic extends Model
+class HouseholdItem extends Model
 {
     use HasFactory;
 
@@ -17,10 +17,10 @@ class Electronic extends Model
         'condition',
         'category',
         'brand_id',
-        'electronic_model_id',
-        'year_of_purchase',
-        'warranty_status',
-        'accessories',
+        'model_name',
+        'material',
+        'color',
+        'dimensions',
         'image_paths', // <-- Added to fillable
     ];
 
@@ -29,7 +29,7 @@ class Electronic extends Model
     ];
 
     /**
-     * Get the brand associated with the electronic item.
+     * Get the brand associated with the household item.
      */
     public function brand()
     {
@@ -37,20 +37,10 @@ class Electronic extends Model
     }
 
     /**
-     * Get the electronic model associated with the electronic item.
-     */
-    public function electronicModel()
-    {
-        return $this->belongsTo(ElectronicModel::class);
-    }
-
-    /**
-     * Get the user that owns the electronic ad.
+     * Get the user that owns the household item ad.
      */
     public function user()
     {
         return $this->belongsTo(User::class);
     }
-
-    // Removed the images() relationship that pointed to ElectronicImage
 }

@@ -9,36 +9,25 @@ class Other extends Model
 {
     use HasFactory;
 
-    // Define the table if it's not the plural form of the model name
-    protected $table = 'others'; // Or 'miscellaneous_ads', 'general_items'
-
-    // Define fillable fields for mass assignment
     protected $fillable = [
+        'user_id',
+        'category_slug',
         'title',
         'description',
         'price',
         'condition',
-        'location', // e.g., city, region
-        'images', // Store as JSON string or comma-separated if multiple
-        'user_id', // If ads are linked to users
-        // Add any other generic fields for 'other' items
+        'location',
+        'contact_phone',
+        'images', // <-- Added to fillable
     ];
 
-    // Cast 'images' attribute to array if you store multiple image paths as JSON
     protected $casts = [
-        'images' => 'array',
+        'images' => 'array', // <-- Cast to array for JSON serialization/deserialization
     ];
 
     /**
-     * Get the category slug for routing.
-     * This helps in generating dynamic routes like /categories/sonstiges/{id}
+     * Get the user that owns the other ad.
      */
-    public function getCategorySlugAttribute()
-    {
-        return 'sonstiges';
-    }
-
-    // If you have a User model and ads belong to users
     public function user()
     {
         return $this->belongsTo(User::class);

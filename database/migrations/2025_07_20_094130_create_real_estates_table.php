@@ -6,10 +6,14 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
+    /**
+     * Run the migrations.
+     */
     public function up(): void
     {
         Schema::create('real_estates', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('user_id')->constrained()->onDelete('cascade'); // Link to users table, crucial for ads
             $table->string('category_slug')->default('immobilien'); // To store the category slug
 
             // Basisdaten
@@ -18,7 +22,7 @@ return new class extends Migration
             $table->string('objekttyp')->nullable();
             $table->string('zustand')->nullable();
             $table->integer('anzahl_zimmer')->nullable();
-            $table->string('bautyp')->nullable(); // Note: Seems redundant with objekttyp, but included as per HTML
+            $table->string('bautyp')->nullable();
             $table->string('verfugbarkeit')->nullable();
             $table->string('befristung')->nullable();
             $table->date('befristung_ende')->nullable();
@@ -73,6 +77,9 @@ return new class extends Migration
         });
     }
 
+    /**
+     * Reverse the migrations.
+     */
     public function down(): void
     {
         Schema::dropIfExists('real_estates');

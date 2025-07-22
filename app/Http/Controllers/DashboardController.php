@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Vehicle;
 use App\Models\Part;
 use App\Models\Electronic;
-use App\Models\Household;
+use App\Models\HouseholdItem;
 use App\Models\RealEstate;
 use App\Models\Service;
 use App\Models\Category; // Assuming you have a Category model for your navigation
@@ -27,7 +27,7 @@ class DashboardController extends Controller
             'fahrzeuge' => Vehicle::orderBy('created_at', 'desc')->limit(4)->get(),
             'fahrzeugeteile' => Part::orderBy('created_at', 'desc')->limit(4)->get(),
             'elektronik' => Electronic::orderBy('created_at', 'desc')->limit(4)->get(),
-            'haushalt' => Household::orderBy('created_at', 'desc')->limit(4)->get(), // Corrected: Changed 'App->Models' to 'App\Models'
+            'haushalt' => HouseholdItem::orderBy('created_at', 'desc')->limit(4)->get(), // Corrected: Changed 'App->Models' to 'App\Models'
             'immobilien' => RealEstate::orderBy('created_at', 'desc')->limit(4)->get(),
             'dienstleistungen' => Service::orderBy('created_at', 'desc')->limit(4)->get(),
         ];
