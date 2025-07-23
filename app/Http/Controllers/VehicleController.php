@@ -5,7 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Vehicle;
 use App\Http\Requests\StoreVehicleRequest;
-
+use App\Models\Brand;
+use App\Models\CarModel;
 use App\Models\VehicleImage;
 use Illuminate\Support\Facades\Storage;
 use App\Models\Ad; // Αν υπάρχει το μοντέλο
@@ -18,9 +19,9 @@ class VehicleController extends Controller
   public function createAutos()
     {
         // Πάρε brands για το select
-        $brands = \App\Models\Brand::orderBy('name')->get();
-
-        return view('ads.auto.create', compact('brands'));
+        $brands =Brand::orderBy('name')->get();
+        $models = CarModel::pluck('name', 'id'); // Adjust this if models are dynamic based on brand
+        return view('ads.auto.create', compact('brands','models'));
     }
 
 

@@ -34,13 +34,17 @@
                                         <div x-show="models.length" x-transition>
                                             <label for="car_model_id"
                                                 class="block text-sm font-medium text-gray-700 mb-2">Modell</label>
-                                            <select id="car_model_id" name="car_model_id" x-model="selectedModelId"
-                                                class="form-select w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
-                                                <option value="">Bitte wählen</option>
-                                                <template x-for="model in models" :key="model.id">
-                                                    <option :value="model.id" x-text="model.name"></option>
-                                                </template>
-                                            </select>
+                                               <select name="car_model_id" id="car_model_id"
+                                class="form-select w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
+                            <option value="">Bitte wählen</option>
+                            {{-- Models populated directly from controller --}}
+                            @foreach($models as $id => $name)
+                                <option value="{{ $id }}" {{ old('car_model_id') == $id ? 'selected' : '' }}>{{ $name }}</option>
+                            @endforeach
+                        </select>
+                        @error('car_model_id')
+                            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                        @enderror
                                         </div>
                                     </div>
                                 </section>
