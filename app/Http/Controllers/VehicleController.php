@@ -14,7 +14,22 @@ use Illuminate\Support\Facades\Log;
 
 class VehicleController extends Controller
 {
-    // app/Http/Controllers/VehicleController.php
+    
+  /**
+     * Display the specified vehicle.
+     *
+     * @param  \App\Models\Vehicle  $vehicle
+     * @return \Illuminate\View\View
+     */
+    public function show(Vehicle $vehicle) // Laravel automatically finds the Vehicle by ID from the route wildcard
+    {
+        // The $vehicle variable now contains the specific Vehicle model instance
+        // that matches the ID in the URL (e.g., /autos/123 will fetch Vehicle with ID 123)
+
+        // Return a view and pass the vehicle data to it
+        return view('vehicles.show', compact('vehicle'));
+    }
+
 
 public function createAutos()
 {
