@@ -31,6 +31,8 @@ use Illuminate\Http\Request; // Keep this use statement if Request is used elsew
 */
 
 // --- PUBLIC ROUTES ---
+// Add this new route for your search functionality
+Route::get('/ads/search', [AdController::class, 'search'])->name('ads.search');
 
 // AJAX response for electronic models
 Route::get('/electronic-models/{brandId}', function ($brandId) {
