@@ -17,7 +17,8 @@ use App\Http\Controllers\CommercialVehicleController;
 use App\Http\Controllers\CamperController;
 use App\Http\Controllers\UsedVehiclePartController;
 use App\Http\Controllers\HouseholdItemController;
-
+use App\Models\Brand; // Keep this use statement if Brand is used elsewhere in web.php
+use Illuminate\Http\Request; // Keep this use statement if Request is used elsewhere in web.php
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -30,11 +31,6 @@ use App\Http\Controllers\HouseholdItemController;
 */
 
 // --- PUBLIC ROUTES ---
-
-// AJAX response for models (e.g., via fetch from Alpine.js)
-Route::get('/models/{brandId}', function ($brandId) {
-    return \App\Models\CarModel::where('brand_id', $brandId)->pluck('name', 'id');
-})->name('ajax.get-models');
 
 // AJAX response for electronic models
 Route::get('/electronic-models/{brandId}', function ($brandId) {
@@ -112,20 +108,17 @@ Route::middleware(['auth'])->group(function () {
 
     // Real Estate
     Route::get('/ads/real-estate/create', [RealEstateController::class, 'create'])->name('ads.realestate.create');
-     Route::post('/realestate', [RealEstateController::class, 'store'])->name('ads.realestate.store');
+    Route::post('/realestate', [RealEstateController::class, 'store'])->name('ads.realestate.store');
 
     // Services
     Route::get('/ads/services/create', [ServiceController::class, 'create'])->name('ads.servises.create');
-  Route::post('/services', [ServiceController::class, 'store'])->name('ads.services.store');
+    Route::post('/services', [ServiceController::class, 'store'])->name('ads.services.store');
 
     // Others
     Route::get('/ads/others/create', [OtherController::class, 'create'])->name('ads.others.create');
     Route::post('/others', [OtherController::class, 'store'])->name('ads.others.store');
 
     // --- Remaining VehicleController and PartController routes ---
-    // These routes are kept as they appear to handle distinct "Auto" or generic "Fahrzeuge" (cars)
-    // and generic "parts" that are not covered by the more specific controllers.
-    // If these are indeed redundant, you can remove them in a future step.
     Route::get('/ads/autos/create', [VehicleController::class, 'createAutos'])->name('ads.autos.create');
     Route::post('/ads/fahrzeuge', [VehicleController::class, 'storeFahrzeuge'])->name('ads.fahrzeuge.store');
     Route::post('/vehicles', [VehicleController::class, 'store'])->name('vehicles.store'); // Generic vehicle store

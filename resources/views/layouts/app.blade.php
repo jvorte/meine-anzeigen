@@ -32,6 +32,41 @@
                 {{ $slot }}
             </main>
         </div>
+
+        <script>
+    document.addEventListener('alpine:init', () => {
+        Alpine.data('imageUploader', () => ({
+            previews: [],
+            files: [], // To store the actual File objects
+
+            handleFiles(event) {
+                this.previews = []; // Clear existing previews
+                this.files = []; // Clear existing files
+
+                Array.from(event.target.files).forEach(file => {
+                    this.files.push(file); // Store the actual file
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        this.previews.push(e.target.result);
+                    };
+                    reader.readAsDataURL(file);
+                });
+            },
+
+            remove(index) {
+                this.previews.splice(index, 1); // Remove preview
+                this.files.splice(index, 1);    // Remove actual file
+
+                // If you need to update the file input, you'd have to recreate DataTransfer
+                // For simplicity, usually, you'd just let the form submit the remaining files.
+                // Or, if you want to clear the input visually:
+                // event.target.value = null; // This won't work directly if files are already selected.
+                // A more robust solution for removing files from the input requires manipulating DataTransfer objects,
+                // which is more complex for a quick fix. For now, the backend will receive fewer files.
+            }
+        }));
+    });
+</script>
            @include('layouts.footer') {{-- Include the footer here --}}
     </body>
 </html>

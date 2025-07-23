@@ -6,105 +6,105 @@ use Illuminate\Http\Request;
 use App\Models\Vehicle;
 use App\Http\Requests\StoreVehicleRequest;
 use App\Models\Brand;
-use App\Models\CarModel;
+use App\Models\CarModel; // Still needed for the initial Brand::orderBy('name')->get() if it references CarModel
 use App\Models\VehicleImage;
 use Illuminate\Support\Facades\Storage;
-use App\Models\Ad; // Αν υπάρχει το μοντέλο
-
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Log;
 
 class VehicleController extends Controller
 {
-  public function createAutos()
+    // app/Http/Controllers/VehicleController.php
+
+public function createAutos()
+{
+ // Ensure these are at the top of the file
+
+    $brands = Brand::orderBy('name')->pluck('name', 'id');
+    $models = CarModel::orderBy('name')->pluck('name', 'id'); // Make sure this is $models
+
+    $colors = ['Schwarz', 'Weiß', 'Rot', 'Blau', 'Grün', 'Gelb', 'Orange', 'Silber', 'Grau', 'Braun', 'Andere'];
+
+    return view('ads.auto.create', compact('brands', 'models', 'colors')); // <--- EXACTLY THIS LINE
+}
+
+    public function storeFahrzeuge(StoreVehicleRequest $request)
     {
-        // Πάρε brands για το select
-        $brands =Brand::orderBy('name')->get();
-        $models = CarModel::pluck('name', 'id'); // Adjust this if models are dynamic based on brand
-        return view('ads.auto.create', compact('brands','models'));
-    }
+        // dd('μπήκαμε στο store', $request->all()); // Good for debugging, remove in production
 
+        $data = $request->validated();
 
-public function storeFahrzeuge(StoreVehicleRequest $request)
-{
-    // dd('μπήκαμε στο store', $request->all());
+        // 1. Create the vehicle ad
+        $ad = Vehicle::create([
+            'category_slug'   => $data['category_slug'],
+            'brand_id'        => $data['brand_id'], // Assuming validation makes this required
+            'car_model_id'    => $data['car_model_id'] ?? null, // Model can be null if none selected for brand
+            'price'           => $data['price_from'],
+            'mileage'         => $data['mileage_from'],
+            'registration'    => $data['registration_to'],
+            'vehicle_type'    => $data['vehicle_type'],
+            'condition'       => $data['condition'],
+            'warranty'        => $data['warranty'],
+            'power'           => $data['power_from'],
+            'fuel_type'       => $data['fuel_type'],
+            'transmission'    => $data['transmission'],
+            'drive'           => $data['drive'],
+            'color'           => $data['color'],
+            'doors'           => $data['doors_from'],
+            'seats'           => $data['seats_from'],
+            'seller_type'     => $data['seller_type'],
+            'title'           => $data['title'],
+            'description'     => $data['description'],
+            'user_id'         => auth()->id(),
+            'slug'            => Str::slug($data['title']) . '-' . uniqid(),
+        ]);
 
-    $data = $request->validated();
+        Log::info('Ad created:', $ad->toArray());
 
+        // 2. Process images
+        if ($request->hasFile('images')) {
+            foreach ($request->file('images') as $image) {
+                // Store on the 'public' disk in the 'vehicles_img' directory
+                $path = Storage::disk('public')->putFile('vehicles_img', $image);
 
-
-    // 1. Δημιουργία αγγελίας
-    $ad = Vehicle::create([
-        'category_slug'   => $data['category_slug'],
-        'brand_id'        => $data['brand_id'] ?? null,
-        'car_model_id'    => $data['car_model_id'] ?? null,
-        'price'           => $data['price_from'],
-        'mileage'         => $data['mileage_from'],
-        'registration'    => $data['registration_to'],
-        'vehicle_type'    => $data['vehicle_type'] ?? null,
-        'condition'       => $data['condition'] ?? null,
-        'warranty'        => $data['warranty'] ?? null,
-        'power'           => $data['power_from'],
-        'fuel_type'       => $data['fuel_type'],
-        'transmission'    => $data['transmission'],
-        'drive'           => $data['drive'],
-        'color'           => $data['color'],
-        'doors'           => $data['doors_from'],
-        'seats'           => $data['seats_from'],
-        'seller_type'     => $data['seller_type'],
-        'title'           => $data['title'],
-        'description'     => $data['description'],
-        'user_id'         => auth()->id(),
-        'slug'            => Str::slug($data['title']) . '-' . uniqid(),
-    ]);
-
-Log::info('Ad created:', $ad->toArray());
-    // 2. Επεξεργασία εικόνων
-    if ($request->hasFile('images')) {
-        foreach ($request->file('images') as $image) {
-            $path = $image->store('/storage/vehicles_img', 'public'); // π.χ. storage/app/public/ads
-            VehicleImage::create([
-              'vehicle_id' => $ad->id,
-    'path' => $path,
-            ]);
+                VehicleImage::create([
+                    'vehicle_id' => $ad->id,
+                    'path'       => $path,
+                ]);
+            }
         }
+
+        return redirect()->route('dashboard')->with('success', 'Anzeige erfolgreich erstellt.');
     }
 
-    return redirect()->route('dashboard')->with('success', 'Anzeige erfolgreich erstellt.');
-}
+    public function createMotorrad()
+    {
+        // Same logic, different view or same form with another category slug
+        return view('ads.motorrad.create');
+    }
 
-public function createMotorrad()
-{
-    // Ίδια λογική, διαφορετικό view ή ίδια φόρμα με άλλο category slug
-    return view('ads.motorrad.create');
-}
+    public function storeMotorrad(Request $request)
+    {
+        // ... (add validation and storage logic for motorrad)
+    }
 
-public function storeMotorrad(Request $request)
-{
+    public function createNutzfahrzeug()
+    {
+        return view('ads.nutzfahrzeug.create');
+    }
 
-    
-    // validation + αποθήκευση με category_slug = 'motorrad'
-}
+    public function storeNutzfahrzeug(Request $request)
+    {
+        // ...
+    }
 
-public function createNutzfahrzeug()
-{
-    return view('ads.nutzfahrzeug.create');
-}
+    public function createWohnmobile()
+    {
+        return view('ads.wohnmobile.create');
+    }
 
-public function storeNutzfahrzeug(Request $request)
-{
-    // ...
-}
-
-public function createWohnmobile()
-{
-    return view('ads.wohnmobile.create');
-}
-
-public function storeWohnmobile(Request $request)
-{
-    // ...
-}
-
-
+    public function storeWohnmobile(Request $request)
+    {
+        // ...
+    }
 }

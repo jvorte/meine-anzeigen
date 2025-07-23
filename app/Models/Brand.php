@@ -14,11 +14,10 @@ class Brand extends Model
     /**
      * Get the car models for the brand.
      */
-    public function carModels()
+   public function carModels()
     {
         return $this->hasMany(CarModel::class);
     }
-
     /**
      * Get the motorrad ads for the brand.
      */
