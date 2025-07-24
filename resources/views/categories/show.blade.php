@@ -106,7 +106,13 @@
                         $ads = \App\Models\Service::orderBy('created_at', 'desc')->paginate(12);
                     } elseif ($category->slug == 'sonstiges') {
                         $ads = \App\Models\Other::orderBy('created_at', 'desc')->paginate(12);
-                    }
+                    }elseif ($category->slug == 'motorrad') { // Using 'motorrad' as per your INSERT
+    $ads = \App\Models\Motorcycle::orderBy('created_at', 'desc')->paginate(12); // Adjust 'Motorcycle' to your actual model name
+} elseif ($category->slug == 'nutzfahrzeuge') {
+    $ads = \App\Models\CommercialVehicle::orderBy('created_at', 'desc')->paginate(12); // Adjust 'CommercialVehicle'
+} elseif ($category->slug == 'wohnmobile') {
+    $ads = \App\Models\RV::orderBy('created_at', 'desc')->paginate(12); // Adjust 'RV' or 'Camper'
+}
                 @endphp
 
                 @if ($ads->isEmpty())
