@@ -155,21 +155,21 @@
             </a>
         </div>
 
-        
+
     </x-slot>
 
-    <div class="py-7 bg-gray-50 dark:bg-gray-50 min-h-screen">
+    <div class="py-5 bg-gray-50 dark:bg-gray-50 min-h-screen">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-lg sm:rounded-lg p-6">
                 <h2 class="text-3xl font-bold mb-4 text-gray-900 dark:text-gray-700">Neueste Anzeigen nach Kategorie
                 </h2>
-                <p class="text-md text-gray-500 dark:text-gray-800 mb-8">
+                <p class="text-md text-gray-500 dark:text-gray-800 mb-4">
                     Entdecke die neuesten Angebote, übersichtlich nach Kategorien geordnet.
                 </p>
 
                 @php
                     $categoryBackgrounds = [
-                        'fahrzeuge' => '/storage/images/car.jpg',
+                        'fahrzeuge' => '/storage/images/cars.jpg',
                         'fahrzeugeteile' => '/storage/images/parts.jpg',
                         'boote' => '/storage/images/boats.jpg',
                         'elektronik' => '/storage/images/tv.jpg',
