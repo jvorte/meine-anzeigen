@@ -10,6 +10,7 @@ class RealEstate extends Model
     use HasFactory;
 
     protected $fillable = [
+           'user_id',
         'category_slug',
         'immobilientyp',
         'title',

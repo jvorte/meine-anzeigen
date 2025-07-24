@@ -99,7 +99,7 @@
                     } elseif ($category->slug == 'elektronik') {
                         $ads = \App\Models\Electronic::orderBy('created_at', 'desc')->paginate(12);
                     } elseif ($category->slug == 'haushalt') {
-                        $ads = \App\Models\Household::orderBy('created_at', 'desc')->paginate(12);
+                        $ads = \App\Models\HouseholdItem::orderBy('created_at', 'desc')->paginate(12);
                     } elseif ($category->slug == 'immobilien') {
                         $ads = \App\Models\RealEstate::orderBy('created_at', 'desc')->paginate(12);
                     } elseif ($category->slug == 'dienstleistungen') {

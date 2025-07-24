@@ -143,59 +143,76 @@
                 <span>Sonstiges</span>
             </a>
         </nav>
-
-        {{-- <h2 class="font-semibold text-xl text-gray-800 leading-tight mt-5">
-            {{ $vehicle->title }}
-        </h2> --}}
     </x-slot>
-
 
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg p-6 text-gray-900 dark:text-gray-100">
-                <h3 class="text-3xl font-bold mb-4">{{ $boat->title }}</h3>
-
-                <p class="text-gray-700 dark:text-gray-300 mb-4">{{ $boat->description }}</p>
-
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-                    <div>
-                        <p class="font-semibold">Preis:</p>
-                        <p>{{ $boat->price ?? 'N/A' }} €</p>
+            <div class="bg-white dark:bg-white rounded-lg shadow-md overflow-hidden">
+                <div class="px-6 py-5 bg-white dark:bg-gray-100 border-b border-gray-200 dark:border-gray-300">
+                    <h3 class="text-4xl font-extrabold text-gray-700 dark:text-gray-800 mb-2 leading-tight">{{ $boat->title }}</h3>
+                    <p class="text-2xl font-bold text-indigo-500 dark:text-indigo-600">
+                        {{ number_format($boat->price ?? 0, 2, ',', '.') }} €
+                    </p>
+                    <div class="flex flex-col sm:flex-row items-center space-y-3 sm:space-y-0 sm:space-x-4">
+                        @if ($boat->user) {{-- Assuming 'user' is a relationship to the boat's owner --}}
+                            {{-- <a href="{{ route('messages.create', $boat->user->id) }}" --}}
+                               class="inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 w-full sm:w-auto transition ease-in-out duration-150">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                                    <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z" />
+                                    <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z" />
+                                </svg>
+                                Verkäufer kontaktieren
+                            </a>
+                        @else
+                            <p class="text-red-800 dark:text-red-700 italic">Informationen zum Verkäufer nicht verfügbar.</p>
+                        @endif
                     </div>
-                    <div>
-                        <p class="font-semibold">Marke:</p>
-                        <p>{{ $boat->brand ?? 'N/A' }}</p>
-                    </div>
-                    <div>
-                        <p class="font-semibold">Baujahr:</p>
-                        <p>{{ $boat->year ?? 'N/A' }}</p>
-                    </div>
-                    <div>
-                        <p class="font-semibold">Länge:</p>
-                        <p>{{ $boat->length ?? 'N/A' }} Meter</p>
-                    </div>
-                    <div>
-                        <p class="font-semibold">Motor:</p>
-                        <p>{{ $boat->engine_type ?? 'N/A' }}</p>
-                    </div>
-                    {{-- Add more boat-specific details here based on your 'boats' table columns --}}
                 </div>
 
-                {{-- Example for displaying images if you have a relationship --}}
-                {{-- Make sure you have an 'images' relationship defined in your Boat model --}}
-                @if (isset($boat->images) && $boat->images->count() > 0)
-                    <div class="mt-6">
-                        <h4 class="text-xl font-semibold mb-3">Bilder</h4>
-                        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                            @foreach ($boat->images as $image)
-                                <img src="{{ asset('storage/' . $image->path) }}" alt="Bootsbild" class="w-full h-48 object-cover rounded-lg shadow-md">
-                            @endforeach
-                        </div>
-                    </div>
-                @endif
+                <div class="p-6">
+                    <p class="text-gray-600 mb-6 leading-relaxed">{{ $boat->description }}</p>
 
-                <div class="mt-8">
-                    <a href="{{ url()->previous() }}" class="text-blue-600 hover:underline dark:text-blue-400">Zurück zur Suche</a>
+                    <h4 class="text-xl font-semibold text-gray-600 mb-4 border-b pb-2 border-gray-200 dark:border-gray-300">Bootsdetails</h4>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-y-3 gap-x-6 mb-6 text-sm">
+                        @foreach([
+                            'Marke' => $boat->brand->name ?? 'N/A',
+                            'Modell' => $boat->carModel->name ?? 'N/A',
+                            'Baujahr' => $boat->year_of_construction ?? 'N/A',
+                            'Zustand' => $boat->condition ?? 'N/A',
+                            'Boots-Typ' => $boat->boat_type ?? 'N/A',
+                            'Material' => $boat->material ?? 'N/A',
+                            'Gesamtlänge' => ($boat->total_length ? $boat->total_length . ' m' : 'N/A'),
+                            'Gesamtbreite' => ($boat->total_width ? $boat->total_width . ' m' : 'N/A'),
+                            'Kojen' => $boat->berths ?? 'N/A',
+                            'Motortyp' => $boat->engine_type ?? 'N/A',
+                            'Motorleistung' => ($boat->engine_power ? $boat->engine_power . ' PS' : 'N/A'),
+                            'Betriebsstunden' => ($boat->operating_hours ? $boat->operating_hours . ' Std.' : 'N/A'),
+                            'Letzter Service' => ($boat->last_service ? \Carbon\Carbon::parse($boat->last_service)->format('d.m.Y') : 'N/A'),
+                        ] as $label => $value)
+                            <div class="flex justify-between items-center bg-gray-50 dark:bg-gray-100 p-3 rounded-md">
+                                <span class="font-semibold text-gray-500 dark:text-gray-600">{{ $label }}:</span>
+                                <span class="text-gray-700 dark:text-gray-800">{{ $value }}</span>
+                            </div>
+                        @endforeach
+                    </div>
+
+                    @if (isset($boat->images) && $boat->images->count() > 0)
+                        <div class="mt-6">
+                            <h4 class="text-xl font-semibold text-gray-600 dark:text-gray-700 mb-3 border-b pb-2 border-gray-200 dark:border-gray-300">Bilder</h4>
+                            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                                @foreach ($boat->images as $image)
+                                    <img src="{{ asset('storage/' . $image->path) }}" alt="Bootsbild" class="w-full h-48 object-cover rounded-lg shadow-sm">
+                                @endforeach
+                            </div>
+                        </div>
+                    @endif
+
+                    <div class="mt-8 text-center">
+                        <a href="{{ url()->previous() }}" class="inline-flex items-center px-4 py-2 bg-blue-300 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-400 active:bg-blue-500 focus:outline-none focus:border-blue-600 focus:ring ring-blue-100 disabled:opacity-25 transition ease-in-out duration-150">
+                            Zurück zur Suche
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>

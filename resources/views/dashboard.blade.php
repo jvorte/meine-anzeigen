@@ -291,7 +291,7 @@
                                                             $adParamName = 'other';
                                                         } elseif ($ad instanceof \App\Models\RealEstate) {
                                                             $adRouteName = 'categories.immobilien.show';
-                                                            $adParamName = 'real_estate';
+                                                            $adParamName = 'realEstate';
                                                         } elseif ($ad instanceof \App\Models\Service) {
                                                             $adRouteName = 'categories.dienstleistungen.show';
                                                             $adParamName = 'service';
