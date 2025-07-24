@@ -115,21 +115,24 @@
                     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
                         @foreach ($ads as $ad)
                             <div class="bg-white dark:bg-white rounded-lg shadow-md overflow-hidden transform transition-all duration-300 hover:scale-105 hover:shadow-xl">
-                                @php
-                                    $imageUrl = 'https://placehold.co/400x250/E0E0E0/6C6C6C?text=No+Image';
-                                    if (!empty($ad->images) && is_array($ad->images) && count($ad->images) > 0) {
-                                        $imageUrl = asset('storage/' . $ad->images[0]);
-                                    } elseif (!empty($ad->images) && is_string($ad->images)) {
-                                        $imageUrl = asset('storage/' . $ad->images);
-                                    } elseif ($ad instanceof \App\Models\RealEstate) {
-                                        if (!empty($ad->grundriss_path)) {
-                                            $imageUrl = asset('storage/' . $ad->grundriss_path);
-                                        } elseif (!empty($ad->energieausweis_path)) {
-                                            $imageUrl = asset('storage/' . $ad->energieausweis_path);
-                                        }
-                                    }
-                                @endphp
-                                <img src="{{ $imageUrl }}" alt="{{ $ad->title ?? 'Anzeige' }}" class="w-full h-40 object-cover rounded-t-lg">
+                                                           @php
+                            $imageUrl = 'https://placehold.co/400x250/E0E0E0/6C6C6C?text=No+Image'; // Default placeholder
+
+                            // Check if the 'images' relationship is loaded and contains images
+                            if ($ad->relationLoaded('images') && $ad->images->isNotEmpty()) {
+                                // Option 1: Try to find an image marked as a thumbnail first
+                                $thumbnailImage = $ad->images->firstWhere('is_thumbnail', true);
+
+                                if ($thumbnailImage) {
+                                    $imageUrl = asset('storage/' . $thumbnailImage->path);
+                                } else {
+                                    // Option 2: If no thumbnail, just use the first available image
+                                    $imageUrl = asset('storage/' . $ad->images->first()->path);
+                                }
+                            }
+                        @endphp
+                        <img src="{{ $imageUrl }}" alt="{{ $ad->title ?? 'Anzeige' }}"
+                            class="w-full h-40 object-cover rounded-t-lg">
                                 <div class="p-4">
                                     <h4 class="text-lg font-bold text-gray-900 dark:text-gray-900 mb-1 truncate">{{ $ad->title }}</h4>
                                     <p class="text-sm text-gray-600 dark:text-gray-700 mb-2 line-clamp-2">{{ $ad->description }}</p>

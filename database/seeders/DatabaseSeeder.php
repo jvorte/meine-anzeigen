@@ -19,6 +19,10 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
 
+         $this->call([
+            CategoryTableSeeder::class,
+            // Add other seeders here, e.g., BrandSeeder::class if you fix it
+        ]);
         $this->call([
             CategorySeeder::class,
         ]);
@@ -28,7 +32,7 @@ class DatabaseSeeder extends Seeder
         
     $this->call([
             // Ensure BrandSeeder is called first as others depend on it
-            BrandSeeder::class,
+            // BrandSeeder::class,
             CategorySeeder::class, // Call CategorySeeder if you have it
     
             ElectronicModelSeeder::class, // Call this if you have it, it depends on BrandSeeder

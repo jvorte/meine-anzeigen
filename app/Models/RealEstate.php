@@ -63,4 +63,9 @@ class RealEstate extends Model
         'befristung_ende' => 'date', // Cast date field
         'zusatzkontakt' => 'boolean', // Cast boolean field
     ];
+
+    public function images()
+{
+    return $this->hasMany(RealEstateImage::class);
+}
 }

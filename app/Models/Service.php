@@ -26,4 +26,8 @@ class Service extends Model
     protected $casts = [
         'images' => 'array', // Automatically cast the 'images' column to a PHP array
     ];
+    public function images()
+{
+    return $this->hasMany(ServiceImage::class);
+}
 }

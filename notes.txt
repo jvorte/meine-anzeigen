@@ -2,3 +2,29 @@ update της λιστα μαρκες/ μοντελα
 php artisan import:vehicles
 
 php artisan db:seed
+
+
+-- SQL INSERT statements for your categories table
+
+-- Ensure your database is selected (e.g., USE your_database_name;)
+-- If your 'id' column is auto-incrementing, you can omit it from the INSERT statement
+-- or set it to NULL if your database requires it.
+
+INSERT INTO categories (name, slug, created_at, updated_at) VALUES
+('Fahrzeuge', 'fahrzeuge', NOW(), NOW()),
+('Fahrzeugeteile', 'fahrzeugeteile', NOW(), NOW()),
+('Boote', 'boote', NOW(), NOW()),
+('Elektronik', 'elektronik', NOW(), NOW()),
+('Haushalt', 'haushalt', NOW(), NOW()),
+('Immobilien', 'immobilien', NOW(), NOW()),
+('Dienstleistungen', 'dienstleistungen', NOW(), NOW()),
+('Sonstiges', 'sonstiges', NOW(), NOW()),
+('Motorräder', 'motorrad', NOW(), NOW()), -- Note: Your route is 'motorrad', not 'motorrad-ad'
+('Nutzfahrzeuge', 'nutzfahrzeuge', NOW(), NOW()),
+('Wohnmobile', 'wohnmobile', NOW(), NOW());
+
+-- If you have other categories like 'motorrad-ad', 'commercial-vehicles', 'camper', 'used-vehicle-parts'
+-- that are used as slugs in your routes or logic, make sure to add them here as well,
+-- matching the exact slug used in your application.
+-- For example, if your route for motorrad is 'motorrad-ad':
+-- INSERT INTO categories (name, slug, created_at, updated_at) VALUES ('Motorrad Anzeigen', 'motorrad-ad', NOW(), NOW());

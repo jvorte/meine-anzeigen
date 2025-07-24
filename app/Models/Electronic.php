@@ -52,5 +52,8 @@ class Electronic extends Model
         return $this->belongsTo(User::class);
     }
 
-    // Removed the images() relationship that pointed to ElectronicImage
+        public function images()
+{
+    return $this->hasMany(ElectronicImage::class);
+}
 }
