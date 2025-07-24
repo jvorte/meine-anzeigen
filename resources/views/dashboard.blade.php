@@ -1,10 +1,13 @@
 <x-app-layout>
     <x-slot name="header">
         {{-- Updated Header Section with Gradient and Prominent CTA --}}
-        <div class="flex flex-col md:flex-row items-center justify-between space-y-4 md:space-y-0 md:space-x-4 p-6 bg-cover bg-center shadow-lg rounded-lg"
+        <div class="relative flex flex-col md:flex-row items-center justify-between space-y-4 md:space-y-0 md:space-x-4 p-6 bg-cover bg-center shadow-lg rounded-lg"
             style="background-image: url('/storage/images/2.jpg');"> {{-- Replaced with a stable placeholder image --}}
-            {{-- Main Heading and Description --}}
-            <div class="text-center md:text-left flex-grow">
+            {{-- Overlay for better text readability --}}
+            <div class="absolute inset-0 bg-black opacity-20 rounded-lg"></div> {{-- Adjust opacity (e.g., 10 to 40) --}}
+
+            {{-- Main Heading and Description (ensure z-index to be above overlay) --}}
+            <div class="relative z-10 text-center md:text-left flex-grow">
                 <h2 class="text-3xl font-extrabold text-gray-900 dark:text-gray-100 leading-tight mb-2">
                     Finde deine nächste Anzeige
                 </h2>
@@ -13,11 +16,11 @@
                 </p>
             </div>
 
-            {{-- Prominent Search Bar --}}
-            <div class="w-full md:w-1/2 lg:w-2/5 relative">
+            {{-- Prominent Search Bar (ensure z-index to be above overlay) --}}
+            <div class="relative z-10 w-full md:w-1/2 lg:w-2/5">
                 <form action="{{ route('ads.search') }}" method="GET">
 
-                    <input type="text" name="query"  placeholder="Was suchst du? z.B. iPhone, Wohnung, Fahrrad..."
+                    <input type="text" name="query" placeholder="Was suchst du? z.B. iPhone, Wohnung, Fahrrad..."
                         class="w-full p-3 pl-10 border border-gray-300 rounded-full shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 transition-all duration-200 text-black dark:bg-gray-100 dark:text-gray-900 dark:border-gray-600"
                         aria-label="Search ads">
                     <svg xmlns="http://www.w3.org/2000/svg"
@@ -28,8 +31,6 @@
                     </svg>
                 </form>
             </div>
-
-
         </div>
 
         {{-- Category Navigation Links (moved below main header for better flow) --}}
@@ -140,99 +141,183 @@
                 <span>Sonstiges</span>
             </a>
         </nav>
+
+
+
+        <div class="px-4 py-4 md:py-2 flex justify-end items-center">
+            <a href="{{ route('ads.create') }}"
+                class="inline-flex items-center px-6 py-3 border border-transparent text-base font-semibold rounded-full shadow-lg text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-all duration-300 transform hover:scale-105">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
+                    stroke="currentColor" class="w-5 h-5 mr-2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                </svg>
+                Neu Anzeige
+            </a>
+        </div>
+
+        
     </x-slot>
 
-    <div class="py-12 bg-gray-50 dark:bg-gray-50 min-h-screen">
+    <div class="py-7 bg-gray-50 dark:bg-gray-50 min-h-screen">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white  overflow-hidden shadow-lg sm:rounded-lg p-6">
-                {{-- The main title and description are now in the header slot for better visual hierarchy --}}
+            <div class="bg-white overflow-hidden shadow-lg sm:rounded-lg p-6">
                 <h2 class="text-3xl font-bold mb-4 text-gray-900 dark:text-gray-700">Neueste Anzeigen nach Kategorie
                 </h2>
                 <p class="text-md text-gray-500 dark:text-gray-800 mb-8">
                     Entdecke die neuesten Angebote, übersichtlich nach Kategorien geordnet.
                 </p>
 
+                @php
+                    $categoryBackgrounds = [
+                        'fahrzeuge' => '/storage/images/car.jpg',
+                        'fahrzeugeteile' => '/storage/images/parts.jpg',
+                        'boote' => '/storage/images/boats.jpg',
+                        'elektronik' => '/storage/images/tv.jpg',
+                        'haushalt' => '/storage/images/car.jpg',
+                        'immobilien' => '/storage/images/car.jpg',
+                        'dienstleistungen' => '/storage/images/car.jpg',
+                        'sonstiges' => '/storage/images/car.jpg',
+                        // Add more mappings for your other categories
+                    ];
+                @endphp
+
                 @forelse ($adsByCategory as $categorySlug => $ads)
                     @if ($ads->isNotEmpty())
-                        <div class="mb-12 border-b border-gray-200 dark:border-gray-700 pb-8 last:border-b-0 last:pb-0">
-                            <h4 class="text-2xl font-bold text-gray-800 dark:text-gray-800 mb-6 capitalize flex items-center">
-                                {{-- Dynamically get category name, fallback to slug --}}
-                                @php
-                                    $categoryName = $categories->firstWhere('slug', $categorySlug)->name ?? ucfirst($categorySlug);
-                                    // You can add category-specific icons here if desired, e.g., using a switch statement
-                                @endphp
-                                {{ $categoryName }}
-                                <a href="{{ route('categories.show', $categorySlug) }}"
-                                    class="ml-auto text-blue-600 hover:text-blue-800 text-base font-semibold transition-colors duration-200">Alle
-                                    anzeigen &rarr;</a>
-                            </h4>
-                            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-                                @foreach ($ads as $ad)
-                                    {{-- Changed card background to be pure white in both light and dark mode for maximum lightness
-                                    --}}
-                                    <div
-                                        class="bg-white dark:bg-white rounded-lg shadow-md overflow-hidden transform transition-all duration-300 hover:scale-105 hover:shadow-xl">
-                                        @php
-                                            $imageUrl = 'https://placehold.co/400x250/E0E0E0/6C6C6C?text=No+Image';
-                                            if (!empty($ad->images) && is_array($ad->images) && count($ad->images) > 0) {
-                                                $imageUrl = asset('storage/' . $ad->images[0]);
-                                            } elseif (!empty($ad->images) && is_string($ad->images)) {
-                                                $imageUrl = asset('storage/' . $ad->images);
-                                            } elseif ($ad instanceof \App\Models\RealEstate) {
-                                                if (!empty($ad->grundriss_path)) {
-                                                    $imageUrl = asset('storage/' . $ad->grundriss_path);
-                                                } elseif (!empty($ad->energieausweis_path)) {
-                                                    $imageUrl = asset('storage/' . $ad->energieausweis_path);
+                        @php
+                            $categoryName = $categories->firstWhere('slug', $categorySlug)->name ?? ucfirst($categorySlug);
+                            $backgroundImage = $categoryBackgrounds[$categorySlug] ?? 'https://placehold.co/1200x200/F0F0F0/8C8C8C?text=Category+Banner';
+                        @endphp
+                        <div class="mb-12 pb-8 last:border-b-0 last:pb-0 relative overflow-hidden rounded-lg shadow-md">
+                            {{-- Thin navbar with background image --}}
+                            <div class="relative h-24 bg-cover bg-center flex items-center p-6 rounded-t-lg"
+                                style="background-image: url('{{ $backgroundImage }}');">
+                                <div class="absolute inset-0 bg-black opacity-30 rounded-t-lg"></div> {{-- Dark overlay --}}
+                                <h4 class="relative z-10 text-2xl font-bold text-white capitalize flex items-center w-full">
+                                    {{ $categoryName }}
+                                    <a href="{{ route('categories.show', $categorySlug) }}"
+                                        class="ml-auto text-white hover:text-blue-200 text-base font-semibold transition-colors duration-200 flex items-center gap-1">
+                                        Alle anzeigen
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M17.25 8.25L21 12m0 0l-3.75 3.75M21 12H3" />
+                                        </svg>
+                                    </a>
+                                </h4>
+                            </div>
+                            <div class="bg-white dark:bg-white p-6 rounded-b-lg"> {{-- Content below the navbar --}}
+                                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                                    @foreach ($ads as $ad)
+                                        <div
+                                            class="bg-white dark:bg-white rounded-lg shadow-md overflow-hidden transform transition-all duration-300 hover:scale-105 hover:shadow-xl">
+                                            @php
+                                                $imageUrl = 'https://placehold.co/400x250/E0E0E0/6C6C6C?text=No+Image';
+                                                if (!empty($ad->images) && is_array($ad->images) && count($ad->images) > 0) {
+                                                    $imageUrl = asset('storage/' . $ad->images[0]);
+                                                } elseif (!empty($ad->images) && is_string($ad->images)) {
+                                                    $imageUrl = asset('storage/' . $ad->images);
+                                                } elseif ($ad instanceof \App\Models\RealEstate) {
+                                                    if (!empty($ad->grundriss_path)) {
+                                                        $imageUrl = asset('storage/' . $ad->grundriss_path);
+                                                    } elseif (!empty($ad->energieausweis_path)) {
+                                                        $imageUrl = asset('storage/' . $ad->energieausweis_path);
+                                                    }
                                                 }
-                                            }
-                                        @endphp
-                                        <img src="{{ $imageUrl }}" alt="{{ $ad->title ?? 'Anzeige' }}"
-                                            class="w-full h-40 object-cover rounded-t-lg">
-                                        <div class="p-4">
-                                            {{-- Adjusted text colors for better contrast on pure white background in dark mode --}}
-                                            <h4 class="text-lg font-bold text-gray-900 dark:text-gray-900 mb-1 truncate">
-                                                {{ $ad->title }}</h4>
-                                            <p class="text-sm text-gray-600 dark:text-gray-700 mb-2 line-clamp-2">
-                                                {{ $ad->description }}</p>
-                                            @if (isset($ad->price) && $ad->price !== null)
-                                                <p class="text-xl font-extrabold text-blue-600 dark:text-blue-600 mb-2">
-                                                    {{ number_format($ad->price, 2, ',', '.') }} €</p>
-                                            @elseif (isset($ad->price_from) && $ad->price_from !== null)
-                                                <p class="text-xl font-extrabold text-blue-600 dark:text-blue-600 mb-2">
-                                                    {{ number_format($ad->price_from, 2, ',', '.') }} €</p>
-                                            @elseif (isset($ad->gesamtmiete) && $ad->gesamtmiete !== null)
-                                                <p class="text-xl font-extrabold text-blue-600 dark:text-blue-600 mb-2">
-                                                    {{ number_format($ad->gesamtmiete, 2, ',', '.') }} €</p>
-                                            @else
-                                                <p class="text-base text-gray-500 dark:text-gray-600 mb-2">Preis auf Anfrage</p>
-                                            @endif
+                                            @endphp
+                                            <img src="{{ $imageUrl }}" alt="{{ $ad->title ?? 'Anzeige' }}"
+                                                class="w-full h-40 object-cover rounded-t-lg">
+                                            <div class="p-4">
+                                                <h4 class="text-lg font-bold text-gray-900 dark:text-gray-900 mb-1 truncate">
+                                                    {{ $ad->title }}</h4>
+                                                <p class="text-sm text-gray-600 dark:text-gray-700 mb-2 line-clamp-2">
+                                                    {{ $ad->description }}</p>
+                                                @if (isset($ad->price) && $ad->price !== null)
+                                                    <p class="text-xl font-extrabold text-blue-600 dark:text-blue-600 mb-2">
+                                                        {{ number_format($ad->price, 2, ',', '.') }} €</p>
+                                                @elseif (isset($ad->price_from) && $ad->price_from !== null)
+                                                    <p class="text-xl font-extrabold text-blue-600 dark:text-blue-600 mb-2">
+                                                        {{ number_format($ad->price_from, 2, ',', '.') }} €</p>
+                                                @elseif (isset($ad->gesamtmiete) && $ad->gesamtmiete !== null)
+                                                    <p class="text-xl font-extrabold text-blue-600 dark:text-blue-600 mb-2">
+                                                        {{ number_format($ad->gesamtmiete, 2, ',', '.') }} €</p>
+                                                @else
+                                                    <p class="text-base text-gray-500 dark:text-gray-600 mb-2">Preis auf Anfrage</p>
+                                                @endif
 
-                                            <div class="flex items-center text-xs text-gray-500 dark:text-gray-700 mt-2">
-                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1 text-gray-400"
-                                                    fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                        d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                        d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                                                </svg>
-                                                <span>{{ $ad->ort ?? $ad->region ?? 'Unbekannter Ort' }}</span>
-                                            </div>
-                                            <div class="flex items-center text-xs text-gray-500 dark:text-gray-700 mt-1">
-                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1 text-gray-400"
-                                                    fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                        d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                                                </svg>
-                                                <span>{{ $ad->created_at->diffForHumans() }}</span>
-                                            </div>
-                                            <div class="mt-4">
-                                                <a href="#"
-                                                    class="inline-block bg-blue-600 text-white px-4 py-2 rounded-md text-sm font-semibold hover:bg-blue-700 transition-colors duration-300 shadow-sm hover:shadow-md">Details
-                                                    ansehen</a>
+                                                <div class="flex items-center text-xs text-gray-500 dark:text-gray-700 mt-2">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1 text-gray-400"
+                                                        fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                            d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                            d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                                                    </svg>
+                                                    <span>{{ $ad->ort ?? $ad->region ?? 'Unbekannter Ort' }}</span>
+                                                </div>
+                                                <div class="flex items-center text-xs text-gray-500 dark:text-gray-700 mt-1">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1 text-gray-400"
+                                                        fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                            d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                                    </svg>
+                                                    <span>{{ $ad->created_at->diffForHumans() }}</span>
+                                                </div>
+                                                <div class="mt-4">
+                                                    @php
+                                                        $adRouteName = null;
+                                                        $adParam = $ad->id;
+
+                                                        if ($ad instanceof \App\Models\Vehicle) {
+                                                            $adRouteName = 'categories.fahrzeuge.show';
+                                                            $adParamName = 'vehicle';
+                                                        } elseif ($ad instanceof \App\Models\Boat) {
+                                                            $adRouteName = 'categories.boote.show';
+                                                            $adParamName = 'boat';
+                                                        } elseif ($ad instanceof \App\Models\Camper) {
+                                                            $adRouteName = 'categories.camper.show';
+                                                            $adParamName = 'camper';
+                                                        } elseif ($ad instanceof \App\Models\CommercialVehicle) {
+                                                            $adRouteName = 'categories.commercial-vehicles.show';
+                                                            $adParamName = 'commercial_vehicle';
+                                                        } elseif ($ad instanceof \App\Models\Electronic) {
+                                                            $adRouteName = 'categories.elektronik.show';
+                                                            $adParamName = 'electronic';
+                                                        } elseif ($ad instanceof \App\Models\HouseholdItem) {
+                                                            $adRouteName = 'categories.haushalt.show';
+                                                            $adParamName = 'householdItem'; 
+                                                        } elseif ($ad instanceof \App\Models\MotorradAd) {
+                                                            $adRouteName = 'categories.motorrad.show';
+                                                            $adParamName = 'motorrad_ad';
+                                                        } elseif ($ad instanceof \App\Models\Other) {
+                                                            $adRouteName = 'categories.others.show';
+                                                            $adParamName = 'other';
+                                                        } elseif ($ad instanceof \App\Models\RealEstate) {
+                                                            $adRouteName = 'categories.immobilien.show';
+                                                            $adParamName = 'real_estate';
+                                                        } elseif ($ad instanceof \App\Models\Service) {
+                                                            $adRouteName = 'categories.dienstleistungen.show';
+                                                            $adParamName = 'service';
+                                                        } elseif ($ad instanceof \App\Models\UsedVehiclePart) {
+                                                            $adRouteName = 'categories.used-vehicle-parts.show';
+                                                            $adParamName = 'used_vehicle_part';
+                                                        } else {
+                                                            $adRouteName = 'ads.show';
+                                                            $adParamName = 'ad';
+                                                        }
+                                                    @endphp
+
+                                                    @if ($adRouteName)
+                                                        <a href="{{ route($adRouteName, [$adParamName => $adParam]) }}"
+                                                            class="inline-block bg-blue-600 text-white px-4 py-2 rounded-md text-sm font-semibold hover:bg-blue-700 transition-colors duration-300 shadow-sm hover:shadow-md">Details
+                                                            ansehen</a>
+                                                    @else
+                                                        <span
+                                                            class="inline-block bg-gray-400 text-white px-4 py-2 rounded-md text-sm font-semibold">Details
+                                                            (N/A)</span>
+                                                    @endif
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-                                @endforeach
+                                    @endforeach
+                                </div>
                             </div>
                         </div>
                     @endif

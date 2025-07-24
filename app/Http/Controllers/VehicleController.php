@@ -23,11 +23,8 @@ class VehicleController extends Controller
      */
     public function show(Vehicle $vehicle) // Laravel automatically finds the Vehicle by ID from the route wildcard
     {
-        // The $vehicle variable now contains the specific Vehicle model instance
-        // that matches the ID in the URL (e.g., /autos/123 will fetch Vehicle with ID 123)
-
-        // Return a view and pass the vehicle data to it
-        return view('vehicles.show', compact('vehicle'));
+      
+        return view('ads.auto.show', compact('vehicle'));
     }
 
 

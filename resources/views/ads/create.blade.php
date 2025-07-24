@@ -29,7 +29,13 @@
                     <img class="w-48 h-48 object-cover rounded-s-lg  me-4" src="{{ asset('storage/images/car.jpg') }}"
                         alt="Fahrzeuge">
                     <div>
-                        <h3 class="text-lg font-semibold text-gray-800 group-hover:text-blue-700">Fahrzeuge</h3>
+                        <h3 class="text-lg font-semibold text-gray-800 group-hover:text-blue-700 flex items-center gap-2">
+                            Fahrzeuge
+                            {{-- Plus icon for the "Fahrzeuge" modal trigger --}}
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5 text-green-600 group-hover:text-green-700">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                            </svg>
+                        </h3>
                         <p class="text-sm text-gray-500">Wähle eine passende Unterkategorie.</p>
                     </div>
                 </div>
@@ -40,7 +46,13 @@
                     <img src="{{ asset('storage/images/parts.jpg') }}" dir="ltr" alt="Fahrzeugteile"
                         class="w-48 h-48 object-cover rounded-s-lg  me-4">
                     <div>
-                        <h3 class="text-lg font-semibold text-gray-800 group-hover:text-blue-700">Fahrzeugteile</h3>
+                        <h3 class="text-lg font-semibold text-gray-800 group-hover:text-blue-700 flex items-center gap-2">
+                            Fahrzeugteile
+                            {{-- Plus icon for Fahrzeugteile --}}
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5 text-green-600 group-hover:text-green-700">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                            </svg>
+                        </h3>
                         <p class="text-sm text-gray-500">Teile und Zubehör für dein Fahrzeug.</p>
                     </div>
                 </a>
@@ -50,82 +62,105 @@
                     <img src="{{ asset('storage/images/boats.jpg') }}" dir="ltr" alt="boat"
                         class="w-48 h-48 object-cover rounded-s-lg  me-4">
                     <div>
-                        <h3 class="text-lg font-semibold text-gray-800 group-hover:text-blue-700">Boote</h3>
+                        <h3 class="text-lg font-semibold text-gray-800 group-hover:text-blue-700 flex items-center gap-2">
+                            Boote
+                            {{-- Plus icon for Boote --}}
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5 text-green-600 group-hover:text-green-700">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                            </svg>
+                        </h3>
                         <p class="text-sm text-gray-500">Geräte, Zubehör und mehr.</p>
                     </div>
                 </a>
-
-
 
                 <a href="{{ route('ads.electronics.create') }}"
                     class="flex items-center bg-white border border-gray-200 rounded-lg shadow-sm hover:bg-gray-100 transition group">
                     <img src="{{ asset('storage/images/tv.jpg') }}" dir="ltr" alt="electronics"
                         class="w-48 h-48 object-cover rounded-s-lg  me-4">
                     <div>
-                        <h3 class="text-lg font-semibold text-gray-800 group-hover:text-blue-700">Elektronik</h3>
+                        <h3 class="text-lg font-semibold text-gray-800 group-hover:text-blue-700 flex items-center gap-2">
+                            Elektronik
+                            {{-- Plus icon for Elektronik --}}
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5 text-green-600 group-hover:text-green-700">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                            </svg>
+                        </h3>
                         <p class="text-sm text-gray-500">Geräte, Zubehör und mehr.</p>
                     </div>
                 </a>
-
-
 
                 <a href="{{ route('ads.household.create') }}"
                     class="flex items-center bg-white border border-gray-200 rounded-lg shadow-sm hover:bg-gray-100 transition group">
                         <img src="{{ asset('storage/images/chairs.jpg') }}" dir="ltr" alt="electronics"
                         class="w-48 h-48 object-cover rounded-s-lg  me-4">
                     <div>
-                        <h3 class="text-lg font-semibold text-gray-800 group-hover:text-blue-700">Haushalt</h3>
+                        <h3 class="text-lg font-semibold text-gray-800 group-hover:text-blue-700 flex items-center gap-2">
+                            Haushalt
+                            {{-- Plus icon for Haushalt --}}
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5 text-green-600 group-hover:text-green-700">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                            </svg>
+                        </h3>
                         <p class="text-sm text-gray-500">Geräte, Zubehör und mehr.</p>
                     </div>
                 </a>
-
-
 
                 <a href="{{ route('ads.realestate.create') }}"
                     class="flex items-center bg-white border border-gray-200 rounded-lg shadow-sm hover:bg-gray-100 transition group">
-                     <img src="{{ asset('storage/images/real.jpg') }}" dir="ltr" alt="electronics"
+                       <img src="{{ asset('storage/images/real.jpg') }}" dir="ltr" alt="electronics"
                         class="w-48 h-48 object-cover rounded-s-lg  me-4">
                     <div>
-                        <h3 class="text-lg font-semibold text-gray-800 group-hover:text-blue-700">Immobilien</h3>
+                        <h3 class="text-lg font-semibold text-gray-800 group-hover:text-blue-700 flex items-center gap-2">
+                            Immobilien
+                            {{-- Plus icon for Immobilien --}}
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5 text-green-600 group-hover:text-green-700">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                            </svg>
+                        </h3>
                         <p class="text-sm text-gray-500">Geräte, Zubehör und mehr.</p>
                     </div>
                 </a>
-
-
 
                 <a href="{{ route('ads.servises.create') }}"
                     class="flex items-center bg-white border border-gray-200 rounded-lg shadow-sm hover:bg-gray-100 transition group">
                        <img src="{{ asset('storage/images/worker.jpg') }}" dir="ltr" alt="electronics"
                         class="w-48 h-48 object-cover rounded-s-lg  me-4">
                     <div>
-                        <h3 class="text-lg font-semibold text-gray-800 group-hover:text-blue-700">Dienstleistunge</h3>
+                        <h3 class="text-lg font-semibold text-gray-800 group-hover:text-blue-700 flex items-center gap-2">
+                            Dienstleistunge
+                            {{-- Plus icon for Dienstleistunge --}}
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5 text-green-600 group-hover:text-green-700">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                            </svg>
+                        </h3>
                         <p class="text-sm text-gray-500">Geräte, Zubehör und mehr.</p>
                     </div>
                 </a>
-
-
 
                 <a href="{{ route('ads.others.create') }}"
                     class="flex items-center bg-white border border-gray-200 rounded-lg shadow-sm hover:bg-gray-100 transition group">
-                     <img src="{{ asset('storage/images/boxes.jpg') }}" dir="ltr" alt="Sonstiges"
+                       <img src="{{ asset('storage/images/boxes.jpg') }}" dir="ltr" alt="Sonstiges"
                         class="w-48 h-48 object-cover rounded-s-lg  me-4">
                     <div>
-                        <h3 class="text-lg font-semibold text-gray-800 group-hover:text-blue-700">Sonstiges</h3>
+                        <h3 class="text-lg font-semibold text-gray-800 group-hover:text-blue-700 flex items-center gap-2">
+                            Sonstiges
+                            {{-- Plus icon for Sonstiges --}}
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5 text-green-600 group-hover:text-green-700">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                            </svg>
+                        </h3>
                         <p class="text-sm text-gray-500">Geräte, Zubehör und mehr.</p>
                     </div>
                 </a>
 
-                {{-- Προσθέτεις όσες θέλεις... --}}
             </div>
         </div>
 
-        <!-- Modal -->
-    <!-- Modal -->
-<div x-show="showModal" x-cloak
-    class="fixed inset-0 bg-black bg-opacity-60 flex justify-center items-center p-4 z-50 overflow-y-auto"
-    x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0"
-    x-transition:enter-end="opacity-100" x-transition:leave="transition ease-in duration-200"
-    x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0">
+        <div x-show="showModal" x-cloak
+            class="fixed inset-0 bg-black bg-opacity-60 flex justify-center items-center p-4 z-50 overflow-y-auto"
+            x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0"
+            x-transition:enter-end="opacity-100" x-transition:leave="transition ease-in duration-200"
+            x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0">
 
             <div class="bg-white rounded-xl w-full max-w-2xl max-h-[95vh] overflow-y-auto p-8 relative shadow-2xl transform transition-all duration-300"
                 @click.away="closeModal" x-trap.noscroll="showModal"
@@ -154,11 +189,11 @@
                         </a>
                         <a href="{{ route('ads.commercial-vehicles.create') }}"
                           class="flex items-center justify-center gap-2 text-center px-4 py-3 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-100 transition font-medium">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-truck-icon lucide-truck"><path d="M14 18V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v11a1 1 0 0 0 1 1h2"/><path d="M15 18H9"/><path d="M19 18h2a1 1 0 0 0 1-1v-3.65a1 1 0 0 0-.22-.624l-3.48-4.35A1 1 0 0 0 17.52 8H14"/><circle cx="17" cy="18" r="2"/><circle cx="7" cy="18" r="2"/></svg> Nutzfahrzeuge
+                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-truck-icon lucide-truck"><path d="M14 18V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v11a1 1 0 0 0 1 1h2"/><path d="M15 18H9"/><path d="M19 18h2a1 1 0 0 0 1-1v-3.65a1 1 0 0 0-.22-.624l-3.48-4.35A1 1 0 0 0 17.52 8H14"/><circle cx="17" cy="18" r="2"/><circle cx="7" cy="18" r="2"/></svg> Nutzfahrzeuge
                         </a>
                         <a href="{{ route('ads.camper.create') }}"
-                             class="flex items-center justify-center gap-2 text-center px-4 py-3 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-100 transition font-medium">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-bus-icon lucide-bus"><path d="M8 6v6"/><path d="M15 6v6"/><path d="M2 12h19.6"/><path d="M18 18h3s.5-1.7.8-2.8c.1-.4.2-.8.2-1.2 0-.4-.1-.8-.2-1.2l-1.4-5C20.1 6.8 19.1 6 18 6H4a2 2 0 0 0-2 2v10h3"/><circle cx="7" cy="18" r="2"/><path d="M9 18h5"/><circle cx="16" cy="18" r="2"/></svg> Wohnmobile
+                               class="flex items-center justify-center gap-2 text-center px-4 py-3 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-100 transition font-medium">
+                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-bus-icon lucide-bus"><path d="M8 6v6"/><path d="M15 6v6"/><path d="M2 12h19.6"/><path d="M18 18h3s.5-1.7.8-2.8c.1-.4.2-.8.2-1.2 0-.4-.1-.8-.2-1.2l-1.4-5C20.1 6.8 19.1 6 18 6H4a2 2 0 0 0-2 2v10h3"/><circle cx="7" cy="18" r="2"/><path d="M9 18h5"/><circle cx="16" cy="18" r="2"/></svg> Wohnmobile
                         </a>
                     </div>
                 </div>
