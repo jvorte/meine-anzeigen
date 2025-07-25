@@ -1,8 +1,8 @@
 <x-app-layout>
-  {{-- ----------------------------------breadcrumbs --------------------------------------------------- --}}
+    {{-- ----------------------------------breadcrumbs --------------------------------------------------- --}}
     <x-slot name="header">
         <h2 class="text-3xl font-extrabold text-gray-900 leading-tight mb-2">
-         Autos Anzeigen
+         {{ $category->name }}
         </h2>
         <p class="text-md text-gray-700 dark:text-gray-500">
             Wähle eine passende Kategorie und fülle die erforderlichen Felder aus, um deine Anzeige zu erstellen.
@@ -14,10 +14,13 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             {{-- Breadcrumbs component --}}
             <x-breadcrumbs :items="[
-        ['label' => 'Autos Anzeigen', 'url' => route('ads.create')],
-        // ['label' => 'Neue Auto Anzeige', 'url' => route('ads.create')],
-    ]" />
-
+                // This breadcrumb points to a generic 'create ad' page.
+                // If this page is specifically for listing 'Autos', then 'ads.create' might be misleading.
+                // Consider changing if 'ads.create' takes you to a selection page,
+                // and you want a direct link to create a car ad: route('ads.cars.create')
+                ['label' => 'Alle Anzeigen', 'url' => route('ads.index')], // A more general link for 'All Ads'
+                ['label' => $category->name, 'url' => route('categories.show', $category->slug)], // Current category
+            ]" />
         </div>
     </div>
 
@@ -37,29 +40,39 @@
                 {{-- Conditional rendering based on the category slug --}}
                 @php
                     $ads = collect(); // Initialize an empty collection
-                    if ($category->slug == 'fahrzeuge') {
-                        $ads = \App\Models\Vehicle::orderBy('created_at', 'desc')->paginate(12);
+
+                    // --- IMPORTANT CHANGES HERE ---
+                    // 1. Changed 'fahrzeuge' to 'cars' for the slug.
+                    // 2. Changed \App\Models\Vehicle::class to \App\Models\Car::class.
+                    // 3. Added ->with('images') to eager load images for all models,
+                    //    as the loop later accesses $ad->images.
+                    if ($category->slug == 'cars') { // Changed from 'fahrzeuge'
+                        $ads = \App\Models\Car::with('images')->orderBy('created_at', 'desc')->paginate(12); // Changed from Vehicle
                     } elseif ($category->slug == 'boote') {
-                        $ads = \App\Models\Boat::orderBy('created_at', 'desc')->paginate(12);
+                        $ads = \App\Models\Boat::with('images')->orderBy('created_at', 'desc')->paginate(12);
                     } elseif ($category->slug == 'fahrzeugeteile') {
-                        $ads = \App\Models\Part::orderBy('created_at', 'desc')->paginate(12);
+                        // Assuming Part is for generic parts, UsedVehiclePart is for specific "used vehicle parts"
+                        // Based on your imports in DashboardController, UsedVehiclePart was explicitly used for 'fahrzeugeteile'
+                        $ads = \App\Models\UsedVehiclePart::with('images')->orderBy('created_at', 'desc')->paginate(12);
                     } elseif ($category->slug == 'elektronik') {
-                        $ads = \App\Models\Electronic::orderBy('created_at', 'desc')->paginate(12);
+                        $ads = \App\Models\Electronic::with('images')->orderBy('created_at', 'desc')->paginate(12);
                     } elseif ($category->slug == 'haushalt') {
-                        $ads = \App\Models\HouseholdItem::orderBy('created_at', 'desc')->paginate(12);
+                        $ads = \App\Models\HouseholdItem::with('images')->orderBy('created_at', 'desc')->paginate(12);
                     } elseif ($category->slug == 'immobilien') {
-                        $ads = \App\Models\RealEstate::orderBy('created_at', 'desc')->paginate(12);
+                        $ads = \App\Models\RealEstate::with('images')->orderBy('created_at', 'desc')->paginate(12);
                     } elseif ($category->slug == 'dienstleistungen') {
-                        $ads = \App\Models\Service::orderBy('created_at', 'desc')->paginate(12);
+                        $ads = \App\Models\Service::with('images')->orderBy('created_at', 'desc')->paginate(12);
                     } elseif ($category->slug == 'sonstiges') {
-                        $ads = \App\Models\Other::orderBy('created_at', 'desc')->paginate(12);
-                    }elseif ($category->slug == 'motorrad') { // Using 'motorrad' as per your INSERT
-    $ads = \App\Models\Motorcycle::orderBy('created_at', 'desc')->paginate(12); // Adjust 'Motorcycle' to your actual model name
-} elseif ($category->slug == 'nutzfahrzeuge') {
-    $ads = \App\Models\CommercialVehicle::orderBy('created_at', 'desc')->paginate(12); // Adjust 'CommercialVehicle'
-} elseif ($category->slug == 'wohnmobile') {
-    $ads = \App\Models\RV::orderBy('created_at', 'desc')->paginate(12); // Adjust 'RV' or 'Camper'
-}
+                        $ads = \App\Models\Other::with('images')->orderBy('created_at', 'desc')->paginate(12);
+                    } elseif ($category->slug == 'motorrad') {
+                        // Changed from Motorcycle to MotorradAd as per your controller imports
+                        $ads = \App\Models\MotorradAd::with('images')->orderBy('created_at', 'desc')->paginate(12);
+                    } elseif ($category->slug == 'nutzfahrzeuge') {
+                        $ads = \App\Models\CommercialVehicle::with('images')->orderBy('created_at', 'desc')->paginate(12);
+                    } elseif ($category->slug == 'wohnmobile') {
+                        // Changed from RV to Camper as per your controller imports
+                        $ads = \App\Models\Camper::with('images')->orderBy('created_at', 'desc')->paginate(12);
+                    }
                 @endphp
 
                 @if ($ads->isEmpty())
@@ -68,24 +81,21 @@
                     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
                         @foreach ($ads as $ad)
                             <div class="bg-white dark:bg-white rounded-lg shadow-md overflow-hidden transform transition-all duration-300 hover:scale-105 hover:shadow-xl">
-                                                           @php
-                            $imageUrl = 'https://placehold.co/400x250/E0E0E0/6C6C6C?text=No+Image'; // Default placeholder
+                                @php
+                                    $imageUrl = 'https://placehold.co/400x250/E0E0E0/6C6C6C?text=No+Image'; // Default placeholder
 
-                            // Check if the 'images' relationship is loaded and contains images
-                            if ($ad->relationLoaded('images') && $ad->images->isNotEmpty()) {
-                                // Option 1: Try to find an image marked as a thumbnail first
-                                $thumbnailImage = $ad->images->firstWhere('is_thumbnail', true);
+                                    if ($ad->relationLoaded('images') && $ad->images->isNotEmpty()) {
+                                        $thumbnailImage = $ad->images->firstWhere('is_thumbnail', true);
 
-                                if ($thumbnailImage) {
-                                    $imageUrl = asset('storage/' . $thumbnailImage->path);
-                                } else {
-                                    // Option 2: If no thumbnail, just use the first available image
-                                    $imageUrl = asset('storage/' . $ad->images->first()->path);
-                                }
-                            }
-                        @endphp
-                        <img src="{{ $imageUrl }}" alt="{{ $ad->title ?? 'Anzeige' }}"
-                            class="w-full h-40 object-cover rounded-t-lg">
+                                        if ($thumbnailImage) {
+                                            $imageUrl = asset('storage/' . $thumbnailImage->path);
+                                        } else {
+                                            $imageUrl = asset('storage/' . $ad->images->first()->path);
+                                        }
+                                    }
+                                @endphp
+                                <img src="{{ $imageUrl }}" alt="{{ $ad->title ?? 'Anzeige' }}"
+                                    class="w-full h-40 object-cover rounded-t-lg">
                                 <div class="p-4">
                                     <h4 class="text-lg font-bold text-gray-900 dark:text-gray-900 mb-1 truncate">{{ $ad->title }}</h4>
                                     <p class="text-sm text-gray-600 dark:text-gray-700 mb-2 line-clamp-2">{{ $ad->description }}</p>
@@ -111,8 +121,8 @@
                                         {{-- Dynamic route for ad details based on category slug --}}
                                         @php
                                             $detailRoute = '#'; // Default fallback
-                                            if ($category->slug == 'fahrzeuge') {
-                                                $detailRoute = route('categories.fahrzeuge.show', $ad);
+                                            if ($category->slug == 'cars') { // Changed from 'fahrzeuge'
+                                                $detailRoute = route('categories.cars.show', $ad); // Changed from 'fahrzeuge'
                                             } elseif ($category->slug == 'boote') {
                                                 $detailRoute = route('categories.boote.show', $ad);
                                             } elseif ($category->slug == 'fahrzeugeteile') {
@@ -127,6 +137,12 @@
                                                 $detailRoute = route('categories.dienstleistungen.show', $ad);
                                             } elseif ($category->slug == 'sonstiges') {
                                                 $detailRoute = route('categories.sonstiges.show', $ad);
+                                            } elseif ($category->slug == 'motorrad') {
+                                                $detailRoute = route('categories.motorrad.show', $ad);
+                                            } elseif ($category->slug == 'nutzfahrzeuge') {
+                                                $detailRoute = route('categories.nutzfahrzeuge.show', $ad);
+                                            } elseif ($category->slug == 'wohnmobile') {
+                                                $detailRoute = route('categories.wohnmobile.show', $ad);
                                             }
                                         @endphp
                                         <a href="{{ $detailRoute }}" class="inline-block bg-blue-600 text-white px-4 py-2 rounded-md text-sm font-semibold hover:bg-blue-700 transition-colors duration-300 shadow-sm hover:shadow-md">Details ansehen</a>
