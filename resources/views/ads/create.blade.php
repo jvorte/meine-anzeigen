@@ -6,6 +6,7 @@
         <p class="text-md text-gray-700 dark:text-gray-500">
             Wähle eine passende Kategorie und fülle die erforderlichen Felder aus, um deine Anzeige zu erstellen.
         </p>
+        
     </x-slot>
 
     <div class="py-8 lg:py-12" x-data="{
@@ -209,7 +210,7 @@
                                 <path d="M9 17h6" />
                                 <circle cx="17" cy="17" r="2" />
                             </svg>
-                            <span>Autos</span>
+                            <span>+Autos</span>
                         </a>
                         <a href="{{ route('ads.motorrad.create') }}"
                             class="flex flex-col items-center p-4 rounded-lg border border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200 text-gray-700 dark:text-gray-200 font-medium">
@@ -223,7 +224,7 @@
                                 <path d="M9 6l-2 4" />
                                 <path d="M12 7v4" />
                             </svg>
-                            <span>Motorräder</span>
+                            <span>+Motorräder</span>
                         </a>
                         <a href="{{ route('ads.commercial-vehicles.create') }}"
                             class="flex flex-col items-center p-4 rounded-lg border border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200 text-gray-700 dark:text-gray-200 font-medium">
@@ -237,7 +238,7 @@
                                 <circle cx="17" cy="18" r="2" />
                                 <circle cx="7" cy="18" r="2" />
                             </svg>
-                            <span>Nutzfahrzeuge</span>
+                            <span>+Nutzfahrzeuge</span>
                         </a>
                         <a href="{{ route('ads.camper.create') }}"
                             class="flex flex-col items-center p-4 rounded-lg border border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200 text-gray-700 dark:text-gray-200 font-medium">
@@ -253,7 +254,7 @@
                                 <path d="M12 10h.01" />
                                 <path d="M20 20v2" />
                             </svg>
-                            <span>Wohnmobile</span>
+                            <span>+Wohnmobile</span>
                         </a>
                     </div>
                 </div>

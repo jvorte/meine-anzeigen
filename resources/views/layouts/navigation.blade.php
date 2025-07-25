@@ -120,7 +120,7 @@
 
 
 
-
+{{-- new part second navbar --}}
 
         <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
       {{-- Updated Header Section with Gradient and Prominent CTA --}}
@@ -194,6 +194,12 @@
                                 <h3 class="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-4">Fahrzeugkategorien</h3>
 
                                 <div class="grid grid-cols-2 gap-4">
+                                            {{-- Link to generic Fahrzeuge page, if you still want one for "all vehicles" --}}
+                                    <a href="{{ route('categories.show', 'fahrzeuge') }}"
+                                        class="flex flex-col items-center p-4 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200 text-gray-700 dark:text-gray-200">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-square-parking mb-2"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M9 17V7H7.8C7.1 7 6.5 7.5 6.5 8.2V10c0 .7.6 1.2 1.3 1.2H10V17"/><path d="M13 17V7h4"/></svg>
+                                        <span>Autos</span> 
+                                    </a>
                                     {{-- Sub-category links for Fahrzeuge. Only include the actual sub-categories for vehicles. --}}
                                     {{-- Make sure your $categories collection passed from the controller includes these slugs --}}
                                     @foreach ($categories->whereIn('slug', ['motorrad', 'nutzfahrzeuge', 'wohnmobile']) as $subCat)
@@ -210,12 +216,7 @@
                                         </a>
                                     @endforeach
 
-                                    {{-- Link to generic Fahrzeuge page, if you still want one for "all vehicles" --}}
-                                    <a href="{{ route('categories.show', 'fahrzeuge') }}"
-                                        class="flex flex-col items-center p-4 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200 text-gray-700 dark:text-gray-200">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-square-parking mb-2"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M9 17V7H7.8C7.1 7 6.5 7.5 6.5 8.2V10c0 .7.6 1.2 1.3 1.2H10V17"/><path d="M13 17V7h4"/></svg>
-                                        <span>Autos</span> 
-                                    </a>
+                            
                                 </div>
 
                                 {{-- Close button --}}
