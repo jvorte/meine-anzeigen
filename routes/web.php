@@ -122,7 +122,7 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/realestate', [RealEstateController::class, 'store'])->name('ads.realestate.store');
 
     // Services - Fixed typo 'servises' to 'services'
-    Route::get('/ads/services/create', [ServiceController::class, 'create'])->name('ads.services.create');
+   Route::get('/ads/services/create', [ServiceController::class, 'create'])->name('ads.services.create'); // <-- CORRECTED NAME
     // Consider if this should be /ads/services for consistency or if /services is a top-level resource
     Route::post('/services', [ServiceController::class, 'store'])->name('ads.services.store');
 
