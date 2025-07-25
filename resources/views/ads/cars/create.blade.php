@@ -28,7 +28,7 @@
 
     <div class="max-w-6xl mx-auto p-6 bg-white rounded-lg shadow-xl my-6">
 
-        <form method="POST" action="{{ route('ads.fahrzeuge.store') }}" enctype="multipart/form-data" class="space-y-8">
+        <form method="POST" action="{{ route('ads.cars.store') }}" enctype="multipart/form-data" class="space-y-8">
             @csrf
 
             {{-- Vehicle Details Section (Marke & Modell) --}}
