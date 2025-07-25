@@ -1,10 +1,29 @@
 {{-- resources/views/ads/services/create.blade.php --}}
 <x-app-layout>
-    <x-slot name="header">
-        <h2 class="text-xl font-semibold text-gray-800 leading-tight">
-            Neue Anzeige: Dienstleistung erstellen
+
+
+           {{-- -----------------------------------breadcrumbs ---------------------------------------------- --}}
+   <x-slot name="header">
+        <h2 class="text-3xl font-extrabold text-gray-900 leading-tight mb-2">
+           Neue Dienstleistung Anzeige erstellen
         </h2>
+        <p class="text-md text-gray-700 dark:text-gray-500">
+            Wähle eine passende Kategorie und fülle die erforderlichen Felder aus, um deine Anzeige zu erstellen.
+        </p>
+
     </x-slot>
+
+    <div class="py-2">
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+            {{-- Breadcrumbs component --}}
+            <x-breadcrumbs :items="[
+        ['label' => 'Anzeige erstellen', 'url' => route('ads.create')],
+        ['label' =>'Neue Dienstleistung Anzeige', 'url' => route('ads.create')],
+    ]" />
+
+        </div>
+    </div>
+{{-- --------------------------------------------------------------------------------- --}}
 
     <div class="max-w-6xl mx-auto p-6 bg-white rounded-lg shadow-xl mt-6">
 
