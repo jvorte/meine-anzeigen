@@ -1,6 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
-               <div class="px-4 py-1 md:py-1 flex justify-end items-center">
+
+        <div class="px-4 py-1 md:py-1 flex justify-end items-center">
             <a href="{{ route('ads.create') }}"
                 class="inline-flex items-center px-6 py-3 border border-transparent text-base font-semibold rounded-full shadow-lg text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-all duration-300 transform hover:scale-105">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
@@ -9,6 +10,14 @@
                 </svg>
                 Neu Anzeige
             </a>
+        </div>
+    <div class="py-1">
+        <div class="max-w-8xl mx-auto sm:px-6 lg:px-1">
+            {{-- Breadcrumbs component --}}
+            <x-breadcrumbs :items="[
+   
+    ]" />
+
         </div>
     </x-slot>
 

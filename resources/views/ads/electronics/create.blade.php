@@ -13,8 +13,8 @@
 
     </x-slot>
 
-    <div class="py-2">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+    <div class="py-1">
+        <div class="max-w-8xl mx-auto sm:px-6 lg:px-1">
             {{-- Breadcrumbs component --}}
             <x-breadcrumbs :items="[
         ['label' => 'Anzeige erstellen', 'url' => route('ads.create')],
