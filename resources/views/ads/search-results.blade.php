@@ -1,11 +1,16 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+   
+ <x-breadcrumbs :items="[
+    ['label' => __('Home'), 'url' => route('dashboard')],
+    ['label' => __('Search Results'), 'url' => route('ads.search', ['query' => $query])],
+]" />
+     <h1 class="font-semibold text-xl text-gray-800 leading-tight my-2">
             Suchergebnisse für: "{{ $query }}"
-        </h2>
+        </h1>
     </x-slot>
 
-    <div class="py-12">
+    <div class="py-5">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg p-6 text-gray-900 dark:text-gray-100">
 
@@ -78,11 +83,9 @@
                                                 <h4 class="font-semibold text-lg">{{ $item->title ?? 'Kein Titel' }}</h4>
                                                 <p class="text-gray-600 dark:text-gray-400 line-clamp-2">{{ $item->description ?? 'Keine Beschreibung' }}</p>
                                             @endif
-                                            
+
                                             {{-- Link to view item details (check if route exists before linking) --}}
                                             @if (isset($itemShowRoutes[$type]))
-                                                {{-- The second parameter for route() should match the route's wildcard name.
-                                                     For example, 'categories.fahrzeuge.show' expects a 'vehicle' parameter. --}}
                                                 @php
                                                     $paramName = match($type) {
                                                         'vehicles' => 'vehicle',
@@ -97,7 +100,7 @@
                                                         'commercial_vehicles' => 'commercialVehicle',
                                                         'campers' => 'camper',
                                                         'categories' => 'slug', // Use slug for categories route
-                                                        'users' => 'id', // Assuming profile.edit uses ID, adjust if it's different
+                                                        'users' => 'user', // Assuming users route uses 'user' as param name, adjust if it's 'id'
                                                         default => 'id', // Fallback
                                                     };
                                                     // For categories.show, you're using 'slug', so we need to pass the category's slug.
