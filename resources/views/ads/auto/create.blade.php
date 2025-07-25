@@ -2,15 +2,33 @@
 <x-app-layout>
 
 
-<x-slot name="header" class=" mx-8">
-    <div class="flex items-center justify-between w-full"> 
-        <h2 class="text-xl font-semibold text-gray-800 leading-tight">
-            Neue Anzeige: Auto erstellen
-        </h2> 
-        {{-- Add a fallback for url()->previous() --}}
-        <a href="{{ url()->previous() ?: route('dashboard') }}" class="underline decoration-red-500">zurück</a>
+ {{-- <x-slot name="header">
+        <div class="flex items-center justify-between w-full"> 
+            <h2 class="text-xl font-semibold text-gray-800 leading-tight">
+                Neue Anzeige: Auto erstellen
+            </h2> 
+            <a href="{{ url()->previous() ?: route('dashboard') }}" class="underline decoration-red-500">zurück</a>
+        </div>
+    </x-slot> --}}
+
+    <div class="py-4">
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+            {{-- Breadcrumbs component --}}
+            <x-breadcrumbs :items="[
+                ['label' => 'Anzeigen', 'url' => route('ads.index')], // Assuming an 'ads.index' route
+                ['label' => 'Neue Anzeige', 'url' => route('ads.create')],
+            ]" />
+
+            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg mt-4">
+                <div class="p-6 text-gray-900">
+                    {{-- Your ad creation form goes here --}}
+                    <h3>Create Your New Ad</h3>
+                    <form action="..." method="POST">
+                        </form>
+                </div>
+            </div>
+        </div>
     </div>
-</x-slot>
 
     <div class="max-w-6xl mx-auto p-6 bg-white rounded-lg shadow-xl my-6">
 

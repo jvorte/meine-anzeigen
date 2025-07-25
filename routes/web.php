@@ -2,7 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\AdController;
+use App\Http\Controllers\AdController; // This controller will handle ads.index
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\VehicleController;
@@ -71,14 +71,24 @@ Route::middleware(['auth'])->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
-    // Generic Ad Creation (if this is a selection page for ad type) - MOVED BEFORE ads.show
+    // !!! IMPORTANT: Add the ads.index route here !!!
+    // This route will handle the listing of ads, often for the authenticated user.
+    Route::get('/ads', [AdController::class, 'index'])->name('ads.index');
+
+
+    // Generic Ad Creation (if this is a selection page for ad type)
+    // Keep this explicitly defined. Place it AFTER ads.index if ads.index is just a list.
+    // If /ads/create is the first step in a multi-step ad creation process,
+    // ensure it's defined before more generic {ad} routes.
     Route::get('/ads/create', [AdController::class, 'create'])->name('ads.create');
 
-    // Fallback for generic ad show (if ads are not strictly categorized by URL) - MOVED AFTER ads.create
+    // Fallback for generic ad show (if ads are not strictly categorized by URL)
     // This route should only be hit if the URL path is NOT '/ads/create'
     Route::get('/ads/{ad}', [AdController::class, 'show'])->name('ads.show');
 
     // --- Specific Ad Type Creation/Storage Routes ---
+    // These are specific and typically have their own /ads/{type}/create and /ads/{type} routes.
+    // Their more specific paths prevent conflicts with /ads/{ad}.
 
     // Motorrad Ads
     Route::get('/ads/motorrad/create', [MotorradAdController::class, 'create'])->name('ads.motorrad.create');
@@ -110,21 +120,22 @@ Route::middleware(['auth'])->group(function () {
 
     // Real Estate
     Route::get('/ads/real-estate/create', [RealEstateController::class, 'create'])->name('ads.realestate.create');
-    Route::post('/realestate', [RealEstateController::class, 'store'])->name('ads.realestate.store');
+    Route::post('/realestate', [RealEstateController::class, 'store'])->name('ads.realestate.store'); // Note: /realestate, not /ads/realestate
 
     // Services
-    Route::get('/ads/services/create', [ServiceController::class, 'create'])->name('ads.servises.create');
-    Route::post('/services', [ServiceController::class, 'store'])->name('ads.services.store');
+    Route::get('/ads/services/create', [ServiceController::class, 'create'])->name('ads.servises.create'); // Typo here: servises should be services
+    Route::post('/services', [ServiceController::class, 'store'])->name('ads.services.store'); // Note: /services, not /ads/services
 
     // Others
     Route::get('/ads/others/create', [OtherController::class, 'create'])->name('ads.others.create');
-    Route::post('/others', [OtherController::class, 'store'])->name('ads.others.store');
+    Route::post('/others', [OtherController::class, 'store'])->name('ads.others.store'); // Note: /others, not /ads/others
 
     // --- Remaining VehicleController and PartController routes ---
+    // These specific 'create' routes also need to be before /ads/{ad} if they are using '/ads/{something}'
     Route::get('/ads/autos/create', [VehicleController::class, 'createAutos'])->name('ads.autos.create');
     Route::post('/ads/fahrzeuge', [VehicleController::class, 'storeFahrzeuge'])->name('ads.fahrzeuge.store');
-    Route::post('/vehicles', [VehicleController::class, 'store'])->name('vehicles.store'); // Generic vehicle store
-    Route::post('/parts', [PartController::class, 'store'])->name('parts.store'); // Generic parts store
+    Route::post('/vehicles', [VehicleController::class, 'store'])->name('vehicles.store'); // Generic vehicle store - note the URI '/vehicles'
+    Route::post('/parts', [PartController::class, 'store'])->name('parts.store'); // Generic parts store - note the URI '/parts'
     Route::get('/ads/parts/create', [PartController::class, 'create'])->name('ads.parts.create');
 
 });

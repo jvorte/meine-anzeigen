@@ -1,4 +1,5 @@
 <x-app-layout>
+    
     <x-slot name="header">
         <h2 class="text-3xl font-extrabold text-gray-900 leading-tight mb-2">
             Neue Anzeige erstellen
@@ -8,6 +9,19 @@
         </p>
         
     </x-slot>
+
+    <div class="py-2">
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+            {{-- Breadcrumbs component --}}
+            <x-breadcrumbs :items="[
+                ['label' => 'Anzeigen', 'url' => route('ads.index')], // Assuming an 'ads.index' route
+                ['label' => 'Neue Anzeige', 'url' => route('ads.create')],
+            ]" />
+
+         
+        </div>
+    </div>
+
 
     <div class="py-8 lg:py-12" x-data="{
         showModal: false,
