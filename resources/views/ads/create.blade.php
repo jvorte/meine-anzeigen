@@ -142,7 +142,7 @@
                     </div>
                 </a>
 
-                <a href="{{ route('ads.servises.create') }}"
+              <a href="{{ route('ads.services.create') }}"
                     class="flex items-center bg-white border border-gray-200 rounded-lg shadow-sm hover:bg-gray-100 transition group">
                     <img src="{{ asset('storage/images/worker.jpg') }}" dir="ltr" alt="electronics"
                         class="w-48 h-48 object-cover rounded-s-lg me-4">
@@ -212,7 +212,7 @@
                     <div class="grid grid-cols-2 gap-4">
                         {{-- Sub-category links for Fahrzeuge --}}
                         {{-- Note: These routes should lead to the *create* page for each specific vehicle type --}}
-                        <a href="{{ route('ads.autos.create') }}"
+                        <a href="{{ route('ads.cars.create') }}"
                             class="flex flex-col items-center p-4 rounded-lg border border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200 text-gray-700 dark:text-gray-200 font-medium">
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                                 fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
