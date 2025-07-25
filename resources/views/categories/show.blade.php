@@ -2,7 +2,7 @@
     {{-- ----------------------------------breadcrumbs --------------------------------------------------- --}}
     <x-slot name="header">
 
-                  <div class="px-4 py-1 md:py-1 flex justify-end items-center">
+         <div class="px-4 py-1 md:py-1 flex justify-end items-center">
             <a href="{{ route('ads.create') }}"
                 class="inline-flex items-center px-6 py-3 border border-transparent text-base font-semibold rounded-full shadow-lg text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-all duration-300 transform hover:scale-105">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
@@ -12,6 +12,16 @@
                 Neu Anzeige
             </a>
         </div>
+         <div class="py-1">
+        <div class="max-w-8xl mx-auto sm:px-6 lg:px-1">
+            {{-- Breadcrumbs component --}}
+            <x-breadcrumbs :items="[
+          
+                ['label' => 'Alle Anzeigen', 'url' => route('ads.index')], // A more general link for 'All Ads'
+                ['label' => $category->name, 'url' => route('categories.show', $category->slug)], // Current category
+            ]" />
+        </div>
+    </div>
         <h2 class="text-3xl font-extrabold text-gray-900 leading-tight mb-2">
          {{ $category->name }}
         </h2>
@@ -21,16 +31,7 @@
 
     </x-slot>
 
-    <div class="py-2">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            {{-- Breadcrumbs component --}}
-            <x-breadcrumbs :items="[
-          
-                ['label' => 'Alle Anzeigen', 'url' => route('ads.index')], // A more general link for 'All Ads'
-                ['label' => $category->name, 'url' => route('categories.show', $category->slug)], // Current category
-            ]" />
-        </div>
-    </div>
+
 
 {{-- ------------------------------------------------------------------------------------- --}}
 

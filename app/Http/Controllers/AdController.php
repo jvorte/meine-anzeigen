@@ -26,7 +26,7 @@ use Illuminate\Http\Request;
 
 use App\Models\Ad;
 use Illuminate\Support\Facades\Log;
-use App\Models\Vehicle;
+use App\Models\Car;
 class AdController extends Controller
 {
 
@@ -57,7 +57,7 @@ class AdController extends Controller
         // Only perform searches if there's an actual query
         if ($query) {
             // --- Search each ad type table ---
-            $results['vehicles'] = Vehicle::where('title', 'like', $searchTerm)
+            $results['cars'] = Car::where('title', 'like', $searchTerm)
                                          ->orWhere('description', 'like', $searchTerm)
                                          ->get();
 

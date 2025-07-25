@@ -1,6 +1,17 @@
 <x-app-layout>
     
     <x-slot name="header">
+
+         <div class="py-1">
+        <div class="max-w-8xl mx-auto sm:px-6 lg:px-1">
+            {{-- Breadcrumbs component --}}
+            <x-breadcrumbs :items="[
+                ['label' => 'Anzeige erstellen', 'url' => route('ads.index')], // Assuming an 'ads.index' route
+                // ['label' => 'Neue Anzeige', 'url' => route('ads.create')],
+            ]" />
+         
+        </div>
+    </div>
         <h2 class="text-3xl font-extrabold text-gray-900 leading-tight mb-2">
             Neue Anzeige erstellen
         </h2>
@@ -10,16 +21,7 @@
         
     </x-slot>
 
-    <div class="py-2">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            {{-- Breadcrumbs component --}}
-            <x-breadcrumbs :items="[
-                ['label' => 'Anzeige erstellen', 'url' => route('ads.index')], // Assuming an 'ads.index' route
-                // ['label' => 'Neue Anzeige', 'url' => route('ads.create')],
-            ]" />
-         
-        </div>
-    </div>
+
 
 
     <div class="py-3 lg:py-2" x-data="{
