@@ -23,7 +23,7 @@
 
                 @php
                     $categoryBackgrounds = [
-                        'fahrzeuge' => asset('storage/images/cars.jpg'),
+                        'cars' => asset('storage/images/cars.jpg'),
                         'fahrzeugeteile' => asset('storage/images/parts.jpg'),
                         'boote' => asset('storage/images/boats.jpg'),
                         'elektronik' => asset('storage/images/tv.jpg'),
