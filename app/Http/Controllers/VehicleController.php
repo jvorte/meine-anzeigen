@@ -26,6 +26,7 @@ class VehicleController extends Controller
       
         return view('ads.auto.show', compact('vehicle'));
     }
+    
 
 
 public function createAutos()
