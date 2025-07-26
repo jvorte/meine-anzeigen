@@ -18,11 +18,11 @@ class Other extends Model
         'condition',
         'location',
         'contact_phone',
-        // 'images', // <--- DIESE ZEILE ENTFERNEN
+       
     ];
 
     protected $casts = [
-        // 'images' => 'array', // <--- DIESE ZEILE ENTFERNEN
+  
     ];
 
     /**
