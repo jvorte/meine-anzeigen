@@ -131,7 +131,7 @@
                                                         $adRouteName = null;
                                                         $adParam = $ad->id;
 
-                                                        if ($ad instanceof \App\Models\Vehicle) { // Note: If you renamed Vehicle to Car, this should be \App\Models\Car
+                                                        if ($ad instanceof \App\Models\Car) { // Note: If you renamed Vehicle to Car, this should be \App\Models\Car
                                                             $adRouteName = 'categories.fahrzeuge.show';
                                                             $adParamName = 'vehicle';
                                                         } elseif ($ad instanceof \App\Models\Boat) {
