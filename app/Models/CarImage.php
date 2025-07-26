@@ -11,7 +11,7 @@ class CarImage extends Model
 
     protected $fillable = [
         'car_id', // <--- CHANGED: from 'vehicle_id' to 'car_id'
-        'path',
+        'image_path',
     ];
 
     public function car() // <--- CHANGED: method name from 'vehicle' to 'car'

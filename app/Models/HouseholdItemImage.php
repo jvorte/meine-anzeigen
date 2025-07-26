@@ -4,20 +4,15 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo; // Πρόσθεσε αυτή τη γραμμή
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class HouseholdItemImage extends Model
 {
     use HasFactory;
 
-    // Ορίζουμε το όνομα του πίνακα αν δεν ακολουθεί τους κανόνες του Laravel (πληθυντικός του μοντέλου)
-    // Αν ο πίνακάς σου λέγεται 'household_item_images', δεν χρειάζεται αυτή η γραμμή.
-    // protected $table = 'household_item_images';
-
-    // Ορίζουμε ποιες στήλες μπορούν να γεμιστούν μαζικά
     protected $fillable = [
         'household_item_id',
-        'path',          // Στην βάση σου λέγεται 'path', όχι 'image_path'
+        'image_path',   // <--- HIER AUF 'image_path' GEÄNDERT, um dem Schema zu entsprechen
         'is_thumbnail',
     ];
 
@@ -27,5 +22,14 @@ class HouseholdItemImage extends Model
     public function householdItem(): BelongsTo
     {
         return $this->belongsTo(HouseholdItem::class);
+    }
+
+    /**
+     * Holt den Bildpfad. Dieser Accessor ermöglicht die Verwendung von $image->path in Blade.
+     * Er gibt den Wert des 'image_path'-Attributs zurück.
+     */
+    public function getPathAttribute()
+    {
+        return $this->attributes['image_path'];
     }
 }

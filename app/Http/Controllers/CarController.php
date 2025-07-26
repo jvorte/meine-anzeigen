@@ -87,7 +87,7 @@ class CarController extends Controller
 
                 CarImage::create([ // <--- CHANGED from VehicleImage::create to CarImage::create
                     'car_id' => $ad->id, // <--- CHANGED from 'vehicle_id' to 'car_id'
-                    'path'   => $path,
+                    'image_path'   => $path,
                 ]);
             }
         }

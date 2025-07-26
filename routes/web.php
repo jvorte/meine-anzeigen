@@ -141,5 +141,13 @@ Route::middleware(['auth'])->group(function () {
 
 });
 
+
+    Route::get('/messages/create/{userId}', function($userId) {
+        // This is a placeholder. You would typically return a view with a form
+        // for sending a message to the user with $userId.
+        // Make sure you have a MessageController and a view for this.
+        return view('messages.create', ['recipientId' => $userId]);
+    })->name('messages.create');
+
 // Auth scaffolding routes (login, register, etc.) - ALWAYS keep this at the very end
 require __DIR__ . '/auth.php';

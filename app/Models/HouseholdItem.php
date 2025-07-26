@@ -4,7 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasMany; // Behalten Sie dies bei, wenn Sie es verwenden
+
 class HouseholdItem extends Model
 {
     use HasFactory;
@@ -21,11 +22,11 @@ class HouseholdItem extends Model
         'material',
         'color',
         'dimensions',
-        'image_paths', // <-- Added to fillable
+      
     ];
 
     protected $casts = [
-        'image_paths' => 'array', // <-- Cast to array for JSON serialization/deserialization
+
     ];
 
     /**
@@ -43,8 +44,12 @@ class HouseholdItem extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    /**
+     * Get the images for the household item.
+     */
     public function images(): HasMany
-{
-    return $this->hasMany(HouseholdItemImage::class);
-}
+    {
+        return $this->hasMany(HouseholdItemImage::class);
+    }
 }

@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request; // Keep if you use it, otherwise can remove
+use Illuminate\Http\Request;
 use App\Models\Category;
 
 // Import ALL your ad models here:
-use App\Models\Car; // <--- CHANGED: Assuming Vehicle model was renamed to Car
-use App\Models\Part; // Assuming this is for 'fahrzeugeteile'
+use App\Models\Car;
+use App\Models\Part;
 use App\Models\Electronic;
 use App\Models\HouseholdItem;
 use App\Models\RealEstate;
@@ -23,28 +23,22 @@ class DashboardController extends Controller
 {
     public function index()
     {
-        // Fetch categories for the header navigation
         $categories = Category::all();
 
-        // Fetch a limited number of latest ads from each category model,
-        // EAGER LOADING their 'images' relationship.
         $adsByCategory = [
-            // Changed 'fahrzeuge' key to 'cars' for consistency with the new naming
-            // And changed Vehicle::class to Car::class
-            'cars' => Car::with('images')->orderBy('created_at', 'desc')->limit(4)->get(), // <--- CHANGED HERE
-            'fahrzeugeteile' => Part::with('images')->orderBy('created_at', 'desc')->limit(4)->get(),
+            'cars' => Car::with('images')->orderBy('created_at', 'desc')->limit(4)->get(),
+            'fahrzeugeteile' => UsedVehiclePart::with('images')->orderBy('created_at', 'desc')->limit(4)->get(),
             'elektronik' => Electronic::with('images')->orderBy('created_at', 'desc')->limit(4)->get(),
             'haushalt' => HouseholdItem::with('images')->orderBy('created_at', 'desc')->limit(4)->get(),
             'immobilien' => RealEstate::with('images')->orderBy('created_at', 'desc')->limit(4)->get(),
             'dienstleistungen' => Service::with('images')->orderBy('created_at', 'desc')->limit(4)->get(),
-
             'boote' => Boat::with('images')->orderBy('created_at', 'desc')->limit(4)->get(),
             'sonstiges' => Other::with('images')->orderBy('created_at', 'desc')->limit(4)->get(),
-
             'motorrad' => MotorradAd::with('images')->orderBy('created_at', 'desc')->limit(4)->get(),
             'nutzfahrzeuge' => CommercialVehicle::with('images')->orderBy('created_at', 'desc')->limit(4)->get(),
             'wohnmobile' => Camper::with('images')->orderBy('created_at', 'desc')->limit(4)->get(),
         ];
+
         return view('dashboard', [
             'categories' => $categories,
             'adsByCategory' => $adsByCategory,

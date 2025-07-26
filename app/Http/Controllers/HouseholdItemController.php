@@ -2,7 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\HouseholdItem; // Corrected: Use HouseholdItem
+use App\Models\HouseholdItem;
+use App\Models\HouseholdItemImage; // Importieren Sie das HouseholdItemImage Model
 use App\Models\Brand;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -16,7 +17,7 @@ class HouseholdItemController extends Controller
      */
     public function create()
     {
-        $brands = Brand::pluck('name', 'id'); // Reuse existing brands
+        $brands = Brand::pluck('name', 'id');
         $categories = [
             'Möbel', 'Küchengeräte', 'Waschmaschinen & Trockner', 'Staubsauger & Reinigungsgeräte',
             'Beleuchtung', 'Dekoration', 'Gartenmöbel & -geräte', 'Sport & Freizeit', 'Baby & Kind', 'Sonstiges'
@@ -50,27 +51,27 @@ class HouseholdItemController extends Controller
             'dimensions' => 'nullable|string|max:255',
         ]);
 
-        // 2. Handle image uploads
-        $imagePaths = [];
-        if ($request->hasFile('images')) {
-            foreach ($request->file('images') as $image) {
+        // Separate image files from other validated data
+        $imageFiles = $request->file('images'); // Get the uploaded image files
+        // Remove 'images' (the file objects) from $validatedData before creating the HouseholdItem record
+        $dataToCreateHouseholdItem = Arr::except($validatedData, ['images']);
+
+        // 2. Create the HouseholdItem record first
+        $householdItem = HouseholdItem::create(array_merge($dataToCreateHouseholdItem, [
+            'user_id' => Auth::id(), // Assign the authenticated user's ID
+        ]));
+
+        // 3. Handle image uploads and save to HouseholdItemImage model
+        if ($imageFiles) {
+            foreach ($imageFiles as $index => $image) {
                 $path = $image->store('household_item_images', 'public'); // Store in 'storage/app/public/household_item_images'
-                $imagePaths[] = $path;
+                HouseholdItemImage::create([
+                    'household_item_id' => $householdItem->id,
+                    'image_path' => $path, // Use 'image_path' as per your schema
+                    'is_thumbnail' => ($index === 0), // Set the first image as thumbnail
+                ]);
             }
         }
-
-        // 3. Create the HouseholdItem record
-        $householdItem = new HouseholdItem(); // Corrected: Use HouseholdItem
-        $householdItem->user_id = Auth::id();
-
-        // Remove 'images' (the file objects) from $validatedData before mass assignment
-        $dataToFill = Arr::except($validatedData, ['images']);
-
-        // Assign the collected image paths to the 'image_paths' attribute
-        $householdItem->image_paths = $imagePaths; // This will be automatically JSON encoded by the model cast
-
-        $householdItem->fill($dataToFill); // Fill other attributes
-        $householdItem->save();
 
         // 4. Redirect with success message
         return redirect()->route('dashboard')->with('success', 'Haushaltsartikel Anzeige erfolgreich erstellt!');
@@ -79,7 +80,7 @@ class HouseholdItemController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(HouseholdItem $householdItem) // Corrected: Use HouseholdItem
+    public function show(HouseholdItem $householdItem)
     {
         return view('ads.household.show', compact('householdItem'));
     }
