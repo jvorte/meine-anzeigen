@@ -20,14 +20,15 @@ class Service extends Model
         'contact_name',
         'contact_tel',
         'contact_email',
-        'images', // Make sure 'images' is fillable for the JSON array
+    
     ];
 
     protected $casts = [
-        'images' => 'array', // Automatically cast the 'images' column to a PHP array
+  
     ];
+
     public function images()
-{
-    return $this->hasMany(ServiceImage::class);
-}
+    {
+        return $this->hasMany(ServiceImage::class);
+    }
 }

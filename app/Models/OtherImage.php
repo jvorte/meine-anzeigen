@@ -10,9 +10,9 @@ class OtherImage extends Model
     use HasFactory;
 
     protected $fillable = [
-        'other_id', // Stellen Sie sicher, dass dies der korrekte Fremdschlüssel ist
-        'image_path', // <--- HIER AUF 'image_path' GEÄNDERT
-        'is_thumbnail', // Fügen Sie dies hinzu, falls es noch nicht da ist
+        'other_id',
+        'image_path',
+        'is_thumbnail',
     ];
 
     public function other()

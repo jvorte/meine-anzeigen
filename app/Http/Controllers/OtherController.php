@@ -4,10 +4,11 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Other;
+use App\Models\OtherImage; // Importieren Sie das OtherImage Model
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\Auth; // Import Auth facade
-use Illuminate\Support\Arr; // Import Arr helper for data manipulation
-use Illuminate\Validation\Rule; // Import Rule for advanced validation
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Arr; // Importieren Sie Arr helper for data manipulation
+use Illuminate\Validation\Rule; // Importieren Sie Rule for advanced validation
 
 class OtherController extends Controller
 {
@@ -43,28 +44,28 @@ class OtherController extends Controller
             'images.*' => ['nullable', 'image', 'max:2048'], // 'images[]' validates each file in the array
         ]);
 
-        // 2. Handle Image Uploads
-        $imagePaths = [];
-        if ($request->hasFile('images')) {
-            foreach ($request->file('images') as $image) {
+        // Separate image files from other validated data
+        $imageFiles = $request->file('images'); // Get the uploaded image files
+        // Remove 'images' (the file objects) from $validatedData before creating the Other record
+        $dataToCreateOther = Arr::except($validatedData, ['images']);
+
+        // 2. Create the Other record first
+        $other = Other::create(array_merge($dataToCreateOther, [
+            'user_id' => Auth::id(), // Assign the authenticated user's ID
+        ]));
+
+        // 3. Handle image uploads and save to OtherImage model
+        if ($imageFiles) {
+            foreach ($imageFiles as $index => $image) {
                 // Store image in 'public/other_images' directory
                 $path = $image->store('other_images', 'public');
-                $imagePaths[] = $path;
+                OtherImage::create([
+                    'other_id' => $other->id,
+                    'image_path' => $path, // Use 'image_path' as per your schema
+                    'is_thumbnail' => ($index === 0), // Set the first image as thumbnail
+                ]);
             }
         }
-
-        // 3. Create the Other record
-        $other = Other::create([
-            'user_id' => Auth::id(), // Assign the authenticated user's ID
-            'category_slug' => $validatedData['category_slug'],
-            'title' => $validatedData['title'],
-            'description' => $validatedData['description'],
-            'price' => $validatedData['price'],
-            'condition' => $validatedData['condition'],
-            'location' => $validatedData['location'],
-            'contact_phone' => $validatedData['contact_phone'],
-            'images' => $imagePaths, // Save the array of paths (will be JSON-encoded by Eloquent due to $casts)
-        ]);
 
         // 4. Redirect with a success message
         return redirect()->route('dashboard')->with('success', 'Sonstiges Anzeige erfolgreich erstellt!');

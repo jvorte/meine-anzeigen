@@ -18,11 +18,11 @@ class Other extends Model
         'condition',
         'location',
         'contact_phone',
-        'images', // <-- Added to fillable
+        // 'images', // <--- DIESE ZEILE ENTFERNEN
     ];
 
     protected $casts = [
-        'images' => 'array', // <-- Cast to array for JSON serialization/deserialization
+        // 'images' => 'array', // <--- DIESE ZEILE ENTFERNEN
     ];
 
     /**
@@ -34,7 +34,7 @@ class Other extends Model
     }
 
     public function images()
-{
-    return $this->hasMany(OtherImage::class);
-}
+    {
+        return $this->hasMany(OtherImage::class);
+    }
 }
