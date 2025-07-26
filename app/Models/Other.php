@@ -37,4 +37,6 @@ class Other extends Model
     {
         return $this->hasMany(OtherImage::class);
     }
+
+    
 }

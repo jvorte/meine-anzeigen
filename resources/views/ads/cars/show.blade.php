@@ -44,15 +44,15 @@
 
                     <div class="px-6 py-5 bg-white dark:bg-gray-100 border-b border-gray-200 dark:border-gray-300">
                         <h3 class="text-2xl font-extrabold text-gray-700 dark:text-gray-800 mb-2 leading-tight">
-                            {{ $vehicle->title }}
+                            {{ $car->title }}
                         </h3>
-                        <p class="text-gray-600 mb-6 leading-relaxed">{{ $vehicle->description }}</p>
+                        <p class="text-gray-600 mb-6 leading-relaxed">{{ $car->description }}</p>
                         <p class="text-2xl font-bold text-indigo-500 dark:text-indigo-600">
-                            {{ number_format($vehicle->price, 2, ',', '.') }} €
+                            {{ number_format($car->price, 2, ',', '.') }} €
                         </p>
                         <div class="flex flex-col sm:flex-row items-center space-y-3 sm:space-y-0 sm:space-x-4">
-                            @if ($vehicle->user) {{-- Only show the button if a user exists for the vehicle --}}
-                                <a href="{{ route('messages.create', $vehicle->user->id) }}"
+                            @if ($car->user) {{-- Only show the button if a user exists for the car --}}
+                                <a href="{{ route('messages.create', $car->user->id) }}"
                                     class="inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 w-full sm:w-auto transition ease-in-out duration-150">
                                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20"
                                         fill="currentColor">
@@ -76,21 +76,21 @@
 
                     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-y-3 gap-x-6 mb-6 text-sm">
                         @foreach([
-                                'Marke' => $vehicle->brand->name ?? 'N/A',
-                                'Modell' => $vehicle->carModel->name ?? 'N/A',
-                                'Baujahr' => $vehicle->registration ?? 'N/A',
-                                'Kilometerstand' => number_format($vehicle->mileage, 0, ',', '.') . ' km',
-                                'Fahrzeugtyp' => $vehicle->vehicle_type ?? 'N/A',
-                                'Zustand' => $vehicle->condition ?? 'N/A',
-                                'Garantie' => $vehicle->warranty ? 'Ja' : 'Nein',
-                                'Leistung' => ($vehicle->power ?? 'N/A') . ' PS',
-                                'Kraftstoffart' => $vehicle->fuel_type ?? 'N/A',
-                                'Getriebe' => $vehicle->transmission ?? 'N/A',
-                                'Antrieb' => $vehicle->drive ?? 'N/A',
-                                'Farbe' => $vehicle->color ?? 'N/A',
-                                'Türen' => $vehicle->doors ?? 'N/A',
-                                'Sitze' => $vehicle->seats ?? 'N/A',
-                                'Verkäufertyp' => $vehicle->seller_type ?? 'N/A'
+                                'Marke' => $car->brand->name ?? 'N/A',
+                                'Modell' => $car->carModel->name ?? 'N/A',
+                                'Baujahr' => $car->registration ?? 'N/A',
+                                'Kilometerstand' => number_format($car->mileage, 0, ',', '.') . ' km',
+                                'Fahrzeugtyp' => $car->vehicle_type ?? 'N/A',
+                                'Zustand' => $car->condition ?? 'N/A',
+                                'Garantie' => $car->warranty ? 'Ja' : 'Nein',
+                                'Leistung' => ($car->power ?? 'N/A') . ' PS',
+                                'Kraftstoffart' => $car->fuel_type ?? 'N/A',
+                                'Getriebe' => $car->transmission ?? 'N/A',
+                                'Antrieb' => $car->drive ?? 'N/A',
+                                'Farbe' => $car->color ?? 'N/A',
+                                'Türen' => $car->doors ?? 'N/A',
+                                'Sitze' => $car->seats ?? 'N/A',
+                                'Verkäufertyp' => $car->seller_type ?? 'N/A'
                             ] as $label => $value)
                             <div class="flex justify-between items-center bg-gray-50 dark:bg-gray-100 p-3 rounded-md">
                                 <span class="font-semibold text-gray-500 dark:text-gray-600">{{ $label }}:</span>
@@ -101,11 +101,11 @@
                          @endforeach
                         </div>
     
-                            @if ($vehicle->images->count() > 0)
+                            @if ($car->images->count() > 0)
                                         <div class="mt-6">
                                             <h4 class="text-xl font-semibold text-gray-600 dark:text-gray-700 mb-3 border-b pb-2 border-gray-200 dark:border-gray-300">Bilder</h4>
                                             <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                                        @foreach ($vehicle->images as $image)
+                                        @foreach ($car->images as $image)
                                             <img src="{{ asset('storage/' . $image->path) }}" alt="Fahrzeugbild" class="w-full h-48 object-cover rounded-lg shadow-sm">
                                         @endforeach
                                     </div>

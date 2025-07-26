@@ -70,7 +70,8 @@
                                     </a>
                                 </h4>
                             </div>
-                            <div class="bg-white dark:bg-white p-6 rounded-b-lg"> {{-- Content below the navbar --}}
+                            <div class="bg-white dark:bg-white p-3 rounded-b-lg"> {{-- Content below the navbar --}}
+
                                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
                                     @foreach ($ads as $ad)
                                         <div
@@ -132,8 +133,8 @@
                                                         $adParam = $ad->id;
 
                                                         if ($ad instanceof \App\Models\Car) { // Note: If you renamed Vehicle to Car, this should be \App\Models\Car
-                                                            $adRouteName = 'categories.fahrzeuge.show';
-                                                            $adParamName = 'vehicle';
+                                                            $adRouteName = 'categories.cars.show';
+                                                            $adParamName = 'car';
                                                         } elseif ($ad instanceof \App\Models\Boat) {
                                                             $adRouteName = 'categories.boote.show';
                                                             $adParamName = 'boat';
@@ -184,6 +185,8 @@
                                         </div>
                                     @endforeach
                                 </div>
+
+                                
                             </div>
                         </div>
                     @endif
