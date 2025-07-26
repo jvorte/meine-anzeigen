@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Electronic;
+use App\Models\ElectronicImage; // Import the ElectronicImage Model
 use App\Models\Brand;
 use App\Models\ElectronicModel;
 use Illuminate\Http\Request;
@@ -28,8 +29,8 @@ class ElectronicController extends Controller
         $initialElectronicModels = [];
         if (old('brand_id')) {
             $initialElectronicModels = ElectronicModel::where('brand_id', old('brand_id'))
-                                                    ->orderBy('name')
-                                                    ->pluck('name', 'id');
+                                                     ->orderBy('name')
+                                                     ->pluck('name', 'id');
         }
 
         return view('ads.electronics.create', compact(
@@ -48,7 +49,7 @@ class ElectronicController extends Controller
     {
         // 1. Validation
         $validatedData = $request->validate([
-            'images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048', // Keep this validation for files
+            'images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048', // Validation for uploaded files
             'title' => 'required|string|max:255',
             'description' => 'required|string',
             'price' => 'nullable|numeric|min:0',
@@ -61,27 +62,27 @@ class ElectronicController extends Controller
             'accessories' => 'nullable|string|max:1000',
         ]);
 
-        // 2. Handle image uploads first
-        $imagePaths = [];
-        if ($request->hasFile('images')) {
-            foreach ($request->file('images') as $image) {
+        // Separate image files from other validated data
+        $imageFiles = $request->file('images'); // Get the uploaded image files
+        // Remove 'images' (the file objects) from $validatedData before creating the Electronic record
+        $dataToCreateElectronic = Arr::except($validatedData, ['images']);
+
+        // 2. Create the Electronic record first
+        $electronic = Electronic::create(array_merge($dataToCreateElectronic, [
+            'user_id' => Auth::id(), // Assign the authenticated user's ID
+        ]));
+
+        // 3. Handle image uploads and save to ElectronicImage model
+        if ($imageFiles) {
+            foreach ($imageFiles as $index => $image) {
                 $path = $image->store('electronic_images', 'public'); // Store in 'storage/app/public/electronic_images'
-                $imagePaths[] = $path;
+                ElectronicImage::create([
+                    'electronic_id' => $electronic->id,
+                    'image_path' => $path,
+                    'is_thumbnail' => ($index === 0), // Set the first image as thumbnail
+                ]);
             }
         }
-
-        // 3. Create the Electronic record
-        $electronic = new Electronic();
-        $electronic->user_id = Auth::id();
-
-        // Remove 'images' (the file objects) from $validatedData before mass assignment
-        $dataToFill = Arr::except($validatedData, ['images']);
-
-        // Assign the collected image paths to the 'image_paths' attribute
-        $electronic->image_paths = $imagePaths; // This will be automatically JSON encoded by the model cast
-
-        $electronic->fill($dataToFill); // Fill other attributes
-        $electronic->save();
 
         // 4. Redirect with success message
         return redirect()->route('dashboard')->with('success', 'Elektronik Anzeige erfolgreich erstellt!');

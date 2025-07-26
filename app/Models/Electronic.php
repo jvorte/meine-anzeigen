@@ -21,11 +21,11 @@ class Electronic extends Model
         'year_of_purchase',
         'warranty_status',
         'accessories',
-        'image_paths', // <-- Added to fillable
+     
     ];
 
     protected $casts = [
-        'image_paths' => 'array', // <-- Cast to array for JSON serialization/deserialization
+        
     ];
 
     /**
@@ -52,8 +52,11 @@ class Electronic extends Model
         return $this->belongsTo(User::class);
     }
 
-        public function images()
-{
-    return $this->hasMany(ElectronicImage::class);
-}
+    /**
+     * Get the images for the electronic ad.
+     */
+    public function images()
+    {
+        return $this->hasMany(ElectronicImage::class);
+    }
 }
