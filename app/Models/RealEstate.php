@@ -10,7 +10,7 @@ class RealEstate extends Model
     use HasFactory;
 
     protected $fillable = [
-           'user_id',
+        'user_id',
         'category_slug',
         'immobilientyp',
         'title',
@@ -38,7 +38,7 @@ class RealEstate extends Model
         'abloese',
         'ausstattung',
         'heizung',
-        'images',
+        // 'images' ist HIER NICHT MEHR ERFORDERLICH, da es eine Beziehung ist
         'grundriss_path',
         'energieausweis_path',
         'rundgang_link',
@@ -59,13 +59,13 @@ class RealEstate extends Model
 
     protected $casts = [
         'ausstattung' => 'array',
-        'images' => 'array',
-        'befristung_ende' => 'date', // Cast date field
-        'zusatzkontakt' => 'boolean', // Cast boolean field
+        // 'images' ist HIER NICHT MEHR ERFORDERLICH, da es eine Beziehung ist
+        'befristung_ende' => 'date',
+        'zusatzkontakt' => 'boolean',
     ];
 
     public function images()
-{
-    return $this->hasMany(RealEstateImage::class);
-}
+    {
+        return $this->hasMany(RealEstateImage::class);
+    }
 }

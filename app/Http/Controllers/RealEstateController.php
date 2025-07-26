@@ -4,20 +4,21 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\RealEstate;
+use App\Models\RealEstateImage; // Importieren Sie das RealEstateImage Model
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\Auth; // Import Auth facade
-use Illuminate\Support\Arr; // Import Arr helper for data manipulation
-use Illuminate\Validation\Rule; // Import Rule for advanced validation
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Arr;
+use Illuminate\Validation\Rule;
 
 class RealEstateController extends Controller
 {
     /**
-     * Show the form for creating a new real estate ad.
-     * This method prepares data needed for the form.
+     * Zeigt das Formular zum Erstellen einer neuen Immobilienanzeige an.
+     * Diese Methode bereitet die für das Formular benötigten Daten vor.
      */
     public function create()
     {
-        // Define options for dropdowns and checkboxes, matching the Blade form
+        // Definieren Sie Optionen für Dropdowns und Checkboxen, passend zum Blade-Formular
         $immobilientypOptions = ['Wohnung', 'Haus', 'Grundstück', 'Gewerbeobjekt', 'Garage/Stellplatz', 'Andere'];
         $objekttypOptions = ['Kauf', 'Miete'];
         $zustandOptions = ['Neubau / Erstbezug', 'Saniert', 'Renovierungsbedürftig', 'Altbau', 'Rohbau'];
@@ -40,17 +41,17 @@ class RealEstateController extends Controller
             'verfugbarkeitOptions',
             'befristungOptions',
             'heizungOptions',
-            'ausstattungOptions' // Pass these to the view
+            'ausstattungOptions' // Übergeben Sie diese an die View
         ));
     }
 
     /**
-     * Store a newly created real estate ad in storage.
-     * This method handles the form submission and saves data.
+     * Speichert eine neu erstellte Immobilienanzeige im Speicher.
+     * Diese Methode verarbeitet die Formularübermittlung und speichert Daten.
      */
     public function store(Request $request)
     {
-        // Define validation rules, ensuring they match the Blade form's 'name' attributes
+        // Definieren Sie Validierungsregeln, stellen Sie sicher, dass sie mit den 'name'-Attributen des Blade-Formulars übereinstimmen
         $validatedData = $request->validate([
             'category_slug' => ['required', 'string', 'max:255', Rule::in(['immobilien'])],
 
@@ -59,14 +60,14 @@ class RealEstateController extends Controller
             'title' => ['required', 'string', 'max:255'],
             'objekttyp' => ['nullable', 'string', Rule::in(['Kauf', 'Miete'])],
             'zustand' => ['nullable', 'string', Rule::in(['Neubau / Erstbezug', 'Saniert', 'Renovierungsbedürftig', 'Altbau', 'Rohbau'])],
-            'anzahl_zimmer' => ['nullable', 'numeric', 'min:0.5'], // Changed to numeric for 0.5 steps
+            'anzahl_zimmer' => ['nullable', 'numeric', 'min:0.5'],
             'bautyp' => ['nullable', 'string', Rule::in(['Massivbau', 'Fertigteilhaus', 'Holzbau', 'Ziegelbau', 'Stahlbeton'])],
             'verfugbarkeit' => ['nullable', 'string', Rule::in(['Sofort', 'Nach Vereinbarung', 'Ab [Datum]'])],
             'befristung' => ['nullable', 'string', Rule::in(['Unbefristet', 'Befristet'])],
             'befristung_ende' => ['nullable', 'date'],
 
             // Beschreibung
-            'description' => ['required', 'string'], // Hauptbeschreibung
+            'description' => ['required', 'string'],
             'objektbeschreibung' => ['nullable', 'string'],
             'lage' => ['nullable', 'string'],
             'sonstiges' => ['nullable', 'string'],
@@ -75,19 +76,18 @@ class RealEstateController extends Controller
             'land' => ['required', 'string', 'max:255'],
             'plz' => ['required', 'string', 'max:10'],
             'ort' => ['required', 'string', 'max:255'],
-            'strasse' => ['nullable', 'string', 'max:255'], // Using 'strasse' as in Blade/Migration
+            'strasse' => ['nullable', 'string', 'max:255'],
 
             // Preise & Flächen
             'gesamtmiete' => ['nullable', 'numeric', 'min:0'],
-            'wohnflaeche' => ['nullable', 'numeric', 'min:0'], // Using 'wohnflaeche' as in Blade/Migration
-            'grundflaeche' => ['nullable', 'numeric', 'min:0'], // Using 'grundflaeche' as in Blade/Migration
+            'wohnflaeche' => ['nullable', 'numeric', 'min:0'],
+            'grundflaeche' => ['nullable', 'numeric', 'min:0'],
             'kaution' => ['nullable', 'numeric', 'min:0'],
             'maklerprovision' => ['nullable', 'numeric', 'min:0'],
             'abloese' => ['nullable', 'numeric', 'min:0'],
 
             // Ausstattung & Heizung
-            'ausstattung' => ['nullable', 'array'], // Array of selected checkbox values
-            // Validate each selected option against the allowed list from the Blade form
+            'ausstattung' => ['nullable', 'array'],
             'ausstattung.*' => ['string', Rule::in([
                 'Balkon', 'Terrasse', 'Garten', 'Keller', 'Dachboden', 'Garage', 'Stellplatz',
                 'Einbauküche', 'Möbliert', 'Barrierefrei', 'Aufzug', 'Klimaanlage', 'Swimmingpool',
@@ -97,9 +97,9 @@ class RealEstateController extends Controller
             'heizung' => ['nullable', 'string', Rule::in(['Zentralheizung', 'Etagenheizung', 'Fußbodenheizung', 'Fernwärme', 'Gasheizung', 'Ölheizung', 'Elektroheizung', 'Kamin/Ofen'])],
 
             // Fotos & Dokumente
-            'images.*' => ['nullable', 'image', 'max:2048'], // Multiple images
-            'grundriss_path' => ['nullable', 'file', 'mimes:jpg,jpeg,png,pdf', 'max:5120'], // Single file, max 5MB (5120 KB)
-            'energieausweis_path' => ['nullable', 'file', 'mimes:jpg,jpeg,png,pdf', 'max:5120'], // Single file, max 5MB
+            'images.*' => ['nullable', 'image', 'max:2048'], // Mehrere Bilder
+            'grundriss_path' => ['nullable', 'file', 'mimes:jpg,jpeg,png,pdf', 'max:5120'],
+            'energieausweis_path' => ['nullable', 'file', 'mimes:jpg,jpeg,png,pdf', 'max:5120'],
             'rundgang_link' => ['nullable', 'url', 'max:2048'],
             'objektinformationen_link' => ['nullable', 'url', 'max:2048'],
             'zustandsbericht_link' => ['nullable', 'url', 'max:2048'],
@@ -115,89 +115,57 @@ class RealEstateController extends Controller
             'fax' => ['nullable', 'string', 'max:255'],
             'immocard_id' => ['nullable', 'string', 'max:255'],
             'immocard_firma_id' => ['nullable', 'string', 'max:255'],
-            'zusatzkontakt' => ['boolean'], // For the checkbox
+            'zusatzkontakt' => ['boolean'],
         ]);
 
-        // 2. Handle File Uploads
-        $imagePaths = [];
-        if ($request->hasFile('images')) {
-            foreach ($request->file('images') as $image) {
-                $path = $image->store('real_estate_images', 'public');
-                $imagePaths[] = $path;
-            }
-        }
+        // Separate die Bilddateien von den anderen Validierungsdaten
+        $imageFiles = $request->file('images'); // Holen Sie sich die hochgeladenen Bilddateien
+        $dataToCreateRealEstate = Arr::except($validatedData, ['images']); // Entfernen Sie 'images' aus den Daten für die Erstellung des RealEstate-Objekts
 
+        // 2. Dateiuploads für Dokumente
         $grundrissPath = null;
-        if ($request->hasFile('grundriss_path')) { // Use 'grundriss_path' matching Blade
+        if ($request->hasFile('grundriss_path')) {
             $grundrissPath = $request->file('grundriss_path')->store('real_estate_documents', 'public');
         }
 
         $energieausweisPath = null;
-        if ($request->hasFile('energieausweis_path')) { // Use 'energieausweis_path' matching Blade
+        if ($request->hasFile('energieausweis_path')) {
             $energieausweisPath = $request->file('energieausweis_path')->store('real_estate_documents', 'public');
         }
 
-        // 3. Create the RealEstate record
-        $realEstate = RealEstate::create([
-            'user_id' => Auth::id(), // Assign the authenticated user's ID
-            'category_slug' => $validatedData['category_slug'],
-            'immobilientyp' => $validatedData['immobilientyp'],
-            'title' => $validatedData['title'],
-            'objekttyp' => $validatedData['objekttyp'],
-            'zustand' => $validatedData['zustand'],
-            'anzahl_zimmer' => $validatedData['anzahl_zimmer'],
-            'bautyp' => $validatedData['bautyp'],
-            'verfugbarkeit' => $validatedData['verfugbarkeit'],
-            'befristung' => $validatedData['befristung'],
-            'befristung_ende' => $validatedData['befristung_ende'],
-            'description' => $validatedData['description'],
-            'objektbeschreibung' => $validatedData['objektbeschreibung'],
-            'lage' => $validatedData['lage'],
-            'sonstiges' => $validatedData['sonstiges'],
-            'zusatzinformation' => $validatedData['zusatzinformation'],
-            'land' => $validatedData['land'],
-            'plz' => $validatedData['plz'],
-            'ort' => $validatedData['ort'],
-            'strasse' => $validatedData['strasse'], // Corrected field name
-            'gesamtmiete' => $validatedData['gesamtmiete'],
-            'wohnflaeche' => $validatedData['wohnflaeche'], // Corrected field name
-            'grundflaeche' => $validatedData['grundflaeche'], // Corrected field name
-            'kaution' => $validatedData['kaution'],
-            'maklerprovision' => $validatedData['maklerprovision'],
-            'abloese' => $validatedData['abloese'],
-            'ausstattung' => $validatedData['ausstattung'] ?? [], // Ensure it's an array, even if null
-            'heizung' => $validatedData['heizung'],
-            'images' => $imagePaths,
+        // 3. Erstellen Sie den RealEstate-Datensatz
+        // Übergeben Sie nur die Daten, die direkt in der RealEstate-Tabelle gespeichert werden
+        $realEstate = RealEstate::create(array_merge($dataToCreateRealEstate, [
+            'user_id' => Auth::id(), // Weisen Sie die ID des authentifizierten Benutzers zu
             'grundriss_path' => $grundrissPath,
             'energieausweis_path' => $energieausweisPath,
-            'rundgang_link' => $validatedData['rundgang_link'], // Corrected field name
-            'objektinformationen_link' => $validatedData['objektinformationen_link'], // Corrected field name
-            'zustandsbericht_link' => $validatedData['zustandsbericht_link'], // Corrected field name
-            'verkaufsbericht_link' => $validatedData['verkaufsbericht_link'], // Corrected field name
-            'contact_name' => $validatedData['contact_name'], // Corrected field name
-            'contact_tel' => $validatedData['contact_tel'], // Corrected field name
-            'contact_email' => $validatedData['contact_email'], // Corrected field name
-            'firmenname' => $validatedData['firmenname'],
-            'homepage' => $validatedData['homepage'],
-            'telefon2' => $validatedData['telefon2'],
-            'fax' => $validatedData['fax'],
-            'immocard_id' => $validatedData['immocard_id'],
-            'immocard_firma_id' => $validatedData['immocard_firma_id'],
-            'zusatzkontakt' => $validatedData['zusatzkontakt'] ?? false, // Checkbox value
-        ]);
+            'zusatzkontakt' => $validatedData['zusatzkontakt'] ?? false,
+        ]));
 
-        // 4. Redirect with a success message
+        // 4. Speichern Sie die Bilder in der separaten RealEstateImage-Tabelle
+        if ($imageFiles) {
+            foreach ($imageFiles as $index => $image) {
+                $path = $image->store('real_estate_images', 'public');
+                RealEstateImage::create([
+                    'real_estate_id' => $realEstate->id,
+                    'image_path' => $path, // Stellen Sie sicher, dass dies mit Ihrer DB-Spalte übereinstimmt
+                    'is_thumbnail' => ($index === 0), // Setzen Sie das erste Bild als Thumbnail
+                ]);
+            }
+        }
+
+        // 5. Weiterleiten mit einer Erfolgsmeldung
         return redirect()->route('dashboard')->with('success', 'Immobilien Anzeige erfolgreich erstellt!');
     }
 
     /**
-     * Display the specified resource.
-     * This method is for showing a single real estate ad.
+     * Zeigt die angegebene Ressource an.
+     * Diese Methode dient zum Anzeigen einer einzelnen Immobilienanzeige.
      */
     public function show(RealEstate $realEstate)
     {
         return view('ads.real-estate.show', compact('realEstate'));
     }
 
-    // You can add edit, update, destroy methods as needed
+    // Sie können bei Bedarf Edit-, Update- und Destroy-Methoden hinzufügen
 }

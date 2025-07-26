@@ -15,7 +15,7 @@
         <div class="max-w-8xl mx-auto sm:px-6 lg:px-1">
             {{-- Breadcrumbs component --}}
             <x-breadcrumbs :items="[
-   
+    
     ]" />
 
         </div>
@@ -47,7 +47,9 @@
                 @endphp
 
                 @forelse ($adsByCategory as $categorySlug => $ads)
-                    @if ($ads->isNotEmpty())
+                    {{-- Defensive check: Ensure $ads is an object and an instance of Collection --}}
+                    {{-- This prevents calling isNotEmpty() on null or a non-object --}}
+                    @if (is_object($ads) && $ads instanceof \Illuminate\Support\Collection && $ads->isNotEmpty())
                         @php
                             $categoryName = $categories->firstWhere('slug', $categorySlug)->name ?? ucfirst($categorySlug);
                             $backgroundImage = $categoryBackgrounds[$categorySlug] ?? 'https://placehold.co/1200x200/F0F0F0/8C8C8C?text=Category+Banner';
@@ -73,19 +75,17 @@
                                     @foreach ($ads as $ad)
                                         <div
                                             class="bg-white dark:bg-white rounded-lg shadow-md overflow-hidden transform transition-all duration-300 hover:scale-105 hover:shadow-xl">
-                                            @php
+                                           @php
                                                 $imageUrl = 'https://placehold.co/400x250/E0E0E0/6C6C6C?text=No+Image'; // Default placeholder
 
-                                                // Check if the 'images' relationship is loaded and contains images
-                                                if ($ad->relationLoaded('images') && $ad->images->isNotEmpty()) {
-                                                    // Option 1: Try to find an image marked as a thumbnail first
+                                                // Inner image check: also defensive
+                                                if (is_object($ad->images) && $ad->images instanceof \Illuminate\Support\Collection && $ad->images->isNotEmpty()) {
                                                     $thumbnailImage = $ad->images->firstWhere('is_thumbnail', true);
 
                                                     if ($thumbnailImage) {
-                                                        $imageUrl = asset('storage/' . $thumbnailImage->path);
+                                                        $imageUrl = asset('storage/' . $thumbnailImage->image_path);
                                                     } else {
-                                                        // Option 2: If no thumbnail, just use the first available image
-                                                        $imageUrl = asset('storage/' . $ad->images->first()->path);
+                                                        $imageUrl = asset('storage/' . $ad->images->first()->image_path);
                                                     }
                                                 }
                                             @endphp
@@ -131,18 +131,18 @@
                                                         $adRouteName = null;
                                                         $adParam = $ad->id;
 
-                                                        if ($ad instanceof \App\Models\Vehicle) {
+                                                        if ($ad instanceof \App\Models\Vehicle) { // Note: If you renamed Vehicle to Car, this should be \App\Models\Car
                                                             $adRouteName = 'categories.fahrzeuge.show';
                                                             $adParamName = 'vehicle';
                                                         } elseif ($ad instanceof \App\Models\Boat) {
                                                             $adRouteName = 'categories.boote.show';
                                                             $adParamName = 'boat';
                                                         } elseif ($ad instanceof \App\Models\Camper) {
-                                                            $adRouteName = 'categories.wohnmobile.show'; // Changed to wohnmobile.show
+                                                            $adRouteName = 'categories.wohnmobile.show';
                                                             $adParamName = 'camper';
                                                         } elseif ($ad instanceof \App\Models\CommercialVehicle) {
-                                                            $adRouteName = 'categories.nutzfahrzeuge.show'; // Changed to nutzfahrzeuge.show
-                                                            $adParamName = 'commercialVehicle'; // Corrected parameter name
+                                                            $adRouteName = 'categories.nutzfahrzeuge.show';
+                                                            $adParamName = 'commercialVehicle';
                                                         } elseif ($ad instanceof \App\Models\Electronic) {
                                                             $adRouteName = 'categories.elektronik.show';
                                                             $adParamName = 'electronic';
@@ -151,19 +151,19 @@
                                                             $adParamName = 'householdItem'; 
                                                         } elseif ($ad instanceof \App\Models\MotorradAd) {
                                                             $adRouteName = 'categories.motorrad.show';
-                                                            $adParamName = 'motorradAd'; // Corrected parameter name
+                                                            $adParamName = 'motorradAd';
                                                         } elseif ($ad instanceof \App\Models\Other) {
-                                                            $adRouteName = 'categories.sonstiges.show'; // Changed to sonstiges.show
+                                                            $adRouteName = 'categories.sonstiges.show';
                                                             $adParamName = 'other';
                                                         } elseif ($ad instanceof \App\Models\RealEstate) {
                                                             $adRouteName = 'categories.immobilien.show';
-                                                            $adParamName = 'realEstate'; // Corrected parameter name
+                                                            $adParamName = 'realEstate';
                                                         } elseif ($ad instanceof \App\Models\Service) {
                                                             $adRouteName = 'categories.dienstleistungen.show';
                                                             $adParamName = 'service';
                                                         } elseif ($ad instanceof \App\Models\UsedVehiclePart) {
-                                                            $adRouteName = 'categories.fahrzeugeteile.show'; // Changed to fahrzeugeteile.show
-                                                            $adParamName = 'usedVehiclePart'; // Corrected parameter name
+                                                            $adRouteName = 'categories.fahrzeugeteile.show';
+                                                            $adParamName = 'usedVehiclePart';
                                                         } else {
                                                             $adRouteName = 'ads.show';
                                                             $adParamName = 'ad';
