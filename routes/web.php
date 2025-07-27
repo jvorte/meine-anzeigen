@@ -100,8 +100,13 @@ Route::delete('/ads/cars/{car}', [CarController::class, 'destroy'])->name('ads.c
     Route::post('/ads/commercial-vehicles', [CommercialVehicleController::class, 'store'])->name('ads.commercial-vehicles.store');
 
     // Campers
-    Route::get('/ads/camper/create', [CamperController::class, 'create'])->name('ads.camper.create');
+  Route::get('/ads/camper/create', [CamperController::class, 'create'])->name('ads.camper.create');
     Route::post('/ads/camper', [CamperController::class, 'store'])->name('ads.camper.store');
+    Route::get('/ads/camper/{camper}', [CamperController::class, 'show'])->name('ads.camper.show');
+    Route::get('/ads/camper/{camper}/edit', [CamperController::class, 'edit'])->name('ads.camper.edit');
+    Route::put('/ads/camper/{camper}', [CamperController::class, 'update'])->name('ads.camper.update');
+    Route::delete('/ads/camper/{camper}', [CamperController::class, 'destroy'])->name('ads.camper.destroy');
+
 
     // Used Vehicle Parts
     Route::get('/ads/used-vehicle-parts/create', [UsedVehiclePartController::class, 'create'])->name('ads.used-vehicle-parts.create');

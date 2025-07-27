@@ -3,96 +3,143 @@
 namespace App\Http\Controllers;
 
 use App\Models\Camper;
-use App\Models\Brand;
-use App\Models\CarModel;
-use Illuminate\Http\Request;
+use App\Models\CamperImage;
+use App\Http\Requests\StoreCamperRequest;
+use App\Http\Requests\UpdateCamperRequest;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Auth; // Don't forget to import Auth
 
 class CamperController extends Controller
 {
+    // Dummy data for dropdowns - you might get this from a database or config
+    private $colors = ['Black', 'White', 'Silver', 'Grey', 'Red', 'Blue', 'Green', 'Yellow', 'Orange', 'Brown'];
+    private $camperTypes = ['Alkoven', 'Teilintegriert', 'Vollintegriert', 'Kastenwagen', 'Wohnwagen'];
+    private $fuelTypes = ['Diesel', 'Petrol', 'Electric'];
+    private $transmissions = ['Manual', 'Automatic'];
+    private $emissionClasses = ['Euro 1', 'Euro 2', 'Euro 3', 'Euro 4', 'Euro 5', 'Euro 6'];
+
+
     /**
-     * Show the form for creating a new camper ad.
+     * Show the form for creating a new camper.
      */
     public function create()
     {
-        $brands = Brand::pluck('name', 'id');
-        $models = CarModel::pluck('name', 'id'); // Assuming CarModel covers camper models
-        $colors = ['Schwarz', 'Weiß', 'Rot', 'Blau', 'Grün', 'Gelb', 'Orange', 'Silber', 'Grau', 'Braun', 'Violett', 'Andere'];
-        $camperTypes = ['Alkoven', 'Teilintegriert', 'Vollintegriert', 'Kastenwagen', 'Wohnwagen', 'Andere'];
-        $fuelTypes = ['Diesel', 'Benzin', 'Elektro', 'Hybrid', 'Gas'];
-        $transmissions = ['Manuell', 'Automatik'];
-        $emissionClasses = ['Euro 1', 'Euro 2', 'Euro 3', 'Euro 4', 'Euro 5', 'Euro 6', 'Euro 6d-TEMP', 'Euro 6d'];
-
-        return view('ads.camper.create', compact(
-            'brands',
-            'models',
-            'colors',
-            'camperTypes',
-            'fuelTypes',
-            'transmissions',
-            'emissionClasses'
-        ));
+        return view('ads.camper.create', [
+            'colors' => $this->colors,
+            'camperTypes' => $this->camperTypes,
+            'fuelTypes' => $this->fuelTypes,
+            'transmissions' => $this->transmissions,
+            'emissionClasses' => $this->emissionClasses,
+        ]);
     }
 
     /**
-     * Store a newly created camper ad in storage.
+     * Store a newly created camper in storage.
      */
-    public function store(Request $request)
+    public function store(StoreCamperRequest $request)
     {
-        // 1. Validation
-        $validatedData = $request->validate([
-            'images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048', // Validate each image
-            'title' => 'required|string|max:255',
-            'description' => 'required|string',
-            'brand_id' => 'required|exists:brands,id',
-            'car_model_id' => 'required|exists:car_models,id',
-            'first_registration' => 'required|date',
-            'mileage' => 'required|integer|min:0',
-            'power' => 'nullable|integer|min:1',
-            'color' => 'nullable|string|max:50',
-            'condition' => 'required|in:neu,gebraucht,unfallfahrzeug',
-            'price' => 'nullable|numeric|min:0',
+        $validatedData = $request->validated();
 
-            // Camper-specific validation
-            'camper_type' => 'required|string|max:100',
-            'berths' => 'nullable|integer|min:1',
-            'total_length' => 'nullable|numeric|min:0',
-            'total_width' => 'nullable|numeric|min:0',
-            'total_height' => 'nullable|numeric|min:0',
-            'gross_vehicle_weight' => 'nullable|integer|min:0',
-            'fuel_type' => 'nullable|string|max:50',
-            'transmission' => 'nullable|string|max:50',
-            'emission_class' => 'nullable|string|max:50',
-        ]);
+        // Create the camper
+        $camper = Auth::user()->campers()->create($validatedData);
 
-        // 2. Create the Camper
-        $camper = new Camper();
-        $camper->user_id = Auth::id(); // Assign the authenticated user's ID
-        $camper->fill($validatedData); // Fill all validated data
-        $camper->save();
-
-        // 3. Handle image uploads
+        // Handle image uploads
         if ($request->hasFile('images')) {
             foreach ($request->file('images') as $image) {
                 $path = $image->store('camper_images', 'public'); // Store in 'storage/app/public/camper_images'
-                $camper->images()->create([
-                    'image_path' => $path,
-                ]);
+                $camper->images()->create(['image_path' => $path]);
             }
         }
 
-        // 4. Redirect with success message
-        return redirect()->route('dashboard')->with('success', 'Wohnmobil Anzeige erfolgreich erstellt!');
+        return redirect()->route('ads.camper.show', $camper->id)
+                         ->with('success', 'Wohnmobil Anzeige erfolgreich erstellt!');
     }
 
     /**
-     * Display the specified resource.
+     * Display the specified camper.
      */
     public function show(Camper $camper)
     {
-        return view('ads.camper.show', compact('camper'));
+        return view('ads.camper.show', compact('camper')); // You'll need to create this view
     }
 
-    // You can add edit, update, destroy methods as needed
+    /**
+     * Show the form for editing the specified camper.
+     */
+    public function edit(Camper $camper)
+    {
+        // Add authorization check
+        if (Auth::user()->id !== $camper->user_id) {
+            abort(403, 'Unauthorized action.');
+        }
+
+        return view('ads.camper.edit', [
+            'camper' => $camper,
+            'colors' => $this->colors,
+            'camperTypes' => $this->camperTypes,
+            'fuelTypes' => $this->fuelTypes,
+            'transmissions' => $this->transmissions,
+            'emissionClasses' => $this->emissionClasses,
+        ]);
+    }
+
+    /**
+     * Update the specified camper in storage.
+     */
+    public function update(UpdateCamperRequest $request, Camper $camper)
+    {
+        // Authorization is handled by the UpdateCamperRequest
+
+        $validatedData = $request->validated();
+
+        // Update camper details
+        $camper->update($validatedData);
+
+        // Handle image updates
+        // 1. Determine which existing images to keep
+        $existingImageIdsToKeep = $request->input('existing_images', []);
+        $currentImageIds = $camper->images->pluck('id')->toArray();
+
+        // Delete images that are no longer in existing_images
+        foreach ($currentImageIds as $imageId) {
+            if (!in_array($imageId, $existingImageIdsToKeep)) {
+                $imageToDelete = CamperImage::find($imageId);
+                if ($imageToDelete) {
+                    Storage::disk('public')->delete($imageToDelete->image_path);
+                    $imageToDelete->delete();
+                }
+            }
+        }
+
+        // 2. Add new images
+        if ($request->hasFile('images')) {
+            foreach ($request->file('images') as $image) {
+                $path = $image->store('camper_images', 'public');
+                $camper->images()->create(['image_path' => $path]);
+            }
+        }
+
+        return redirect()->route('ads.camper.show', $camper->id)
+                         ->with('success', 'Wohnmobil Anzeige erfolgreich aktualisiert!');
+    }
+
+    /**
+     * Remove the specified camper from storage.
+     */
+    public function destroy(Camper $camper)
+    {
+        // Add authorization check
+        if (Auth::user()->id !== $camper->user_id) {
+            abort(403, 'Unauthorized action.');
+        }
+
+        // Delete associated images from storage
+        foreach ($camper->images as $image) {
+            Storage::disk('public')->delete($image->image_path);
+        }
+
+        $camper->delete();
+
+        return redirect()->route('dashboard')->with('success', 'Wohnmobil Anzeige erfolgreich gelöscht!');
+    }
 }
