@@ -1,3 +1,21 @@
+.section-title {
+    @apply text-xl font-semibold text-gray-600 mb-4 border-b pb-2 border-gray-200;
+}
+.details-grid {
+    @apply grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-y-3 gap-x-6 mb-6 text-sm;
+}
+.detail-item {
+    @apply flex justify-between items-center bg-gray-50 p-3 rounded-md;
+}
+.btn-green {
+    @apply inline-flex items-center px-6 py-3 rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700 transition;
+}
+.btn-blue {
+    @apply inline-flex items-center px-6 py-3 rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 transition;
+}
+.btn-red {
+    @apply inline-flex items-center px-6 py-3 rounded-md shadow-sm text-white bg-red-600 hover:bg-red-700 transition;
+}
 
 
 @tailwind base;

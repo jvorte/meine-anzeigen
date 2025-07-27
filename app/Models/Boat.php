@@ -13,8 +13,8 @@ class Boat extends Model
         'user_id',
         'title',
         'description',
-        'brand_id',
-        'car_model_id', // Using car_model_id for consistency, can be renamed to boat_model_id if a separate table is desired
+        'brand',        // string, όχι foreign key
+        'model',
         'year_of_construction',
         'condition',
         'price',
@@ -27,6 +27,13 @@ class Boat extends Model
         'engine_power',
         'operating_hours',
         'last_service',
+        'country',
+        'zip_code',
+        'city',
+        'street',
+        'seller_name',
+        'seller_phone',
+        'seller_email',
     ];
 
     /**
@@ -37,6 +44,11 @@ class Boat extends Model
         return $this->belongsTo(Brand::class);
     }
 
+
+    public function boatModel()
+    {
+        return $this->belongsTo(Boat::class, 'boat_model_id');
+    }
     /**
      * Get the car model (used as boat model) associated with the boat.
      */

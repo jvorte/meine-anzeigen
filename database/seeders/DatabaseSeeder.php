@@ -35,8 +35,7 @@ class DatabaseSeeder extends Seeder
             // BrandSeeder::class,
             CategorySeeder::class, // Call CategorySeeder if you have it
     
-            ElectronicModelSeeder::class, // Call this if you have it, it depends on BrandSeeder
-            // Add any other seeders here that you want to run
+            // ElectronicModelSeeder::class,
         ]);
         // User::factory(10)->create();
 

@@ -6,32 +6,40 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
         Schema::create('boats', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained()->onDelete('cascade'); // Link to users table
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->string('title');
             $table->text('description');
-            $table->foreignId('brand_id')->nullable()->constrained('brands')->onDelete('set null'); // Brand might not always apply to boats
-            $table->foreignId('car_model_id')->nullable()->constrained('car_models')->onDelete('set null'); // Can be used for boat models
-            $table->year('year_of_construction'); // Baujahr
-            $table->string('condition'); // e.g., 'neu', 'gebraucht', 'restaurierungsbedürftig'
-            $table->decimal('price', 10, 2)->nullable(); // Price in Euros
+            $table->string('brand');
+            $table->string('model');
+            $table->year('year_of_construction');
+            $table->string('condition');
+            $table->decimal('price', 10, 2)->nullable();
 
             // Boat-specific fields
-            $table->string('boat_type'); // e.g., 'Segelboot', 'Motorboot', 'Schlauchboot', 'Kajak'
-            $table->string('material')->nullable(); // e.g., 'GFK', 'Holz', 'Stahl', 'Aluminium'
-            $table->decimal('total_length', 5, 2)->nullable(); // in meters (e.g., 7.50)
-            $table->decimal('total_width', 5, 2)->nullable(); // in meters (e.g., 2.50)
-            $table->unsignedTinyInteger('berths')->nullable(); // Number of berths/sleeping places
-            $table->string('engine_type')->nullable(); // e.g., 'Innenborder', 'Außenborder', 'Segelantrieb'
-            $table->unsignedInteger('engine_power')->nullable(); // in PS
-            $table->unsignedInteger('operating_hours')->nullable(); // Betriebsstunden
-            $table->date('last_service')->nullable(); // Date of last service
+            $table->string('boat_type');
+            $table->string('material')->nullable();
+            $table->decimal('total_length', 5, 2)->nullable();
+            $table->decimal('total_width', 5, 2)->nullable();
+            $table->unsignedTinyInteger('berths')->nullable();
+            $table->string('engine_type')->nullable();
+            $table->unsignedInteger('engine_power')->nullable();
+            $table->unsignedInteger('operating_hours')->nullable();
+            $table->date('last_service')->nullable();
+
+            // Address
+            $table->string('country');
+            $table->string('zip_code')->nullable();
+            $table->string('city');
+            $table->string('street')->nullable();
+
+            // Verkäufer (πωλητής)
+            $table->string('seller_name');
+            $table->string('seller_phone')->nullable();
+            $table->string('seller_email')->nullable();
 
             $table->timestamps();
         });
@@ -44,9 +52,6 @@ return new class extends Migration
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::dropIfExists('boat_images');
