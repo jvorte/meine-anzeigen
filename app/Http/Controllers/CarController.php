@@ -216,4 +216,25 @@ class CarController extends Controller
 
         return redirect()->route('dashboard')->with('success', 'Auto-Anzeige erfolgreich aktualisiert.');
     }
+
+
+    public function destroy(Car $car)
+{
+    // Έλεγχος δικαιώματος
+    if (auth()->id() !== $car->user_id && !auth()->user()->isAdmin()) {
+        abort(403);
+    }
+
+    // Διαγραφή εικόνων
+    foreach ($car->images as $image) {
+        Storage::delete($image->image_path);
+        $image->delete();
+    }
+
+    // Διαγραφή αγγελίας
+    $car->delete();
+
+    return redirect()->route('dashboard')->with('success', 'Anzeige wurde erfolgreich gelöscht.');
+}
+
 }

@@ -89,6 +89,8 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/ads/cars', [CarController::class, 'store'])->name('ads.cars.store'); // Standardized URI and name for car storage
 Route::get('/ads/cars/{car}/edit', [CarController::class, 'edit'])->name('ads.cars.edit');
 Route::put('/ads/cars/{car}', [CarController::class, 'update'])->name('ads.cars.update');
+Route::delete('/ads/cars/{car}', [CarController::class, 'destroy'])->name('ads.cars.destroy');
+
     // Motorrad Ads
     Route::get('/ads/motorrad/create', [MotorradAdController::class, 'create'])->name('ads.motorrad.create');
     Route::post('/ads/motorrad', [MotorradAdController::class, 'store'])->name('ads.motorrad.store');
