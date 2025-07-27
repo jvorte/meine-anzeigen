@@ -47,10 +47,12 @@
                 @endphp
 
                 @forelse ($adsByCategory as $categorySlug => $ads)
+
                     {{-- Defensive check: Ensure $ads is an object and an instance of Collection --}}
                     {{-- This prevents calling isNotEmpty() on null or a non-object --}}
                     @if (is_object($ads) && $ads instanceof \Illuminate\Support\Collection && $ads->isNotEmpty())
                         @php
+                        
                             $categoryName = $categories->firstWhere('slug', $categorySlug)->name ?? ucfirst($categorySlug);
                             $backgroundImage = $categoryBackgrounds[$categorySlug] ?? 'https://placehold.co/1200x200/F0F0F0/8C8C8C?text=Category+Banner';
                         @endphp
@@ -90,8 +92,9 @@
                                                     }
                                                 }
                                             @endphp
+                                            
                                             <img src="{{ $imageUrl }}" alt="{{ $ad->title ?? 'Anzeige' }}" class="w-full h-40 object-cover rounded-t-lg">
-                                            <div class="p-4">
+                                            <div class="p-1">
                                                 <h4 class="text-lg font-bold text-gray-900 dark:text-gray-900 mb-1 truncate">
                                                     {{ $ad->title }}</h4>
                                                 <p class="text-sm text-gray-600 dark:text-gray-700 mb-2 line-clamp-2">

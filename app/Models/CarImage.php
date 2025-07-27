@@ -10,12 +10,13 @@ class CarImage extends Model
     // protected $table = 'vehicle_images'; // Uncomment and set if your table is still named 'vehicle_images'
 
     protected $fillable = [
-        'car_id', // <--- CHANGED: from 'vehicle_id' to 'car_id'
+        'car_id',
         'image_path',
+        'is_thumbnail',
     ];
 
-    public function car() // <--- CHANGED: method name from 'vehicle' to 'car'
+    public function car() 
     {
-        return $this->belongsTo(Car::class); // <--- CHANGED: from Vehicle::class to Car::class
+        return $this->belongsTo(Car::class); 
     }
 }

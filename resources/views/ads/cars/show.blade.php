@@ -26,9 +26,9 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             {{-- Breadcrumbs component --}}
             <x-breadcrumbs :items="[
-        ['label' => 'Autos Anzeigen', 'url' => route('ads.create')],
-        ['label' => 'Auto Anzeige', 'url' => route('ads.create')],
-    ]" />
+                ['label' => 'Autos Anzeigen', 'url' => route('ads.create')],
+                ['label' => 'Auto Anzeige', 'url' => route('ads.create')],
+            ]" />
 
         </div>
     </div>
@@ -67,6 +67,32 @@
                                     verfügbar.
                                 </p>
                             @endif
+
+                            {{-- Edit Button (Visible to owner or admin) --}}
+                            @auth
+                                @if (auth()->id() === $car->user_id || (auth()->user() && auth()->user()->isAdmin()))
+                                    <a href="{{ route('ads.cars.edit', $car->id) }}"
+                                        class="inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 w-full sm:w-auto transition ease-in-out duration-150">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                                            <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zm-3.586 3.586L10.586 7l-7 7V17h3l7-7.001z" />
+                                        </svg>
+                                        Anzeige bearbeiten
+                                    </a>
+                              <form action="{{ route('ads.cars.destroy', $car->id) }}" method="POST" onsubmit="return confirm('Bist du sicher, dass du diese Anzeige löschen möchtest?');" class="inline-block">
+    @csrf
+    @method('DELETE')
+    <button type="submit"
+        class="inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 w-full sm:w-auto transition ease-in-out duration-150">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+            <path d="M6 8a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1z" />
+            <path fill-rule="evenodd" d="M4 5a2 2 0 012-2h8a2 2 0 012 2v10a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm2 0v10h8V5H6z" clip-rule="evenodd" />
+        </svg>
+        Anzeige löschen
+    </button>
+</form>
+
+                                @endif
+                            @endauth
                         </div>
                     </div>
 
@@ -94,32 +120,30 @@
                             ] as $label => $value)
                             <div class="flex justify-between items-center bg-gray-50 dark:bg-gray-100 p-3 rounded-md">
                                 <span class="font-semibold text-gray-500 dark:text-gray-600">{{ $label }}:</span>
-                                        <span class="text-gray-700 dark:text-gray-800">{{ $value }}</span>
-                                        </div>
+                                <span class="text-gray-700 dark:text-gray-800">{{ $value }}</span>
+                            </div>
+                        @endforeach
+                    </div>
 
-
-                         @endforeach
+                    @if ($car->images->count() > 0)
+                        <div class="mt-6">
+                            <h4 class="text-xl font-semibold text-gray-600 dark:text-gray-700 mb-3 border-b pb-2 border-gray-200 dark:border-gray-300">Bilder</h4>
+                            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                                @foreach ($car->images as $image)
+                                    <img src="{{ asset('storage/' . $image->image_path) }}" alt="car" class="w-full h-48 object-cover rounded-lg shadow-sm">
+                                @endforeach
+                            </div>
                         </div>
-    
-                            @if ($car->images->count() > 0)
-                                        <div class="mt-6">
-                                            <h4 class="text-xl font-semibold text-gray-600 dark:text-gray-700 mb-3 border-b pb-2 border-gray-200 dark:border-gray-300">Bilder</h4>
-                                            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                                        @foreach ($car->images as $image)
-                                            <img src="{{ asset('storage/' . $image->path) }}" alt="Fahrzeugbild" class="w-full h-48 object-cover rounded-lg shadow-sm">
-                                        @endforeach
-                                    </div>
-                                </div>
-                            @endif
+                    @endif
 
-                <div class="mt-8 text-center">
-                    <a href="{{ url()->previous() }}" class="inline-flex items-center px-4 py-2 bg-blue-300 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-400 active:bg-blue-500 focus:outline-none focus:border-blue-600 focus:ring ring-blue-100 disabled:opacity-25 transition ease-in-out duration-150">
-                        Zurück zur Suche
-                    </a>
+                    <div class="mt-8 text-center">
+                        <a href="{{ url()->previous() }}" class="inline-flex items-center px-4 py-2 bg-blue-300 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-400 active:bg-blue-500 focus:outline-none focus:border-blue-600 focus:ring ring-blue-100 disabled:opacity-25 transition ease-in-out duration-150">
+                            Zurück zur Suche
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
 
 </x-app-layout>
