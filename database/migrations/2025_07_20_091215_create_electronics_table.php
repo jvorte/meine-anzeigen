@@ -30,12 +30,12 @@ return new class extends Migration
             $table->timestamps();
         });
 
-        Schema::create('electronic_images', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('electronic_id')->constrained('electronics')->onDelete('cascade');
-            $table->string('image_path');
-            $table->timestamps();
-        });
+        // Schema::create('electronic_images', function (Blueprint $table) {
+        //     $table->id();
+        //     $table->foreignId('electronic_id')->constrained('electronics')->onDelete('cascade');
+        //     $table->string('image_path');
+        //     $table->timestamps();
+        // });
     }
 
     /**
