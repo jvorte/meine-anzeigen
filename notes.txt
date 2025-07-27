@@ -1,7 +1,10 @@
 update της λιστα μαρκες/ μοντελα
 php artisan import:vehicles
 
+
+php artisan migrate
 php artisan db:seed
+
 
 
 -- SQL INSERT statements for your categories table
