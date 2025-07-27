@@ -23,7 +23,7 @@ return new class extends Migration
             $table->string('location')->nullable(); // For general location/city
             $table->string('contact_phone')->nullable(); // Optional contact phone
 
-            $table->json('images')->nullable(); // Store image paths as JSON array
+         
 
             $table->timestamps();
         });

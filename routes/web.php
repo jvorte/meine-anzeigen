@@ -87,7 +87,8 @@ Route::middleware(['auth'])->group(function () {
     // Assuming createAutos and storeFahrzeuge methods are now simply 'create' and 'store' in CarController
     Route::get('/ads/cars/create', [CarController::class, 'create'])->name('ads.cars.create');
     Route::post('/ads/cars', [CarController::class, 'store'])->name('ads.cars.store'); // Standardized URI and name for car storage
-
+Route::get('/ads/cars/{car}/edit', [CarController::class, 'edit'])->name('ads.cars.edit');
+Route::put('/ads/cars/{car}', [CarController::class, 'update'])->name('ads.cars.update');
     // Motorrad Ads
     Route::get('/ads/motorrad/create', [MotorradAdController::class, 'create'])->name('ads.motorrad.create');
     Route::post('/ads/motorrad', [MotorradAdController::class, 'store'])->name('ads.motorrad.store');

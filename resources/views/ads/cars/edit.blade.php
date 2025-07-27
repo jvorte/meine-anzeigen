@@ -1,25 +1,23 @@
-{{-- resources/views/ads/auto/create.blade.php --}}
+{{-- resources/views/ads/cars/edit.blade.php --}}
 <x-app-layout>
 
     {{-- ----------------------------------breadcrumbs --------------------------------------------------- --}}
     <x-slot name="header">
         <h2 class="text-3xl font-extrabold text-gray-900 leading-tight mb-2">
-            Neue Auto Anzeige erstellen
+            Auto Anzeige bearbeiten
         </h2>
         <p class="text-md text-gray-700 dark:text-gray-500">
-            Wähle eine passende Kategorie und fülle die erforderlichen Felder aus, um deine Anzeige zu erstellen.
+            Bearbeite die Details deiner Anzeige oder füge neue Fotos hinzu.
         </p>
-
     </x-slot>
 
     <div class="py-2">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             {{-- Breadcrumbs component --}}
             <x-breadcrumbs :items="[
-                ['label' => 'Anzeige erstellen', 'url' => route('ads.create')],
-                ['label' => 'Neue Auto Anzeige', 'url' => route('ads.create')],
+                ['label' => 'Anzeigen', 'url' => route('dashboard')], {{-- Adjust this route as needed --}}
+                ['label' => 'Auto Anzeige bearbeiten', 'url' => route('ads.cars.edit', $car)],
             ]" />
-
         </div>
     </div>
 
@@ -27,8 +25,9 @@
 
     <div class="max-w-6xl mx-auto p-6 bg-white rounded-lg shadow-xl my-6">
 
-        <form method="POST" action="{{ route('ads.cars.store') }}" enctype="multipart/form-data" class="space-y-8">
+        <form method="POST" action="{{ route('ads.cars.update', $car->id) }}" enctype="multipart/form-data" class="space-y-8">
             @csrf
+            @method('PUT') {{-- Use PUT method for updates --}}
 
             {{-- Vehicle Details Section (Marke & Modell) --}}
             <section class="bg-gray-50 p-6 rounded-lg shadow-inner">
@@ -41,7 +40,7 @@
                             class="form-select w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
                             <option value="">Bitte wählen</option>
                             @foreach($brands as $id => $name)
-                                <option value="{{ $id }}" {{ old('brand_id') == $id ? 'selected' : '' }}>{{ $name }}</option>
+                                <option value="{{ $id }}" {{ old('brand_id', $car->brand_id) == $id ? 'selected' : '' }}>{{ $name }}</option>
                             @endforeach
                         </select>
                         @error('brand_id')
@@ -49,15 +48,14 @@
                         @enderror
                     </div>
 
-                    {{-- Modell - MODIFIED TO NOT USE ALPINE.JS --}}
+                    {{-- Modell --}}
                     <div>
                         <label for="car_model_id" class="block text-sm font-medium text-gray-700 mb-2">Modell</label>
                         <select name="car_model_id" id="car_model_id"
                             class="form-select w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
                             <option value="">Bitte wählen</option>
-                            {{-- Models populated directly from controller --}}
                             @foreach($models as $id => $name)
-                                <option value="{{ $id }}" {{ old('car_model_id') == $id ? 'selected' : '' }}>{{ $name }}
+                                <option value="{{ $id }}" {{ old('car_model_id', $car->car_model_id) == $id ? 'selected' : '' }}>{{ $name }}
                                 </option>
                             @endforeach
                         </select>
@@ -77,7 +75,7 @@
                         <label for="registration_to"
                             class="block text-sm font-medium text-gray-700 mb-2">Erstzulassung</label>
                         <input type="date" name="registration_to" id="registration_to"
-                            value="{{ old('registration_to') }}"
+                            value="{{ old('registration_to', $car->registration) }}"
                             class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
                         @error('registration_to')
                             <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
@@ -88,7 +86,7 @@
                     <div>
                         <label for="mileage_from" class="block text-sm font-medium text-gray-700 mb-2">Kilometerstand
                             (in km)</label>
-                        <input type="number" name="mileage_from" id="mileage_from" value="{{ old('mileage_from') }}"
+                        <input type="number" name="mileage_from" id="mileage_from" value="{{ old('mileage_from', $car->mileage) }}"
                             placeholder="z.B. 50.000"
                             class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
                         @error('mileage_from')
@@ -100,7 +98,7 @@
                     <div>
                         <label for="power_from" class="block text-sm font-medium text-gray-700 mb-2">Leistung
                             (PS)</label>
-                        <input type="number" name="power_from" id="power_from" value="{{ old('power_from') }}"
+                        <input type="number" name="power_from" id="power_from" value="{{ old('power_from', $car->power) }}"
                             placeholder="z.B. 150"
                             class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
                         @error('power_from')
@@ -120,8 +118,8 @@
                         <select name="color" id="color"
                             class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
                             <option value="">Bitte wählen</option>
-                            @foreach($colors as $color)
-                                <option value="{{ $color }}" {{ old('color') == $color ? 'selected' : '' }}>{{ $color }}
+                            @foreach($colors as $colorOption)
+                                <option value="{{ $colorOption }}" {{ old('color', $car->color) == $colorOption ? 'selected' : '' }}>{{ $colorOption }}
                                 </option>
                             @endforeach
                         </select>
@@ -136,10 +134,10 @@
                         <select name="condition" id="condition"
                             class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
                             <option value="">Bitte wählen</option>
-                            <option value="neu" {{ old('condition') == 'neu' ? 'selected' : '' }}>Neu</option>
-                            <option value="gebraucht" {{ old('condition') == 'gebraucht' ? 'selected' : '' }}>Gebraucht
+                            <option value="neu" {{ old('condition', $car->condition) == 'neu' ? 'selected' : '' }}>Neu</option>
+                            <option value="gebraucht" {{ old('condition', $car->condition) == 'gebraucht' ? 'selected' : '' }}>Gebraucht
                             </option>
-                            <option value="unfallfahrzeug" {{ old('condition') == 'unfallfahrzeug' ? 'selected' : '' }}>
+                            <option value="unfallfahrzeug" {{ old('condition', $car->condition) == 'unfallfahrzeug' ? 'selected' : '' }}>
                                 Unfallfahrzeug</option>
                         </select>
                         @error('condition')
@@ -149,8 +147,7 @@
                 </div>
             </section>
 
-            {{-- New Fields for Autos (Fuel Type, Transmission, Drive, Doors, Seats, Seller Type, Price, Vehicle Type,
-            Warranty) --}}
+            {{-- New Fields for Autos (Fuel Type, Transmission, Drive, Doors, Seats, Seller Type, Price, Vehicle Type, Warranty) --}}
             <section class="bg-gray-50 p-6 rounded-lg shadow-inner">
                 <h4 class="text-xl font-semibold text-gray-700 mb-6">Zusätzliche Fahrzeugmerkmale</h4>
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -161,12 +158,12 @@
                         <select name="fuel_type" id="fuel_type"
                             class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
                             <option value="">Bitte wählen</option>
-                            <option value="benzin" {{ old('fuel_type') == 'benzin' ? 'selected' : '' }}>Benzin</option>
-                            <option value="diesel" {{ old('fuel_type') == 'diesel' ? 'selected' : '' }}>Diesel</option>
-                            <option value="elektro" {{ old('fuel_type') == 'elektro' ? 'selected' : '' }}>Elektro</option>
-                            <option value="hybrid" {{ old('fuel_type') == 'hybrid' ? 'selected' : '' }}>Hybrid</option>
-                            <option value="lpg" {{ old('fuel_type') == 'lpg' ? 'selected' : '' }}>LPG</option>
-                            <option value="cng" {{ old('fuel_type') == 'cng' ? 'selected' : '' }}>CNG</option>
+                            <option value="benzin" {{ old('fuel_type', $car->fuel_type) == 'benzin' ? 'selected' : '' }}>Benzin</option>
+                            <option value="diesel" {{ old('fuel_type', $car->fuel_type) == 'diesel' ? 'selected' : '' }}>Diesel</option>
+                            <option value="elektro" {{ old('fuel_type', $car->fuel_type) == 'elektro' ? 'selected' : '' }}>Elektro</option>
+                            <option value="hybrid" {{ old('fuel_type', $car->fuel_type) == 'hybrid' ? 'selected' : '' }}>Hybrid</option>
+                            <option value="lpg" {{ old('fuel_type', $car->fuel_type) == 'lpg' ? 'selected' : '' }}>LPG</option>
+                            <option value="cng" {{ old('fuel_type', $car->fuel_type) == 'cng' ? 'selected' : '' }}>CNG</option>
                         </select>
                         @error('fuel_type')
                             <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
@@ -179,9 +176,9 @@
                         <select name="transmission" id="transmission"
                             class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
                             <option value="">Bitte wählen</option>
-                            <option value="manuell" {{ old('transmission') == 'manuell' ? 'selected' : '' }}>Manuell
+                            <option value="manuell" {{ old('transmission', $car->transmission) == 'manuell' ? 'selected' : '' }}>Manuell
                             </option>
-                            <option value="automatik" {{ old('transmission') == 'automatik' ? 'selected' : '' }}>Automatik
+                            <option value="automatik" {{ old('transmission', $car->transmission) == 'automatik' ? 'selected' : '' }}>Automatik
                             </option>
                         </select>
                         @error('transmission')
@@ -195,10 +192,10 @@
                         <select name="drive" id="drive"
                             class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
                             <option value="">Bitte wählen</option>
-                            <option value="front" {{ old('drive') == 'front' ? 'selected' : '' }}>Vorderradantrieb
+                            <option value="front" {{ old('drive', $car->drive) == 'front' ? 'selected' : '' }}>Vorderradantrieb
                             </option>
-                            <option value="rear" {{ old('drive') == 'rear' ? 'selected' : '' }}>Hinterradantrieb</option>
-                            <option value="all" {{ old('drive') == 'all' ? 'selected' : '' }}>Allrad</option>
+                            <option value="rear" {{ old('drive', $car->drive) == 'rear' ? 'selected' : '' }}>Hinterradantrieb</option>
+                            <option value="all" {{ old('drive', $car->drive) == 'all' ? 'selected' : '' }}>Allrad</option>
                         </select>
                         @error('drive')
                             <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
@@ -212,9 +209,9 @@
                         <select name="doors_from" id="doors_from"
                             class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
                             <option value="">Bitte wählen</option>
-                            <option value="2" {{ old('doors_from') == '2' ? 'selected' : '' }}>2/3</option>
-                            <option value="4" {{ old('doors_from') == '4' ? 'selected' : '' }}>4/5</option>
-                            <option value="6" {{ old('doors_from') == '6' ? 'selected' : '' }}>6/7</option>
+                            <option value="2" {{ old('doors_from', $car->doors) == '2' ? 'selected' : '' }}>2/3</option>
+                            <option value="4" {{ old('doors_from', $car->doors) == '4' ? 'selected' : '' }}>4/5</option>
+                            <option value="6" {{ old('doors_from', $car->doors) == '6' ? 'selected' : '' }}>6/7</option>
                         </select>
                         @error('doors_from')
                             <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
@@ -228,12 +225,12 @@
                         <select name="seats_from" id="seats_from"
                             class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
                             <option value="">Bitte wählen</option>
-                            <option value="2" {{ old('seats_from') == '2' ? 'selected' : '' }}>2</option>
-                            <option value="3" {{ old('seats_from') == '3' ? 'selected' : '' }}>3</option>
-                            <option value="4" {{ old('seats_from') == '4' ? 'selected' : '' }}>4</option>
-                            <option value="5" {{ old('seats_from') == '5' ? 'selected' : '' }}>5</option>
-                            <option value="7" {{ old('seats_from') == '7' ? 'selected' : '' }}>7</option>
-                            <option value="9" {{ old('seats_from') == '9' ? 'selected' : '' }}>9</option>
+                            <option value="2" {{ old('seats_from', $car->seats) == '2' ? 'selected' : '' }}>2</option>
+                            <option value="3" {{ old('seats_from', $car->seats) == '3' ? 'selected' : '' }}>3</option>
+                            <option value="4" {{ old('seats_from', $car->seats) == '4' ? 'selected' : '' }}>4</option>
+                            <option value="5" {{ old('seats_from', $car->seats) == '5' ? 'selected' : '' }}>5</option>
+                            <option value="7" {{ old('seats_from', $car->seats) == '7' ? 'selected' : '' }}>7</option>
+                            <option value="9" {{ old('seats_from', $car->seats) == '9' ? 'selected' : '' }}>9</option>
                         </select>
                         @error('seats_from')
                             <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
@@ -243,7 +240,7 @@
                     {{-- Price --}}
                     <div>
                         <label for="price_from" class="block text-sm font-medium text-gray-700 mb-2">Preis (€)</label>
-                        <input type="number" name="price_from" id="price_from" value="{{ old('price_from') }}"
+                        <input type="number" name="price_from" id="price_from" value="{{ old('price_from', $car->price) }}"
                             placeholder="z.B. 15000"
                             class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
                         @error('price_from')
@@ -258,18 +255,18 @@
                         <select name="vehicle_type" id="vehicle_type"
                             class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
                             <option value="">Bitte wählen</option>
-                            <option value="limousine" {{ old('vehicle_type') == 'limousine' ? 'selected' : '' }}>Limousine
+                            <option value="limousine" {{ old('vehicle_type', $car->vehicle_type) == 'limousine' ? 'selected' : '' }}>Limousine
                             </option>
-                            <option value="kombi" {{ old('vehicle_type') == 'kombi' ? 'selected' : '' }}>Kombi</option>
-                            <option value="suv" {{ old('vehicle_type') == 'suv' ? 'selected' : '' }}>SUV/Geländewagen
+                            <option value="kombi" {{ old('vehicle_type', $car->vehicle_type) == 'kombi' ? 'selected' : '' }}>Kombi</option>
+                            <option value="suv" {{ old('vehicle_type', $car->vehicle_type) == 'suv' ? 'selected' : '' }}>SUV/Geländewagen
                             </option>
-                            <option value="coupe" {{ old('vehicle_type') == 'coupe' ? 'selected' : '' }}>Coupé</option>
-                            <option value="cabrio" {{ old('vehicle_type') == 'cabrio' ? 'selected' : '' }}>Cabrio</option>
-                            <option value="minivan" {{ old('vehicle_type') == 'minivan' ? 'selected' : '' }}>Minivan
+                            <option value="coupe" {{ old('vehicle_type', $car->vehicle_type) == 'coupe' ? 'selected' : '' }}>Coupé</option>
+                            <option value="cabrio" {{ old('vehicle_type', $car->vehicle_type) == 'cabrio' ? 'selected' : '' }}>Cabrio</option>
+                            <option value="minivan" {{ old('vehicle_type', $car->vehicle_type) == 'minivan' ? 'selected' : '' }}>Minivan
                             </option>
-                            <option value="kleinwagen" {{ old('vehicle_type') == 'kleinwagen' ? 'selected' : '' }}>
+                            <option value="kleinwagen" {{ old('vehicle_type', $car->vehicle_type) == 'kleinwagen' ? 'selected' : '' }}>
                                 Kleinwagen</option>
-                            <option value="pickup" {{ old('vehicle_type') == 'pickup' ? 'selected' : '' }}>Pickup</option>
+                            <option value="pickup" {{ old('vehicle_type', $car->vehicle_type) == 'pickup' ? 'selected' : '' }}>Pickup</option>
                         </select>
                         @error('vehicle_type')
                             <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
@@ -282,8 +279,8 @@
                         <select name="warranty" id="warranty"
                             class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
                             <option value="">Bitte wählen</option>
-                            <option value="yes" {{ old('warranty') == 'yes' ? 'selected' : '' }}>Ja</option>
-                            <option value="no" {{ old('warranty') == 'no' ? 'selected' : '' }}>Nein</option>
+                            <option value="yes" {{ old('warranty', $car->warranty) == 'yes' ? 'selected' : '' }}>Ja</option>
+                            <option value="no" {{ old('warranty', $car->warranty) == 'no' ? 'selected' : '' }}>Nein</option>
                         </select>
                         @error('warranty')
                             <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
@@ -296,9 +293,9 @@
                         <select name="seller_type" id="seller_type"
                             class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
                             <option value="">Bitte wählen</option>
-                            <option value="private" {{ old('seller_type') == 'private' ? 'selected' : '' }}>Privat
+                            <option value="private" {{ old('seller_type', $car->seller_type) == 'private' ? 'selected' : '' }}>Privat
                             </option>
-                            <option value="dealer" {{ old('seller_type') == 'dealer' ? 'selected' : '' }}>Händler</option>
+                            <option value="dealer" {{ old('seller_type', $car->seller_type) == 'dealer' ? 'selected' : '' }}>Händler</option>
                         </select>
                         @error('seller_type')
                             <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
@@ -312,7 +309,7 @@
                 {{-- Titel --}}
                 <div class="mb-6">
                     <label for="title" class="block text-sm font-semibold text-gray-800 mb-2">Anzeigentitel</label>
-                    <input type="text" name="title" id="title" value="{{ old('title') }}"
+                    <input type="text" name="title" id="title" value="{{ old('title', $car->title) }}"
                         placeholder="Aussagekräftiger Titel für deine Anzeige"
                         class="w-full p-3 border border-gray-300 rounded-md shadow-sm bg-white text-gray-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50">
                     @error('title')
@@ -325,23 +322,45 @@
                     <label for="description" class="block text-sm font-semibold text-gray-800 mb-2">Beschreibung</label>
                     <textarea name="description" id="description" rows="7"
                         placeholder="Gib hier alle wichtigen Details zu deinem Auto ein. Je mehr Informationen, desto besser!"
-                        class="w-full p-3 border border-gray-300 rounded-md shadow-sm bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-600 transition duration-150 ease-in-out">{{ old('description') }}</textarea>
+                        class="w-full p-3 border border-gray-300 rounded-md shadow-sm bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-600 transition duration-150 ease-in-out">{{ old('description', $car->description) }}</textarea>
                     @error('description')
                         <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                     @enderror
                 </div>
             </section>
 
-            {{-- Photo Upload Section (simple file input) --}}
+            {{-- Existing Photos Section --}}
+            @if ($car->images->count() > 0)
+                <section class="bg-gray-50 p-6 rounded-lg shadow-inner">
+                    <h4 class="text-xl font-semibold text-gray-700 mb-6">Vorhandene Fotos</h4>
+                    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                        @foreach ($car->images as $image)
+                            <div class="relative group">
+                                <img src="{{ asset('storage/' . $image->image_path) }}" alt="Car Image" class="w-full h-48 object-cover rounded-lg shadow-sm">
+                                <label class="absolute top-2 right-2 bg-red-600 text-white text-xs px-2 py-1 rounded-full cursor-pointer opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                                    <input type="checkbox" name="delete_images[]" value="{{ $image->id }}" class="mr-1"> Löschen
+                                </label>
+                            </div>
+                        @endforeach
+                    </div>
+                    <p class="text-sm text-gray-600 mt-4">Wähle Fotos zum Löschen aus.</p>
+                </section>
+            @endif
+
+            {{-- New Photo Upload Section --}}
             <section class="bg-gray-50 p-6 rounded-lg shadow-inner">
-                <h4 class="text-xl font-semibold text-gray-700 mb-6">Fotos hinzufügen</h4>
+                <h4 class="text-xl font-semibold text-gray-700 mb-6">Neue Fotos hinzufügen</h4>
                 <div>
-                    <label for="images" class="sr-only">Bilder hochladen</label>
-                    <input type="file" name="images[]" id="images" multiple accept="image/*"
+                    <label for="new_images" class="sr-only">Bilder hochladen</label>
+                    <input type="file" name="new_images[]" id="new_images" multiple accept="image/*"
                         class="w-full text-base text-gray-700 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 cursor-pointer" />
-                    @error('images')
+                    @error('new_images.*') {{-- Note: new_images.* for individual file errors --}}
                         <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                     @enderror
+                    @error('new_images') {{-- For general array errors (e.g., no files) --}}
+                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                    @enderror
+                    <p class="text-sm text-gray-600 mt-2">Wähle zusätzliche Fotos aus, die du hochladen möchtest. Vorhandene Fotos bleiben erhalten, es sei denn, du löschst sie.</p>
                 </div>
             </section>
 
@@ -352,7 +371,7 @@
             <div class="pt-6 border-t border-gray-200 flex justify-end">
                 <button type="submit"
                     class="bg-blue-600 text-white px-8 py-3 rounded-lg font-semibold text-lg hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-300 transition-all duration-300 shadow-lg">
-                    Anzeige erstellen
+                    Anzeige aktualisieren
                 </button>
             </div>
         </form>

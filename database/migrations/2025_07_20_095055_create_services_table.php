@@ -26,7 +26,7 @@ return new class extends Migration
             $table->string('contact_email'); // Corresponds to 'kontakt_email' in frontend
 
             // Images (from 'bilder[]' in frontend)
-            $table->json('images')->nullable(); // To store multiple image paths as JSON
+         
 
             $table->timestamps();
         });
