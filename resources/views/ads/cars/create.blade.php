@@ -23,10 +23,11 @@
         </div>
     </div>
 
-    {{-- ------------------------------------------------------------------------------------- --}}
+    ---
 
     <div class="max-w-6xl mx-auto p-6 bg-white rounded-lg shadow-xl my-6">
 
+        {{-- IMPORTANT CHANGE HERE: Removed @submit.prevent="submitForm" from the form tag --}}
         <form method="POST" action="{{ route('ads.cars.store') }}" enctype="multipart/form-data" class="space-y-8">
             @csrf
 
@@ -149,8 +150,7 @@
                 </div>
             </section>
 
-            {{-- New Fields for Autos (Fuel Type, Transmission, Drive, Doors, Seats, Seller Type, Price, Vehicle Type,
-            Warranty) --}}
+            {{-- New Fields for Autos (Fuel Type, Transmission, Drive, Doors, Seats, Seller Type, Price, Vehicle Type, Warranty) --}}
             <section class="bg-gray-50 p-6 rounded-lg shadow-inner">
                 <h4 class="text-xl font-semibold text-gray-700 mb-6">Zusätzliche Fahrzeugmerkmale</h4>
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -322,7 +322,7 @@
 
                 {{-- Beschreibung --}}
                 <div>
-                    <label for="description" class="block text-sm font-semibold text-gray-800 mb-2">Beschreibung</label>
+                    <label for="description" class="block text-sm font-medium text-gray-800 mb-2">Beschreibung</label>
                     <textarea name="description" id="description" rows="7"
                         placeholder="Gib hier alle wichtigen Details zu deinem Auto ein. Je mehr Informationen, desto besser!"
                         class="w-full p-3 border border-gray-300 rounded-md shadow-sm bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-600 transition duration-150 ease-in-out">{{ old('description') }}</textarea>
@@ -332,18 +332,81 @@
                 </div>
             </section>
 
-            {{-- Photo Upload Section (simple file input) --}}
+      
+
+            {{-- Photo Upload Section --}}
+            {{-- The x-data="multiImageUploader()" is placed on a div wrapping the input and previews --}}
             <section class="bg-gray-50 p-6 rounded-lg shadow-inner">
                 <h4 class="text-xl font-semibold text-gray-700 mb-6">Fotos hinzufügen</h4>
-                <div>
-                    <label for="images" class="sr-only">Bilder hochladen</label>
-                    <input type="file" name="images[]" id="images" multiple accept="image/*"
-                        class="w-full text-base text-gray-700 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 cursor-pointer" />
+
+                <div x-data="multiImageUploader()" class="space-y-4">
+                    {{-- The file input field. Laravel will pick up files from here. --}}
+                    <input type="file" name="images[]" multiple @change="addFiles($event)" class="block w-full border p-2 rounded" />
                     @error('images')
                         <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                     @enderror
+                    @error('images.*') {{-- For individual image validation errors --}}
+                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                    @enderror
+
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                        <template x-for="(image, index) in previews" :key="index">
+                            <div class="relative group">
+                                <img :src="image" class="w-full h-32 object-cover rounded shadow">
+                                <button type="button" @click="remove(index)"
+                                    class="absolute top-1 right-1 bg-red-700 text-white w-6 h-6 rounded-full text-xs flex items-center justify-center hidden group-hover:flex">✕</button>
+                            </div>
+                        </template>
+                    </div>
                 </div>
+
+                {{-- Alpine.js Script for Image Previews --}}
+                <script>
+                    function multiImageUploader() {
+                        return {
+                            files: [], // Stores the actual File objects
+                            previews: [], // Stores URLs for image previews
+
+                            addFiles(event) {
+                                const newFiles = Array.from(event.target.files);
+
+                                newFiles.forEach(file => {
+                                    this.files.push(file);
+                                    this.previews.push(URL.createObjectURL(file));
+                                });
+
+                                // Important: Assign the collected files back to the input's files property
+                                // This ensures the native form submission sends the correct set of files
+                                const dataTransfer = new DataTransfer();
+                                this.files.forEach(file => dataTransfer.items.add(file));
+                                event.target.files = dataTransfer.files;
+
+                                // No need to clear event.target.value = '' if you're managing `event.target.files` directly.
+                                // It can sometimes interfere with re-selecting the *same* file if you clear it.
+                                // If you want to allow selecting the same file multiple times, you might need
+                                // to rethink the preview logic or clear it but rely on the `files` array.
+                            },
+
+                            remove(index) {
+                                // Remove from internal arrays
+                                this.files.splice(index, 1);
+                                this.previews.splice(index, 1);
+
+                                // Update the actual file input's files property
+                                // Find the file input within the current component's scope
+                                const fileInput = this.$el.querySelector('input[type="file"][name="images[]"]');
+                                if (fileInput) {
+                                    const dataTransfer = new DataTransfer();
+                                    this.files.forEach(file => dataTransfer.items.add(file));
+                                    fileInput.files = dataTransfer.files;
+                                }
+                            }
+                        };
+                    }
+                </script>
             </section>
+
+      
 
             {{-- Add category_slug hidden input --}}
             <input type="hidden" name="category_slug" value="auto">
@@ -357,4 +420,5 @@
             </div>
         </form>
     </div>
+
 </x-app-layout>
