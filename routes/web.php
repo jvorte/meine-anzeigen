@@ -108,8 +108,17 @@ Route::delete('/ads/cars/{car}', [CarController::class, 'destroy'])->name('ads.c
     Route::post('/ads/used-vehicle-parts', [UsedVehiclePartController::class, 'store'])->name('ads.used-vehicle-parts.store');
 
     // Boats
-    Route::get('/ads/boats/create', [BoatController::class, 'create'])->name('ads.boats.create');
-    Route::post('/ads/boats', [BoatController::class, 'store'])->name('ads.boats.store');
+
+
+Route::prefix('ads/boats')->name('ads.boats.')->group(function () {
+    Route::get('/', [BoatController::class, 'index'])->name('index');
+    Route::get('/create', [BoatController::class, 'create'])->name('create');
+    Route::post('/', [BoatController::class, 'store'])->name('store');
+    Route::get('/{boat}/edit', [BoatController::class, 'edit'])->name('edit');
+    Route::put('/{boat}', [BoatController::class, 'update'])->name('update');
+    Route::delete('/{boat}', [BoatController::class, 'destroy'])->name('destroy');
+});
+
 
     // Electronics
     Route::get('/ads/electronics/create', [ElectronicController::class, 'create'])->name('ads.electronics.create');
