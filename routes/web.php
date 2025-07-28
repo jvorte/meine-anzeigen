@@ -47,11 +47,12 @@ Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard
 // Generic category show route - This handles /categories/{slug} for all categories
 Route::get('/categories/{slug}', [CategoryController::class, 'show'])->name('categories.show');
 
+
 // Specific ad detail pages for each model type (Publicly accessible)
 Route::prefix('categories')->name('categories.')->group(function () {
-    // Changed 'fahrzeuge' to 'cars' in URI and name, and using CarController
+   
     Route::get('/cars/{car}', [CarController::class, 'show'])->name('cars.show');
-    Route::get('/boote/{boat}', [BoatController::class, 'show'])->name('boote.show');
+    Route::get('/boats/{boat}', [BoatController::class, 'show'])->name('boats.show');
     Route::get('/fahrzeugeteile/{usedVehiclePart}', [UsedVehiclePartController::class, 'show'])->name('fahrzeugeteile.show');
     Route::get('/elektronik/{electronic}', [ElectronicController::class, 'show'])->name('elektronik.show');
     Route::get('/haushalt/{householdItem}', [HouseholdItemController::class, 'show'])->name('haushalt.show');

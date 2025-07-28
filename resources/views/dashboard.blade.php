@@ -34,7 +34,7 @@
                     $categoryBackgrounds = [
                         'cars' => asset('storage/images/cars.jpg'),
                         'fahrzeugeteile' => asset('storage/images/parts.jpg'),
-                        'boote' => asset('storage/images/boats.jpg'),
+                        'boats' => asset('storage/images/boats.jpg'),
                         'elektronik' => asset('storage/images/tv.jpg'),
                         'haushalt' => asset('storage/images/car.jpg'), // Consider changing these placeholders
                         'immobilien' => asset('storage/images/car.jpg'), // Consider changing these placeholders
@@ -139,7 +139,7 @@
                                                             $adRouteName = 'categories.cars.show';
                                                             $adParamName = 'car';
                                                         } elseif ($ad instanceof \App\Models\Boat) {
-                                                            $adRouteName = 'categories.boote.show';
+                                                            $adRouteName = 'categories.boats.show';
                                                             $adParamName = 'boat';
                                                         } elseif ($ad instanceof \App\Models\Camper) {
                                                             $adRouteName = 'categories.wohnmobile.show';

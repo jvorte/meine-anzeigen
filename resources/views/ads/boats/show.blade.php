@@ -21,16 +21,16 @@
 
     </x-slot>
 
-    <div class="py-2">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            {{-- Breadcrumbs component --}}
-            <x-breadcrumbs :items="[
-        ['label' => 'Boats Anzeigen', 'url' => route('ads.create')],
-        ['label' => 'Boats Anzeige', 'url' => route('ads.create')],
-    ]" />
+<div class="py-2">
+    <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+        {{-- Breadcrumbs component --}}
+        <x-breadcrumbs :items="[
+            ['label' => 'Boats Anzeigen', 'url' => route('categories.show', 'boats')],
+            ['label' => 'Boats Anzeige', 'url' => null],
+        ]" />
 
-        </div>
     </div>
+</div>
 
     {{-- ------------------------------------------------------------------------------------- --}}
 

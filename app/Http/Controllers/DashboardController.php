@@ -32,7 +32,7 @@ class DashboardController extends Controller
             'haushalt' => HouseholdItem::with('images')->orderBy('created_at', 'desc')->limit(4)->get(),
             'immobilien' => RealEstate::with('images')->orderBy('created_at', 'desc')->limit(4)->get(),
             'dienstleistungen' => Service::with('images')->orderBy('created_at', 'desc')->limit(4)->get(),
-            'boote' => Boat::with('images')->orderBy('created_at', 'desc')->limit(4)->get(),
+            'boats' => Boat::with('images')->orderBy('created_at', 'desc')->limit(4)->get(),
             'sonstiges' => Other::with('images')->orderBy('created_at', 'desc')->limit(4)->get(),
             'motorrad' => MotorradAd::with('images')->orderBy('created_at', 'desc')->limit(4)->get(),
             'nutzfahrzeuge' => CommercialVehicle::with('images')->orderBy('created_at', 'desc')->limit(4)->get(),

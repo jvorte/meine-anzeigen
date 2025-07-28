@@ -12,7 +12,7 @@ class CategorySeeder extends Seeder
         $categories = [
             ['name' => 'Fahrzeuge', 'slug' => 'fahrzeuge'],
             ['name' => 'Fahrzeugeteile', 'slug' => 'fahrzeugeteile'],
-               ['name' => 'Boote', 'slug' => 'boote'],
+               ['name' => 'Boats', 'slug' => 'boats'],
             ['name' => 'Elektronik', 'slug' => 'elektronik'],
             ['name' => 'Haushalt', 'slug' => 'haushalt'],
             ['name' => 'Immobilien', 'slug' => 'immobilien'],

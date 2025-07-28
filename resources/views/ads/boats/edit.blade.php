@@ -14,8 +14,8 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             {{-- Breadcrumbs component --}}
             <x-breadcrumbs :items="[
-                ['label' => 'Bootsanzeigen', 'url' => route('ads.index')], {{-- Assuming an index route for all ads --}}
-                ['label' => 'Bootsanzeige bearbeiten', 'url' => route('ads.boats.edit', $boat->id)],
+                  ['label' => 'Boat Anzeigen', 'url' => route('categories.boats.show', 1)],
+                ['label' => 'Boat edit', 'url' => route('ads.boats.edit', $boat->id)],
             ]" />
         </div>
     </div>
