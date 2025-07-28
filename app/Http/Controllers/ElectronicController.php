@@ -20,8 +20,16 @@ class ElectronicController extends Controller
     {
         $brands = Brand::orderBy('name')->get();
         $categories = [
-            'Mobiltelefone', 'Fernseher', 'Computer & Laptops', 'Haushaltsgeräte',
-            'Kameras & Foto', 'Audio & HiFi', 'Gaming Konsolen', 'Wearables', 'Drohnen', 'Sonstiges'
+            'Mobiltelefone',
+            'Fernseher',
+            'Computer & Laptops',
+            'Haushaltsgeräte',
+            'Kameras & Foto',
+            'Audio & HiFi',
+            'Gaming Konsolen',
+            'Wearables',
+            'Drohnen',
+            'Sonstiges'
         ];
         $conditions = ['neu', 'gebraucht', 'defekt'];
         $warrantyStatuses = ['Keine Garantie', 'Herstellergarantie', 'Händlergarantie', 'Garantie abgelaufen'];
@@ -29,8 +37,8 @@ class ElectronicController extends Controller
         $initialElectronicModels = [];
         if (old('brand_id')) {
             $initialElectronicModels = ElectronicModel::where('brand_id', old('brand_id'))
-                                                     ->orderBy('name')
-                                                     ->pluck('name', 'id');
+                ->orderBy('name')
+                ->pluck('name', 'id');
         }
 
         return view('ads.electronics.create', compact(
@@ -55,7 +63,8 @@ class ElectronicController extends Controller
             'price' => 'nullable|numeric|min:0',
             'condition' => 'required|in:neu,gebraucht,defekt',
             'category' => 'required|string|max:100',
-            'brand_id' => 'nullable|exists:brands,id',
+            'brand' => 'nullable|exists:brands,id',
+            'model' => 'nullable|exists:brands,id',
             'electronic_model_id' => 'nullable|exists:electronic_models,id',
             'year_of_purchase' => 'nullable|integer|min:1950|max:' . date('Y'),
             'warranty_status' => 'nullable|string|max:100',

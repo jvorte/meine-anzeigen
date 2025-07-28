@@ -35,7 +35,7 @@
                         'cars' => asset('storage/images/cars.jpg'),
                         'fahrzeugeteile' => asset('storage/images/parts.jpg'),
                         'boats' => asset('storage/images/boats.jpg'),
-                        'elektronik' => asset('storage/images/tv.jpg'),
+                        'electronics' => asset('storage/images/tv.jpg'),
                         'haushalt' => asset('storage/images/car.jpg'), // Consider changing these placeholders
                         'immobilien' => asset('storage/images/car.jpg'), // Consider changing these placeholders
                         'dienstleistungen' => asset('storage/images/car.jpg'), // Consider changing these placeholders
@@ -148,7 +148,7 @@
                                                             $adRouteName = 'categories.commercial-vehicles.show';
                                                             $adParamName = 'commercialVehicle';
                                                         } elseif ($ad instanceof \App\Models\Electronic) {
-                                                            $adRouteName = 'categories.elektronik.show';
+                                                            $adRouteName = 'categories.electronics.show';
                                                             $adParamName = 'electronic';
                                                         } elseif ($ad instanceof \App\Models\HouseholdItem) {
                                                             $adRouteName = 'categories.haushalt.show';

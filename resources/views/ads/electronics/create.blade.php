@@ -3,24 +3,24 @@
 
 
          {{-- -----------------------------------breadcrumbs ---------------------------------------------- --}}
-   <x-slot name="header">
-        <h2 class="text-3xl font-extrabold text-gray-900 leading-tight mb-2">
-           Neue Elektronik Anzeige erstellen
-        </h2>
-        <p class="text-md text-gray-700 dark:text-gray-500">
-            Wähle eine passende Kategorie und fülle die erforderlichen Felder aus, um deine Anzeige zu erstellen.
-        </p>
+<x-slot name="header">
+    <h2 class="text-3xl font-extrabold text-gray-900 leading-tight mb-2">
+        Neue Electronics Anzeige erstellen
+    </h2>
+    <p class="text-md text-gray-700 dark:text-gray-500">
+        Wähle eine passende Kategorie und fülle die erforderlichen Felder aus, um deine Anzeige zu erstellen.
+    </p>
+</x-slot>
 
-    </x-slot>
- <div class="py-2">
+<div class="py-2">
     <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
         {{-- Breadcrumbs component --}}
         <x-breadcrumbs :items="[
-            {{-- Link to the general Cars category listing --}}
-            ['label' => 'Cars Anzeigen', 'url' => route('categories.show', 'cars')],
+            {{-- Link to the general Electronics category listing --}}
+            ['label' => 'Electronics Anzeigen', 'url' => route('categories.show', 'elektronik')],
 
-            {{-- The current page (New Car Ad creation) - set URL to null --}}
-            ['label' => 'Neue Auto Anzeige', 'url' => null],
+            {{-- The current page (New Electronic Ad creation) - set URL to null --}}
+            ['label' => 'Neue Electronic Anzeige', 'url' => null],
         ]" />
     </div>
 </div>
@@ -37,7 +37,7 @@
 
             {{-- Electronic Details Section --}}
             <section class="bg-gray-50 p-6 rounded-lg shadow-inner">
-                <h4 class="text-xl font-semibold text-gray-700 mb-6">Elektronik-Details</h4>
+                <h4 class="text-xl font-semibold text-gray-700 mb-6">Electronics-Details</h4>
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
                      x-data="{
                         selectedBrandId: @json(old('brand_id')),
@@ -74,20 +74,29 @@
                         @enderror
                     </div>
 
-                    {{-- Brand (Dynamic with Alpine.js) --}}
+                   <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    {{-- Marke (Text Input) --}}
                     <div>
-                        <label for="brand_id" class="block text-sm font-medium text-gray-700 mb-2">Marke</label>
-                        <select name="brand_id" id="brand_id" x-model="selectedBrandId"
-                                class="form-select w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
-                            <option value="">Bitte wählen</option>
-                            @foreach($brands as $brand)
-                                <option value="{{ $brand->id }}">{{ $brand->name }}</option>
-                            @endforeach
-                        </select>
-                        @error('brand_id')
+                        <label for="brand" class="block text-sm font-medium text-gray-700 mb-2">Marke</label>
+                        <input type="text" name="brand" id="brand" value="{{ old('brand') }}"
+                            placeholder="z.B. Bavaria, Jeanneau"
+                            class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
+                        @error('brand')
                             <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                         @enderror
                     </div>
+
+                    {{-- Modell (Text Input) --}}
+                    <div>
+                        <label for="model" class="block text-sm font-medium text-gray-700 mb-2">Modell</label>
+                        <input type="text" name="model" id="model" value="{{ old('model') }}"
+                            placeholder="z.B. 37 Cruiser"
+                            class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
+                        @error('model')
+                            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                        @enderror
+                    </div>
+                </div>
 
                     {{-- Electronic Model (Dynamic with Alpine.js) --}}
                     <div x-show="Object.keys(electronicModels).length > 0" x-transition>
