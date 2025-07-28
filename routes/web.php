@@ -97,8 +97,24 @@ Route::delete('/ads/cars/{car}', [CarController::class, 'destroy'])->name('ads.c
     Route::post('/ads/motorrad', [MotorradAdController::class, 'store'])->name('ads.motorrad.store');
 
     // Commercial Vehicles
-    Route::get('/ads/commercial-vehicles/create', [CommercialVehicleController::class, 'create'])->name('ads.commercial-vehicles.create');
-    Route::post('/ads/commercial-vehicles', [CommercialVehicleController::class, 'store'])->name('ads.commercial-vehicles.store');
+
+    Route::prefix('ads/commercial-vehicles')->name('ads.commercial-vehicles.')->group(function () {
+    Route::get('/create', [CommercialVehicleController::class, 'create'])->name('create');
+    Route::post('/', [CommercialVehicleController::class, 'store'])->name('store');
+    Route::get('/{ad}/edit', [CommercialVehicleController::class, 'edit'])->name('edit');
+    Route::put('/{ad}', [CommercialVehicleController::class, 'update'])->name('update');
+    Route::delete('/{ad}', [CommercialVehicleController::class, 'destroy'])->name('destroy');
+Route::get('/{commercialVehicle}', [CommercialVehicleController::class, 'show'])->name('show');
+
+
+});
+
+
+    //    Route::get('/{ad}/edit', [CommercialVehicleController::class, 'edit'])->name('edit');
+    // Route::put('/{ad}', [CommercialVehicleController::class, 'update'])->name('update');
+    // Route::delete('/{ad}', [CommercialVehicleController::class, 'destroy'])->name('destroy');
+    // Route::get('/ads/commercial-vehicles/create', [CommercialVehicleController::class, 'create'])->name('ads.commercial-vehicles.create');
+    // Route::post('/ads/commercial-vehicles', [CommercialVehicleController::class, 'store'])->name('ads.commercial-vehicles.store');
 
     // Campers
   Route::get('/ads/camper/create', [CamperController::class, 'create'])->name('ads.camper.create');
