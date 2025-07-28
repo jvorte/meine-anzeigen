@@ -9,9 +9,12 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Arr; // Import Arr helper
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 class HouseholdItemController extends Controller
 {
+
+     use AuthorizesRequests;
     /**
      * Show the form for creating a new household item ad.
      */
@@ -85,5 +88,81 @@ class HouseholdItemController extends Controller
         return view('ads.household.show', compact('householdItem'));
     }
 
-    // You can add edit, update, destroy methods as needed
+   public function edit(HouseholdItem $householdItem)
+{
+    // Φόρτωσε τις κατηγορίες για το dropdown (αν χρειάζεται)
+    $categories = ['Möbel', 'Elektronik', 'Küche', 'Sonstiges']; // Παράδειγμα, φέρε από τη βάση αν έχεις
+
+    return view('ads.household.edit', compact('householdItem', 'categories'));
+}
+
+
+public function update(Request $request, HouseholdItem $householdItem)
+{
+    // Validation rules
+  $validated = $request->validate([
+    'category' => 'required|string|max:255',
+    'brand' => 'nullable|string|max:255',
+    'model_name' => 'nullable|string|max:255',
+    'price' => 'required|numeric|min:0',
+    'condition' => 'required|string|in:neu,gebraucht,stark gebraucht,defekt',
+    'material' => 'nullable|string|max:255',
+    'color' => 'nullable|string|max:255',
+    'dimensions' => 'nullable|string|max:255',
+    'title' => 'required|string|max:255',
+    'description' => 'required|string',
+    'images.*' => 'nullable|image|max:2048',
+]);
+
+    // Ενημέρωση πεδίων
+    $householdItem->category = $validated['category'];
+    $householdItem->brand = $validated['brand'] ?? null;
+    $householdItem->model_name = $validated['model_name'] ?? null;
+    $householdItem->price = $validated['price'];
+    $householdItem->condition = $validated['condition'];
+    $householdItem->material = $validated['material'] ?? null;
+    $householdItem->color = $validated['color'] ?? null;
+    $householdItem->dimensions = $validated['dimensions'] ?? null;
+    $householdItem->title = $validated['title'];
+    $householdItem->description = $validated['description'];
+
+    $householdItem->save();
+
+    // Αποθήκευση νέων εικόνων αν υπάρχουν
+    if ($request->hasFile('images')) {
+        foreach ($request->file('images') as $image) {
+            // Αποθήκευση εικόνας και δημιουργία σχετικού record
+          $path = $image->store('household_images', 'public');
+
+        $householdItem->images()->create([
+            'image_path' => $path,
+            'is_thumbnail' => false, // optional
+        ]);
+        }
+    }
+
+    return redirect()->route('ads.household-items.show', $householdItem->id)
+                     ->with('success', 'Anzeige erfolgreich aktualisiert.');
+}
+
+public function destroy(HouseholdItem $ad)
+{
+    foreach ($ad->images as $image) {
+        $path = $image->image_path;
+
+        if (is_string($path) && strlen($path) > 0 && Storage::disk('public')->exists($path)) {
+            Storage::disk('public')->delete($path);
+        }
+
+        $image->delete();
+    }
+
+    $ad->delete();
+
+    return redirect()->route('dashboard')->with('success', 'Anzeige erfolgreich gelöscht.');
+}
+
+
+
+
 }

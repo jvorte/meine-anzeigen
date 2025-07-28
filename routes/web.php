@@ -72,6 +72,7 @@ Route::prefix('categories')->name('categories.')->group(function () {
 // --- AUTHENTICATED ROUTES ---
 Route::middleware(['auth'])->group(function () {
 
+
     // User profile routes
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
@@ -150,7 +151,11 @@ Route::middleware(['auth'])->group(function () {
     // Household Items
     Route::get('/ads/household/create', [HouseholdItemController::class, 'create'])->name('ads.household.create');
     Route::post('/ads/household', [HouseholdItemController::class, 'store'])->name('ads.household.store');
-
+// ---------------------------------------------------
+ 
+      Route::get('/ads/household-item/{householdItem}/edit', [HouseholdItemController::class, 'edit'])->name('edit');
+     
+// ---------------------------------------------------
     // Real Estate
     Route::get('/ads/real-estate/create', [RealEstateController::class, 'create'])->name('ads.realestate.create');
     // Consider if this should be /ads/real-estate for consistency or if /realestate is a top-level resource

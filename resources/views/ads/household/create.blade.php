@@ -1,11 +1,6 @@
 {{-- resources/views/ads/household/create.blade.php --}}
 <x-app-layout>
-    <x-slot name="header">
-        <h2 class="text-xl font-semibold text-gray-800 leading-tight">
-            Neue Anzeige: Haushaltsartikel erstellen
-        </h2>
-    </x-slot>
-
+  
 
            {{-- -----------------------------------breadcrumbs ---------------------------------------------- --}}
    <x-slot name="header">
@@ -58,15 +53,11 @@
 
                     {{-- Brand --}}
                     <div>
-                        <label for="brand_id" class="block text-sm font-medium text-gray-700 mb-2">Marke (optional)</label>
-                        <select name="brand_id" id="brand_id"
-                                class="form-select w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
-                            <option value="">Bitte wählen</option>
-                            @foreach($brands as $id => $name)
-                                <option value="{{ $id }}" {{ old('brand_id') == $id ? 'selected' : '' }}>{{ $name }}</option>
-                            @endforeach
-                        </select>
-                        @error('brand_id')
+                        <label for="brand" class="block text-sm font-medium text-gray-700 mb-2">Marke (optional)</label>
+                      
+                         <input type="text" name="brand" id="brand" value="{{ old('brand') }}" placeholder="z.B. Ektorp Sofa, Serie 7 Stuhl"
+                               class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
+                        @error('brand')
                             <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                         @enderror
                     </div>

@@ -21,7 +21,8 @@ return new class extends Migration
 
             // Household Item-specific fields
             $table->string('category'); // e.g., 'Möbel', 'Küchengeräte', 'Dekoration', 'Garten'
-            $table->foreignId('brand_id')->nullable()->constrained('brands')->onDelete('set null'); // Optional brand
+      $table->string('brand')->nullable();
+
             $table->string('model_name')->nullable(); // Free text for specific model/series
             $table->string('material')->nullable(); // e.g., 'Holz', 'Stoff', 'Metall', 'Kunststoff'
             $table->string('color')->nullable();

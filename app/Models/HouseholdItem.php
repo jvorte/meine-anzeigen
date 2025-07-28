@@ -11,17 +11,16 @@ class HouseholdItem extends Model
     use HasFactory;
 
     protected $fillable = [
-        'user_id',
-        'title',
-        'description',
-        'price',
-        'condition',
-        'category',
-        'brand_id',
-        'model_name',
-        'material',
-        'color',
-        'dimensions',
+          'title',
+    'description',
+    'price',
+    'condition',
+    'category',
+    'brand',
+    'model_name',
+    'material',
+    'color',
+    'dimensions',
       
     ];
 
