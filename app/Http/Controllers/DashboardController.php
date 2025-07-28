@@ -36,7 +36,7 @@ class DashboardController extends Controller
             'sonstiges' => Other::with('images')->orderBy('created_at', 'desc')->limit(4)->get(),
             'motorrad' => MotorradAd::with('images')->orderBy('created_at', 'desc')->limit(4)->get(),
             'nutzfahrzeuge' => CommercialVehicle::with('images')->orderBy('created_at', 'desc')->limit(4)->get(),
-            'wohnmobile' => Camper::with('images')->orderBy('created_at', 'desc')->limit(4)->get(),
+            'campers' => Camper::with('images')->orderBy('created_at', 'desc')->limit(4)->get(),
         ];
 
         return view('dashboard', [

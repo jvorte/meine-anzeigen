@@ -28,84 +28,81 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             {{-- Breadcrumbs component --}}
             <x-breadcrumbs :items="[
-                ['label' => 'Campers Anzeigen', 'url' => route('ads.create')],
-                ['label' => 'Campers Anzeige', 'url' => route('ads.create')],
+            ['label' => 'Campers Anzeigen', 'url' => route('categories.show', 'campers')],
+            ['label' => 'Camper Anzeige', 'url' => null], 
+
             ]" />
 
         </div>
     </div>
 
     {{-- ------------------------------------------------------------------------------------- --}}
-     <div class="py-12">
+     <div class="py-4">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white dark:bg-white rounded-lg shadow-md overflow-hidden">
                 <div class="px-6 py-5 bg-white dark:bg-gray-100 border-b border-gray-200 dark:border-gray-300">
-                    <h3 class="text-4xl font-extrabold text-gray-700 dark:text-gray-800 mb-2 leading-tight">{{ $camper->title }}</h3>
+                    <h3 class="text-3xl font-extrabold text-gray-700 dark:text-gray-800 mb-2 leading-tight">{{ $camper->title }}</h3>
                     <p class="text-2xl font-bold text-indigo-500 dark:text-indigo-600">
                         {{ number_format($camper->price ?? 0, 2, ',', '.') }} €
                     </p>
 
-                    {{-- Seller Information Section --}}
-                        {{-- Check if a user is associated with the camper --}}
-                    {{-- @if ($camper->user) 
-                
-                        <div class="mt-4 mb-4 text-gray-700 dark:text-gray-800">
-                            <h4 class="text-lg font-semibold mb-1">Verkäufer:</h4>
-                            <p><strong>Name:</strong> {{ $camper->user->name }}</p>
-                            <p><strong>E-Mail:</strong> <a href="mailto:{{ $camper->user->email }}" class="text-blue-600 hover:underline">{{ $camper->user->email }}</a></p>
-                          
-                            <p><strong>Telefon:</strong> {{ $camper->user->seller_phone ?? 'N/A' }}</p>
-                            <p><strong>Standort:</strong> {{ $camper->user->city ?? 'N/A' }}</p>
-                        </div>
-                    @else
-                        <p class="text-red-800 dark:text-red-700 italic mt-4">Informationen zum Verkäufer nicht verfügbar.</p>
-                    @endif --}}
-
 
                     <div class="flex flex-col sm:flex-row items-center space-y-3 sm:space-y-0 sm:space-x-4">
                         @if (isset($camper->user_id))
-                            <a href="{{ route('messages.create', $camper->user_id) }}"
-                               class="inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 w-full sm:w-auto transition ease-in-out duration-150">
+                              <a href="{{ route('messages.create', $camper->user_id) }}"
+                               class="inline-flex items-center text-base font-medium text-green-600
+                                      hover:text-green-800 hover:underline
+                                      focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500
+                                      transition ease-in-out duration-150">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
                                     <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z" />
                                     <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z" />
                                 </svg>
                                 Verkäufer kontaktieren
                             </a>
+
                         @endif {{-- Removed the else block here, as seller info is handled above --}}
 
                         {{-- Edit/Delete Buttons (already existing) --}}
+                 <div class="flex-grow flex justify-end items-center space-x-2 sm:space-x-4 mt-3 sm:mt-0">
                         @auth
                             @if (auth()->id() === $camper->user_id || (auth()->user() && auth()->user()->isAdmin()))
-                                <a href="{{ route('ads.camper.edit', $camper->id) }}"
-                                    class="inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 w-full sm:w-auto transition ease-in-out duration-150">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20"
-                                        fill="currentColor">
-                                        <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zm-3.586 3.586L10.586 7l-7 7V17h3l7-7.001z" />
-                                    </svg>
-                                    Anzeige bearbeiten
-                                </a>
+                                      <a href="{{ route('ads.camper.edit', $camper->id) }}"
+                                       class="inline-flex items-center justify-center px-4 py-2 border border-blue-600 text-sm font-medium rounded-md text-blue-600 bg-transparent
+                                              hover:bg-blue-50 hover:text-blue-700
+                                              focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500
+                                              transition ease-in-out duration-150">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1.5" viewBox="0 0 20 20" fill="currentColor">
+                                            <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zm-3.586 3.586L10.586 7l-7 7V17h3l7-7.001z" />
+                                        </svg>
+                                        Anzeige bearbeiten
+                                    </a>
+
                                 <form action="{{ route('ads.camper.destroy', $camper->id) }}" method="POST"
                                     onsubmit="return confirm('Bist du sicher, dass du diese Anzeige löschen möchtest?');"
                                     class="inline-block">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit"
-                                        class="inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 w-full sm:w-auto transition ease-in-out duration-150">
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20"
-                                            fill="currentColor">
-                                            <path d="M6 8a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1z" />
-                                            <path fill-rule="evenodd"
-                                                d="M4 5a2 2 0 012-2h8a2 2 0 012 2v10a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm2 0v10h8V5H6z"
-                                                clip-rule="evenodd" />
-                                        </svg>
-                                        Anzeige löschen
-                                    </button>
+                                 <button type="submit"
+                                                class="inline-flex items-center justify-center px-4 py-2 border border-red-600 text-sm font-medium rounded-md text-red-600 bg-transparent
+                                                       hover:bg-red-50 hover:text-red-700
+                                                       focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500
+                                                       transition ease-in-out duration-150">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1.5" viewBox="0 0 20 20" fill="currentColor">
+                                                <path d="M6 8a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1z" />
+                                                <path fill-rule="evenodd"
+                                                      d="M4 5a2 2 0 012-2h8a2 2 0 012 2v10a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm2 0v10h8V5H6z"
+                                                      clip-rule="evenodd" />
+                                            </svg>
+                                            Anzeige löschen
+                                        </button>
+
                                 </form>
                             @endif
                         @endauth
-                    </div>
+                  </div>
                 </div>
+              </div>
 
                 <div class="p-6">
                     <p class="text-gray-600 mb-6 leading-relaxed">{{ $camper->description }}</p>
@@ -188,11 +185,7 @@
                         </div>
                     @endif
 
-                    <div class="mt-8 text-center">
-                        <a href="{{ url()->previous() }}" class="inline-flex items-center px-4 py-2 bg-blue-300 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-400 active:bg-blue-500 focus:outline-none focus:border-blue-600 focus:ring ring-blue-100 disabled:opacity-25 transition ease-in-out duration-150">
-                            Zurück zur Suche
-                        </a>
-                    </div>
+                 
                 </div>
             </div>
         </div>

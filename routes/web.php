@@ -61,7 +61,7 @@ Route::prefix('categories')->name('categories.')->group(function () {
     Route::get('/sonstiges/{other}', [OtherController::class, 'show'])->name('sonstiges.show');
     Route::get('/motorrad/{motorradAd}', [MotorradAdController::class, 'show'])->name('motorrad.show');
     Route::get('/nutzfahrzeuge/{commercialVehicle}', [CommercialVehicleController::class, 'show'])->name('nutzfahrzeuge.show');
-    Route::get('/wohnmobile/{camper}', [CamperController::class, 'show'])->name('wohnmobile.show');
+    Route::get('/campers/{camper}', [CamperController::class, 'show'])->name('campers.show');
 });
 
 

@@ -10,15 +10,22 @@
         </p>
     </x-slot>
 
-    <div class="py-2">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            {{-- Breadcrumbs component --}}
-            <x-breadcrumbs :items="[
-                  ['label' => 'Boat Anzeigen', 'url' => route('categories.boats.show', 1)],
-                ['label' => 'Boat edit', 'url' => route('ads.boats.edit', $boat->id)],
-            ]" />
-        </div>
+
+<div class="py-2">
+    <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+        {{-- Breadcrumbs component --}}
+        <x-breadcrumbs :items="[
+            {{-- Link to the general listing of boats --}}
+            ['label' => 'Boats Anzeigen', 'url' => route('ads.boats.index')],
+
+            {{-- Link to the specific boat's show page --}}
+            ['label' => 'Boats Anzeige', 'url' => route('categories.boats.show', $boat->id)],
+
+            {{-- The current page (Boat Edit) - set URL to null as it's the current page --}}
+            ['label' => 'Boot bearbeiten', 'url' => null],
+        ]" />
     </div>
+</div>
 
     <div class="max-w-6xl mx-auto p-6 bg-white rounded-lg shadow-xl mt-6">
 

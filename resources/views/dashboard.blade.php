@@ -42,7 +42,7 @@
                         'sonstiges' => asset('storage/images/car.jpg'), // Consider changing these placeholders
                         'motorrad' => asset('storage/images/motorcycle.jpg'), // Added new
                         'nutzfahrzeuge' => asset('storage/images/trucks.jpg'), // Added new
-                        'wohnmobile' => asset('storage/images/rv.jpg'), // Added new
+                        'campers' => asset('storage/images/camper.jpg'), // Added new
                     ];
                 @endphp
 
@@ -142,7 +142,7 @@
                                                             $adRouteName = 'categories.boats.show';
                                                             $adParamName = 'boat';
                                                         } elseif ($ad instanceof \App\Models\Camper) {
-                                                            $adRouteName = 'categories.wohnmobile.show';
+                                                            $adRouteName = 'categories.campers.show';
                                                             $adParamName = 'camper';
                                                         } elseif ($ad instanceof \App\Models\CommercialVehicle) {
                                                             $adRouteName = 'categories.nutzfahrzeuge.show';

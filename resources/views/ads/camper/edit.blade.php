@@ -10,15 +10,21 @@
         </p>
     </x-slot>
 
-    <div class="py-2">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            {{-- Breadcrumbs component --}}
-            <x-breadcrumbs :items="[
-                ['label' => 'Meine Anzeigen', 'url' => route('dashboard')], {{-- Adjust as needed for your "my ads" page --}}
-                ['label' => 'Wohnmobil Anzeige bearbeiten', 'url' => route('ads.camper.edit', $camper)],
-            ]" />
-        </div>
+<div class="py-2">
+    <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+        {{-- Breadcrumbs component --}}
+        <x-breadcrumbs :items="[
+            {{-- Link to the general campers category page --}}
+            ['label' => 'Campers Anzeigen', 'url' => route('categories.show', 'campers')],
+
+            {{-- Link to the specific camper's show page --}}
+            ['label' => 'Camper Anzeige', 'url' => route('categories.campers.show', $camper->id)],
+
+            {{-- The current page (Camper Edit) - set URL to null as it's the current page --}}
+            ['label' => 'Camper bearbeiten', 'url' => null],
+        ]" />
     </div>
+</div>
     {{-- --------------------------------------------------------------------------------- --}}
     <div class="max-w-6xl mx-auto p-6 bg-white rounded-lg shadow-xl mt-6">
 
@@ -301,7 +307,7 @@
 
 
             {{-- Verkäufer (Seller) --}}
-            <section class="bg-gray-50 p-6 rounded-lg shadow-inner mt-6">
+            {{-- <section class="bg-gray-50 p-6 rounded-lg shadow-inner mt-6">
                 <h4 class="text-xl font-semibold text-gray-700 mb-6">Verkäufer Informationen</h4>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
@@ -326,7 +332,7 @@
                         @error('seller_email') <p class="text-red-500 text-sm mt-1">{{ $message }}</p> @enderror
                     </div>
                 </div>
-            </section>
+            </section> --}}
 
              {{-- Existing Photos Section --}}
             @if ($camper->images->count() > 0)
