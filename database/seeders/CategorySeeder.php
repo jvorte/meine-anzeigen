@@ -10,14 +10,14 @@ class CategorySeeder extends Seeder
     public function run()
     {
         $categories = [
-            ['name' => 'Fahrzeuge', 'slug' => 'fahrzeuge'],
+            ['name' => 'Vehicles', 'slug' => 'vehicles'],
             ['name' => 'Fahrzeugeteile', 'slug' => 'fahrzeugeteile'],
-               ['name' => 'Boats', 'slug' => 'boats'],
+            ['name' => 'Boats', 'slug' => 'boats'],
             ['name' => 'Elektronik', 'slug' => 'elektronik'],
             ['name' => 'Haushalt', 'slug' => 'haushalt'],
             ['name' => 'Immobilien', 'slug' => 'immobilien'],
             ['name' => 'Dienstleistungen', 'slug' => 'dienstleistungen'],
-             ['name' => 'Sonstiges', 'slug' => 'sonstiges'],
+            ['name' => 'Sonstiges', 'slug' => 'sonstiges'],
         ];
 
         foreach ($categories as $category) {
@@ -26,7 +26,5 @@ class CategorySeeder extends Seeder
                 ['name' => $category['name']]
             );
         }
-
-        
     }
 }

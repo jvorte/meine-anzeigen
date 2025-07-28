@@ -22,17 +22,19 @@
 
     </x-slot>
 
-    <div class="py-2">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            {{-- Breadcrumbs component --}}
-            <x-breadcrumbs :items="[
-        ['label' => 'Autos Anzeigen', 'url' => route('ads.create')],
-        ['label' => 'Auto Anzeige', 'url' => route('ads.create')],
-    ]" />
+ 
 
-        </div>
+  <div class="py-2">
+    <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+        {{-- Breadcrumbs component --}}
+        <x-breadcrumbs :items="[
+            {{-- Link to the general cars category listing --}}
+            ['label' => 'Cars Anzeigen', 'url' => route('dashboard')],
+            {{-- The current page (specific Car Ad) - set URL to null as it's the current page --}}
+            ['label' => 'Car Anzeige', 'url' => null],
+        ]" />
     </div>
-
+</div>
     {{-- ------------------------------------------------------------------------------------- --}}
 
     <div class="py-4">

@@ -161,7 +161,7 @@
             class="p-4 flex flex-wrap justify-center md:justify-start gap-x-4 gap-y-2 mt-4 pb-2 border-b border-gray-200 dark:border-gray-700">
             @foreach ($categories as $cat)
                 {{-- Check if it's the "Fahrzeuge" category --}}
-                @if ($cat->slug == 'fahrzeuge')
+                @if ($cat->slug == 'vehicles')
                     {{-- Alpine.js for modal --}}
                     <div x-data="{ open: false }" class="relative">
                         <a @click.prevent="open = true" {{-- Prevent default link behavior --}}
