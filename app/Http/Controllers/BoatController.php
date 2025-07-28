@@ -45,15 +45,15 @@ class BoatController extends Controller
             'operating_hours' => 'nullable|integer|min:0',
             'last_service' => 'nullable|date',
 
-            'country' => 'required|string|max:255',
-            'zip_code' => 'nullable|string|max:20',
-            'city' => 'required|string|max:255',
-            'street' => 'nullable|string|max:255',
+            // 'country' => 'required|string|max:255',
+            // 'zip_code' => 'nullable|string|max:20',
+            // 'city' => 'required|string|max:255',
+            // 'street' => 'nullable|string|max:255',
 
-            'seller_name' => 'required|string|max:255',
-            'seller_phone' => 'nullable|string|max:50',
-            'seller_email' => 'nullable|email|max:255',
-            'images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            // 'seller_name' => 'required|string|max:255',
+            // 'seller_phone' => 'nullable|string|max:50',
+            // 'seller_email' => 'nullable|email|max:255',
+            // 'images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
 
         $boat = new Boat();

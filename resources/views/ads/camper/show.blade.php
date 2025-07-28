@@ -46,18 +46,20 @@
                     </p>
 
                     {{-- Seller Information Section --}}
-                    @if ($camper->user) {{-- Check if a user is associated with the camper --}}
+                        {{-- Check if a user is associated with the camper --}}
+                    {{-- @if ($camper->user) 
+                
                         <div class="mt-4 mb-4 text-gray-700 dark:text-gray-800">
                             <h4 class="text-lg font-semibold mb-1">Verkäufer:</h4>
                             <p><strong>Name:</strong> {{ $camper->user->name }}</p>
                             <p><strong>E-Mail:</strong> <a href="mailto:{{ $camper->user->email }}" class="text-blue-600 hover:underline">{{ $camper->user->email }}</a></p>
-                            {{-- Add more seller details here if available on the User model, e.g., phone, city --}}
+                          
                             <p><strong>Telefon:</strong> {{ $camper->user->seller_phone ?? 'N/A' }}</p>
                             <p><strong>Standort:</strong> {{ $camper->user->city ?? 'N/A' }}</p>
                         </div>
                     @else
                         <p class="text-red-800 dark:text-red-700 italic mt-4">Informationen zum Verkäufer nicht verfügbar.</p>
-                    @endif
+                    @endif --}}
 
 
                     <div class="flex flex-col sm:flex-row items-center space-y-3 sm:space-y-0 sm:space-x-4">

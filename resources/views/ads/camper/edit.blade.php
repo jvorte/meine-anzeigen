@@ -328,7 +328,23 @@
                 </div>
             </section>
 
-           
+             {{-- Existing Photos Section --}}
+            @if ($camper->images->count() > 0)
+                <section class="bg-gray-50 p-6 rounded-lg shadow-inner">
+                    <h4 class="text-xl font-semibold text-gray-700 mb-6">Vorhandene Fotos</h4>
+                    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                        @foreach ($camper->images as $image)
+                            <div class="relative group">
+                                <img src="{{ asset('storage/' . $image->image_path) }}" alt="Car Image" class="w-full h-48 object-cover rounded-lg shadow-sm">
+                                <label class="absolute top-2 right-2 bg-red-600 text-white text-xs px-2 py-1 rounded-full cursor-pointer opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                                    <input type="checkbox" name="delete_images[]" value="{{ $image->id }}" class="mr-1"> Löschen
+                                </label>
+                            </div>
+                        @endforeach
+                    </div>
+                    <p class="text-sm text-gray-600 mt-4">Wähle Fotos zum Löschen aus.</p>
+                </section>
+            @endif
    {{-- Photo Upload Section --}}
             {{-- The x-data="multiImageUploader()" is placed on a div wrapping the input and previews --}}
             <section class="bg-gray-50 p-6 rounded-lg shadow-inner">

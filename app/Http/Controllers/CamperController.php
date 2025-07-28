@@ -52,7 +52,7 @@ class CamperController extends Controller
         }
 
         return redirect()->route('ads.camper.show', $camper->id)
-                         ->with('success', 'Wohnmobil Anzeige erfolgreich erstellt!');
+            ->with('success', 'Wohnmobil Anzeige erfolgreich erstellt!');
     }
 
     /**
@@ -72,6 +72,7 @@ class CamperController extends Controller
         if (Auth::user()->id !== $camper->user_id) {
             abort(403, 'Unauthorized action.');
         }
+        $camper->load('images'); // This fetches all associated images for the camper
 
         return view('ads.camper.edit', [
             'camper' => $camper,
@@ -120,7 +121,7 @@ class CamperController extends Controller
         }
 
         return redirect()->route('ads.camper.show', $camper->id)
-                         ->with('success', 'Wohnmobil Anzeige erfolgreich aktualisiert!');
+            ->with('success', 'Wohnmobil Anzeige erfolgreich aktualisiert!');
     }
 
     /**

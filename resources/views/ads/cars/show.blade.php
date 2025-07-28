@@ -52,8 +52,10 @@
                         </p>
                         <div class="flex flex-col sm:flex-row items-center space-y-3 sm:space-y-0 sm:space-x-4">
                             @if ($car->user) {{-- Only show the button if a user exists for the car --}}
-                                <a href="{{ route('messages.create', $car->user->id) }}"
-                                    class="inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 w-full sm:w-auto transition ease-in-out duration-150">
+                                <a href="{{ route('messages.create', $car->user->id) }}" class="inline-flex items-center text-base font-medium text-green-600
+                                          hover:text-green-800 hover:underline
+                                          focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500
+                                          transition ease-in-out duration-150">
                                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20"
                                         fill="currentColor">
                                         <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z" />
@@ -61,6 +63,7 @@
                                     </svg>
                                     Verkäufer kontaktieren
                                 </a>
+
                             @else
                                 {{-- Optionally, display a message or a different button if no seller is available --}}
                                 <p class="text-red-800 dark:text-red-700 italic">Informationen zum Verkäufer nicht
@@ -68,38 +71,52 @@
                                 </p>
                             @endif
 
-                            {{-- Edit Button (Visible to owner or admin) --}}
-                            @auth
-                                @if (auth()->id() === $car->user_id || (auth()->user() && auth()->user()->isAdmin()))
-                                    <a href="{{ route('ads.cars.edit', $car->id) }}"
-                                        class="inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 w-full sm:w-auto transition ease-in-out duration-150">
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20"
-                                            fill="currentColor">
-                                            <path
-                                                d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zm-3.586 3.586L10.586 7l-7 7V17h3l7-7.001z" />
-                                        </svg>
-                                        Anzeige bearbeiten
-                                    </a>
-                                    <form action="{{ route('ads.cars.destroy', $car->id) }}" method="POST"
-                                        onsubmit="return confirm('Bist du sicher, dass du diese Anzeige löschen möchtest?');"
-                                        class="inline-block">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit"
-                                            class="inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 w-full sm:w-auto transition ease-in-out duration-150">
-                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20"
-                                                fill="currentColor">
-                                                <path d="M6 8a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1z" />
-                                                <path fill-rule="evenodd"
-                                                    d="M4 5a2 2 0 012-2h8a2 2 0 012 2v10a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm2 0v10h8V5H6z"
-                                                    clip-rule="evenodd" />
-                                            </svg>
-                                            Anzeige löschen
-                                        </button>
-                                    </form>
+                            <div class="flex-grow flex justify-end items-center space-x-2 sm:space-x-4 mt-3 sm:mt-0">
+                                @auth
+                                    @if (auth()->id() === $car->user_id || (auth()->user() && auth()->user()->isAdmin()))
 
-                                @endif
-                            @endauth
+
+                                        <a href="{{ route('ads.cars.edit', $car->id) }}" class="inline-flex items-center justify-center px-4 py-2 border border-blue-600 text-sm font-medium rounded-md text-blue-600 bg-transparent
+                                                      hover:bg-blue-50 hover:text-blue-700
+                                                      focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500
+                                                      transition ease-in-out duration-150">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1.5" viewBox="0 0 20 20"
+                                                fill="currentColor">
+                                                <path
+                                                    d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zm-3.586 3.586L10.586 7l-7 7V17h3l7-7.001z" />
+                                            </svg>
+                                            Anzeige bearbeiten
+                                        </a>
+
+
+
+                                        <form action="{{ route('ads.cars.destroy', $car->id) }}" method="POST"
+                                            onsubmit="return confirm('Bist du sicher, dass du diese Anzeige löschen möchtest?');"
+                                            class="inline-block">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="inline-flex items-center justify-center px-4 py-2 border border-red-600 text-sm font-medium rounded-md text-red-600 bg-transparent
+                                                               hover:bg-red-50 hover:text-red-700
+                                                               focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500
+                                                               transition ease-in-out duration-150">
+                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1.5"
+                                                    viewBox="0 0 20 20" fill="currentColor">
+                                                    <path d="M6 8a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1z" />
+                                                    <path fill-rule="evenodd"
+                                                        d="M4 5a2 2 0 012-2h8a2 2 0 012 2v10a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm2 0v10h8V5H6z"
+                                                        clip-rule="evenodd" />
+                                                </svg>
+                                                Anzeige löschen
+                                            </button>
+                                        </form>
+
+                                    @endif
+                                @endauth
+                            </div>
+
+
+
+
                         </div>
                     </div>
 
@@ -126,11 +143,12 @@
                                 'Verkäufertyp' => $car->seller_type ?? 'N/A'
                             ] as $label => $value)
                                 <div class="flex justify-between items-center bg-gray-50 dark:bg-gray-100 p-3 rounded-md">
-                                    <span class="font-semibold text-gray-500 dark:text-gray-600">{{ $label }}:</span>
-                                    <span class="text-gray-700 dark:text-gray-800">{{ $value }}</span>
-                                </div>
+                                        <span class="font-semibold text-gray-500 dark:text-gray-600">{{ $label }}:</span>
+                                        <span class="text-gray-700 dark:text-gray-800">{{ $value }}</span>
+                                    </div>
 
-                           @endforeach
+
+                          @endforeach
                     </div>
 
                     @if ($car->images->count() > 0)
@@ -144,11 +162,11 @@
                         </div>
                     @endif
 
-                    <div class="mt-8 text-center">
+                    {{-- <div class="mt-8 text-center">
                         <a href="{{ url()->previous() }}" class="inline-flex items-center px-4 py-2 bg-blue-300 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-400 active:bg-blue-500 focus:outline-none focus:border-blue-600 focus:ring ring-blue-100 disabled:opacity-25 transition ease-in-out duration-150">
                             Zurück zur Suche
                         </a>
-                    </div>
+                    </div> --}}
                 </div>
             </div>
         </div>

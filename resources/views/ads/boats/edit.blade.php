@@ -19,7 +19,7 @@
             ]" />
         </div>
     </div>
-    ---
+
     <div class="max-w-6xl mx-auto p-6 bg-white rounded-lg shadow-xl mt-6">
 
         <form method="POST" action="{{ route('ads.boats.update', $boat->id) }}" enctype="multipart/form-data" class="space-y-8">
@@ -47,7 +47,7 @@
                     {{-- Marke (Brand) - Now a simple text input --}}
                     <div>
                         <label for="brand_name" class="block text-sm font-medium text-gray-700 mb-2">Marke</label>
-                        <input type="text" name="brand_name" id="brand_name" value="{{ old('brand_name', $boat->brand_name) }}" {{-- Ensure $boat->brand_name is directly used --}}
+                        <input type="text" name="brand_name" id="brand_name" value="{{ old('brand', $boat->brand_name) }}" {{-- Ensure $boat->brand_name is directly used --}}
                                placeholder="z.B. Bavaria, Jeanneau"
                                class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
                         @error('brand_name')
@@ -58,7 +58,7 @@
                     {{-- Modell (Model) - Now a simple text input --}}
                     <div>
                         <label for="model_name" class="block text-sm font-medium text-gray-700 mb-2">Modell</label>
-                        <input type="text" name="model_name" id="model_name" value="{{ old('model_name', $boat->model_name) }}" {{-- Ensure $boat->model_name is directly used --}}
+                        <input type="text" name="model_name" id="model_name" value="{{ old('model', $boat->model_name) }}" {{-- Ensure $boat->model_name is directly used --}}
                                placeholder="z.B. Cruiser 34, Sun Odyssey 409"
                                class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
                         @error('model_name')
@@ -232,10 +232,10 @@
             </section>
 
             {{-- Standort Section --}}
-            <section class="bg-gray-50 p-6 rounded-lg shadow-inner">
+            {{-- <section class="bg-gray-50 p-6 rounded-lg shadow-inner">
                 <h4 class="text-xl font-semibold text-gray-700 mb-6">Standort</h4>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    {{-- Land --}}
+             
                     <div>
                         <label for="country" class="block text-sm font-medium text-gray-700 mb-2">Land</label>
                         <input type="text" name="country" id="country" value="{{ old('country', $boat->country ?? 'Österreich') }}" placeholder="z.B. Österreich"
@@ -245,7 +245,7 @@
                         @enderror
                     </div>
 
-                    {{-- PLZ --}}
+                
                     <div>
                         <label for="zip_code" class="block text-sm font-medium text-gray-700 mb-2">Postleitzahl</label>
                         <input type="text" name="zip_code" id="zip_code" value="{{ old('zip_code', $boat->zip_code) }}" placeholder="z.B. 1010"
@@ -255,7 +255,6 @@
                         @enderror
                     </div>
 
-                    {{-- Ort --}}
                     <div>
                         <label for="city" class="block text-sm font-medium text-gray-700 mb-2">Ort</label>
                         <input type="text" name="city" id="city" value="{{ old('city', $boat->city) }}" placeholder="z.B. Wien"
@@ -265,7 +264,7 @@
                         @enderror
                     </div>
 
-                    {{-- Straße --}}
+        
                     <div>
                         <label for="street" class="block text-sm font-medium text-gray-700 mb-2">Straße (optional)</label>
                         <input type="text" name="street" id="street" value="{{ old('street', $boat->street) }}" placeholder="z.B. Musterstraße 123"
@@ -275,7 +274,7 @@
                         @enderror
                     </div>
                 </div>
-            </section>
+            </section> --}}
 
             {{-- Fotos & Dokumente Section --}}
             <section class="bg-gray-50 p-6 rounded-lg shadow-inner">

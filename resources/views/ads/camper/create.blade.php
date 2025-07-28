@@ -301,7 +301,7 @@
 
 
             {{-- Verkäufer (Seller) --}}
-            <section class="bg-gray-50 p-6 rounded-lg shadow-inner mt-6">
+            {{-- <section class="bg-gray-50 p-6 rounded-lg shadow-inner mt-6">
                 <h4 class="text-xl font-semibold text-gray-700 mb-6">Verkäufer Informationen</h4>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
@@ -326,9 +326,11 @@
                         @error('seller_email') <p class="text-red-500 text-sm mt-1">{{ $message }}</p> @enderror
                     </div>
                 </div>
-
                 
-            </section>
+            </section> --}}
+
+
+
             {{-- Photo Upload Section --}}
             {{-- The x-data="multiImageUploader()" is placed on a div wrapping the input and previews --}}
             <section class="bg-gray-50 p-6 rounded-lg shadow-inner">
