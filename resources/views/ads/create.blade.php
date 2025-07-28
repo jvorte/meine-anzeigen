@@ -47,7 +47,7 @@
                     <div>
                         <h3
                             class="text-lg font-semibold text-gray-800 group-hover:text-blue-700 flex items-center gap-2">
-                            Fahrzeuge
+                            Vehicles
                             {{-- Plus icon for the "Fahrzeuge" modal trigger --}}
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
                                 stroke="currentColor" class="w-5 h-5 text-green-600 group-hover:text-green-700">
@@ -225,7 +225,7 @@
                                 <path d="M9 17h6" />
                                 <circle cx="17" cy="17" r="2" />
                             </svg>
-                            <span>+Autos</span>
+                            <span>+Cars</span>
                         </a>
                         <a href="{{ route('ads.motorrad.create') }}"
                             class="flex flex-col items-center p-4 rounded-lg border border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200 text-gray-700 dark:text-gray-200 font-medium">
@@ -253,7 +253,7 @@
                                 <circle cx="17" cy="18" r="2" />
                                 <circle cx="7" cy="18" r="2" />
                             </svg>
-                            <span>+Nutzfahrzeuge</span>
+                            <span>+Commercial-vehicle</span>
                         </a>
                         <a href="{{ route('ads.camper.create') }}"
                             class="flex flex-col items-center p-4 rounded-lg border border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200 text-gray-700 dark:text-gray-200 font-medium">

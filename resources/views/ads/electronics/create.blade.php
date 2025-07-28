@@ -12,17 +12,18 @@
         </p>
 
     </x-slot>
+ <div class="py-2">
+    <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+        {{-- Breadcrumbs component --}}
+        <x-breadcrumbs :items="[
+            {{-- Link to the general Cars category listing --}}
+            ['label' => 'Cars Anzeigen', 'url' => route('categories.show', 'cars')],
 
-    <div class="py-1">
-        <div class="max-w-8xl mx-auto sm:px-6 lg:px-1">
-            {{-- Breadcrumbs component --}}
-            <x-breadcrumbs :items="[
-        ['label' => 'Anzeige erstellen', 'url' => route('ads.create')],
-        ['label' =>'Neue Elektronik Anzeige', 'url' => route('ads.create')],
-    ]" />
-
-        </div>
+            {{-- The current page (New Car Ad creation) - set URL to null --}}
+            ['label' => 'Neue Auto Anzeige', 'url' => null],
+        ]" />
     </div>
+</div>
 {{-- --------------------------------------------------------------------------------- --}}
 
     <div class="max-w-6xl mx-auto p-6 bg-white rounded-lg shadow-xl mt-6">

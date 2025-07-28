@@ -202,12 +202,12 @@
                                     </a>
                                     {{-- Sub-category links for Fahrzeuge. Only include the actual sub-categories for vehicles. --}}
                                     {{-- Make sure your $categories collection passed from the controller includes these slugs --}}
-                                    @foreach ($categories->whereIn('slug', ['motorrad', 'nutzfahrzeuge', 'campers']) as $subCat)
+                                    @foreach ($categories->whereIn('slug', ['motorrad', 'commercial-vehicle', 'campers']) as $subCat)
                                         <a href="{{ route('categories.show', $subCat->slug) }}"
                                             class="flex flex-col items-center p-4 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200 text-gray-700 dark:text-gray-200">
                                             @if ($subCat->slug == 'motorrad')
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-motorbike mb-2"><path d="M5 16m-3 0a3 3 0 1 0 6 0a3 3 0 1 0 -6 0"/><path d="M17 16m-3 0a3 3 0 1 0 6 0a3 3 0 1 0 -6 0"/><path d="M7.5 14h9l4 -2l-1.5 -4.5h-11.5l-4 2z"/><path d="M18 5l-1.5 4.5"/><path d="M9 6l-2 4"/><path d="M12 7v4"/></svg>
-                                            @elseif ($subCat->slug == 'nutzfahrzeuge')
+                                            @elseif ($subCat->slug == 'commercial-vehicle')
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucude-truck mb-2"><path d="M14 18V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v11a1 1 0 0 0 1 1h2"/><path d="M10 18H7"/><path d="M18 18h-1"/><path d="M19 12h2v3"/><path d="M18 11V6a2 2 0 0 0-2-2h-3"/><path d="M14 18h6a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2h-3"/><path d="M7 18v.001"/><circle cx="7" cy="18" r="2"/><circle cx="17" cy="18" r="2"/></svg>
                                             @elseif ($subCat->slug == 'campers')
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-caravan mb-2"><path d="M6 10c-1.1 0-2 .9-2 2v6h3"/><path d="M15 10h5a2 2 0 0 1 2 2v6h-3"/><path d="M11 10V6a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v4h8Z"/><path d="M15 18H9a2 2 0 0 1-2-2v-4h10v4a2 2 0 0 1-2 2Z"/><path d="M18 20v2"/><path d="M14 14h.01"/><path d="M12 10h.01"/><path d="M20 20v2"/></svg>
@@ -227,7 +227,7 @@
                             </div>
                         </div>
                     </div>
-                @elseif (!in_array($cat->slug, ['motorrad', 'nutzfahrzeuge', 'campers']))
+                @elseif (!in_array($cat->slug, ['motorrad', 'commercial-vehicle', 'campers']))
                     {{-- All other categories (excluding vehicle sub-categories that are now in the modal) remain as direct links --}}
                     <a href="{{ route('categories.show', $cat->slug) }}"
                         class="flex items-center space-x-1 text-gray-700 hover:text-indigo-600 transition-colors duration-200 px-3 py-1 rounded-full dark:hover:bg-gray-400 dark:text-gray-700 dark:hover:text-white">
