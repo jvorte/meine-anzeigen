@@ -23,9 +23,9 @@ class DatabaseSeeder extends Seeder
             CategoryTableSeeder::class,
             // Add other seeders here, e.g., BrandSeeder::class if you fix it
         ]);
-        $this->call([
-            CategorySeeder::class,
-        ]);
+        // $this->call([
+        //     CategorySeeder::class,
+        // ]);
         $this->call([
             // CarModelsTableSeeder::class,
         ]);

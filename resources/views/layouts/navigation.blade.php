@@ -161,7 +161,7 @@
             class="p-4 flex flex-wrap justify-center md:justify-start gap-x-4 gap-y-2 mt-4 pb-2 border-b border-gray-200 dark:border-gray-700">
             @foreach ($categories as $cat)
                 {{-- Check if it's the "Fahrzeuge" category --}}
-                @if ($cat->slug == 'vehicles')
+                @if ($cat->slug == 'cars')
                     {{-- Alpine.js for modal --}}
                     <div x-data="{ open: false }" class="relative">
                         <a @click.prevent="open = true" {{-- Prevent default link behavior --}}
@@ -176,7 +176,7 @@
                                 <path d="M9 17h6" />
                                 <circle cx="17" cy="17" r="2" />
                             </svg>
-                            <span>Fahrzeuge</span>
+                            <span>Vehicles</span>
                         </a>
 
                         {{-- The Modal --}}
@@ -195,7 +195,7 @@
 
                                 <div class="grid grid-cols-2 gap-4">
                                             {{-- Link to generic Fahrzeuge page, if you still want one for "all vehicles" --}}
-                                    <a href="{{ route('categories.show', 'fahrzeuge') }}"
+                                    <a href="{{ route('categories.show', 'cars') }}"
                                         class="flex flex-col items-center p-4 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200 text-gray-700 dark:text-gray-200">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-square-parking mb-2"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M9 17V7H7.8C7.1 7 6.5 7.5 6.5 8.2V10c0 .7.6 1.2 1.3 1.2H10V17"/><path d="M13 17V7h4"/></svg>
                                         <span>Autos</span> 
