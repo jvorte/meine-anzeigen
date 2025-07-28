@@ -10,26 +10,44 @@ class Electronic extends Model
     use HasFactory;
 
     protected $fillable = [
-        'user_id',
         'title',
         'description',
         'price',
-        'condition',
-        'category',
+        'user_id', // Make sure user_id is fillable if set this way
         'brand_id',
         'electronic_model_id',
-        'year_of_purchase',
-        'warranty_status',
-        'accessories',
-     
+        'condition',
+        'warranty',
+        'color',
+        'usage_time',
+        'power',
+        'operating_system',
+        'storage_capacity',
+        'screen_size',
+        'processor',
+        'ram',
     ];
 
-    protected $casts = [
-        
-    ];
+    // ... other methods ...
 
     /**
-     * Get the brand associated with the electronic item.
+     * An electronic ad can have many images.
+     */
+    public function images()
+    {
+        return $this->hasMany(ElectronicImage::class);
+    }
+
+    /**
+     * An electronic ad belongs to a user.
+     */
+    public function user()
+    {
+        return $this->belongsTo(User::class); // Assuming your User model is in App\Models\User
+    }
+
+    /**
+     * An electronic ad belongs to a brand.
      */
     public function brand()
     {
@@ -37,26 +55,10 @@ class Electronic extends Model
     }
 
     /**
-     * Get the electronic model associated with the electronic item.
+     * An electronic ad belongs to an electronic model.
      */
     public function electronicModel()
     {
         return $this->belongsTo(ElectronicModel::class);
-    }
-
-    /**
-     * Get the user that owns the electronic ad.
-     */
-    public function user()
-    {
-        return $this->belongsTo(User::class);
-    }
-
-    /**
-     * Get the images for the electronic ad.
-     */
-    public function images()
-    {
-        return $this->hasMany(ElectronicImage::class);
     }
 }

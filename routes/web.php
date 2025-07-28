@@ -7,7 +7,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\CategoryController;
 // Removed VehicleController as CarController is taking its place for "cars"
 use App\Http\Controllers\PartController;
-use App\Http\Controllers\ElectronicController;
+use App\Http\Controllers\ElectronicController; // Ensure this is imported
 use App\Http\Controllers\RealEstateController;
 use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\BoatController;
@@ -47,20 +47,25 @@ Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard
 // Generic category show route - This handles /categories/{slug} for all categories
 Route::get('/categories/{slug}', [CategoryController::class, 'show'])->name('categories.show');
 
+
 // Specific ad detail pages for each model type (Publicly accessible)
 Route::prefix('categories')->name('categories.')->group(function () {
-    // Changed 'fahrzeuge' to 'cars' in URI and name, and using CarController
+
     Route::get('/cars/{car}', [CarController::class, 'show'])->name('cars.show');
-    Route::get('/boote/{boat}', [BoatController::class, 'show'])->name('boote.show');
+    Route::get('/boats/{boat}', [BoatController::class, 'show'])->name('boats.show');
     Route::get('/fahrzeugeteile/{usedVehiclePart}', [UsedVehiclePartController::class, 'show'])->name('fahrzeugeteile.show');
-    Route::get('/elektronik/{electronic}', [ElectronicController::class, 'show'])->name('elektronik.show');
+    // Ensure this show route for electronics is correct, as the `show` method for specific
+    // electronics ads is usually `categories.electronics.show` with a slug or ID.
+    // The previous advice had this as categories.electronics.show (with slug/id),
+    // but your current structure has it as categories.electronics.show (with electronic model binding).
+    Route::get('/electronics/{electronic}', [ElectronicController::class, 'show'])->name('electronics.show');
     Route::get('/haushalt/{householdItem}', [HouseholdItemController::class, 'show'])->name('haushalt.show');
     Route::get('/immobilien/{realEstate}', [RealEstateController::class, 'show'])->name('immobilien.show');
     Route::get('/dienstleistungen/{service}', [ServiceController::class, 'show'])->name('dienstleistungen.show');
     Route::get('/sonstiges/{other}', [OtherController::class, 'show'])->name('sonstiges.show');
     Route::get('/motorrad/{motorradAd}', [MotorradAdController::class, 'show'])->name('motorrad.show');
-    Route::get('/nutzfahrzeuge/{commercialVehicle}', [CommercialVehicleController::class, 'show'])->name('nutzfahrzeuge.show');
-    Route::get('/wohnmobile/{camper}', [CamperController::class, 'show'])->name('wohnmobile.show');
+    Route::get('/commercial-vehicles/{commercialVehicle}', [CommercialVehicleController::class, 'show'])->name('commercial-vehicles.show');
+    Route::get('/campers/{camper}', [CamperController::class, 'show'])->name('campers.show');
 });
 
 
@@ -86,43 +91,61 @@ Route::middleware(['auth'])->group(function () {
     // Cars (formerly 'autos' and 'fahrzeuge' for creation/storage)
     // Assuming createAutos and storeFahrzeuge methods are now simply 'create' and 'store' in CarController
     Route::get('/ads/cars/create', [CarController::class, 'create'])->name('ads.cars.create');
-    Route::post('/ads/cars', [CarController::class, 'store'])->name('ads.cars.store'); // Standardized URI and name for car storage
-Route::get('/ads/cars/{car}/edit', [CarController::class, 'edit'])->name('ads.cars.edit');
-Route::put('/ads/cars/{car}', [CarController::class, 'update'])->name('ads.cars.update');
-Route::delete('/ads/cars/{car}', [CarController::class, 'destroy'])->name('ads.cars.destroy');
+    Route::post('/ads/cars', [CarController::class, 'store'])->name('ads.cars.store');
+    Route::get('/ads/cars/{car}/edit', [CarController::class, 'edit'])->name('ads.cars.edit');
+    Route::put('/ads/cars/{car}', [CarController::class, 'update'])->name('ads.cars.update');
+    Route::delete('/ads/cars/{car}', [CarController::class, 'destroy'])->name('ads.cars.destroy');
 
     // Motorrad Ads
     Route::get('/ads/motorrad/create', [MotorradAdController::class, 'create'])->name('ads.motorrad.create');
     Route::post('/ads/motorrad', [MotorradAdController::class, 'store'])->name('ads.motorrad.store');
 
     // Commercial Vehicles
-    Route::get('/ads/commercial-vehicles/create', [CommercialVehicleController::class, 'create'])->name('ads.commercial-vehicles.create');
-    Route::post('/ads/commercial-vehicles', [CommercialVehicleController::class, 'store'])->name('ads.commercial-vehicles.store');
+    Route::prefix('ads/commercial-vehicles')->name('ads.commercial-vehicles.')->group(function () {
+        Route::get('/create', [CommercialVehicleController::class, 'create'])->name('create');
+        Route::post('/', [CommercialVehicleController::class, 'store'])->name('store');
+        Route::get('/{ad}/edit', [CommercialVehicleController::class, 'edit'])->name('edit');
+        Route::put('/{ad}', [CommercialVehicleController::class, 'update'])->name('update');
+        Route::delete('/{ad}', [CommercialVehicleController::class, 'destroy'])->name('destroy');
+        Route::get('/{commercialVehicle}', [CommercialVehicleController::class, 'show'])->name('show');
+    });
 
     // Campers
     Route::get('/ads/camper/create', [CamperController::class, 'create'])->name('ads.camper.create');
     Route::post('/ads/camper', [CamperController::class, 'store'])->name('ads.camper.store');
+    Route::get('/ads/camper/{camper}', [CamperController::class, 'show'])->name('ads.camper.show');
+    Route::get('/ads/camper/{camper}/edit', [CamperController::class, 'edit'])->name('ads.camper.edit');
+    Route::put('/ads/camper/{camper}', [CamperController::class, 'update'])->name('ads.camper.update');
+    Route::delete('/ads/camper/{camper}', [CamperController::class, 'destroy'])->name('ads.camper.destroy');
+
 
     // Used Vehicle Parts
     Route::get('/ads/used-vehicle-parts/create', [UsedVehiclePartController::class, 'create'])->name('ads.used-vehicle-parts.create');
     Route::post('/ads/used-vehicle-parts', [UsedVehiclePartController::class, 'store'])->name('ads.used-vehicle-parts.store');
 
     // Boats
+    Route::prefix('ads/boats')->name('ads.boats.')->group(function () {
+        Route::get('/', [BoatController::class, 'index'])->name('index');
+        Route::get('/create', [BoatController::class, 'create'])->name('create');
+        Route::post('/', [BoatController::class, 'store'])->name('store');
+        Route::get('/{boat}/edit', [BoatController::class, 'edit'])->name('edit');
+        Route::put('/{boat}', [BoatController::class, 'update'])->name('update');
+        Route::delete('/{boat}', [BoatController::class, 'destroy'])->name('destroy');
+    });
 
 
-Route::prefix('ads/boats')->name('ads.boats.')->group(function () {
-    Route::get('/', [BoatController::class, 'index'])->name('index');
-    Route::get('/create', [BoatController::class, 'create'])->name('create');
-    Route::post('/', [BoatController::class, 'store'])->name('store');
-    Route::get('/{boat}/edit', [BoatController::class, 'edit'])->name('edit');
-    Route::put('/{boat}', [BoatController::class, 'update'])->name('update');
-    Route::delete('/{boat}', [BoatController::class, 'destroy'])->name('destroy');
-});
-
-
-    // Electronics
+    // Electronics (ADDITIONS START HERE)
     Route::get('/ads/electronics/create', [ElectronicController::class, 'create'])->name('ads.electronics.create');
     Route::post('/ads/electronics', [ElectronicController::class, 'store'])->name('ads.electronics.store');
+    // ADDED: Edit route for Electronics
+    Route::get('/ads/electronics/{electronic}/edit', [ElectronicController::class, 'edit'])->name('ads.electronics.edit');
+    // ADDED: Update route for Electronics
+    Route::put('/ads/electronics/{electronic}', [ElectronicController::class, 'update'])->name('ads.electronics.update');
+    // ADDED: Destroy route for Electronics
+    Route::delete('/ads/electronics/{electronic}', [ElectronicController::class, 'destroy'])->name('ads.electronics.destroy');
+    // ADDED: Destroy Image route for Electronics (within ElectronicController)
+    Route::delete('/ads/electronics/images/{electronicImage}', [ElectronicController::class, 'destroyImage'])->name('ads.electronics.images.destroy');
+
 
     // Household Items
     Route::get('/ads/household/create', [HouseholdItemController::class, 'create'])->name('ads.household.create');
@@ -134,7 +157,7 @@ Route::prefix('ads/boats')->name('ads.boats.')->group(function () {
     Route::post('/realestate', [RealEstateController::class, 'store'])->name('ads.realestate.store');
 
     // Services - Fixed typo 'servises' to 'services'
-   Route::get('/ads/services/create', [ServiceController::class, 'create'])->name('ads.services.create'); // <-- CORRECTED NAME
+    Route::get('/ads/services/create', [ServiceController::class, 'create'])->name('ads.services.create'); // <-- CORRECTED NAME
     // Consider if this should be /ads/services for consistency or if /services is a top-level resource
     Route::post('/services', [ServiceController::class, 'store'])->name('ads.services.store');
 
@@ -154,12 +177,12 @@ Route::prefix('ads/boats')->name('ads.boats.')->group(function () {
 });
 
 
-    Route::get('/messages/create/{userId}', function($userId) {
-        // This is a placeholder. You would typically return a view with a form
-        // for sending a message to the user with $userId.
-        // Make sure you have a MessageController and a view for this.
-        return view('messages.create', ['recipientId' => $userId]);
-    })->name('messages.create');
+Route::get('/messages/create/{userId}', function($userId) {
+    // This is a placeholder. You would typically return a view with a form
+    // for sending a message to the user with $userId.
+    // Make sure you have a MessageController and a view for this.
+    return view('messages.create', ['recipientId' => $userId]);
+})->name('messages.create');
 
 // Auth scaffolding routes (login, register, etc.) - ALWAYS keep this at the very end
 require __DIR__ . '/auth.php';

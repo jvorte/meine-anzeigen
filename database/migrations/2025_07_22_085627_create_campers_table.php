@@ -11,37 +11,37 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('campers', function (Blueprint $table) {
+      Schema::create('campers', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained()->onDelete('cascade'); // Link to users table
+            $table->foreignId('user_id')->constrained()->onDelete('cascade'); // Assuming users create campers
+            $table->string('brand');
+            $table->string('model');
+            $table->decimal('price', 10, 2);
+            $table->date('first_registration');
+            $table->integer('mileage');
+            $table->integer('power');
+            $table->string('color');
+            $table->string('condition');
+            $table->string('camper_type');
+            $table->integer('berths');
+            $table->decimal('total_length', 4, 1);
+            $table->decimal('total_width', 4, 1);
+            $table->decimal('total_height', 4, 1);
+            $table->integer('gross_vehicle_weight');
+            $table->string('fuel_type');
+            $table->string('transmission');
+            $table->string('emission_class');
             $table->string('title');
             $table->text('description');
-            $table->foreignId('brand_id')->constrained('brands')->onDelete('cascade');
-            $table->foreignId('car_model_id')->constrained('car_models')->onDelete('cascade'); // Assuming CarModel covers camper models
-            $table->date('first_registration');
-            $table->unsignedInteger('mileage');
-            $table->unsignedInteger('power')->nullable(); // Horsepower, can be null
-            $table->string('color')->nullable();
-            $table->string('condition'); // e.g., 'neu', 'gebraucht', 'unfallfahrzeug'
-            $table->decimal('price', 10, 2)->nullable(); // Price in Euros
-
-            // Camper-specific fields
-            $table->string('camper_type'); // e.g., 'Alkoven', 'Teilintegriert', 'Vollintegriert', 'Kastenwagen'
-            $table->unsignedTinyInteger('berths')->nullable(); // Number of sleeping berths
-            $table->decimal('total_length', 4, 1)->nullable(); // in meters (e.g., 6.5)
-            $table->decimal('total_width', 4, 1)->nullable(); // in meters (e.g., 2.3)
-            $table->decimal('total_height', 4, 1)->nullable(); // in meters (e.g., 2.9)
-            $table->unsignedInteger('gross_vehicle_weight')->nullable(); // in kg
-            $table->string('fuel_type')->nullable(); // e.g., 'Diesel', 'Gasoline'
-            $table->string('transmission')->nullable(); // e.g., 'Manuell', 'Automatik'
-            $table->string('emission_class')->nullable(); // e.g., 'Euro 6'
-
+            $table->string('seller_name')->nullable();
+            $table->string('seller_phone')->nullable();
+            $table->string('seller_email')->nullable();
             $table->timestamps();
         });
 
-        Schema::create('camper_images', function (Blueprint $table) {
+      Schema::create('camper_images', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('camper_id')->constrained('campers')->onDelete('cascade');
+            $table->foreignId('camper_id')->constrained()->onDelete('cascade');
             $table->string('image_path');
             $table->timestamps();
         });

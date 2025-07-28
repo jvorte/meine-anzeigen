@@ -1,100 +1,103 @@
-{{-- resources/views/ads/electronics/create.blade.php --}}
+{{-- resources/views/ads/electronics/edit.blade.php --}}
 <x-app-layout>
 
+    {{-- -----------------------------------breadcrumbs ---------------------------------------------- --}}
+    <x-slot name="header">
+        <h2 class="text-3xl font-extrabold text-gray-900 leading-tight mb-2">
+            Electronics Anzeige bearbeiten
+        </h2>
+        <p class="text-md text-gray-700 dark:text-gray-500">
+            Bearbeite die Details deiner Anzeige für {{ $electronic->title }}.
+        </p>
+    </x-slot>
 
-         {{-- -----------------------------------breadcrumbs ---------------------------------------------- --}}
-<x-slot name="header">
-    <h2 class="text-3xl font-extrabold text-gray-900 leading-tight mb-2">
-        Neue Electronics Anzeige erstellen
-    </h2>
-    <p class="text-md text-gray-700 dark:text-gray-500">
-        Wähle eine passende Kategorie und fülle die erforderlichen Felder aus, um deine Anzeige zu erstellen.
-    </p>
-</x-slot>
-
-<div class="py-2">
-    <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-        {{-- Breadcrumbs component --}}
-        <x-breadcrumbs :items="[
-            {{-- Link to the general Electronics category listing --}}
-            ['label' => 'Electronics Anzeigen', 'url' => route('categories.show', 'elektronik')],
-
-            {{-- The current page (New Electronic Ad creation) - set URL to null --}}
-            ['label' => 'Neue Electronic Anzeige', 'url' => null],
-        ]" />
+    <div class="py-2">
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+            {{-- Breadcrumbs component --}}
+            <x-breadcrumbs :items="[
+                ['label' => 'Electronics Anzeigen', 'url' => route('categories.show', 'elektronik')],
+                ['label' => $electronic->title, 'url' => route('ads.show', $electronic)], {{-- Link to the ad's show page --}}
+                ['label' => 'Anzeige bearbeiten', 'url' => null],
+            ]" />
+        </div>
     </div>
-</div>
-{{-- --------------------------------------------------------------------------------- --}}
+    {{-- --------------------------------------------------------------------------------- --}}
 
-    <div class="max-w-6xl mx-auto p-6 bg-white rounded-lg shadow-xl mt-6">
+    <div class="max-w-6xl mx-auto p-6 bg-white rounded-lg shadow-xl my-6">
 
-        <form method="POST" action="{{ route('ads.electronics.store') }}" enctype="multipart/form-data" class="space-y-8">
+        <form method="POST" action="{{ route('ads.electronics.update', $electronic->id) }}" enctype="multipart/form-data" class="space-y-8">
             @csrf
-
-       
+            @method('PUT') {{-- Specify the PUT method for updates --}}
 
             {{-- Electronic Details Section --}}
             <section class="bg-gray-50 p-6 rounded-lg shadow-inner">
                 <h4 class="text-xl font-semibold text-gray-700 mb-6">Electronics-Details</h4>
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
                      x-data="{
-                        selectedBrandId: @json(old('brand_id')),
-                        selectedElectronicModelId: @json(old('electronic_model_id')),
-                        electronicModels: @json($initialElectronicModels), // Initial models for old value
-                        async fetchElectronicModels() {
-                            if (this.selectedBrandId) {
-                                const response = await fetch(`/electronic-models/${this.selectedBrandId}`);
-                                this.electronicModels = await response.json();
-                                // Reset selected model if it's not in the new list
-                                if (!Object.keys(this.electronicModels).includes(String(this.selectedElectronicModelId))) {
-                                    this.selectedElectronicModelId = '';
-                                }
-                            } else {
-                                this.electronicModels = {};
-                                this.selectedElectronicModelId = '';
-                            }
-                        }
+                         selectedBrandId: @json(old('brand_id', $electronic->brand_id)),
+                         selectedElectronicModelId: @json(old('electronic_model_id', $electronic->electronic_model_id)),
+                         electronicModels: @json($initialElectronicModels ?? []), // Initial models for old value or existing ad
+                         async fetchElectronicModels() {
+                             if (this.selectedBrandId) {
+                                 const response = await fetch(`/electronic-models/${this.selectedBrandId}`);
+                                 this.electronicModels = await response.json();
+                                 // Reset selected model if it's not in the new list
+                                 if (!Object.keys(this.electronicModels).includes(String(this.selectedElectronicModelId))) {
+                                     this.selectedElectronicModelId = '';
+                                 }
+                             } else {
+                                 this.electronicModels = {};
+                                 this.selectedElectronicModelId = '';
+                             }
+                         }
                      }"
                      x-init="fetchElectronicModels(); $watch('selectedBrandId', fetchElectronicModels)">
 
                     {{-- Category --}}
                     <div>
                         <label for="category" class="block text-sm font-medium text-gray-700 mb-2">Kategorie</label>
-                        <select name="category" id="category"
-                                class="form-select w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
-                            <option value="">Bitte wählen</option>
-                            @foreach($categories as $cat)
-                                <option value="{{ $cat }}" {{ old('category') == $cat ? 'selected' : '' }}>{{ $cat }}</option>
-                            @endforeach
-                        </select>
+                  @php
+    $categories = ['Smartphone', 'Tablet', 'Laptop', 'Fernseher', 'Kopfhörer', 'Spielkonsole'];
+@endphp
+
+<select name="category" id="category"
+        class="form-select w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
+    <option value="">Bitte wählen</option>
+    @foreach($categories as $cat)
+        <option value="{{ $cat }}" {{ old('category', $electronic->category) == $cat ? 'selected' : '' }}>
+            {{ $cat }}
+        </option>
+    @endforeach
+</select>
+
                         @error('category')
                             <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                         @enderror
                     </div>
 
-                   <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    {{-- Marke (Text Input) --}}
-                    <div>
-                        <label for="brand" class="block text-sm font-medium text-gray-700 mb-2">Marke</label>
-                        <input type="text" name="brand" id="brand" value="{{ old('brand') }}"
-                            placeholder="Samsung"
-                            class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
-                        @error('brand')
-                            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-                        @enderror
-                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        {{-- Marke (Text Input) --}}
+                        <div>
+                            <label for="brand" class="block text-sm font-medium text-gray-700 mb-2">Marke</label>
+                            <input type="text" name="brand" id="brand" value="{{ old('brand', $electronic->brand) }}"
+                                placeholder="Samsung"
+                                class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
+                            @error('brand')
+                                <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                            @enderror
+                        </div>
 
-                    {{-- Modell (Text Input) --}}
-                    <div>
-                        <label for="model" class="block text-sm font-medium text-gray-700 mb-2">Modell</label>
-                        <input type="text" name="model" id="model" value="{{ old('model') }}"
-                            placeholder="z.B. s24 plus"
-                            class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
-                        @error('model')
-                            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-                        @enderror
+                        {{-- Modell (Text Input) --}}
+                        <div>
+                            <label for="model" class="block text-sm font-medium text-gray-700 mb-2">Modell</label>
+                            <input type="text" name="model" id="model" value="{{ old('model', $electronic->model) }}"
+                                placeholder="z.B. s24 plus"
+                                class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
+                            @error('model')
+                                <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                            @enderror
+                        </div>
                     </div>
-                </div>
 
                     {{-- Electronic Model (Dynamic with Alpine.js) --}}
                     <div x-show="Object.keys(electronicModels).length > 0" x-transition>
@@ -114,7 +117,7 @@
                     {{-- Price --}}
                     <div>
                         <label for="price" class="block text-sm font-medium text-gray-700 mb-2">Preis (in €)</label>
-                        <input type="number" name="price" id="price" value="{{ old('price') }}" placeholder="z.B. 750"
+                        <input type="number" name="price" id="price" value="{{ old('price', $electronic->price) }}" placeholder="z.B. 750"
                                class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
                         @error('price')
                             <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
@@ -127,9 +130,9 @@
                         <select name="condition" id="condition"
                                 class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
                             <option value="">Bitte wählen</option>
-                            <option value="neu" {{ old('condition') == 'neu' ? 'selected' : '' }}>Neu</option>
-                            <option value="gebraucht" {{ old('condition') == 'gebraucht' ? 'selected' : '' }}>Gebraucht</option>
-                            <option value="defekt" {{ old('condition') == 'defekt' ? 'selected' : '' }}>Defekt (als Ersatzteilspender)</option>
+                            <option value="neu" {{ old('condition', $electronic->condition) == 'neu' ? 'selected' : '' }}>Neu</option>
+                            <option value="gebraucht" {{ old('condition', $electronic->condition) == 'gebraucht' ? 'selected' : '' }}>Gebraucht</option>
+                            <option value="defekt" {{ old('condition', $electronic->condition) == 'defekt' ? 'selected' : '' }}>Defekt (als Ersatzteilspender)</option>
                         </select>
                         @error('condition')
                             <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
@@ -139,7 +142,7 @@
                     {{-- Year of Purchase --}}
                     <div>
                         <label for="year_of_purchase" class="block text-sm font-medium text-gray-700 mb-2">Kaufjahr (optional)</label>
-                        <input type="number" name="year_of_purchase" id="year_of_purchase" value="{{ old('year_of_purchase') }}" placeholder="z.B. 2023" min="1950" max="{{ date('Y') }}"
+                        <input type="number" name="year_of_purchase" id="year_of_purchase" value="{{ old('year_of_purchase', $electronic->year_of_purchase) }}" placeholder="z.B. 2023" min="1950" max="{{ date('Y') }}"
                                class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
                         @error('year_of_purchase')
                             <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
@@ -153,7 +156,7 @@
                                 class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
                             <option value="">Bitte wählen</option>
                             @foreach($warrantyStatuses as $status)
-                                <option value="{{ $status }}" {{ old('warranty_status') == $status ? 'selected' : '' }}>{{ $status }}</option>
+                                <option value="{{ $status }}" {{ old('warranty_status', $electronic->warranty_status) == $status ? 'selected' : '' }}>{{ $status }}</option>
                             @endforeach
                         </select>
                         @error('warranty_status')
@@ -165,7 +168,7 @@
                     <div class="md:col-span-2 lg:col-span-3">
                         <label for="accessories" class="block text-sm font-medium text-gray-700 mb-2">Zubehör (optional, z.B. Ladekabel, Fernbedienung)</label>
                         <textarea name="accessories" id="accessories" rows="3" placeholder="Liste hier enthaltenes Zubehör auf."
-                                  class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">{{ old('accessories') }}</textarea>
+                                    class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">{{ old('accessories', $electronic->accessories) }}</textarea>
                         @error('accessories')
                             <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                         @enderror
@@ -178,7 +181,7 @@
                 {{-- Titel --}}
                 <div class="mb-6">
                     <label for="title" class="block text-sm font-semibold text-gray-800 mb-2">Anzeigentitel</label>
-                    <input type="text" name="title" id="title" value="{{ old('title') }}"
+                    <input type="text" name="title" id="title" value="{{ old('title', $electronic->title) }}"
                            placeholder="Aussagekräftiger Titel für deine Anzeige (z.B. iPhone 15 Pro Max 256GB)"
                            class="w-full p-3 border border-gray-300 rounded-md shadow-sm bg-white text-gray-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 focus:border-blue-600 transition duration-150 ease-in-out">
                     @error('title')
@@ -190,22 +193,42 @@
                 <div>
                     <label for="description" class="block text-sm font-semibold text-gray-800 mb-2">Beschreibung</label>
                     <textarea name="description" id="description" rows="7"
-                              placeholder="Gib hier alle wichtigen Details zu deinem Elektronikartikel ein. Zustand, Funktionen, Mängel."
-                              class="w-full p-3 border border-gray-300 rounded-md shadow-sm bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-600 transition duration-150 ease-in-out">{{ old('description') }}</textarea>
+                                placeholder="Gib hier alle wichtigen Details zu deinem Elektronikartikel ein. Zustand, Funktionen, Mängel."
+                                class="w-full p-3 border border-gray-300 rounded-md shadow-sm bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-600 transition duration-150 ease-in-out">{{ old('description', $electronic->description) }}</textarea>
                     @error('description')
                         <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                     @enderror
                 </div>
             </section>
 
-       {{-- Photo Upload Section --}}
+                     {{-- Existing Photos Section --}}
+            @if ($electronic->images->count() > 0)
+                <section class="bg-gray-50 p-6 rounded-lg shadow-inner">
+                    <h4 class="text-xl font-semibold text-gray-700 mb-6">Vorhandene Fotos</h4>
+                    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                        @foreach ($electronic->images as $image)
+                            <div class="relative group">
+                                <img src="{{ asset('storage/' . $image->image_path) }}" alt="Car Image" class="w-full h-48 object-cover rounded-lg shadow-sm">
+                                <label class="absolute top-2 right-2 bg-red-600 text-white text-xs px-2 py-1 rounded-full cursor-pointer opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                                    <input type="checkbox" name="delete_images[]" value="{{ $image->id }}" class="mr-1"> Löschen
+                                </label>
+                            </div>
+                        @endforeach
+                    </div>
+                    <p class="text-sm text-gray-600 mt-4">Wähle Fotos zum Löschen aus.</p>
+                </section>
+            @endif
+
+
+
+          {{-- Photo Upload Section --}}
             {{-- The x-data="multiImageUploader()" is placed on a div wrapping the input and previews --}}
             <section class="bg-gray-50 p-6 rounded-lg shadow-inner">
                 <h4 class="text-xl font-semibold text-gray-700 mb-6">Fotos hinzufügen</h4>
 
                 <div x-data="multiImageUploader()" class="space-y-4">
                     {{-- The file input field. Laravel will pick up files from here. --}}
-                    <input type="file" name="images[]" multiple @change="addFiles($event)" class="block w-full border p-2 rounded" />
+                    <input type="file" name="new_images[]" multiple @change="addFiles($event)" class="block w-full border p-2 rounded" />
                     @error('images')
                         <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                     @enderror
@@ -269,27 +292,26 @@
                     }
                 </script>
             </section>
-
             {{-- Submit Button --}}
             <div class="pt-6 border-t border-gray-200 flex justify-end">
                 <button type="submit"
                         class="bg-blue-600 text-white px-8 py-3 rounded-lg font-semibold text-lg hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-300 transition-all duration-300 shadow-lg">
-                    Anzeige erstellen
+                    Anzeige aktualisieren
                 </button>
             </div>
 
         </form>
     </div>
 
-    {{-- Alpine.js for dynamic models --}}
+    {{-- Alpine.js for dynamic models (can be removed from here if already in multiImageUploader) --}}
     @push('scripts')
         <script>
             // Ensure Alpine.js is loaded before this script runs
             document.addEventListener('alpine:init', () => {
                 Alpine.data('electronicForm', () => ({
-                    selectedBrandId: @json(old('brand_id')),
-                    selectedElectronicModelId: @json(old('electronic_model_id')),
-                    electronicModels: @json($initialElectronicModels),
+                    selectedBrandId: @json(old('brand_id', $electronic->brand_id)),
+                    selectedElectronicModelId: @json(old('electronic_model_id', $electronic->electronic_model_id)),
+                    electronicModels: @json($initialElectronicModels ?? []),
 
                     async fetchElectronicModels() {
                         if (this.selectedBrandId) {

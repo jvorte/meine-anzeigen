@@ -11,16 +11,23 @@
         </p>
     </x-slot>
 
-    <div class="py-2">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            {{-- Breadcrumbs component --}}
-            <x-breadcrumbs :items="[
-                ['label' => 'Anzeigen', 'url' => route('dashboard')], {{-- Adjust this route as needed --}}
-                ['label' => 'Auto Anzeige bearbeiten', 'url' => route('ads.cars.edit', $car)],
-            ]" />
-        </div>
-    </div>
+ 
 
+    <div class="py-2">
+    <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+        {{-- Breadcrumbs component --}}
+        <x-breadcrumbs :items="[
+            {{-- Link to the general campers category page --}}
+            ['label' => 'Cars Anzeigen', 'url' => route('categories.show', 'cars')],
+
+            {{-- Link to the specific camper's show page --}}
+            ['label' => 'Car Anzeige', 'url' => route('categories.cars.show', $car->id)],
+
+            {{-- The current page (Camper Edit) - set URL to null as it's the current page --}}
+            ['label' => 'Car bearbeiten', 'url' => null],
+        ]" />
+    </div>
+</div>
     {{-- ------------------------------------------------------------------------------------- --}}
 
     <div class="max-w-6xl mx-auto p-6 bg-white rounded-lg shadow-xl my-6">

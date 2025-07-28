@@ -34,15 +34,15 @@
                     $categoryBackgrounds = [
                         'cars' => asset('storage/images/cars.jpg'),
                         'fahrzeugeteile' => asset('storage/images/parts.jpg'),
-                        'boote' => asset('storage/images/boats.jpg'),
-                        'elektronik' => asset('storage/images/tv.jpg'),
+                        'boats' => asset('storage/images/boats.jpg'),
+                        'electronics' => asset('storage/images/tv.jpg'),
                         'haushalt' => asset('storage/images/car.jpg'), // Consider changing these placeholders
                         'immobilien' => asset('storage/images/car.jpg'), // Consider changing these placeholders
                         'dienstleistungen' => asset('storage/images/car.jpg'), // Consider changing these placeholders
                         'sonstiges' => asset('storage/images/car.jpg'), // Consider changing these placeholders
                         'motorrad' => asset('storage/images/motorcycle.jpg'), // Added new
-                        'nutzfahrzeuge' => asset('storage/images/trucks.jpg'), // Added new
-                        'wohnmobile' => asset('storage/images/rv.jpg'), // Added new
+                        'commercial-vehicle' => asset('storage/images/trucks.jpg'), // Added new
+                        'campers' => asset('storage/images/camper.jpg'), // Added new
                     ];
                 @endphp
 
@@ -139,16 +139,16 @@
                                                             $adRouteName = 'categories.cars.show';
                                                             $adParamName = 'car';
                                                         } elseif ($ad instanceof \App\Models\Boat) {
-                                                            $adRouteName = 'categories.boote.show';
+                                                            $adRouteName = 'categories.boats.show';
                                                             $adParamName = 'boat';
                                                         } elseif ($ad instanceof \App\Models\Camper) {
-                                                            $adRouteName = 'categories.wohnmobile.show';
+                                                            $adRouteName = 'categories.campers.show';
                                                             $adParamName = 'camper';
                                                         } elseif ($ad instanceof \App\Models\CommercialVehicle) {
-                                                            $adRouteName = 'categories.nutzfahrzeuge.show';
+                                                            $adRouteName = 'categories.commercial-vehicles.show';
                                                             $adParamName = 'commercialVehicle';
                                                         } elseif ($ad instanceof \App\Models\Electronic) {
-                                                            $adRouteName = 'categories.elektronik.show';
+                                                            $adRouteName = 'categories.electronics.show';
                                                             $adParamName = 'electronic';
                                                         } elseif ($ad instanceof \App\Models\HouseholdItem) {
                                                             $adRouteName = 'categories.haushalt.show';

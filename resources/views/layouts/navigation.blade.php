@@ -161,7 +161,7 @@
             class="p-4 flex flex-wrap justify-center md:justify-start gap-x-4 gap-y-2 mt-4 pb-2 border-b border-gray-200 dark:border-gray-700">
             @foreach ($categories as $cat)
                 {{-- Check if it's the "Fahrzeuge" category --}}
-                @if ($cat->slug == 'fahrzeuge')
+                @if ($cat->slug == 'cars')
                     {{-- Alpine.js for modal --}}
                     <div x-data="{ open: false }" class="relative">
                         <a @click.prevent="open = true" {{-- Prevent default link behavior --}}
@@ -176,7 +176,7 @@
                                 <path d="M9 17h6" />
                                 <circle cx="17" cy="17" r="2" />
                             </svg>
-                            <span>Fahrzeuge</span>
+                            <span>Vehicles</span>
                         </a>
 
                         {{-- The Modal --}}
@@ -195,21 +195,21 @@
 
                                 <div class="grid grid-cols-2 gap-4">
                                             {{-- Link to generic Fahrzeuge page, if you still want one for "all vehicles" --}}
-                                    <a href="{{ route('categories.show', 'fahrzeuge') }}"
+                                    <a href="{{ route('categories.show', 'cars') }}"
                                         class="flex flex-col items-center p-4 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200 text-gray-700 dark:text-gray-200">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-square-parking mb-2"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M9 17V7H7.8C7.1 7 6.5 7.5 6.5 8.2V10c0 .7.6 1.2 1.3 1.2H10V17"/><path d="M13 17V7h4"/></svg>
                                         <span>Autos</span> 
                                     </a>
                                     {{-- Sub-category links for Fahrzeuge. Only include the actual sub-categories for vehicles. --}}
                                     {{-- Make sure your $categories collection passed from the controller includes these slugs --}}
-                                    @foreach ($categories->whereIn('slug', ['motorrad', 'nutzfahrzeuge', 'wohnmobile']) as $subCat)
+                                    @foreach ($categories->whereIn('slug', ['motorrad', 'commercial-vehicle', 'campers']) as $subCat)
                                         <a href="{{ route('categories.show', $subCat->slug) }}"
                                             class="flex flex-col items-center p-4 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200 text-gray-700 dark:text-gray-200">
                                             @if ($subCat->slug == 'motorrad')
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-motorbike mb-2"><path d="M5 16m-3 0a3 3 0 1 0 6 0a3 3 0 1 0 -6 0"/><path d="M17 16m-3 0a3 3 0 1 0 6 0a3 3 0 1 0 -6 0"/><path d="M7.5 14h9l4 -2l-1.5 -4.5h-11.5l-4 2z"/><path d="M18 5l-1.5 4.5"/><path d="M9 6l-2 4"/><path d="M12 7v4"/></svg>
-                                            @elseif ($subCat->slug == 'nutzfahrzeuge')
+                                            @elseif ($subCat->slug == 'commercial-vehicle')
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucude-truck mb-2"><path d="M14 18V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v11a1 1 0 0 0 1 1h2"/><path d="M10 18H7"/><path d="M18 18h-1"/><path d="M19 12h2v3"/><path d="M18 11V6a2 2 0 0 0-2-2h-3"/><path d="M14 18h6a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2h-3"/><path d="M7 18v.001"/><circle cx="7" cy="18" r="2"/><circle cx="17" cy="18" r="2"/></svg>
-                                            @elseif ($subCat->slug == 'wohnmobile')
+                                            @elseif ($subCat->slug == 'campers')
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-caravan mb-2"><path d="M6 10c-1.1 0-2 .9-2 2v6h3"/><path d="M15 10h5a2 2 0 0 1 2 2v6h-3"/><path d="M11 10V6a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v4h8Z"/><path d="M15 18H9a2 2 0 0 1-2-2v-4h10v4a2 2 0 0 1-2 2Z"/><path d="M18 20v2"/><path d="M14 14h.01"/><path d="M12 10h.01"/><path d="M20 20v2"/></svg>
                                             @endif
                                             <span>{{ $subCat->name }}</span>
@@ -227,14 +227,14 @@
                             </div>
                         </div>
                     </div>
-                @elseif (!in_array($cat->slug, ['motorrad', 'nutzfahrzeuge', 'wohnmobile']))
+                @elseif (!in_array($cat->slug, ['motorrad', 'commercial-vehicle', 'campers']))
                     {{-- All other categories (excluding vehicle sub-categories that are now in the modal) remain as direct links --}}
                     <a href="{{ route('categories.show', $cat->slug) }}"
                         class="flex items-center space-x-1 text-gray-700 hover:text-indigo-600 transition-colors duration-200 px-3 py-1 rounded-full dark:hover:bg-gray-400 dark:text-gray-700 dark:hover:text-white">
                         {{-- Original SVG Icon Logic here for other categories --}}
                         @if ($cat->slug == 'fahrzeugeteile')
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-wrench"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-2.46 2.46a7 7 0 0 1-9.9-9.9l2.46-2.46a6 6 0 0 1 7.94-7.94l-3.77 3.77a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0Z" /></svg>
-                        @elseif ($cat->slug == 'boote')
+                        @elseif ($cat->slug == 'boats')
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-boat"><path d="M2 20a2.43 2.43 0 0 1 2-2h16a2.43 2.43 0 0 1 2 2Z"/><path d="M18 10H6"/><path d="M2 12h20"/><path d="M12 2v10"/></svg>
                         @elseif ($cat->slug == 'elektronik')
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-cable-icon lucide-cable"><path d="M17 19a1 1 0 0 1-1-1v-2a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2a1 1 0 0 1-1 1z"/><path d="M17 21v-2"/><path d="M19 14V6.5a1 1 0 0 0-7 0v11a1 1 0 0 1-7 0V10"/><path d="M21 21v-2"/><path d="M3 5V3"/><path d="M4 10a2 2 0 0 1-2-2V6a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2a2 2 0 0 1-2 2z"/><path d="M7 5V3"/></svg>

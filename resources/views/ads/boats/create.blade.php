@@ -13,16 +13,20 @@
 
     </x-slot>
 
-    <div class="py-2">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            {{-- Breadcrumbs component --}}
-            <x-breadcrumbs :items="[
-        ['label' => 'Anzeige erstellen', 'url' => route('ads.create')],
-        ['label' => 'Gebrauchte Vergnügungsboot Anzeige', 'url' => route('ads.create')],
-    ]" />
+  
 
-        </div>
+     <div class="py-2">
+    <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+        {{-- Breadcrumbs component --}}
+        <x-breadcrumbs :items="[
+            {{-- Link to the general Cars category listing --}}
+            ['label' => 'boats Anzeigen', 'url' => route('categories.show', 'boats')],
+
+            {{-- The current page (New Car Ad creation) - set URL to null --}}
+            ['label' => 'Neue boats Anzeige', 'url' => null],
+        ]" />
     </div>
+</div>
     {{-- --------------------------------------------------------------------------------- --}}
 
     <div class="max-w-6xl mx-auto p-6 bg-white rounded-lg shadow-xl mt-6">
@@ -258,7 +262,7 @@
             
 
 {{-- Standort (Adresse) --}}
-<section class="bg-gray-50 p-6 rounded-lg shadow-inner mt-6">
+{{-- <section class="bg-gray-50 p-6 rounded-lg shadow-inner mt-6">
     <h4 class="text-xl font-semibold text-gray-700 mb-6">Standort</h4>
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <div>
@@ -282,10 +286,10 @@
             @error('street') <p class="text-red-500 text-sm mt-1">{{ $message }}</p> @enderror
         </div>
     </div>
-</section>
+</section> --}}
 
 {{-- Verkäufer (Seller) --}}
-<section class="bg-gray-50 p-6 rounded-lg shadow-inner mt-6">
+{{-- <section class="bg-gray-50 p-6 rounded-lg shadow-inner mt-6">
     <h4 class="text-xl font-semibold text-gray-700 mb-6">Verkäufer Informationen</h4>
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div>
@@ -304,7 +308,7 @@
             @error('seller_email') <p class="text-red-500 text-sm mt-1">{{ $message }}</p> @enderror
         </div>
     </div>
-</section>
+</section> --}}
 
 
 

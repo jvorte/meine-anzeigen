@@ -11,16 +11,14 @@ class Camper extends Model
 
     protected $fillable = [
         'user_id',
-        'title',
-        'description',
-        'brand_id',
-        'car_model_id',
+        'brand',
+        'model',
+        'price',
         'first_registration',
         'mileage',
         'power',
         'color',
         'condition',
-        'price',
         'camper_type',
         'berths',
         'total_length',
@@ -30,23 +28,12 @@ class Camper extends Model
         'fuel_type',
         'transmission',
         'emission_class',
+        'title',
+        'description',
+        'seller_name',
+        'seller_phone',
+        'seller_email',
     ];
-
-    /**
-     * Get the brand associated with the camper.
-     */
-    public function brand()
-    {
-        return $this->belongsTo(Brand::class);
-    }
-
-    /**
-     * Get the car model associated with the camper.
-     */
-    public function carModel()
-    {
-        return $this->belongsTo(CarModel::class);
-    }
 
     /**
      * Get the images for the camper.
@@ -57,10 +44,17 @@ class Camper extends Model
     }
 
     /**
-     * Get the user that owns the camper ad.
+     * Get the user that owns the camper.
      */
     public function user()
     {
         return $this->belongsTo(User::class);
     }
+
+        public function campers()
+    {
+        return $this->hasMany(Camper::class);
+    }
+
+    
 }
