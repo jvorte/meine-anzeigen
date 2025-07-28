@@ -17,16 +17,16 @@ class CategoryTableSeeder extends Seeder
         DB::table('categories')->truncate(); // Use truncate if safe, or delete()
 
         $categories = [
-            ['name' => 'Vehicles', 'slug' => 'vehicles'],
+            ['name' => 'Cars', 'slug' => 'cars'],
             ['name' => 'Fahrzeugeteile', 'slug' => 'fahrzeugeteile'],
             ['name' => 'Boats', 'slug' => 'boats'],
-            ['name' => 'Elektronik', 'slug' => 'elektronik'],
+            ['name' => 'Electronics', 'slug' => 'electronics'],
             ['name' => 'Haushalt', 'slug' => 'haushalt'],
             ['name' => 'Immobilien', 'slug' => 'immobilien'],
             ['name' => 'Dienstleistungen', 'slug' => 'dienstleistungen'],
             ['name' => 'Sonstiges', 'slug' => 'sonstiges'],
             ['name' => 'Motorräder', 'slug' => 'motorrad'],
-            ['name' => 'Nutzfahrzeuge', 'slug' => 'nutzfahrzeuge'],
+            ['name' => 'Commercial-vehicle', 'slug' => 'commercial-vehicle'],
             ['name' => 'Campers', 'slug' => 'campers'],
         ];
 

@@ -87,42 +87,35 @@ class CamperController extends Controller
     /**
      * Update the specified camper in storage.
      */
-    public function update(UpdateCamperRequest $request, Camper $camper)
-    {
-        // Authorization is handled by the UpdateCamperRequest
+   public function update(UpdateCamperRequest $request, Camper $camper)
+{
+    $validatedData = $request->validated();
 
-        $validatedData = $request->validated();
+    // Ενημέρωση των πεδίων του camper
+    $camper->update($validatedData);
 
-        // Update camper details
-        $camper->update($validatedData);
+    // Διαγραφή εικόνων που ο χρήστης τικάρει για διαγραφή
+    if ($request->filled('delete_images')) {
+        $imagesToDelete = $camper->images()->whereIn('id', $request->input('delete_images'))->get();
 
-        // Handle image updates
-        // 1. Determine which existing images to keep
-        $existingImageIdsToKeep = $request->input('existing_images', []);
-        $currentImageIds = $camper->images->pluck('id')->toArray();
-
-        // Delete images that are no longer in existing_images
-        foreach ($currentImageIds as $imageId) {
-            if (!in_array($imageId, $existingImageIdsToKeep)) {
-                $imageToDelete = CamperImage::find($imageId);
-                if ($imageToDelete) {
-                    Storage::disk('public')->delete($imageToDelete->image_path);
-                    $imageToDelete->delete();
-                }
-            }
+        foreach ($imagesToDelete as $image) {
+            Storage::disk('public')->delete($image->image_path);
+            $image->delete();
         }
-
-        // 2. Add new images
-        if ($request->hasFile('images')) {
-            foreach ($request->file('images') as $image) {
-                $path = $image->store('camper_images', 'public');
-                $camper->images()->create(['image_path' => $path]);
-            }
-        }
-
-        return redirect()->route('ads.camper.show', $camper->id)
-            ->with('success', 'Wohnmobil Anzeige erfolgreich aktualisiert!');
     }
+
+    // Προσθήκη νέων εικόνων
+    if ($request->hasFile('images')) {
+        foreach ($request->file('images') as $image) {
+            $path = $image->store('camper_images', 'public');
+            $camper->images()->create(['image_path' => $path]);
+        }
+    }
+
+    return redirect()->route('ads.camper.show', $camper->id)
+                     ->with('success', 'Wohnmobil Anzeige erfolgreich aktualisiert!');
+}
+
 
     /**
      * Remove the specified camper from storage.

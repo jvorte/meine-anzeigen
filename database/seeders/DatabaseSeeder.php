@@ -23,21 +23,9 @@ class DatabaseSeeder extends Seeder
             CategoryTableSeeder::class,
             // Add other seeders here, e.g., BrandSeeder::class if you fix it
         ]);
-        // $this->call([
-        //     CategorySeeder::class,
-        // ]);
-        $this->call([
-            // CarModelsTableSeeder::class,
-        ]);
+  
         
-    $this->call([
-            // Ensure BrandSeeder is called first as others depend on it
-            // BrandSeeder::class,
-            CategorySeeder::class, // Call CategorySeeder if you have it
-    
-            // ElectronicModelSeeder::class,
-        ]);
-        // User::factory(10)->create();
+  
 
         User::factory()->create([
             'name' => 'Test User',
