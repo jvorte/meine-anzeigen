@@ -14,7 +14,7 @@ use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 class HouseholdItemController extends Controller
 {
 
-     use AuthorizesRequests;
+    use AuthorizesRequests;
     /**
      * Show the form for creating a new household item ad.
      */
@@ -22,8 +22,16 @@ class HouseholdItemController extends Controller
     {
         $brands = Brand::pluck('name', 'id');
         $categories = [
-            'Möbel', 'Küchengeräte', 'Waschmaschinen & Trockner', 'Staubsauger & Reinigungsgeräte',
-            'Beleuchtung', 'Dekoration', 'Gartenmöbel & -geräte', 'Sport & Freizeit', 'Baby & Kind', 'Sonstiges'
+            'Möbel',
+            'Küchengeräte',
+            'Waschmaschinen & Trockner',
+            'Staubsauger & Reinigungsgeräte',
+            'Beleuchtung',
+            'Dekoration',
+            'Gartenmöbel & -geräte',
+            'Sport & Freizeit',
+            'Baby & Kind',
+            'Sonstiges'
         ];
         $conditions = ['neu', 'gebraucht', 'stark gebraucht', 'defekt'];
 
@@ -41,9 +49,10 @@ class HouseholdItemController extends Controller
     {
         // 1. Validation
         $validatedData = $request->validate([
-        
+
             'images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048', // Validation for files
-            'title' => 'required|string|max:255',
+            'title' => 'nullable|string|max:255',
+            'brand' => 'required|string|max:255',
             'description' => 'required|string',
             'price' => 'nullable|numeric|min:0',
             'condition' => 'required|in:neu,gebraucht,stark gebraucht,defekt',
@@ -54,7 +63,7 @@ class HouseholdItemController extends Controller
             'color' => 'nullable|string|max:50',
             'dimensions' => 'nullable|string|max:255',
         ]);
-// dd(Auth::id());
+        // dd(Auth::id());
         // Separate image files from other validated data
         $imageFiles = $request->file('images'); // Get the uploaded image files
         // Remove 'images' (the file objects) from $validatedData before creating the HouseholdItem record
@@ -89,16 +98,16 @@ class HouseholdItemController extends Controller
         return view('ads.household.show', compact('householdItem'));
     }
 
-   public function edit(HouseholdItem $householdItem)
-{
-    // Φόρτωσε τις κατηγορίες για το dropdown (αν χρειάζεται)
-    $categories = ['Möbel', 'Elektronik', 'Küche', 'Sonstiges']; // Παράδειγμα, φέρε από τη βάση αν έχεις
+    public function edit(HouseholdItem $householdItem)
+    {
+        // Φόρτωσε τις κατηγορίες για το dropdown (αν χρειάζεται)
+        $categories = ['Möbel', 'Elektronik', 'Küche', 'Sonstiges']; // Παράδειγμα, φέρε από τη βάση αν έχεις
 
-    return view('ads.household.edit', compact('householdItem', 'categories'));
-}
+        return view('ads.household.edit', compact('householdItem', 'categories'));
+    }
 
 
-public function update(Request $request, HouseholdItem $householdItem)
+    public function update(Request $request, HouseholdItem $householdItem)
     {
         $validated = $request->validate([
             'category' => 'required|string|max:255',
@@ -164,7 +173,7 @@ public function update(Request $request, HouseholdItem $householdItem)
         return redirect()->route('dashboard')->with('success', 'Anzeige erfolgreich aktualisiert.');
     }
 
-public function destroy($id)
+    public function destroy($id)
     {
         // Correct variable name: fetch HouseholdItem and assign to $householdItem
         $householdItem = HouseholdItem::findOrFail($id);
@@ -185,8 +194,6 @@ public function destroy($id)
         $householdItem->delete();
 
         return redirect()->route('dashboard') // or any other appropriate redirect route
-                         ->with('success', 'Anzeige erfolgreich gelöscht.');
+            ->with('success', 'Anzeige erfolgreich gelöscht.');
     }
-
-
 }

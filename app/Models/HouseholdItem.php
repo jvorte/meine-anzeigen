@@ -11,23 +11,21 @@ class HouseholdItem extends Model
     use HasFactory;
 
     protected $fillable = [
-         'user_id',
-          'title',
-    'description',
-    'price',
-    'condition',
-    'category',
-    'brand',
-    'model_name',
-    'material',
-    'color',
-    'dimensions',
-      
-    ];
-
-    protected $casts = [
+        'user_id',
+        'title',
+        'description',
+        'price',
+        'condition',
+        'category',
+        'brand',
+        'model_name',
+        'material',
+        'color',
+        'dimensions',
 
     ];
+
+    protected $casts = [];
 
     /**
      * Get the brand associated with the household item.
