@@ -20,7 +20,7 @@ class CarBrandsAndModelsSeeder extends Seeder
         // Clear existing data to prevent duplicates on re-run
         // IMPORTANT: Ensure these table names match your actual tables
         DB::table('car_models')->truncate();
-        DB::table('brands')->truncate(); // Your brand table is named 'brands'
+        DB::table('car_brands')->truncate(); // Renamed from 'brands' to 'car_brands'
 
         $brandsData = [
             'Toyota', 'Honda', 'Ford', 'Chevrolet', 'BMW', 'Mercedes-Benz', 'Audi', 'Volkswagen',
@@ -210,7 +210,7 @@ class CarBrandsAndModelsSeeder extends Seeder
         $now = Carbon::now();
 
         foreach ($brandsData as $brandName) {
-            $brandId = DB::table('brands')->insertGetId([ // Using your 'brands' table
+            $brandId = DB::table('car_brands')->insertGetId([ // Updated to 'car_brands'
                 'name' => $brandName,
                 'created_at' => $now,
                 'updated_at' => $now,
@@ -220,17 +220,14 @@ class CarBrandsAndModelsSeeder extends Seeder
                 $modelsToInsert = [];
                 foreach ($modelsData[$brandName] as $modelName) {
                     $modelsToInsert[] = [
-                        'brand_id' => $brandId, // Using your 'brand_id' foreign key
+                        'car_brand_id' => $brandId, // Updated to 'car_brand_id'
                         'name' => $modelName,
-                        'slug' => Str::slug($modelName), // Generating slug
+                        'slug' => Str::slug($modelName),
                         'created_at' => $now,
                         'updated_at' => $now,
                     ];
                 }
-                // Insert models in chunks if the list is very large
                 foreach (array_chunk($modelsToInsert, 1000) as $chunk) {
-                    // Using 'ignore' to skip duplicates if a model with the same brand_id and slug already exists
-                    // This is safer if you have unique constraints on brand_id and slug
                     DB::table('car_models')->insertOrIgnore($chunk);
                 }
             }

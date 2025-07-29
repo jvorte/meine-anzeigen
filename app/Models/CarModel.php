@@ -2,23 +2,26 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Factories\HasFactory; // Add this if you use factories for CarModel
 
 class CarModel extends Model
 {
-    use HasFactory; // It's good practice to include this if you use factories
+    use HasFactory;
 
-    protected $table = 'car_models';
-    protected $fillable = ['brand_id', 'name', 'slug']; // Corrected: Removed duplicate 'brand_id'
+    protected $table = 'car_models'; // Ensure this is correct
 
-    public function brand()
+    protected $fillable = [
+        'name',
+        'slug',
+        'car_brand_id', // Update to new foreign key name
+    ];
+
+    /**
+     * A car model belongs to a car brand.
+     */
+    public function carBrand()
     {
-        return $this->belongsTo(Brand::class);
-    }
-
-    public function motorradAds()
-    {
-        return $this->hasMany(MotorradAd::class);
+        return $this->belongsTo(CarBrand::class, 'car_brand_id'); // Update to new foreign key name
     }
 }
