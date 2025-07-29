@@ -99,70 +99,88 @@ class HouseholdItemController extends Controller
 
 
 public function update(Request $request, HouseholdItem $householdItem)
-{
-    // Validation rules
-  $validated = $request->validate([
-    'category' => 'required|string|max:255',
-    'brand' => 'nullable|string|max:255',
-    'model_name' => 'nullable|string|max:255',
-    'price' => 'required|numeric|min:0',
-    'condition' => 'required|string|in:neu,gebraucht,stark gebraucht,defekt',
-    'material' => 'nullable|string|max:255',
-    'color' => 'nullable|string|max:255',
-    'dimensions' => 'nullable|string|max:255',
-    'title' => 'required|string|max:255',
-    'description' => 'required|string',
-    'images.*' => 'nullable|image|max:2048',
-]);
-
-    // Ενημέρωση πεδίων
-    $householdItem->category = $validated['category'];
-    $householdItem->brand = $validated['brand'] ?? null;
-    $householdItem->model_name = $validated['model_name'] ?? null;
-    $householdItem->price = $validated['price'];
-    $householdItem->condition = $validated['condition'];
-    $householdItem->material = $validated['material'] ?? null;
-    $householdItem->color = $validated['color'] ?? null;
-    $householdItem->dimensions = $validated['dimensions'] ?? null;
-    $householdItem->title = $validated['title'];
-    $householdItem->description = $validated['description'];
-
-    $householdItem->save();
-
-    // Αποθήκευση νέων εικόνων αν υπάρχουν
-    if ($request->hasFile('images')) {
-        foreach ($request->file('images') as $image) {
-            // Αποθήκευση εικόνας και δημιουργία σχετικού record
-          $path = $image->store('household_images', 'public');
-
-        $householdItem->images()->create([
-            'image_path' => $path,
-            'is_thumbnail' => false, // optional
+    {
+        $validated = $request->validate([
+            'category' => 'required|string|max:255',
+            'brand' => 'nullable|string|max:255',
+            'model_name' => 'nullable|string|max:255',
+            'price' => 'required|numeric|min:0',
+            'condition' => 'required|string|in:neu,gebraucht,stark gebraucht,defekt',
+            'material' => 'nullable|string|max:255',
+            'color' => 'nullable|string|max:255',
+            'dimensions' => 'nullable|string|max:255',
+            'title' => 'required|string|max:255',
+            'description' => 'required|string',
+            'images.*' => 'nullable|image|max:2048', // For newly uploaded images
+            // No validation for existing_images_to_delete as it's an internal mechanism
         ]);
+
+        // Update main HouseholdItem fields
+        $householdItem->fill([
+            'category' => $validated['category'],
+            'brand' => $validated['brand'] ?? null,
+            'model_name' => $validated['model_name'] ?? null,
+            'price' => $validated['price'],
+            'condition' => $validated['condition'],
+            'material' => $validated['material'] ?? null,
+            'color' => $validated['color'] ?? null,
+            'dimensions' => $validated['dimensions'] ?? null,
+            'title' => $validated['title'],
+            'description' => $validated['description'],
+        ])->save();
+
+
+        // 1. Handle deletion of existing images
+        if ($request->has('existing_images_to_delete')) {
+            $idsToDelete = array_filter(explode(',', $request->input('existing_images_to_delete'))); // Split string by comma and remove empty values
+
+            if (!empty($idsToDelete)) {
+                // Get the image records that belong to THIS householdItem AND are in the $idsToDelete array
+                $imagesToDelete = $householdItem->images()->whereIn('id', $idsToDelete)->get();
+
+                foreach ($imagesToDelete as $image) {
+                    // Delete the file from storage
+                    if ($image->image_path && Storage::disk('public')->exists($image->image_path)) {
+                        Storage::disk('public')->delete($image->image_path);
+                    }
+                    // Delete the image record from the database
+                    $image->delete();
+                }
+            }
         }
+
+        // 2. Handle upload of new images
+        if ($request->hasFile('images')) {
+            foreach ($request->file('images') as $imageFile) {
+                $path = $imageFile->store('household_images', 'public');
+
+                $householdItem->images()->create([
+                    'image_path' => $path,
+                    'is_thumbnail' => false, // Set appropriately, perhaps based on original order
+                ]);
+            }
+        }
+
+        return redirect()->route('dashboard')->with('success', 'Anzeige erfolgreich aktualisiert.');
     }
 
-    return redirect()->route('ads.household-items.show', $householdItem->id)
-                     ->with('success', 'Anzeige erfolgreich aktualisiert.');
-}
-
-public function destroy(HouseholdItem $ad)
+public function destroy($id)
 {
-    foreach ($ad->images as $image) {
-        $path = $image->image_path;
+    $boat = HouseholdItem::findOrFail($id);
 
-        if (is_string($path) && strlen($path) > 0 && Storage::disk('public')->exists($path)) {
-            Storage::disk('public')->delete($path);
-        }
-
+    // Αν έχεις σχετικές εικόνες, διαγραφή αρχείων και records:
+    foreach ($householdItem->images as $image) {
+        // Διαγραφή αρχείου από storage
+        Storage::delete($image->image_path);
         $image->delete();
     }
 
-    $ad->delete();
+    // Διαγραφή του ίδιου του boat
+    $boat->delete();
 
-    return redirect()->route('dashboard')->with('success', 'Anzeige erfolgreich gelöscht.');
+    return redirect()->route('dashboard') // ή όπου θέλεις να πας μετά
+                     ->with('success', 'Anzeige erfolgreich gelöscht.');
 }
-
 
 
 

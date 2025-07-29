@@ -169,77 +169,101 @@
 
 
 
-          {{-- Photo Upload Section --}}
-            {{-- The x-data="multiImageUploader()" is placed on a div wrapping the input and previews --}}
-            <section class="bg-gray-50 p-6 rounded-lg shadow-inner">
-                <h4 class="text-xl font-semibold text-gray-700 mb-6">Fotos hinzufügen</h4>
+    <section class="bg-gray-50 p-6 rounded-lg shadow-inner">
+    <h4 class="text-xl font-semibold text-gray-700 mb-6">Fotos hinzufügen</h4>
 
-                <div x-data="multiImageUploader()" class="space-y-4">
-                    {{-- The file input field. Laravel will pick up files from here. --}}
-                    <input type="file" name="images[]" multiple @change="addFiles($event)" class="block w-full border p-2 rounded" />
-                    @error('images')
-                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-                    @enderror
-                    @error('images.*') {{-- For individual image validation errors --}}
-                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-                    @enderror
+    {{-- Initial Alpine.js data with existing images --}}
+    <div x-data="multiImageUploader( {{ json_encode($householdItem->images->map(fn($image) => ['id' => $image->id, 'url' => Storage::url($image->image_path)])) }} )" class="space-y-4">
+        {{-- The file input field for NEW uploads --}}
+        <input type="file" name="images[]" multiple @change="addFiles($event)" class="block w-full border p-2 rounded" />
+        @error('images')
+            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+        @enderror
+        @error('images.*')
+            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+        @enderror
 
-                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-                        <template x-for="(image, index) in previews" :key="index">
-                            <div class="relative group">
-                                <img :src="image" class="w-full h-32 object-cover rounded shadow">
-                                <button type="button" @click="remove(index)"
-                                    class="absolute top-1 right-1 bg-red-700 text-white w-6 h-6 rounded-full text-xs flex items-center justify-center hidden group-hover:flex">✕</button>
-                            </div>
-                        </template>
-                    </div>
+        {{-- Hidden input to store IDs of images to be deleted --}}
+        <input type="hidden" name="existing_images_to_delete" :value="imagesToDelete.join(',')">
+
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+            {{-- Loop for EXISTING Images --}}
+            <template x-for="(image, index) in existingImages" :key="`existing-${image.id}`">
+                <div x-show="!imagesToDelete.includes(image.id)" class="relative group">
+                    <img :src="image.url" class="w-full h-32 object-cover rounded shadow">
+                    <button type="button" @click="markForDeletion(image.id)"
+                        class="absolute top-1 right-1 bg-red-700 text-white w-6 h-6 rounded-full text-xs flex items-center justify-center hidden group-hover:flex">✕</button>
                 </div>
+            </template>
 
-                {{-- Alpine.js Script for Image Previews --}}
-                <script>
-                    function multiImageUploader() {
-                        return {
-                            files: [], // Stores the actual File objects
-                            previews: [], // Stores URLs for image previews
+            {{-- Loop for NEWLY Added Images (your original logic) --}}
+            <template x-for="(image, index) in newPreviews" :key="`new-${index}`">
+                <div class="relative group">
+                    <img :src="image" class="w-full h-32 object-cover rounded shadow">
+                    <button type="button" @click="removeNewFile(index)"
+                        class="absolute top-1 right-1 bg-red-700 text-white w-6 h-6 rounded-full text-xs flex items-center justify-center hidden group-hover:flex">✕</button>
+                </div>
+            </template>
+        </div>
+    </div>
 
-                            addFiles(event) {
-                                const newFiles = Array.from(event.target.files);
+    {{-- Alpine.js Script for Image Previews and Deletion --}}
+    <script>
+        function multiImageUploader(initialImages = []) {
+            return {
+                // For new files being uploaded in this submission
+                newFiles: [],
+                newPreviews: [],
 
-                                newFiles.forEach(file => {
-                                    this.files.push(file);
-                                    this.previews.push(URL.createObjectURL(file));
-                                });
+                // For existing images loaded from the database
+                existingImages: initialImages, // This will hold objects like {id: 1, url: '...'}
+                imagesToDelete: [], // Stores IDs of existing images marked for deletion
 
-                                // Important: Assign the collected files back to the input's files property
-                                // This ensures the native form submission sends the correct set of files
-                                const dataTransfer = new DataTransfer();
-                                this.files.forEach(file => dataTransfer.items.add(file));
-                                event.target.files = dataTransfer.files;
+                init() {
+                    // This runs when the component initializes
+                    console.log('Initial images:', this.existingImages);
+                },
 
-                                // No need to clear event.target.value = '' if you're managing `event.target.files` directly.
-                                // It can sometimes interfere with re-selecting the *same* file if you clear it.
-                                // If you want to allow selecting the same file multiple times, you might need
-                                // to rethink the preview logic or clear it but rely on the `files` array.
-                            },
+                addFiles(event) {
+                    const filesToAdd = Array.from(event.target.files);
 
-                            remove(index) {
-                                // Remove from internal arrays
-                                this.files.splice(index, 1);
-                                this.previews.splice(index, 1);
+                    filesToAdd.forEach(file => {
+                        this.newFiles.push(file);
+                        this.newPreviews.push(URL.createObjectURL(file));
+                    });
 
-                                // Update the actual file input's files property
-                                // Find the file input within the current component's scope
-                                const fileInput = this.$el.querySelector('input[type="file"][name="images[]"]');
-                                if (fileInput) {
-                                    const dataTransfer = new DataTransfer();
-                                    this.files.forEach(file => dataTransfer.items.add(file));
-                                    fileInput.files = dataTransfer.files;
-                                }
-                            }
-                        };
+                    // Update the actual file input's files property for Laravel to pick up
+                    this.updateFileInput(event.target);
+                },
+
+                removeNewFile(index) {
+                    URL.revokeObjectURL(this.newPreviews[index]); // Free up memory
+                    this.newFiles.splice(index, 1);
+                    this.newPreviews.splice(index, 1);
+
+                    // Re-update the file input to reflect removed new files
+                    const fileInput = this.$el.querySelector('input[type="file"][name="images[]"]');
+                    if (fileInput) {
+                        this.updateFileInput(fileInput);
                     }
-                </script>
-            </section>
+                },
+
+                markForDeletion(imageId) {
+                    // Add the image ID to the list of images to delete
+                    this.imagesToDelete.push(imageId);
+                    // You might also want to visually hide it immediately
+                    // The x-show="!imagesToDelete.includes(image.id)" on the template handles this
+                },
+
+                updateFileInput(fileInput) {
+                    const dataTransfer = new DataTransfer();
+                    this.newFiles.forEach(file => dataTransfer.items.add(file));
+                    fileInput.files = dataTransfer.files;
+                }
+            };
+        }
+    </script>
+</section>
 
             {{-- Submit Button --}}
             <div class="pt-6 border-t border-gray-200 flex justify-end">
