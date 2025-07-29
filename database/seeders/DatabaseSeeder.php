@@ -21,6 +21,7 @@ class DatabaseSeeder extends Seeder
             CategoryTableSeeder::class,
              ElectronicBrandSeeder::class,
              MotorcycleBrandSeeder::class, 
+              CarBrandsAndModelsSeeder::class, 
         ]);
   
         
