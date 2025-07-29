@@ -267,16 +267,18 @@
                 </div>
             </section>
 
-            {{-- Photo Upload Section --}}
+        {{-- Photo Upload Section --}}
+            {{-- The x-data="multiImageUploader()" is placed on a div wrapping the input and previews --}}
             <section class="bg-gray-50 p-6 rounded-lg shadow-inner">
                 <h4 class="text-xl font-semibold text-gray-700 mb-6">Fotos hinzufügen</h4>
 
                 <div x-data="multiImageUploader()" class="space-y-4">
+                    {{-- The file input field. Laravel will pick up files from here. --}}
                     <input type="file" name="images[]" multiple @change="addFiles($event)" class="block w-full border p-2 rounded" />
                     @error('images')
                         <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                     @enderror
-                    @error('images.*')
+                    @error('images.*') {{-- For individual image validation errors --}}
                         <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                     @enderror
 
@@ -291,26 +293,40 @@
                     </div>
                 </div>
 
+                {{-- Alpine.js Script for Image Previews --}}
                 <script>
                     function multiImageUploader() {
                         return {
-                            files: [],
-                            previews: [],
+                            files: [], // Stores the actual File objects
+                            previews: [], // Stores URLs for image previews
 
                             addFiles(event) {
                                 const newFiles = Array.from(event.target.files);
+
                                 newFiles.forEach(file => {
                                     this.files.push(file);
                                     this.previews.push(URL.createObjectURL(file));
                                 });
+
+                                // Important: Assign the collected files back to the input's files property
+                                // This ensures the native form submission sends the correct set of files
                                 const dataTransfer = new DataTransfer();
                                 this.files.forEach(file => dataTransfer.items.add(file));
                                 event.target.files = dataTransfer.files;
+
+                                // No need to clear event.target.value = '' if you're managing `event.target.files` directly.
+                                // It can sometimes interfere with re-selecting the *same* file if you clear it.
+                                // If you want to allow selecting the same file multiple times, you might need
+                                // to rethink the preview logic or clear it but rely on the `files` array.
                             },
 
                             remove(index) {
+                                // Remove from internal arrays
                                 this.files.splice(index, 1);
                                 this.previews.splice(index, 1);
+
+                                // Update the actual file input's files property
+                                // Find the file input within the current component's scope
                                 const fileInput = this.$el.querySelector('input[type="file"][name="images[]"]');
                                 if (fileInput) {
                                     const dataTransfer = new DataTransfer();

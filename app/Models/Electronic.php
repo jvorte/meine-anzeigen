@@ -1,5 +1,3 @@
-// app/Models/Electronic.php
-
 <?php
 
 namespace App\Models;

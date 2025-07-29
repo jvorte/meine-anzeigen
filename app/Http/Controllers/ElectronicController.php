@@ -119,8 +119,17 @@ public function store(Request $request)
     /**
      * Display the specified resource.
      */
-    public function show(Electronic $electronic)
+public function show(Electronic $electronic)
     {
+        // Eager load all necessary relationships for the show page
+        $electronic->load(['electronicBrand', 'electronicModel', 'images']);
+
+        // --- DEBUG STEP ---
+        // Temporarily uncomment the line below to see all the data.
+        // This is the most important step to understand what's missing.
+        // dd($electronic->toArray());
+        // ------------------
+
         return view('ads.electronics.show', compact('electronic'));
     }
 

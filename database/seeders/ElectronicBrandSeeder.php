@@ -1,6 +1,4 @@
-// database/seeders/ElectronicBrandSeeder.php
-
-<?php
+<?php // This should be the very first line of actual code
 
 namespace Database\Seeders;
 

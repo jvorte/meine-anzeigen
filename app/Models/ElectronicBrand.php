@@ -1,5 +1,3 @@
-// app/Models/ElectronicBrand.php
-
 <?php
 
 namespace App\Models;

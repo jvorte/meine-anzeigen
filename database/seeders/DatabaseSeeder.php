@@ -5,10 +5,8 @@ namespace Database\Seeders;
 use App\Models\User;
 
 use Illuminate\Database\Seeder;
-use Database\Seeders\BrandSeeder; // Make sure this is imported
-use Database\Seeders\CarModelSeeder; // If you have this
-use Database\Seeders\ElectronicModelSeeder; // If you have this
-use Database\Seeders\CategorySeeder; // I
+use Database\Seeders\ElectronicBrandSeeder; // Make sure this is imported
+
 
 class DatabaseSeeder extends Seeder
 {
