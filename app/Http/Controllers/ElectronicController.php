@@ -177,16 +177,20 @@ class ElectronicController extends Controller
 }
 
 
-    public function destroy(Electronic $electronic)
-    {
-        // ✅ Delete images
-        foreach ($electronic->images as $image) {
+public function destroy(Electronic $electronic)
+{
+    // Delete images
+    foreach ($electronic->images as $image) {
+        // Check if the path exists before attempting to delete the file
+        if ($image->path) { // <--- ADD THIS CHECK
             Storage::delete($image->path);
-            $image->delete();
         }
-
-        $electronic->delete();
-
-        return redirect()->route('categories.show', 'elektronik')->with('success', 'Anzeige gelöscht.');
+        // Always delete the image record from the database, regardless of file existence
+        $image->delete();
     }
+
+    $electronic->delete();
+
+    return redirect()->route('dashboard', 'elektronik')->with('success', 'Anzeige gelöscht.');
+}
 }
