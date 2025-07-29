@@ -147,15 +147,13 @@ Route::middleware(['auth'])->group(function () {
     // ADDED: Destroy Image route for Electronics (within ElectronicController)
     Route::delete('/ads/electronics/images/{electronicImage}', [ElectronicController::class, 'destroyImage'])->name('ads.electronics.images.destroy');
 
-
+// ---------------------------------------------------
     // Household Items
     Route::get('/ads/household/create', [HouseholdItemController::class, 'create'])->name('ads.household.create');
-    Route::post('/ads/household', [HouseholdItemController::class, 'store'])->name('ads.household.store');
-// ---------------------------------------------------
- 
-Route::get('/ads/household-item/{householdItem}/edit', [HouseholdItemController::class, 'edit'])->name('ads.household-items.edit');
-Route::get('/ads/household-item/{householdItem}/destroy', [HouseholdItemController::class, 'destroy'])->name('ads.household-items.destroy');
-     Route::put('/ads/household-item/{householdItem}/update', [HouseholdItemController::class, 'update'])->name('ads.household-items.update');
+    Route::post('/ads/household', [HouseholdItemController::class, 'store'])->name('ads.household.store'); 
+    Route::get('/ads/household-item/{householdItem}/edit', [HouseholdItemController::class, 'edit'])->name('ads.household-items.edit');
+    Route::delete('/ads/household-item/{householdItem}/destroy', [HouseholdItemController::class, 'destroy'])->name('ads.household-items.destroy');
+    Route::put('/ads/household-item/{householdItem}/update', [HouseholdItemController::class, 'update'])->name('ads.household-items.update');
 // ---------------------------------------------------
     // Real Estate
     Route::get('/ads/real-estate/create', [RealEstateController::class, 'create'])->name('ads.realestate.create');

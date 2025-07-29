@@ -165,23 +165,28 @@ public function update(Request $request, HouseholdItem $householdItem)
     }
 
 public function destroy($id)
-{
-    $boat = HouseholdItem::findOrFail($id);
+    {
+        // Correct variable name: fetch HouseholdItem and assign to $householdItem
+        $householdItem = HouseholdItem::findOrFail($id);
 
-    // Αν έχεις σχετικές εικόνες, διαγραφή αρχείων και records:
-    foreach ($householdItem->images as $image) {
-        // Διαγραφή αρχείου από storage
-        Storage::delete($image->image_path);
-        $image->delete();
+        // Delete associated images (files and database records)
+        // Ensure image_path is not null before attempting to delete
+        foreach ($householdItem->images as $image) {
+            // Delete file from storage
+            // Add a check to ensure the path exists before attempting deletion to prevent errors
+            if ($image->image_path && Storage::disk('public')->exists($image->image_path)) {
+                Storage::disk('public')->delete($image->image_path);
+            }
+            // Delete the image record from the database
+            $image->delete();
+        }
+
+        // Delete the HouseholdItem itself
+        $householdItem->delete();
+
+        return redirect()->route('dashboard') // or any other appropriate redirect route
+                         ->with('success', 'Anzeige erfolgreich gelöscht.');
     }
-
-    // Διαγραφή του ίδιου του boat
-    $boat->delete();
-
-    return redirect()->route('dashboard') // ή όπου θέλεις να πας μετά
-                     ->with('success', 'Anzeige erfolgreich gelöscht.');
-}
-
 
 
 }

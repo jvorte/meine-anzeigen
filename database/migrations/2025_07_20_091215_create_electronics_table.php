@@ -18,7 +18,8 @@ return new class extends Migration
         // 2. Create 'electronic_models' table
         Schema::create('electronic_models', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('brand_id')->constrained('brands')->onDelete('cascade');
+         $table->unsignedBigInteger('brand_id')->nullable();
+            $table->foreign('brand_id')->references('id')->on('electronic_brands')->onDelete('set null'); 
             $table->string('name');
             $table->timestamps();
             $table->unique(['brand_id', 'name']);

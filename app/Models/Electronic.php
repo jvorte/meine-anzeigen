@@ -1,23 +1,31 @@
+// app/Models/Electronic.php
+
 <?php
 
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes; // If you use SoftDeletes
 
 class Electronic extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes; // Include SoftDeletes if you have `deleted_at`
 
     protected $fillable = [
         'title',
         'description',
         'price',
-        'user_id', // Make sure user_id is fillable if set this way
-        'brand_id',
+        'user_id',
+        'brand_id', // This refers to the ID in the electronic_brands table now
         'electronic_model_id',
         'condition',
-        'warranty',
+        'year_of_purchase',
+        'warranty_status',
+        'accessories',
+        'category',
+        'status',
+        'published_at',
         'color',
         'usage_time',
         'power',
@@ -28,37 +36,25 @@ class Electronic extends Model
         'ram',
     ];
 
-    // ... other methods ...
-
-    /**
-     * An electronic ad can have many images.
-     */
-    public function images()
+    // Define relationship to the new ElectronicBrand model
+    public function electronicBrand()
     {
-        return $this->hasMany(ElectronicImage::class);
+        return $this->belongsTo(ElectronicBrand::class, 'brand_id');
     }
 
-    /**
-     * An electronic ad belongs to a user.
-     */
+    // Existing relationships
     public function user()
     {
-        return $this->belongsTo(User::class); // Assuming your User model is in App\Models\User
+        return $this->belongsTo(User::class);
     }
 
-    /**
-     * An electronic ad belongs to a brand.
-     */
-    public function brand()
-    {
-        return $this->belongsTo(Brand::class);
-    }
-
-    /**
-     * An electronic ad belongs to an electronic model.
-     */
     public function electronicModel()
     {
         return $this->belongsTo(ElectronicModel::class);
+    }
+
+    public function images()
+    {
+        return $this->hasMany(ElectronicImage::class);
     }
 }

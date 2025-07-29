@@ -21,11 +21,11 @@ class DatabaseSeeder extends Seeder
 
          $this->call([
             CategoryTableSeeder::class,
-            // Add other seeders here, e.g., BrandSeeder::class if you fix it
+             ElectronicBrandSeeder::class, 
         ]);
   
         
-  
+ 
 
         User::factory()->create([
             'name' => 'Test User',

@@ -81,11 +81,8 @@
                                     </a>
 
 
-                                    {{-- FIX: Changed route to ads.electronics.destroy --}}
-                                    <form action="{{ route('ads.electronics.destroy', $householdItem->id) }}" method="POST"
-                                        onsubmit="return confirm('Bist du sicher, dass du diese Anzeige löschen möchtest?');"
-                                        class="inline-block">
-                                        @csrf
+                                  
+                               
                                         @method('DELETE')
                                         <form method="POST"
                                             action="{{ route('ads.household-items.destroy', $householdItem->id) }}"
