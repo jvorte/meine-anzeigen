@@ -101,6 +101,9 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/ads/motorrad/create', [MotorradAdController::class, 'create'])->name('ads.motorrad.create');
     Route::post('/ads/motorrad', [MotorradAdController::class, 'store'])->name('ads.motorrad.store');
 
+//     Route::resource('ads.motorrad', MotorradAdController::class); // This covers create, store, show, edit, update, destroy
+// Route::get('/motorcycle-models/{brandId}', [MotorradAdController::class, 'getModelsByBrand']);
+
     // Commercial Vehicles
     Route::prefix('ads/commercial-vehicles')->name('ads.commercial-vehicles.')->group(function () {
         Route::get('/create', [CommercialVehicleController::class, 'create'])->name('create');
