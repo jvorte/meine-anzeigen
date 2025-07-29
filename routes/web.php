@@ -5,9 +5,8 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\AdController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\CategoryController;
-// Removed VehicleController as CarController is taking its place for "cars"
 use App\Http\Controllers\PartController;
-use App\Http\Controllers\ElectronicController; // Ensure this is imported
+use App\Http\Controllers\ElectronicController;
 use App\Http\Controllers\RealEstateController;
 use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\BoatController;
@@ -54,10 +53,6 @@ Route::prefix('categories')->name('categories.')->group(function () {
     Route::get('/cars/{car}', [CarController::class, 'show'])->name('cars.show');
     Route::get('/boats/{boat}', [BoatController::class, 'show'])->name('boats.show');
     Route::get('/fahrzeugeteile/{usedVehiclePart}', [UsedVehiclePartController::class, 'show'])->name('fahrzeugeteile.show');
-    // Ensure this show route for electronics is correct, as the `show` method for specific
-    // electronics ads is usually `categories.electronics.show` with a slug or ID.
-    // The previous advice had this as categories.electronics.show (with slug/id),
-    // but your current structure has it as categories.electronics.show (with electronic model binding).
     Route::get('/electronics/{electronic}', [ElectronicController::class, 'show'])->name('electronics.show');
     Route::get('/haushalt/{householdItem}', [HouseholdItemController::class, 'show'])->name('haushalt.show');
     Route::get('/immobilien/{realEstate}', [RealEstateController::class, 'show'])->name('immobilien.show');
@@ -71,7 +66,6 @@ Route::prefix('categories')->name('categories.')->group(function () {
 
 // --- AUTHENTICATED ROUTES ---
 Route::middleware(['auth'])->group(function () {
-
 
     // User profile routes
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -89,32 +83,29 @@ Route::middleware(['auth'])->group(function () {
 
     // --- Specific Ad Type Creation/Storage Routes ---
 
-    // Cars (formerly 'autos' and 'fahrzeuge' for creation/storage)
-    // Assuming createAutos and storeFahrzeuge methods are now simply 'create' and 'store' in CarController
+    // Cars
     Route::get('/ads/cars/create', [CarController::class, 'create'])->name('ads.cars.create');
     Route::post('/ads/cars', [CarController::class, 'store'])->name('ads.cars.store');
     Route::get('/ads/cars/{car}/edit', [CarController::class, 'edit'])->name('ads.cars.edit');
     Route::put('/ads/cars/{car}', [CarController::class, 'update'])->name('ads.cars.update');
     Route::delete('/ads/cars/{car}', [CarController::class, 'destroy'])->name('ads.cars.destroy');
 
+    // FIX: Changed this route to match the frontend AJAX request URL
+    // Ensure your CarController has a public method named `getModelsByBrand`
+    // that accepts a $brandId and returns the car models.
+    Route::get('/car-models/{brandId}', [CarController::class, 'getModelsByBrand']);
+
     // Motorrad Ads
-//     Route::get('/ads/motorrad/create', [MotorradAdController::class, 'create'])->name('ads.motorrad.create');
-// Route::post('/ads/motorrad', [MotorradAdController::class, 'store'])->name('ads.motorrad.store');
+    Route::get('/ads/motorrad/create', [MotorradAdController::class, 'create'])->name('ads.motorrad.create');
+    Route::post('/ads/motorrad', [MotorradAdController::class, 'store'])->name('ads.motorrad.store');
 
-    // Route::resource('ads.motorrad', MotorradAdController::class); // This covers create, store, show, edit, update, destroy
-// Route::get('/motorcycle-models/{brandId}', [MotorradAdController::class, 'getModelsByBrand']);
+    // Route for fetching motorcycle models dynamically (for Alpine.js)
+    Route::get('/motorcycle-models/{brandId}', [MotorradAdController::class, 'getModelsByBrand']);
 
-Route::get('/ads/motorrad/create', [MotorradAdController::class, 'create'])->name('ads.motorrad.create');
-Route::post('/ads/motorrad', [MotorradAdController::class, 'store'])->name('ads.motorrad.store');
-
-// Route for fetching models dynamically (for Alpine.js)
-Route::get('/motorcycle-models/{brandId}', [MotorradAdController::class, 'getModelsByBrand']);
-
-
-Route::get('/ads/motorrad/{motorradAd}', [MotorradAdController::class, 'show'])->name('ads.motorrad.show');
-Route::get('/ads/motorrad/{motorradAd}/edit', [MotorradAdController::class, 'edit'])->name('ads.motorrad.edit');
-Route::put('/ads/motorrad/{motorradAd}', [MotorradAdController::class, 'update'])->name('ads.motorrad.update');
-Route::delete('/ads/motorrad/{motorradAd}', [MotorradAdController::class, 'destroy'])->name('ads.motorrad.destroy');
+    Route::get('/ads/motorrad/{motorradAd}', [MotorradAdController::class, 'show'])->name('ads.motorrad.show');
+    Route::get('/ads/motorrad/{motorradAd}/edit', [MotorradAdController::class, 'edit'])->name('ads.motorrad.edit');
+    Route::put('/ads/motorrad/{motorradAd}', [MotorradAdController::class, 'update'])->name('ads.motorrad.update');
+    Route::delete('/ads/motorrad/{motorradAd}', [MotorradAdController::class, 'destroy'])->name('ads.motorrad.destroy');
 
 
     // Commercial Vehicles
@@ -166,7 +157,7 @@ Route::delete('/ads/motorrad/{motorradAd}', [MotorradAdController::class, 'destr
 // ---------------------------------------------------
     // Household Items
     Route::get('/ads/household/create', [HouseholdItemController::class, 'create'])->name('ads.household.create');
-    Route::post('/ads/household', [HouseholdItemController::class, 'store'])->name('ads.household.store'); 
+    Route::post('/ads/household', [HouseholdItemController::class, 'store'])->name('ads.household.store');
     Route::get('/ads/household-item/{householdItem}/edit', [HouseholdItemController::class, 'edit'])->name('ads.household-items.edit');
     Route::delete('/ads/household-item/{householdItem}/destroy', [HouseholdItemController::class, 'destroy'])->name('ads.household-items.destroy');
     Route::put('/ads/household-item/{householdItem}/update', [HouseholdItemController::class, 'update'])->name('ads.household-items.update');
@@ -187,10 +178,6 @@ Route::delete('/ads/motorrad/{motorradAd}', [MotorradAdController::class, 'destr
     Route::post('/others', [OtherController::class, 'store'])->name('ads.others.store');
 
     // --- Remaining PartController routes ---
-    // The previous '/vehicles' route was likely intended for cars. If so, it's replaced by '/ads/cars' or '/cars'.
-    // If 'vehicles.store' was a generic catch-all, you might need to reconsider its purpose.
-    // For now, I'm assuming it's part of the 'Car' flow or is generic but less critical.
-    // Removed the conflicting '/ads/fahrzeuge' route.
     Route::post('/parts', [PartController::class, 'store'])->name('parts.store');
     Route::get('/ads/parts/create', [PartController::class, 'create'])->name('ads.parts.create');
 

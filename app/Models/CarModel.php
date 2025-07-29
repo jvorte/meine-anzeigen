@@ -9,12 +9,12 @@ class CarModel extends Model
 {
     use HasFactory;
 
-    protected $table = 'car_models'; // Ensure this is correct
+    protected $table = 'car_models'; // This is correct
 
     protected $fillable = [
         'name',
         'slug',
-        'car_brand_id', // Update to new foreign key name
+        'car_brand_id', // This is correct
     ];
 
     /**
@@ -22,6 +22,6 @@ class CarModel extends Model
      */
     public function carBrand()
     {
-        return $this->belongsTo(CarBrand::class, 'car_brand_id'); // Update to new foreign key name
+        return $this->belongsTo(CarBrand::class, 'car_brand_id'); // This is correct
     }
 }
