@@ -29,45 +29,22 @@
             {{-- Vehicle Details Section (Marke & Modell) --}}
             <section class="bg-gray-50 p-6 rounded-lg shadow-inner">
                 <h4 class="text-xl font-semibold text-gray-700 mb-6">Fahrzeugdetails</h4>
+                {{-- Alpine.js x-data references the defined component for edit form --}}
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6"
-                     x-data="{
-                        selectedMotorcycleBrandId: @json(old('motorcycle_brand_id', $motorradAd->motorcycle_brand_id)), // Changed Alpine.js variable name
-                        selectedMotorcycleModelId: @json(old('motorcycle_model_id', $motorradAd->motorcycle_model_id)), // Changed Alpine.js variable name
-                        motorcycleModels: @json($initialModels), // Pass initial models from controller
-
-                        async fetchMotorcycleModels() { // Changed function name for clarity
-                            if (this.selectedMotorcycleBrandId) {
-                                try {
-                                    const response = await fetch(`/motorcycle-models/${this.selectedMotorcycleBrandId}`);
-                                    if (!response.ok) {
-                                        throw new Error(`HTTP error! status: ${response.status}`);
-                                    }
-                                    this.motorcycleModels = await response.json();
-                                    // If the previously selected model is not in the new list, clear it
-                                    if (!Object.keys(this.motorcycleModels).includes(String(this.selectedMotorcycleModelId))) {
-                                        this.selectedMotorcycleModelId = '';
-                                    }
-                                } catch (error) {
-                                    console.error('Error fetching motorcycle models:', error);
-                                    this.motorcycleModels = {};
-                                    this.selectedMotorcycleModelId = '';
-                                }
-                            } else {
-                                this.motorcycleModels = {};
-                                this.selectedMotorcycleModelId = '';
-                            }
-                        }
-                    }"
-                     x-init="fetchMotorcycleModels(); $watch('selectedMotorcycleBrandId', fetchMotorcycleModels)">
+                     x-data="motorcycleAdEditForm(
+                         @json(old('motorcycle_brand_id', $motorradAd->motorcycle_brand_id)),
+                         @json(old('motorcycle_model_id', $motorradAd->motorcycle_model_id)),
+                         @json($initialModels)
+                     )">
 
                     {{-- Marke --}}
                     <div>
                         <label for="motorcycle_brand_id" class="block text-sm font-medium text-gray-700 mb-2">Marke</label>
-                        <select name="motorcycle_brand_id" id="motorcycle_brand_id" x-model="selectedMotorcycleBrandId" {{-- Changed name and x-model --}}
+                        <select name="motorcycle_brand_id" id="motorcycle_brand_id" x-model="selectedMotorcycleBrandId"
                                 class="form-select w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
                             <option value="">Bitte wählen</option>
                             @foreach($brands as $id => $name)
-                                <option value="{{ $id }}" {{ old('motorcycle_brand_id', $motorradAd->motorcycle_brand_id) == $id ? 'selected' : '' }}>{{ $name }}</option>
+                                <option value="{{ $id }}">{{ $name }}</option>
                             @endforeach
                         </select>
                         @error('motorcycle_brand_id')
@@ -78,7 +55,7 @@
                     {{-- Modell (Dynamic with Alpine.js) --}}
                     <div x-show="Object.keys(motorcycleModels).length > 0" x-transition>
                         <label for="motorcycle_model_id" class="block text-sm font-medium text-gray-700 mb-2">Modell</label>
-                        <select name="motorcycle_model_id" id="motorcycle_model_id" x-model="selectedMotorcycleModelId" {{-- Changed name and x-model --}}
+                        <select name="motorcycle_model_id" id="motorcycle_model_id" x-model="selectedMotorcycleModelId"
                                 class="form-select w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
                             <option value="">Bitte wählen</option>
                             <template x-for="(name, id) in motorcycleModels" :key="id">
@@ -199,6 +176,7 @@
                         <template x-for="(image, index) in existingPreviews" :key="image.id">
                             <div class="relative group">
                                 <img :src="image.path" class="w-full h-32 object-cover rounded shadow">
+                                {{-- Hidden input to send existing image IDs back to the server --}}
                                 <input type="hidden" :name="'existing_images[]'" :value="image.id">
                                 <button type="button" @click="removeExisting(index)"
                                     class="absolute top-1 right-1 bg-red-700 text-white w-6 h-6 rounded-full text-xs flex items-center justify-center hidden group-hover:flex">✕</button>
@@ -226,51 +204,6 @@
                         </template>
                     </div>
                 </div>
-
-                {{-- Alpine.js Script for Image Previews (Modified for Edit) --}}
-                <script>
-                    function multiImageUploader(initialImages = []) {
-                        return {
-                            existingPreviews: initialImages, // For images already saved
-                            newFiles: [], // Stores new File objects
-                            newPreviews: [], // Stores URLs for new image previews
-
-                            addNewFiles(event) {
-                                const files = Array.from(event.target.files);
-                                files.forEach(file => {
-                                    this.newFiles.push(file);
-                                    this.newPreviews.push(URL.createObjectURL(file));
-                                });
-
-                                // Update the actual file input's files property for submission
-                                const dataTransfer = new DataTransfer();
-                                this.newFiles.forEach(file => dataTransfer.items.add(file));
-                                event.target.files = dataTransfer.files;
-                            },
-
-                            removeExisting(index) {
-                                // Remove from existing previews
-                                this.existingPreviews.splice(index, 1);
-                                // The hidden input for this image will automatically be removed from the DOM
-                                // and thus not sent with the form, signaling its deletion.
-                            },
-
-                            removeNew(index) {
-                                URL.revokeObjectURL(this.newPreviews[index]); // Revoke URL for new image
-                                this.newFiles.splice(index, 1);
-                                this.newPreviews.splice(index, 1);
-
-                                // Update the new file input's files property
-                                const fileInput = this.$el.querySelector('input[type="file"][name="images[]"]');
-                                if (fileInput) {
-                                    const dataTransfer = new DataTransfer();
-                                    this.newFiles.forEach(file => dataTransfer.items.add(file));
-                                    fileInput.files = dataTransfer.files;
-                                }
-                            }
-                        };
-                    }
-                </script>
             </section>
 
             {{-- Submit Button --}}
@@ -283,4 +216,108 @@
 
         </form>
     </div>
+
+    {{-- Alpine.js Script for Image Previews and Main Form Logic --}}
+    <script>
+        // Define the multiImageUploader component for both new and existing images
+        document.addEventListener('alpine:init', () => {
+            Alpine.data('multiImageUploader', (initialImages = []) => ({
+                existingPreviews: initialImages, // For images already saved (objects with id and path)
+                newFiles: [], // Stores new File objects
+                newPreviews: [], // Stores URLs for new image previews
+
+                addNewFiles(event) {
+                    const files = Array.from(event.target.files);
+                    files.forEach(file => {
+                        this.newFiles.push(file);
+                        this.newPreviews.push(URL.createObjectURL(file));
+                    });
+
+                    // Update the actual file input's files property for submission
+                    const dataTransfer = new DataTransfer();
+                    this.newFiles.forEach(file => dataTransfer.items.add(file));
+                    event.target.files = dataTransfer.files;
+                },
+
+                removeExisting(index) {
+                    // Remove from existing previews array
+                    this.existingPreviews.splice(index, 1);
+                    // The corresponding hidden input will be removed from the DOM by Alpine,
+                    // so its ID will not be sent, indicating it should be deleted.
+                },
+
+                removeNew(index) {
+                    URL.revokeObjectURL(this.newPreviews[index]); // Revoke URL for new image
+                    this.newFiles.splice(index, 1);
+                    this.newPreviews.splice(index, 1);
+
+                    // Update the new file input's files property
+                    const fileInput = this.$el.querySelector('input[type="file"][name="images[]"]');
+                    if (fileInput) {
+                        const dataTransfer = new DataTransfer();
+                        this.newFiles.forEach(file => dataTransfer.items.add(file));
+                        fileInput.files = dataTransfer.files;
+                    }
+                }
+            }));
+
+            // Define the Alpine.js component for the motorcycle form (Brand/Model dropdowns)
+            Alpine.data('motorcycleAdEditForm', (initialBrandId, initialModelId, initialModels) => ({
+                selectedMotorcycleBrandId: initialBrandId || '',
+                selectedMotorcycleModelId: initialModelId || '',
+                motorcycleModels: initialModels || {}, // Ensure it's an object, not null
+
+                async fetchMotorcycleModels() {
+                    console.log('fetchMotorcycleModels triggered. Current selectedBrandId (before fetch):', this.selectedMotorcycleBrandId);
+
+                    if (this.selectedMotorcycleBrandId) {
+                        const fetchUrl = `/motorcycle-models/${this.selectedMotorcycleBrandId}`;
+                        console.log('Attempting to fetch models from URL:', fetchUrl);
+                        try {
+                            const response = await fetch(fetchUrl);
+                            if (!response.ok) {
+                                console.error('HTTP error! Status:', response.status, 'Response text:', await response.text());
+                                throw new Error(`HTTP error! status: ${response.status}`);
+                            }
+                            const data = await response.json();
+                            console.log('Models fetched successfully:', data);
+                            this.motorcycleModels = data;
+
+                            // If the previously selected model is not in the new list, clear it
+                            if (this.selectedMotorcycleModelId && !Object.keys(this.motorcycleModels).includes(String(this.selectedMotorcycleModelId))) {
+                                this.selectedMotorcycleModelId = '';
+                                console.log('Cleared selectedMotorcycleModelId as it was not in the new list.');
+                            }
+                        } catch (error) {
+                            console.error('Error fetching motorcycle models:', error);
+                            this.motorcycleModels = {}; // Clear models on error
+                            this.selectedMotorcycleModelId = ''; // Clear selected model on error
+                        }
+                    } else {
+                        console.log('No brand selected, clearing models.');
+                        this.motorcycleModels = {};
+                        this.selectedMotorcycleModelId = '';
+                    }
+                },
+
+                init() {
+                    console.log('motorcycleAdEditForm init() called.');
+                    console.log('Initial selectedMotorcycleBrandId:', this.selectedMotorcycleBrandId);
+                    console.log('Initial selectedMotorcycleModelId:', this.selectedMotorcycleModelId);
+                    console.log('Initial motorcycleModels (from controller):', this.motorcycleModels);
+
+                    // Call fetch on init to handle cases where the ad's brand_id exists on page load
+                    this.$nextTick(() => {
+                        this.fetchMotorcycleModels();
+                    });
+
+                    // Watch for changes on the brand select element's x-model bound variable
+                    this.$watch('selectedMotorcycleBrandId', (value) => {
+                        console.log('selectedMotorcycleBrandId changed to (via $watch):', value);
+                        this.fetchMotorcycleModels();
+                    });
+                },
+            }));
+        });
+    </script>
 </x-app-layout>

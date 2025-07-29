@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\MotorradAd;
-use App\Models\MotorcycleBrand; // Use MotorcycleBrand
-use App\Models\MotorcycleModel; // Use MotorcycleModel
+use App\Models\MotorcycleBrand;
+use App\Models\MotorcycleModel;
 use App\Models\MotorradAdImage;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -18,11 +18,14 @@ class MotorradAdController extends Controller
      */
     public function create()
     {
-        $brands = MotorcycleBrand::orderBy('name')->pluck('name', 'id'); // Fetch from MotorcycleBrand
+        $brands = MotorcycleBrand::orderBy('name')->pluck('name', 'id');
+
+        // --- DEBUG: Check what $brands contains on page load ---
+        // dd($brands); // <--- THIS LINE IS NOW COMMENTED OUT
 
         $initialModels = [];
-        if (old('motorcycle_brand_id')) { // Use new column name
-            $initialModels = MotorcycleModel::where('motorcycle_brand_id', old('motorcycle_brand_id')) // Fetch from MotorcycleModel
+        if (old('motorcycle_brand_id')) {
+            $initialModels = MotorcycleModel::where('motorcycle_brand_id', old('motorcycle_brand_id'))
                                      ->orderBy('name')
                                      ->pluck('name', 'id');
         }
@@ -42,8 +45,8 @@ class MotorradAdController extends Controller
             'images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'title' => 'required|string|max:255',
             'description' => 'required|string',
-            'motorcycle_brand_id' => 'required|exists:motorcycle_brands,id', // Validate against motorcycle_brands table
-            'motorcycle_model_id' => [ // Validate against motorcycle_models table
+            'motorcycle_brand_id' => 'required|exists:motorcycle_brands,id',
+            'motorcycle_model_id' => [
                 'required',
                 Rule::exists('motorcycle_models', 'id')->where(function ($query) use ($request) {
                     return $query->where('motorcycle_brand_id', $request->motorcycle_brand_id);
@@ -60,8 +63,8 @@ class MotorradAdController extends Controller
         $motorradAd->user_id = Auth::id();
         $motorradAd->title = $validatedData['title'];
         $motorradAd->description = $validatedData['description'];
-        $motorradAd->motorcycle_brand_id = $validatedData['motorcycle_brand_id']; // Save to new column
-        $motorradAd->motorcycle_model_id = $validatedData['motorcycle_model_id']; // Save to new column
+        $motorradAd->motorcycle_brand_id = $validatedData['motorcycle_brand_id'];
+        $motorradAd->motorcycle_model_id = $validatedData['motorcycle_model_id'];
         $motorradAd->first_registration = $validatedData['first_registration'];
         $motorradAd->mileage = $validatedData['mileage'];
         $motorradAd->power = $validatedData['power'];
@@ -86,9 +89,7 @@ class MotorradAdController extends Controller
      */
     public function show(MotorradAd $motorradAd)
     {
-        // Eager load using the new relationship names
         $motorradAd->load(['motorcycleBrand', 'motorcycleModel', 'user', 'images']);
-
         return view('ads.motorrad.show', compact('motorradAd'));
     }
 
@@ -101,11 +102,11 @@ class MotorradAdController extends Controller
             abort(403, 'Unauthorized action.');
         }
 
-        $brands = MotorcycleBrand::orderBy('name')->pluck('name', 'id'); // Fetch from MotorcycleBrand
+        $brands = MotorcycleBrand::orderBy('name')->pluck('name', 'id');
 
         $initialModels = [];
-        if ($motorradAd->motorcycle_brand_id) { // Use new column name
-            $initialModels = MotorcycleModel::where('motorcycle_brand_id', $motorradAd->motorcycle_brand_id) // Fetch from MotorcycleModel
+        if ($motorradAd->motorcycle_brand_id) {
+            $initialModels = MotorcycleModel::where('motorcycle_brand_id', $motorradAd->motorcycle_brand_id)
                                      ->orderBy('name')
                                      ->pluck('name', 'id');
         }
@@ -129,8 +130,8 @@ class MotorradAdController extends Controller
             'images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'title' => 'required|string|max:255',
             'description' => 'required|string',
-            'motorcycle_brand_id' => 'required|exists:motorcycle_brands,id', // Validate against motorcycle_brands table
-            'motorcycle_model_id' => [ // Validate against motorcycle_models table
+            'motorcycle_brand_id' => 'required|exists:motorcycle_brands,id',
+            'motorcycle_model_id' => [
                 'required',
                 Rule::exists('motorcycle_models', 'id')->where(function ($query) use ($request) {
                     return $query->where('motorcycle_brand_id', $request->motorcycle_brand_id);
@@ -147,8 +148,8 @@ class MotorradAdController extends Controller
 
         $motorradAd->title = $validatedData['title'];
         $motorradAd->description = $validatedData['description'];
-        $motorradAd->motorcycle_brand_id = $validatedData['motorcycle_brand_id']; // Update new column
-        $motorradAd->motorcycle_model_id = $validatedData['motorcycle_model_id']; // Update new column
+        $motorradAd->motorcycle_brand_id = $validatedData['motorcycle_brand_id'];
+        $motorradAd->motorcycle_model_id = $validatedData['motorcycle_model_id'];
         $motorradAd->first_registration = $validatedData['first_registration'];
         $motorradAd->mileage = $validatedData['mileage'];
         $motorradAd->power = $validatedData['power'];
@@ -200,13 +201,13 @@ class MotorradAdController extends Controller
 
     /**
      * Get motorcycle models by brand ID (for AJAX/Alpine.js).
-     * Now uses MotorcycleModel and motorcycle_brand_id.
      */
     public function getModelsByBrand($brandId)
     {
-        $models = MotorcycleModel::where('motorcycle_brand_id', $brandId) // Query MotorcycleModel
+        $models = MotorcycleModel::where('motorcycle_brand_id', $brandId)
                           ->orderBy('name')
                           ->pluck('name', 'id');
+        // dd($models); // <--- THIS LINE IS COMMENTED OUT
         return response()->json($models);
     }
 }

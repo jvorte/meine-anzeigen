@@ -98,11 +98,24 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('/ads/cars/{car}', [CarController::class, 'destroy'])->name('ads.cars.destroy');
 
     // Motorrad Ads
-    Route::get('/ads/motorrad/create', [MotorradAdController::class, 'create'])->name('ads.motorrad.create');
-    Route::post('/ads/motorrad', [MotorradAdController::class, 'store'])->name('ads.motorrad.store');
+//     Route::get('/ads/motorrad/create', [MotorradAdController::class, 'create'])->name('ads.motorrad.create');
+// Route::post('/ads/motorrad', [MotorradAdController::class, 'store'])->name('ads.motorrad.store');
 
-//     Route::resource('ads.motorrad', MotorradAdController::class); // This covers create, store, show, edit, update, destroy
+    // Route::resource('ads.motorrad', MotorradAdController::class); // This covers create, store, show, edit, update, destroy
 // Route::get('/motorcycle-models/{brandId}', [MotorradAdController::class, 'getModelsByBrand']);
+
+Route::get('/ads/motorrad/create', [MotorradAdController::class, 'create'])->name('ads.motorrad.create');
+Route::post('/ads/motorrad', [MotorradAdController::class, 'store'])->name('ads.motorrad.store');
+
+// Route for fetching models dynamically (for Alpine.js)
+Route::get('/motorcycle-models/{brandId}', [MotorradAdController::class, 'getModelsByBrand']);
+
+
+Route::get('/ads/motorrad/{motorradAd}', [MotorradAdController::class, 'show'])->name('ads.motorrad.show');
+Route::get('/ads/motorrad/{motorradAd}/edit', [MotorradAdController::class, 'edit'])->name('ads.motorrad.edit');
+Route::put('/ads/motorrad/{motorradAd}', [MotorradAdController::class, 'update'])->name('ads.motorrad.update');
+Route::delete('/ads/motorrad/{motorradAd}', [MotorradAdController::class, 'destroy'])->name('ads.motorrad.destroy');
+
 
     // Commercial Vehicles
     Route::prefix('ads/commercial-vehicles')->name('ads.commercial-vehicles.')->group(function () {

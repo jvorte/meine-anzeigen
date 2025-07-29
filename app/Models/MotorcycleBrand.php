@@ -20,4 +20,6 @@ class MotorcycleBrand extends Model
     {
         return $this->hasMany(MotorradAd::class);
     }
+
+    
 }
