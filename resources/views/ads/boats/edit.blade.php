@@ -238,50 +238,7 @@
                 </div>
             </section>
 
-            {{-- Standort Section --}}
-            {{-- <section class="bg-gray-50 p-6 rounded-lg shadow-inner">
-                <h4 class="text-xl font-semibold text-gray-700 mb-6">Standort</h4>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-             
-                    <div>
-                        <label for="country" class="block text-sm font-medium text-gray-700 mb-2">Land</label>
-                        <input type="text" name="country" id="country" value="{{ old('country', $boat->country ?? 'Österreich') }}" placeholder="z.B. Österreich"
-                               class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
-                        @error('country')
-                            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-                        @enderror
-                    </div>
-
-                
-                    <div>
-                        <label for="zip_code" class="block text-sm font-medium text-gray-700 mb-2">Postleitzahl</label>
-                        <input type="text" name="zip_code" id="zip_code" value="{{ old('zip_code', $boat->zip_code) }}" placeholder="z.B. 1010"
-                               class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
-                        @error('zip_code')
-                            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-                        @enderror
-                    </div>
-
-                    <div>
-                        <label for="city" class="block text-sm font-medium text-gray-700 mb-2">Ort</label>
-                        <input type="text" name="city" id="city" value="{{ old('city', $boat->city) }}" placeholder="z.B. Wien"
-                               class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
-                        @error('city')
-                            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-                        @enderror
-                    </div>
-
-        
-                    <div>
-                        <label for="street" class="block text-sm font-medium text-gray-700 mb-2">Straße (optional)</label>
-                        <input type="text" name="street" id="street" value="{{ old('street', $boat->street) }}" placeholder="z.B. Musterstraße 123"
-                               class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
-                        @error('street')
-                            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-                        @enderror
-                    </div>
-                </div>
-            </section> --}}
+       
 
             {{-- Fotos & Dokumente Section --}}
             <section class="bg-gray-50 p-6 rounded-lg shadow-inner">

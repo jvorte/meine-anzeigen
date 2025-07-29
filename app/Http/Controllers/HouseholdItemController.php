@@ -41,6 +41,7 @@ class HouseholdItemController extends Controller
     {
         // 1. Validation
         $validatedData = $request->validate([
+        
             'images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048', // Validation for files
             'title' => 'required|string|max:255',
             'description' => 'required|string',
@@ -53,7 +54,7 @@ class HouseholdItemController extends Controller
             'color' => 'nullable|string|max:50',
             'dimensions' => 'nullable|string|max:255',
         ]);
-
+// dd(Auth::id());
         // Separate image files from other validated data
         $imageFiles = $request->file('images'); // Get the uploaded image files
         // Remove 'images' (the file objects) from $validatedData before creating the HouseholdItem record

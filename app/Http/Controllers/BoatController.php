@@ -55,7 +55,7 @@ class BoatController extends Controller
             // 'seller_email' => 'nullable|email|max:255',
             // 'images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
-
+    // dd( $validatedData);
         $boat = new Boat();
         $boat->user_id = Auth::id();
         $boat->fill($validatedData);
@@ -117,6 +117,7 @@ public function update(Request $request, $id)
         'images.*' => 'nullable|image|max:2048',
         'deleted_images' => 'nullable|string', // comma separated IDs of images to delete
     ]);
+
 
     // Ανάθεσε τιμές
     $boat->fill($validated);

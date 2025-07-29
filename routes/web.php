@@ -153,7 +153,7 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/ads/household', [HouseholdItemController::class, 'store'])->name('ads.household.store');
 // ---------------------------------------------------
  
-      Route::get('/ads/household-item/{householdItem}/edit', [HouseholdItemController::class, 'edit'])->name('edit');
+    //   Route::get('/ads/household-item/{householdItem}/edit', [HouseholdItemController::class, 'edit'])->name('edit');
      
 // ---------------------------------------------------
     // Real Estate

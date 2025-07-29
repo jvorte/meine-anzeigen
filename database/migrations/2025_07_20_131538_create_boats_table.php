@@ -30,16 +30,6 @@ return new class extends Migration
             $table->unsignedInteger('operating_hours')->nullable();
             $table->date('last_service')->nullable();
 
-            // Address
-            $table->string('country');
-            $table->string('zip_code')->nullable();
-            $table->string('city');
-            $table->string('street')->nullable();
-
-            // Verkäufer (πωλητής)
-            $table->string('seller_name');
-            $table->string('seller_phone')->nullable();
-            $table->string('seller_email')->nullable();
 
             $table->timestamps();
         });
