@@ -29,13 +29,9 @@
             {{-- Vehicle Details Section (Marke & Modell) --}}
             <section class="bg-gray-50 p-6 rounded-lg shadow-inner">
                 <h4 class="text-xl font-semibold text-gray-700 mb-6">Fahrzeugdetails</h4>
-                {{-- Alpine.js x-data references the defined component for edit form --}}
+                {{-- Alpine.js x-data now references the defined component --}}
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6"
-                     x-data="motorcycleAdEditForm(
-                         @json(old('motorcycle_brand_id', $motorradAd->motorcycle_brand_id)),
-                         @json(old('motorcycle_model_id', $motorradAd->motorcycle_model_id)),
-                         @json($initialModels)
-                     )">
+                     x-data="motorcycleAdEditFormInitializer"> {{-- Reference the initializer component --}}
 
                     {{-- Marke --}}
                     <div>
@@ -69,7 +65,7 @@
                 </div>
             </section>
 
-            {{-- Basic Data Section (Erstzulassung, Kilometerstand, Leistung) --}}
+            {{-- Basic Data Section (Erstzulassung, Kilometerstand, Leistung, Price) --}}
             <section class="bg-gray-50 p-6 rounded-lg shadow-inner">
                 <h4 class="text-xl font-semibold text-gray-700 mb-6">Basisdaten</h4>
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -99,6 +95,16 @@
                         <input type="number" name="power" id="power" value="{{ old('power', $motorradAd->power) }}" placeholder="z.B. 150"
                                class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
                         @error('power')
+                            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    {{-- Price --}}
+                    <div>
+                        <label for="price" class="block text-sm font-medium text-gray-700 mb-2">Preis (€)</label>
+                        <input type="number" name="price" id="price" value="{{ old('price', $motorradAd->price) }}" placeholder="z.B. 10.000"
+                               class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50" step="0.01">
+                        @error('price')
                             <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                         @enderror
                     </div>
@@ -170,7 +176,7 @@
             <section class="bg-gray-50 p-6 rounded-lg shadow-inner">
                 <h4 class="text-xl font-semibold text-gray-700 mb-6">Fotos hinzufügen</h4>
 
-                <div x-data="multiImageUploader(@json($motorradAd->images->map(fn($image) => ['id' => $image->id, 'path' => asset('storage/' . $image->image_path)])))" class="space-y-4">
+                <div x-data="multiImageUploaderInitializer"> {{-- Reference the initializer component --}}
                     {{-- Existing images --}}
                     <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
                         <template x-for="(image, index) in existingPreviews" :key="image.id">
@@ -219,10 +225,16 @@
 
     {{-- Alpine.js Script for Image Previews and Main Form Logic --}}
     <script>
-        // Define the multiImageUploader component for both new and existing images
+        // Data prepared by Blade for Alpine.js
+        const initialBrandId = @json(old('motorcycle_brand_id', $motorradAd->motorcycle_brand_id));
+        const initialModelId = @json(old('motorcycle_model_id', $motorradAd->motorcycle_model_id));
+        const initialMotorcycleModels = @json($initialModels);
+        const initialImagesData = @json($motorradAd->images->map(fn($image) => ['id' => $image->id, 'path' => asset('storage/' . $image->image_path)]));
+
         document.addEventListener('alpine:init', () => {
-            Alpine.data('multiImageUploader', (initialImages = []) => ({
-                existingPreviews: initialImages, // For images already saved (objects with id and path)
+            // Define the multiImageUploader component
+            Alpine.data('multiImageUploaderInitializer', () => ({
+                existingPreviews: initialImagesData || [], // For images already saved (objects with id and path)
                 newFiles: [], // Stores new File objects
                 newPreviews: [], // Stores URLs for new image previews
 
@@ -262,10 +274,10 @@
             }));
 
             // Define the Alpine.js component for the motorcycle form (Brand/Model dropdowns)
-            Alpine.data('motorcycleAdEditForm', (initialBrandId, initialModelId, initialModels) => ({
+            Alpine.data('motorcycleAdEditFormInitializer', () => ({
                 selectedMotorcycleBrandId: initialBrandId || '',
                 selectedMotorcycleModelId: initialModelId || '',
-                motorcycleModels: initialModels || {}, // Ensure it's an object, not null
+                motorcycleModels: initialMotorcycleModels || {}, // Ensure it's an object, not null
 
                 async fetchMotorcycleModels() {
                     console.log('fetchMotorcycleModels triggered. Current selectedBrandId (before fetch):', this.selectedMotorcycleBrandId);
