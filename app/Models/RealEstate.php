@@ -37,25 +37,21 @@ class RealEstate extends Model
         'maklerprovision',
         'abloese',
         'ausstattung',
-        'heizung',
-       
+        'heizung',       
         'grundriss_path',
         'energieausweis_path',
         'rundgang_link',
         'objektinformationen_link',
         'zustandsbericht_link',
         'verkaufsbericht_link',
-        'contact_name',
-    
-        'contact_email',
-     
+        'contact_name',    
+        'contact_email',     
         'homepage',
   
     ];
 
     protected $casts = [
-        'ausstattung' => 'array',
-  
+        'ausstattung' => 'array',  
         'befristung_ende' => 'date',
         'zusatzkontakt' => 'boolean',
     ];

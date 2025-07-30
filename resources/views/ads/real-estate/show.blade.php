@@ -16,29 +16,36 @@
             ]" />
         </div>
     </div>
-
-    <div class="max-w-6xl mx-auto p-6 bg-white rounded-lg shadow-xl mt-6">
-
-        {{-- Main Title --}}
-        <h1 class="text-3xl font-bold text-gray-800 mb-8">{{ $realEstate->title }}</h1>
-
-        
-        {{-- Action Buttons --}}
-        <div class="my-5 flex space-x-4 justify-end">
-            <a href="{{ route('ads.realestate.edit', $realEstate) }}" class="inline-flex items-center px-4 py-2 bg-blue-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-700 active:bg-blue-900 focus:outline-none focus:border-blue-900 focus:ring ring-blue-300 disabled:opacity-25 transition ease-in-out duration-150">
+            {{-- Action Buttons --}}
+        <div class="max-w-6xl mx-auto my-5 flex space-x-4 justify-end">
+                <a href="{{ route('dashboard') }}" class="inline-flex items-center px-4 py-2 bg-slate-600 border border-slate-300 rounded-md font-semibold text-xs text-gray-100 uppercase tracking-widest hover:bg-gray-300 focus:outline-none focus:border-gray-900 focus:ring ring-gray-300 disabled:opacity-25 transition ease-in-out duration-150">
+                Zurück zum Dashboard
+            </a>
+                  <a href="{{ route('ads.real-estate.edit', $realEstate) }}" class="inline-flex items-center px-4 py-2 bg-slate-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-slate-700 active:bg-blue-900 focus:outline-none focus:border-blue-900 focus:ring ring-blue-300 disabled:opacity-25 transition ease-in-out duration-150">
+               Contact
+            </a>
+            <a href="{{ route('ads.real-estate.edit', $realEstate) }}" class="inline-flex items-center px-4 py-2 bg-blue-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-700 active:bg-blue-900 focus:outline-none focus:border-blue-900 focus:ring ring-blue-300 disabled:opacity-25 transition ease-in-out duration-150">
                 Anzeige bearbeiten
             </a>
-            <form action="{{ route('ads.realestate.destroy', $realEstate) }}" method="POST" onsubmit="return confirm('Sind Sie sicher, dass Sie diese Anzeige löschen möchten? Diese Aktion kann nicht rückgängig gemacht werden.');">
+            <form action="{{ route('ads.real-estate.destroy', $realEstate) }}" method="POST" onsubmit="return confirm('Sind Sie sicher, dass Sie diese Anzeige löschen möchten? Diese Aktion kann nicht rückgängig gemacht werden.');">
                 @csrf
                 @method('DELETE')
                 <button type="submit" class="inline-flex items-center px-4 py-2 bg-red-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-red-700 active:bg-red-900 focus:outline-none focus:border-red-900 focus:ring ring-red-300 disabled:opacity-25 transition ease-in-out duration-150">
                     Anzeige löschen
                 </button>
             </form>
-            <a href="{{ route('dashboard') }}" class="inline-flex items-center px-4 py-2 bg-gray-200 border border-gray-300 rounded-md font-semibold text-xs text-gray-800 uppercase tracking-widest hover:bg-gray-300 focus:outline-none focus:border-gray-900 focus:ring ring-gray-300 disabled:opacity-25 transition ease-in-out duration-150">
-                Zurück zum Dashboard
-            </a>
+        
         </div>
+
+    <div class="max-w-6xl mx-auto p-6 bg-white rounded-lg shadow-xl my-6">
+
+        {{-- Main Title --}}
+
+        
+        <h1 class="text-3xl font-bold text-gray-800 mb-8">{{ $realEstate->title }}</h1>
+
+        
+
 
         {{-- Basic Data Section --}}
         <section class="bg-gray-50 p-6 rounded-lg shadow-inner mb-8">

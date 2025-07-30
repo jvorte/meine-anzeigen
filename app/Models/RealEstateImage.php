@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class RealEstateImage extends Model
 {
     use HasFactory;
-    protected $fillable = ['real_estate_id', 'path', 'is_thumbnail']; 
+    protected $fillable = ['real_estate_id', 'image_path', 'is_thumbnail']; 
     public function realEstate() // Singularer Methodenname für belongsTo
     {
         return $this->belongsTo(RealEstate::class);

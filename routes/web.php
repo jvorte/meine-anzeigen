@@ -55,7 +55,7 @@ Route::prefix('categories')->name('categories.')->group(function () {
     Route::get('/fahrzeugeteile/{usedVehiclePart}', [UsedVehiclePartController::class, 'show'])->name('fahrzeugeteile.show');
     Route::get('/electronics/{electronic}', [ElectronicController::class, 'show'])->name('electronics.show');
     Route::get('/haushalt/{householdItem}', [HouseholdItemController::class, 'show'])->name('haushalt.show');
-    Route::get('/immobilien/{realEstate}', [RealEstateController::class, 'show'])->name('immobilien.show');
+    Route::get('/real-estate/{realEstate}', [RealEstateController::class, 'show'])->name('real-estate.show');
     Route::get('/dienstleistungen/{service}', [ServiceController::class, 'show'])->name('dienstleistungen.show');
     Route::get('/sonstiges/{other}', [OtherController::class, 'show'])->name('sonstiges.show');
     Route::get('/motorrad/{motorradAd}', [MotorradAdController::class, 'show'])->name('motorrad.show');
@@ -163,22 +163,20 @@ Route::get('/ads/cars/{car}', [CarController::class, 'show'])->name('ads.cars.sh
     Route::delete('/ads/household-item/{householdItem}/destroy', [HouseholdItemController::class, 'destroy'])->name('ads.household-items.destroy');
     Route::put('/ads/household-item/{householdItem}/update', [HouseholdItemController::class, 'update'])->name('ads.household-items.update');
 // ---------------------------------------------------
-    // Real Estate
-    Route::get('/ads/real-estate/create', [RealEstateController::class, 'create'])->name('ads.realestate.create');
-    // Consider if this should be /ads/real-estate for consistency or if /realestate is a top-level resource
-    Route::post('/realestate', [RealEstateController::class, 'store'])->name('ads.realestate.store');
-
-  
  
-    Route::post('/ads/real-estate', [RealEstateController::class, 'store'])->name('real-estate.store');
-    Route::get('/ads/real-estate/{realEstate}', [RealEstateController::class, 'show'])->name('real-estate.show');
-    Route::get('/ads/real-estate/{realEstate}/edit', [RealEstateController::class, 'edit'])->name('ads.realestate.edit');
-    Route::put('/ads/real-estate/{realEstate}', [RealEstateController::class, 'update'])->name('real-estate.update');
-    Route::delete('/ads/real-estate/{realEstate}', [RealEstateController::class, 'destroy'])->name('ads.realestate.destroy');
+
+// Real Estate
+Route::prefix('ads/real-estate')->name('ads.real-estate.')->group(function () {
+    Route::get('/create', [RealEstateController::class, 'create'])->name('create');
+    Route::post('/', [RealEstateController::class, 'store'])->name('store');
+    Route::get('/{realEstate}', [RealEstateController::class, 'show'])->name('show');
+    Route::get('/{realEstate}/edit', [RealEstateController::class, 'edit'])->name('edit');
+    Route::put('/{realEstate}', [RealEstateController::class, 'update'])->name('update');
+    Route::delete('/{realEstate}', [RealEstateController::class, 'destroy'])->name('destroy');
+});
 
 
-
-
+ 
     // Services - Fixed typo 'servises' to 'services'
     Route::get('/ads/services/create', [ServiceController::class, 'create'])->name('ads.services.create'); // <-- CORRECTED NAME
     // Consider if this should be /ads/services for consistency or if /services is a top-level resource

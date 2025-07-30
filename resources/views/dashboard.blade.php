@@ -37,7 +37,7 @@
                         'boats' => asset('storage/images/boats.jpg'),
                         'electronics' => asset('storage/images/tv.jpg'),
                         'haushalt' => asset('storage/images/car.jpg'), // Consider changing these placeholders
-                        'immobilien' => asset('storage/images/car.jpg'), // Consider changing these placeholders
+                        'realestate' => asset('storage/images/car.jpg'), // Consider changing these placeholders
                         'dienstleistungen' => asset('storage/images/car.jpg'), // Consider changing these placeholders
                         'sonstiges' => asset('storage/images/car.jpg'), // Consider changing these placeholders
                         'motorrad' => asset('storage/images/motorcycle.jpg'), // Added new
@@ -160,7 +160,7 @@
                                                             $adRouteName = 'categories.sonstiges.show';
                                                             $adParamName = 'other';
                                                         } elseif ($ad instanceof \App\Models\RealEstate) {
-                                                            $adRouteName = 'categories.immobilien.show';
+                                                            $adRouteName = 'categories.real-estate.show';
                                                             $adParamName = 'realEstate';
                                                         } elseif ($ad instanceof \App\Models\Service) {
                                                             $adRouteName = 'categories.dienstleistungen.show';

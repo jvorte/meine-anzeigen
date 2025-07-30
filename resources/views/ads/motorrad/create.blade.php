@@ -31,10 +31,10 @@
                 {{-- Alpine.js x-data now references the defined component --}}
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6"
                      x-data="motorcycleAdForm(
-                             @json(old('motorcycle_brand_id')),
-                             @json(old('motorcycle_model_id')),
-                             @json($initialModels)
-                         )">
+                         @json(old('motorcycle_brand_id')),
+                         @json(old('motorcycle_model_id')),
+                         @json($initialModels)
+                     )">
 
                     {{-- Marke --}}
                     <div>
@@ -68,7 +68,7 @@
                 </div>
             </section>
 
-            {{-- Basic Data Section (Erstzulassung, Kilometerstand, Leistung, **Preis**) --}}
+            {{-- Basic Data Section (Erstzulassung, Kilometerstand, Leistung) --}}
             <section class="bg-gray-50 p-6 rounded-lg shadow-inner">
                 <h4 class="text-xl font-semibold text-gray-700 mb-6">Basisdaten</h4>
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -98,17 +98,6 @@
                         <input type="number" name="power" id="power" value="{{ old('power') }}" placeholder="z.B. 150"
                                class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
                         @error('power')
-                            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-                        @enderror
-                    </div>
-
-                    {{-- **NEW: Preis** --}}
-                    <div>
-                        <label for="price" class="block text-sm font-medium text-gray-700 mb-2">Preis (€)</label>
-                        <input type="number" name="price" id="price" value="{{ old('price') }}" placeholder="z.B. 7.500"
-                               class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50"
-                               min="0" step="0.01"> {{-- Added min and step for price --}}
-                        @error('price')
                             <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                         @enderror
                     </div>
@@ -247,31 +236,33 @@
                             async fetchMotorcycleModels() {
                                 console.log('fetchMotorcycleModels triggered. Current selectedBrandId (before fetch):', this.selectedMotorcycleBrandId);
 
-                                // The fix for the AJAX URL should be `/api/motorcycle-models/...`
-                                // Double-check your routes/api.php and the previous conversation for the correct URL prefix.
-                                // If you moved it to web.php and removed the /api prefix, then it should match that.
-                                // For consistency, it's generally better to use /api for such endpoints.
-                                const fetchUrl = `/api/motorcycle-models/${this.selectedMotorcycleBrandId}`; // Assuming API route is /api/motorcycle-models
-                                console.log('Attempting to fetch models from URL:', fetchUrl);
-                                try {
-                                    const response = await fetch(fetchUrl);
-                                    if (!response.ok) {
-                                        console.error('HTTP error! Status:', response.status, 'Response text:', await response.text());
-                                        throw new Error(`HTTP error! status: ${response.status}`);
-                                    }
-                                    const data = await response.json();
-                                    console.log('Models fetched successfully:', data);
-                                    this.motorcycleModels = data;
+                                if (this.selectedMotorcycleBrandId) {
+                                    const fetchUrl = `/motorcycle-models/${this.selectedMotorcycleBrandId}`;
+                                    console.log('Attempting to fetch models from URL:', fetchUrl);
+                                    try {
+                                        const response = await fetch(fetchUrl);
+                                        if (!response.ok) {
+                                            console.error('HTTP error! Status:', response.status, 'Response text:', await response.text());
+                                            throw new Error(`HTTP error! status: ${response.status}`);
+                                        }
+                                        const data = await response.json();
+                                        console.log('Models fetched successfully:', data);
+                                        this.motorcycleModels = data;
 
-                                    // If the previously selected model is not in the new list, clear it
-                                    if (this.selectedMotorcycleModelId && !Object.keys(this.motorcycleModels).includes(String(this.selectedMotorcycleModelId))) {
-                                        this.selectedMotorcycleModelId = '';
-                                        console.log('Cleared selectedMotorcycleModelId as it was not in the new list.');
+                                        // If the previously selected model is not in the new list, clear it
+                                        if (this.selectedMotorcycleModelId && !Object.keys(this.motorcycleModels).includes(String(this.selectedMotorcycleModelId))) {
+                                            this.selectedMotorcycleModelId = '';
+                                            console.log('Cleared selectedMotorcycleModelId as it was not in the new list.');
+                                        }
+                                    } catch (error) {
+                                        console.error('Error fetching motorcycle models:', error);
+                                        this.motorcycleModels = {}; // Clear models on error
+                                        this.selectedMotorcycleModelId = ''; // Clear selected model on error
                                     }
-                                } catch (error) {
-                                    console.error('Error fetching motorcycle models:', error);
-                                    this.motorcycleModels = {}; // Clear models on error
-                                    this.selectedMotorcycleModelId = ''; // Clear selected model on error
+                                } else {
+                                    console.log('No brand selected, clearing models.');
+                                    this.motorcycleModels = {};
+                                    this.selectedMotorcycleModelId = '';
                                 }
                             },
 

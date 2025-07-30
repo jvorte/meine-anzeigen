@@ -22,7 +22,7 @@ class CategoryTableSeeder extends Seeder
             ['name' => 'Boats', 'slug' => 'boats'],
             ['name' => 'Electronics', 'slug' => 'electronics'],
             ['name' => 'Haushalt', 'slug' => 'haushalt'],
-            ['name' => 'Immobilien', 'slug' => 'immobilien'],
+            ['name' => 'Real Estate', 'slug' => 'realestate'],
             ['name' => 'Dienstleistungen', 'slug' => 'dienstleistungen'],
             ['name' => 'Sonstiges', 'slug' => 'sonstiges'],
             ['name' => 'Motorräder', 'slug' => 'motorrad'],

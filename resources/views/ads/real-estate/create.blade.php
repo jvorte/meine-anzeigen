@@ -39,7 +39,7 @@
             <section class="bg-gray-50 p-6 rounded-lg shadow-inner">
                 <h4 class="text-xl font-semibold text-gray-700 mb-6">Basisdaten</h4>
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {{-- Titel --}}
+              {{-- Titel --}}
                     <div class="lg:col-span-3">
                         <label for="title" class="block text-sm font-semibold text-gray-800 mb-2">Anzeigentitel</label>
                         <input type="text" name="title" id="title" value="{{ old('title') }}"
@@ -50,6 +50,8 @@
                         @enderror
                     </div>
 
+
+                    
                     {{-- Immobilientyp --}}
                     <div>
                         <label for="immobilientyp" class="block text-sm font-medium text-gray-700 mb-2">Immobilientyp</label>
@@ -503,6 +505,42 @@
                         </template>
                     </div>
                 </div>
+
+                <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const objekttypSelect = document.getElementById('objekttyp');
+        const gesamtmieteField = document.getElementById('gesamtmiete').closest('div'); // Get parent div
+        const kautionField = document.getElementById('kaution').closest('div');
+        const maklerprovisionField = document.getElementById('maklerprovision').closest('div');
+        const abloeseField = document.getElementById('abloese').closest('div');
+        const purchasePriceField = document.getElementById('purchasePriceField');
+
+        function togglePriceFields() {
+            if (objekttypSelect.value === 'Kauf') {
+                gesamtmieteField.style.display = 'none';
+                kautionField.style.display = 'none';
+                maklerprovisionField.style.display = 'none';
+                abloeseField.style.display = 'none';
+                purchasePriceField.style.display = 'block';
+            } else if (objekttypSelect.value === 'Miete') {
+                gesamtmieteField.style.display = 'block';
+                kautionField.style.display = 'block';
+                maklerprovisionField.style.display = 'block';
+                abloeseField.style.display = 'block';
+                purchasePriceField.style.display = 'none';
+            } else { // No selection
+                gesamtmieteField.style.display = 'block'; // Or 'none' depending on default
+                kautionField.style.display = 'block';
+                maklerprovisionField.style.display = 'block';
+                abloeseField.style.display = 'block';
+                purchasePriceField.style.display = 'none';
+            }
+        }
+
+        objekttypSelect.addEventListener('change', togglePriceFields);
+        togglePriceFields(); // Call on load to set initial state based on old() value
+    });
+</script>
 
                 {{-- Alpine.js Script for Image Previews and Main Form Logic --}}
                 <script>

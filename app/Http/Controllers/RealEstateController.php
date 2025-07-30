@@ -147,7 +147,7 @@ class RealEstateController extends Controller
                 $path = $image->store('real_estate_images', 'public');
                 RealEstateImage::create([
                     'real_estate_id' => $realEstate->id,
-                    'image_path' => $path, // Make sure this matches your DB column
+                    'image_path' => $path,
                     'is_thumbnail' => ($index === 0), // Set the first image as thumbnail
                 ]);
             }

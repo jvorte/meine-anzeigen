@@ -30,7 +30,7 @@ class DashboardController extends Controller
             'fahrzeugeteile' => UsedVehiclePart::with('images')->orderBy('created_at', 'desc')->limit(4)->get(),
             'electronics' => Electronic::with('images')->orderBy('created_at', 'desc')->limit(4)->get(),
             'haushalt' => HouseholdItem::with('images')->orderBy('created_at', 'desc')->limit(4)->get(),
-            'immobilien' => RealEstate::with('images')->orderBy('created_at', 'desc')->limit(4)->get(),
+            'realestate' => RealEstate::with('images')->orderBy('created_at', 'desc')->limit(4)->get(),
             'dienstleistungen' => Service::with('images')->orderBy('created_at', 'desc')->limit(4)->get(),
             'boats' => Boat::with('images')->orderBy('created_at', 'desc')->limit(4)->get(),
             'sonstiges' => Other::with('images')->orderBy('created_at', 'desc')->limit(4)->get(),
