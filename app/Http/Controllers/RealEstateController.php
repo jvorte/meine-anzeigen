@@ -107,14 +107,9 @@ class RealEstateController extends Controller
 
             // Contact
             'contact_name' => ['required', 'string', 'max:255'],
-            // 'contact_tel' => ['nullable', 'string', 'max:255'],
-            // 'contact_email' => ['required', 'email', 'max:255'],
-            // 'firmenname' => ['nullable', 'string', 'max:255'],
+        
             'homepage' => ['nullable', 'url', 'max:2048'],
-            // 'telefon2' => ['nullable', 'string', 'max:255'],
-            // 'fax' => ['nullable', 'string', 'max:255'],
-            // 'immocard_id' => ['nullable', 'string', 'max:255'],
-            // 'immocard_firma_id' => ['nullable', 'string', 'max:255'],
+         
             'zusatzkontakt' => ['boolean'], // Make sure this is validated if present in the form
         ]);
 
@@ -145,7 +140,7 @@ class RealEstateController extends Controller
             'grundriss_path' => $grundrissPath,
             'energieausweis_path' => $energieausweisPath,
         ]));
-
+// dd($validatedData);
         // 4. Save images to the separate RealEstateImage table
         if ($imageFiles) {
             foreach ($imageFiles as $index => $image) {

@@ -53,26 +53,16 @@ return new class extends Migration
             $table->string('heizung')->nullable();
 
             // Fotos & Dokumente
-            $table->json('images')->nullable(); // Multiple images
+            // $table->json('images')->nullable(); // Multiple images
             $table->string('grundriss_path')->nullable(); // Path to single grundriss file
             $table->string('energieausweis_path')->nullable(); // Path to single energieausweis file
             $table->string('rundgang_link')->nullable();
             $table->string('objektinformationen_link')->nullable();
             $table->string('zustandsbericht_link')->nullable();
             $table->string('verkaufsbericht_link')->nullable();
-
             // Kontakt
             $table->string('contact_name');
-            $table->string('contact_tel')->nullable();
-            $table->string('contact_email');
-            $table->string('firmenname')->nullable();
             $table->string('homepage')->nullable();
-            $table->string('telefon2')->nullable();
-            $table->string('fax')->nullable();
-            $table->string('immocard_id')->nullable();
-            $table->string('immocard_firma_id')->nullable();
-            $table->boolean('zusatzkontakt')->default(false);
-
             $table->timestamps();
         });
     }

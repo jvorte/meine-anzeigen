@@ -38,7 +38,7 @@ class RealEstate extends Model
         'abloese',
         'ausstattung',
         'heizung',
-        // 'images' ist HIER NICHT MEHR ERFORDERLICH, da es eine Beziehung ist
+       
         'grundriss_path',
         'energieausweis_path',
         'rundgang_link',
@@ -46,20 +46,16 @@ class RealEstate extends Model
         'zustandsbericht_link',
         'verkaufsbericht_link',
         'contact_name',
-        'contact_tel',
+    
         'contact_email',
-        'firmenname',
+     
         'homepage',
-        'telefon2',
-        'fax',
-        'immocard_id',
-        'immocard_firma_id',
-        'zusatzkontakt',
+  
     ];
 
     protected $casts = [
         'ausstattung' => 'array',
-        // 'images' ist HIER NICHT MEHR ERFORDERLICH, da es eine Beziehung ist
+  
         'befristung_ende' => 'date',
         'zusatzkontakt' => 'boolean',
     ];

@@ -387,15 +387,7 @@
 
                 <h4 class="text-xl font-semibold text-gray-700 mb-6">Fotos & Dokumente</h4>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    {{-- Multiple Images --}}
-                    {{-- <div>
-                        <label for="images" class="block text-sm font-medium text-gray-700 mb-2">Fotos hinzufügen</label>
-                        <input type="file" name="images[]" id="images" multiple accept="image/*"
-                               class="w-full text-base text-gray-700 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 cursor-pointer" />
-                        @error('images')
-                            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-                        @enderror
-                    </div> --}}
+               
 
                     {{-- Grundriss --}}
                     <div>
