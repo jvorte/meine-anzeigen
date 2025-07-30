@@ -42,7 +42,7 @@ class Car extends Model
     // Corrected relationship for CarBrand
     public function carBrand() // FIX: Renamed function from 'brand' to 'carBrand' for clarity and consistency
     {
-        return $this->belongsTo(CarBrand::class, 'car_brand_id'); // FIX: Pointed to CarBrand::class and specified foreign key
+        return $this->belongsTo(CarBrand::class, 'brand_id'); // FIX: Pointed to CarBrand::class and specified foreign key
     }
 
     public function carModel()

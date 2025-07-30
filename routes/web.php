@@ -89,6 +89,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/ads/cars/{car}/edit', [CarController::class, 'edit'])->name('ads.cars.edit');
     Route::put('/ads/cars/{car}', [CarController::class, 'update'])->name('ads.cars.update');
     Route::delete('/ads/cars/{car}', [CarController::class, 'destroy'])->name('ads.cars.destroy');
+Route::get('/ads/cars/{car}', [CarController::class, 'show'])->name('ads.cars.show');
 
     // FIX: Changed this route to match the frontend AJAX request URL
     // Ensure your CarController has a public method named `getModelsByBrand`

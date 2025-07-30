@@ -50,7 +50,9 @@ class CarController extends Controller
      */
     public function store(Request $request)
     {
+    //    dd('dd');
         $data = $request->validate([
+           
             'category_slug' => ['required', 'string', 'max:255'],
            'car_brand_id' => ['required', 'exists:car_brands,id'], // Validates input named 'car_brand_id'
             'car_model_id' => [
@@ -78,10 +80,10 @@ class CarController extends Controller
             'images' => ['nullable', 'array', 'max:10'], // Max 10 images
             'images.*' => ['image', 'mimes:jpeg,png,jpg,gif,svg', 'max:2048'], // Individual image rules
         ]);
-
+//  dd( $data);
         $mappedData = [
             'category_slug' => $data['category_slug'],
-            'car_brand_id'  => $data['car_brand_id'], // THIS MUST BE 'car_brand_id'
+            'brand_id'  => $data['car_brand_id'], 
             'car_model_id'  => $data['car_model_id'] ?? null,
             'price' => $data['price_from'],
             'mileage' => $data['mileage_from'],
@@ -134,9 +136,9 @@ class CarController extends Controller
      * @param  \App\Models\Car  $car The Car model instance to be edited.
      * @return \Illuminate\Http\Response
      */
-    public function edit(Car $car) // Correct type-hinting for Car model
+public function edit(Car $car) // Correct type-hinting for Car model
     {
-        // Ensure only the owner can edit the car ad
+    
         if (Auth::id() !== $car->user_id) {
             abort(403, 'Unauthorized action. You do not own this car advertisement.');
         }
@@ -184,21 +186,23 @@ class CarController extends Controller
      * @return \Illuminate\Http\RedirectResponse
      */
     public function update(Request $request, Car $car)
-    {    dd( 'eee');
+    {  
         // Ensure only the owner can update the car ad
         if (Auth::id() !== $car->user_id) {
             abort(403, 'Unauthorized action. You do not own this car advertisement.');
         }
-
+// dd( 'hh');
         // 1. Validation
         $validatedData = $request->validate([
+              
             'category_slug' => ['required', 'string', 'max:255'], // Assuming this is still sent
-            'car_brand_id' => ['required', 'exists:car_brands,id'],
+            'brand_id' => ['required', 'exists:car_brands,id'],
             'car_model_id' => [
                 'nullable',
                 Rule::exists('car_models', 'id')->where(function ($query) use ($request) {
                     return $query->where('car_brand_id', $request->car_brand_id);
                 }),
+              
             ],
             'price_from' => ['required', 'numeric', 'min:0'],
             'mileage_from' => ['required', 'numeric', 'min:0'],
@@ -221,7 +225,7 @@ class CarController extends Controller
             'delete_images' => ['nullable', 'array'], // Array of image IDs to delete
             'delete_images.*' => ['exists:car_images,id'], // Validate that each ID exists in car_images table
         ]);
-
+//   dd( $validatedData );
         // 2. Map validated data to Car model attributes
         $car->title = $validatedData['title'];
         $car->description = $validatedData['description'];

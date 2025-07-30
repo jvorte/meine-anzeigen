@@ -11,21 +11,23 @@
         </p>
     </x-slot>
 
+ 
+
     <div class="py-2">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            {{-- Breadcrumbs component --}}
-            <x-breadcrumbs :items="[
-                {{-- Link to the general cars category page --}}
-                ['label' => 'Cars Anzeigen', 'url' => route('categories.show', 'cars')],
+    <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+        {{-- Breadcrumbs component --}}
+        <x-breadcrumbs :items="[
+            {{-- Link to the general campers category page --}}
+            ['label' => 'Cars Anzeigen', 'url' => route('categories.show', 'cars')],
 
-                {{-- Link to the specific car's show page --}}
-                ['label' => 'Car Anzeige', 'url' => route('categories.cars.show', $car->id)],
+            {{-- Link to the specific camper's show page --}}
+            ['label' => 'Car Anzeige', 'url' => route('categories.cars.show', $car->id)],
 
-                {{-- The current page (Car Edit) - set URL to null as it's the current page --}}
-                ['label' => 'Car bearbeiten', 'url' => null],
-            ]" />
-        </div>
+            {{-- The current page (Camper Edit) - set URL to null as it's the current page --}}
+            ['label' => 'Car bearbeiten', 'url' => null],
+        ]" />
     </div>
+</div>
     {{-- ------------------------------------------------------------------------------------- --}}
 
     <div class="max-w-6xl mx-auto p-6 bg-white rounded-lg shadow-xl my-6">
@@ -35,12 +37,12 @@
             @method('PUT') {{-- Use PUT method for updates --}}
 
             {{-- Vehicle Details Section (Marke & Modell) --}}
-            <section class="bg-gray-50 p-6 rounded-lg shadow-inner">
+                 <section class="bg-gray-50 p-6 rounded-lg shadow-inner">
                 <h4 class="text-xl font-semibold text-gray-700 mb-6">Fahrzeugdetails</h4>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6"
                      x-data="carAdForm(
-                             @json(old('car_brand_id', $car->car_brand_id)), {{-- FIX: Pass car's brand ID as default --}}
-                             @json(old('car_model_id', $car->car_model_id)), {{-- FIX: Pass car's model ID as default --}}
+                             @json(old('car_brand_id')),
+                             @json(old('car_model_id')),
                              @json($initialModels ?? [])
                          )">
                     {{-- Marke --}}
@@ -144,12 +146,11 @@
                         <select name="condition" id="condition"
                             class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
                             <option value="">Bitte wählen</option>
-                            {{-- FIX: Use the $conditions array passed from the controller for consistency --}}
-                            @foreach($conditions as $conditionOption)
-                                <option value="{{ $conditionOption }}" {{ old('condition', $car->condition) == $conditionOption ? 'selected' : '' }}>
-                                    {{ $conditionOption }}
-                                </option>
-                            @endforeach
+                            <option value="neu" {{ old('condition', $car->condition) == 'neu' ? 'selected' : '' }}>Neu</option>
+                            <option value="gebraucht" {{ old('condition', $car->condition) == 'gebraucht' ? 'selected' : '' }}>Gebraucht
+                            </option>
+                            <option value="unfallfahrzeug" {{ old('condition', $car->condition) == 'unfallfahrzeug' ? 'selected' : '' }}>
+                                Unfallfahrzeug</option>
                         </select>
                         @error('condition')
                             <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
@@ -322,7 +323,7 @@
                     <label for="title" class="block text-sm font-semibold text-gray-800 mb-2">Anzeigentitel</label>
                     <input type="text" name="title" id="title" value="{{ old('title', $car->title) }}"
                         placeholder="Aussagekräftiger Titel für deine Anzeige"
-                        class="w-full p-3 border border-gray-300 rounded-md shadow-sm bg-white text-gray-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 focus:border-blue-600 transition duration-150 ease-in-out">
+                        class="w-full p-3 border border-gray-300 rounded-md shadow-sm bg-white text-gray-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50">
                     @error('title')
                         <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                     @enderror
@@ -358,7 +359,11 @@
                 </section>
             @endif
 
-            {{-- Photo Upload Section --}}
+    
+
+
+      {{-- Photo Upload Section --}}
+            {{-- The x-data="multiImageUploader()" is placed on a div wrapping the input and previews --}}
             <section class="bg-gray-50 p-6 rounded-lg shadow-inner">
                 <h4 class="text-xl font-semibold text-gray-700 mb-6">Fotos hinzufügen</h4>
 
@@ -409,7 +414,7 @@
                                 this.files.splice(index, 1);
                                 this.previews.splice(index, 1);
 
-                                const fileInput = this.$el.querySelector('input[type="file"][name="new_images[]"]'); // FIX: Changed name to new_images[]
+                                const fileInput = this.$el.querySelector('input[type="file"][name="images[]"]');
                                 if (fileInput) {
                                     const dataTransfer = new DataTransfer();
                                     this.files.forEach(file => dataTransfer.items.add(file));
@@ -471,13 +476,11 @@
                                     if (this.selectedCarBrandId) {
                                         await this.fetchCarModels();
                                         // After models are fetched and rendered, try to set the old model ID
-                                        // initialModelId is passed from x-data, which is old('car_model_id', $car->car_model_id)
-                                        if (this.selectedCarModelId && Object.keys(this.carModels).includes(String(this.selectedCarModelId))) {
-                                            // No need to re-assign, x-model already set it from initialModelId.
-                                            // This check is more for logging or if you had complex re-selection logic.
-                                            console.log('  Final check: selectedCarModelId already set and valid:', this.selectedCarModelId);
-                                        } else if (this.selectedCarModelId) { // If selectedCarModelId was set from old() but isn't in new models
-                                            console.log('  Final check: selectedCarModelId', this.selectedCarModelId, 'not found in fetched models. Clearing selection.');
+                                        if (initialModelId && Object.keys(this.carModels).includes(String(initialModelId))) {
+                                            this.selectedCarModelId = initialModelId;
+                                            console.log('  Final check: Successfully re-set selectedCarModelId to initialModelId:', this.selectedCarModelId);
+                                        } else if (initialModelId) {
+                                            console.log('  Final check: Initial model ID', initialModelId, 'not found in fetched models. Clearing selection.');
                                             this.selectedCarModelId = ''; // Clear if old model isn't valid for the brand
                                         }
                                     } else {
@@ -499,11 +502,17 @@
                 </script>
             </section>
 
+
+
+
+            {{-- Add category_slug hidden input --}}
+            <input type="hidden" name="category_slug" value="auto">
+
             {{-- Submit Button --}}
             <div class="pt-6 border-t border-gray-200 flex justify-end">
                 <button type="submit"
                     class="bg-blue-600 text-white px-8 py-3 rounded-lg font-semibold text-lg hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-300 transition-all duration-300 shadow-lg">
-                    Änderungen speichern
+                    Anzeige aktualisieren
                 </button>
             </div>
         </form>

@@ -128,7 +128,7 @@
 
                     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-y-3 gap-x-6 mb-6 text-sm">
                         @foreach([
-                                'Marke' => $car->brand->name ?? 'N/A',
+                               'Marke' => $car->carBrand->name ?? 'N/A',
                                 'Modell' => $car->carModel->name ?? 'N/A',
                                 'Baujahr' => $car->registration ?? 'N/A',
                                 'Kilometerstand' => number_format($car->mileage, 0, ',', '.') . ' km',
