@@ -1,9 +1,5 @@
-{{-- resources/views/ads/others/create.blade.php --}}
+{{-- resources/views/ads/others/edit.blade.php --}}
 <x-app-layout>
-
-    
-
-               {{-- -----------------------------------breadcrumbs ---------------------------------------------- --}}
    <x-slot name="header">
         <h2 class="text-3xl font-extrabold text-gray-900 leading-tight mb-2">
            Neue Sonstiges Anzeige erstellen
@@ -13,27 +9,25 @@
         </p>
 
     </x-slot>
-
- <div class="py-2">
-    <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-        {{-- Breadcrumbs component --}}
-        <x-breadcrumbs :items="[
-            {{-- Link to the general Cars category listing --}}
-            ['label' => 'Cars Anzeigen', 'url' => route('categories.show', 'cars')],
-
-            {{-- The current page (New Car Ad creation) - set URL to null --}}
-            ['label' => 'Neue Auto Anzeige', 'url' => null],
-        ]" />
+    <div class="py-2">
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+            {{-- Breadcrumbs component --}}
+            <x-breadcrumbs :items="[
+                ['label' => 'Sonstiges Anzeigen', 'url' => route('categories.show', 'sonstiges')],
+                ['label' => $other->title, 'url' => route('ads.others.show', $other->id)],
+                ['label' => 'Bearbeiten', 'url' => null],
+            ]" />
+        </div>
     </div>
-</div>
-{{-- --------------------------------------------------------------------------------- --}}
+
     <div class="max-w-6xl mx-auto p-6 bg-white rounded-lg shadow-xl my-6">
 
-        <form method="POST" action="{{ route('ads.others.store') }}" enctype="multipart/form-data" class="space-y-8">
+        <form method="POST" action="{{ route('ads.others.update', $other->id) }}" enctype="multipart/form-data" class="space-y-8">
             @csrf
+            @method('PUT') {{-- Use PUT method for updates --}}
 
-            {{-- Hidden field for category_slug --}}
-            <input type="hidden" name="category_slug" value="sonstiges">
+            {{-- Hidden field for category_slug (assuming it's not editable) --}}
+            <input type="hidden" name="category_slug" value="{{ old('category_slug', $other->category_slug) }}">
 
             {{-- General Details Section --}}
             <section class="bg-gray-50 p-6 rounded-lg shadow-inner">
@@ -42,7 +36,7 @@
                     {{-- Title --}}
                     <div class="md:col-span-2">
                         <label for="title" class="block text-sm font-medium text-gray-700 mb-2">Anzeigentitel</label>
-                        <input type="text" name="title" id="title" value="{{ old('title') }}"
+                        <input type="text" name="title" id="title" value="{{ old('title', $other->title) }}"
                                placeholder="Aussagekräftiger Titel für deine Anzeige (z.B. Alte Schallplatten Sammlung)"
                                class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
                         @error('title')
@@ -53,7 +47,7 @@
                     {{-- Price --}}
                     <div>
                         <label for="price" class="block text-sm font-medium text-gray-700 mb-2">Preis (in €)</label>
-                        <input type="number" step="0.01" name="price" id="price" value="{{ old('price') }}" placeholder="z.B. 75.00"
+                        <input type="number" step="0.01" name="price" id="price" value="{{ old('price', $other->price) }}" placeholder="z.B. 75.00"
                                class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
                         @error('price')
                             <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
@@ -67,7 +61,7 @@
                                 class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
                             <option value="">Bitte wählen</option>
                             @foreach(['Neu', 'Gebraucht', 'Stark gebraucht', 'Defekt'] as $cond)
-                                <option value="{{ $cond }}" {{ old('condition') == $cond ? 'selected' : '' }}>{{ $cond }}</option>
+                                <option value="{{ $cond }}" {{ (old('condition', $other->condition) == $cond) ? 'selected' : '' }}>{{ $cond }}</option>
                             @endforeach
                         </select>
                         @error('condition')
@@ -75,21 +69,62 @@
                         @enderror
                     </div>
 
-
-                {{-- Description --}}
-                <div class="mt-6">
-                    <label for="description" class="block text-sm font-medium text-gray-700 mb-2">Beschreibung</label>
-                    <textarea name="description" id="description" rows="7"
-                              placeholder="Gib hier alle wichtigen Details zu deinem Artikel ein, der nicht in andere Kategorien passt."
-                              class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">{{ old('description') }}</textarea>
-                    @error('description')
-                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-                    @enderror
+                    {{-- Description --}}
+                    <div class="md:col-span-2 mt-6">
+                        <label for="description" class="block text-sm font-medium text-gray-700 mb-2">Beschreibung</label>
+                        <textarea name="description" id="description" rows="7"
+                                 placeholder="Gib hier alle wichtigen Details zu deinem Artikel ein, der nicht in andere Kategorien passt."
+                                 class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">{{ old('description', $other->description) }}</textarea>
+                        @error('description')
+                            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                        @enderror
+                    </div>
                 </div>
             </section>
 
-     {{-- Photo Upload Section (with Alpine.js for previews) --}}
+            {{-- Photo Upload Section (with Alpine.js for previews) --}}
             <section class="bg-gray-50 p-6 rounded-lg shadow-inner">
+                <h4 class="text-xl font-semibold text-gray-700 mb-6">Fotos verwalten</h4>
+
+                {{-- Initialize multiImageUploader with existing images --}}
+                <div x-data="multiImageUploader(@json($other->images->map(fn($img) => ['id' => $img->id, 'path' => Storage::url($img->image_path)])))" class="space-y-4">
+                    {{-- Display existing images with checkboxes to keep them --}}
+                    @if($other->images->isNotEmpty())
+                        <div class="mb-4">
+                            <h5 class="text-lg font-medium text-gray-700 mb-3">Aktuelle Bilder:</h5>
+                            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+                                <template x-for="(image, index) in existingImages" :key="`existing-${image.id}`">
+                                    <div class="relative group border border-gray-300 p-2 rounded shadow">
+                                        <img :src="image.path" class="w-full h-32 object-cover rounded">
+                                        <label :for="`existing_image_${image.id}`" class="block text-center text-sm mt-2">
+                                            <input type="checkbox" :id="`existing_image_${image.id}`"
+                                                   name="existing_image_ids[]" :value="image.id" x-model="selectedExistingImageIds"
+                                                   class="rounded border-gray-300 text-blue-600 shadow-sm focus:ring-blue-500">
+                                            Behalten
+                                        </label>
+                                    </div>
+                                </template>
+                            </div>
+                            <p class="text-sm text-gray-600 mt-2">Deaktiviere die Checkboxen der Bilder, die du löschen möchtest.</p>
+                        </div>
+                    @endif
+
+               
+       {{-- Photo Upload Section (with Alpine.js for previews) --}}
+            <section class="bg-gray-50 p-6 rounded-lg shadow-inner">
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4">
+                        <template x-for="(image, index) in previews" :key="`new-${index}`">
+                            <div class="relative group">
+                                <img :src="image" class="w-full h-32 object-cover rounded shadow">
+                                <button type="button" @click="removeNew(index)"
+                                        class="absolute top-1 right-1 bg-red-700 text-white w-6 h-6 rounded-full text-xs flex items-center justify-center hidden group-hover:flex">✕</button>
+                            </div>
+                        </template>
+                    </div>
+                </div>
+                
+
+       
                 <h4 class="text-xl font-semibold text-gray-700 mb-6">Fotos hinzufügen</h4>
 
                 <div x-data="multiImageUploader()" class="space-y-4">
@@ -205,12 +240,13 @@
                     });
                 </script>
             </section>
+         
 
             {{-- Submit Button --}}
             <div class="pt-6 border-t border-gray-200 flex justify-end">
                 <button type="submit"
                         class="bg-blue-600 text-white px-8 py-3 rounded-lg font-semibold text-lg hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-300 transition-all duration-300 shadow-lg">
-                    Anzeige erstellen
+                    Änderungen speichern
                 </button>
             </div>
 

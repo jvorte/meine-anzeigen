@@ -178,6 +178,13 @@ Route::get('/ads/cars/{car}', [CarController::class, 'show'])->name('ads.cars.sh
     // Consider if this should be /ads/others for consistency or if /others is a top-level resource
     Route::post('/others', [OtherController::class, 'store'])->name('ads.others.store');
 
+    // Route::get('/ads/others', [OtherController::class, 'index'])->name('ads.others.index');
+// Route::get('/ads/others/create', [OtherController::class, 'create'])->name('ads.others.create'); // You already have this
+// Route::post('/ads/others', [OtherController::class, 'store'])->name('ads.others.store'); // You already have this
+ Route::get('/ads/others/{other}/edit', [OtherController::class, 'edit'])->name('ads.others.edit'); Route::put('/ads/others/{other}', [OtherController::class, 'update'])->name('ads.others.update');
+ Route::delete('/ads/others/{other}', [OtherController::class, 'destroy'])->name('ads.others.destroy');
+ Route::get('/ads/others/{other}', [OtherController::class, 'show'])->name('ads.others.show'); // You already have this
+
     // --- Remaining PartController routes ---
     Route::post('/parts', [PartController::class, 'store'])->name('parts.store');
     Route::get('/ads/parts/create', [PartController::class, 'create'])->name('ads.parts.create');

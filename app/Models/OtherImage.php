@@ -8,10 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 class OtherImage extends Model
 {
     use HasFactory;
-
-    protected $fillable = [
+   protected $fillable = [
         'other_id',
-        'image_path',
+        'image_path', // This is what you used in your store method
         'is_thumbnail',
     ];
 
