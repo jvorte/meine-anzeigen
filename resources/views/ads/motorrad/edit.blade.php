@@ -13,16 +13,17 @@
     <div class="py-2">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <x-breadcrumbs :items="[
-                ['label' => 'Motorrad Anzeigen', 'url' => route('categories.show', 'motorrad')],
-                ['label' => $motorradAd->title, 'url' => route('ads.motorrad.show', $motorradAd)],
-                ['label' => 'Bearbeiten', 'url' => null],
-            ]" />
+        ['label' => 'Motorrad Anzeigen', 'url' => route('categories.show', 'motorrad')],
+        ['label' => $motorradAd->title, 'url' => route('ads.motorrad.show', $motorradAd)],
+        ['label' => 'Bearbeiten', 'url' => null],
+    ]" />
         </div>
     </div>
 
     <div class="max-w-6xl mx-auto p-6 bg-white rounded-lg shadow-xl mt-6">
 
-        <form method="POST" action="{{ route('ads.motorrad.update', $motorradAd) }}" enctype="multipart/form-data" class="space-y-8">
+        <form method="POST" action="{{ route('ads.motorrad.update', $motorradAd) }}" enctype="multipart/form-data"
+            class="space-y-8">
             @csrf
             @method('PUT') {{-- Use PUT method for updates --}}
 
@@ -30,14 +31,15 @@
             <section class="bg-gray-50 p-6 rounded-lg shadow-inner">
                 <h4 class="text-xl font-semibold text-gray-700 mb-6">Fahrzeugdetails</h4>
                 {{-- Alpine.js x-data now references the defined component --}}
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6"
-                     x-data="motorcycleAdEditFormInitializer"> {{-- Reference the initializer component --}}
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6" x-data="motorcycleAdEditFormInitializer"> {{--
+                    Reference the initializer component --}}
 
                     {{-- Marke --}}
                     <div>
-                        <label for="motorcycle_brand_id" class="block text-sm font-medium text-gray-700 mb-2">Marke</label>
+                        <label for="motorcycle_brand_id"
+                            class="block text-sm font-medium text-gray-700 mb-2">Marke</label>
                         <select name="motorcycle_brand_id" id="motorcycle_brand_id" x-model="selectedMotorcycleBrandId"
-                                class="form-select w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
+                            class="form-select w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
                             <option value="">Bitte wählen</option>
                             @foreach($brands as $id => $name)
                                 <option value="{{ $id }}">{{ $name }}</option>
@@ -50,9 +52,10 @@
 
                     {{-- Modell (Dynamic with Alpine.js) --}}
                     <div x-show="Object.keys(motorcycleModels).length > 0" x-transition>
-                        <label for="motorcycle_model_id" class="block text-sm font-medium text-gray-700 mb-2">Modell</label>
+                        <label for="motorcycle_model_id"
+                            class="block text-sm font-medium text-gray-700 mb-2">Modell</label>
                         <select name="motorcycle_model_id" id="motorcycle_model_id" x-model="selectedMotorcycleModelId"
-                                class="form-select w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
+                            class="form-select w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
                             <option value="">Bitte wählen</option>
                             <template x-for="(name, id) in motorcycleModels" :key="id">
                                 <option :value="id" x-text="name"></option>
@@ -69,11 +72,15 @@
             <section class="bg-gray-50 p-6 rounded-lg shadow-inner">
                 <h4 class="text-xl font-semibold text-gray-700 mb-6">Basisdaten</h4>
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+                
                     {{-- Erstzulassung --}}
                     <div>
-                        <label for="first_registration" class="block text-sm font-medium text-gray-700 mb-2">Erstzulassung</label>
-                        <input type="date" name="first_registration" id="first_registration" value="{{ old('first_registration', $motorradAd->first_registration ? \Carbon\Carbon::parse($motorradAd->first_registration)->format('Y-m-d') : '') }}"
-                               class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
+                        <label for="first_registration"
+                            class="block text-sm font-medium text-gray-700 mb-2">Erstzulassung</label>
+                        <input type="date" name="first_registration" id="first_registration"
+                            value="{{ old('first_registration', $motorradAd->first_registration ? \Carbon\Carbon::parse($motorradAd->first_registration)->format('Y-m-d') : '') }}"
+                            class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
                         @error('first_registration')
                             <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                         @enderror
@@ -81,9 +88,11 @@
 
                     {{-- Kilometerstand --}}
                     <div>
-                        <label for="mileage" class="block text-sm font-medium text-gray-700 mb-2">Kilometerstand (in km)</label>
-                        <input type="number" name="mileage" id="mileage" value="{{ old('mileage', $motorradAd->mileage) }}" placeholder="z.B. 50.000"
-                               class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
+                        <label for="mileage" class="block text-sm font-medium text-gray-700 mb-2">Kilometerstand (in
+                            km)</label>
+                        <input type="number" name="mileage" id="mileage"
+                            value="{{ old('mileage', $motorradAd->mileage) }}" placeholder="z.B. 50.000"
+                            class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
                         @error('mileage')
                             <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                         @enderror
@@ -92,23 +101,26 @@
                     {{-- Leistung (PS) --}}
                     <div>
                         <label for="power" class="block text-sm font-medium text-gray-700 mb-2">Leistung (PS)</label>
-                        <input type="number" name="power" id="power" value="{{ old('power', $motorradAd->power) }}" placeholder="z.B. 150"
-                               class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
+                        <input type="number" name="power" id="power" value="{{ old('power', $motorradAd->power) }}"
+                            placeholder="z.B. 150"
+                            class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
                         @error('power')
                             <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                         @enderror
                     </div>
-
-                    {{-- Price --}}
+                        {{-- price --}}
                     <div>
                         <label for="price" class="block text-sm font-medium text-gray-700 mb-2">Preis (€)</label>
-                        <input type="number" name="price" id="price" value="{{ old('price', $motorradAd->price) }}" placeholder="z.B. 10.000"
-                               class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50" step="0.01">
+                        <input type="number" name="price" id="price" value="{{ old('price', $motorradAd->price) }}"
+                            placeholder="z.B. 7.500"
+                            class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50"
+                            min="0" step="0.01">
                         @error('price')
                             <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                         @enderror
                     </div>
-                </div>
+
+           
             </section>
 
             {{-- Type & Condition Section (Farbe & Zustand) --}}
@@ -119,7 +131,7 @@
                     <div>
                         <label for="color" class="block text-sm font-medium text-gray-700 mb-2">Farbe</label>
                         <select name="color" id="color"
-                                class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
+                            class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
                             <option value="">Bitte wählen</option>
                             @foreach($colors as $color)
                                 <option value="{{ $color }}" {{ old('color', $motorradAd->color) == $color ? 'selected' : '' }}>{{ $color }}</option>
@@ -134,7 +146,7 @@
                     <div>
                         <label for="condition" class="block text-sm font-medium text-gray-700 mb-2">Zustand</label>
                         <select name="condition" id="condition"
-                                class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
+                            class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
                             <option value="">Bitte wählen</option>
                             @foreach($conditions as $condition)
                                 <option value="{{ $condition }}" {{ old('condition', $motorradAd->condition) == $condition ? 'selected' : '' }}>{{ $condition }}</option>
@@ -153,8 +165,8 @@
                 <div class="mb-6">
                     <label for="title" class="block text-sm font-semibold text-gray-800 mb-2">Anzeigentitel</label>
                     <input type="text" name="title" id="title" value="{{ old('title', $motorradAd->title) }}"
-                           placeholder="Aussagekräftiger Titel für deine Anzeige"
-                           class="w-full p-3 border border-gray-300 rounded-md shadow-sm bg-white text-gray-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 focus:border-blue-600 transition duration-150 ease-in-out">
+                        placeholder="Aussagekräftiger Titel für deine Anzeige"
+                        class="w-full p-3 border border-gray-300 rounded-md shadow-sm bg-white text-gray-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 focus:border-blue-600 transition duration-150 ease-in-out">
                     @error('title')
                         <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                     @enderror
@@ -164,8 +176,8 @@
                 <div>
                     <label for="description" class="block text-sm font-medium text-gray-800 mb-2">Beschreibung</label>
                     <textarea name="description" id="description" rows="7"
-                               placeholder="Gib hier alle wichtigen Details zu deinem Motorrad ein. Je mehr Informationen, desto besser!"
-                               class="w-full p-3 border border-gray-300 rounded-md shadow-sm bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-600 transition duration-150 ease-in-out">{{ old('description', $motorradAd->description) }}</textarea>
+                        placeholder="Gib hier alle wichtigen Details zu deinem Motorrad ein. Je mehr Informationen, desto besser!"
+                        class="w-full p-3 border border-gray-300 rounded-md shadow-sm bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-600 transition duration-150 ease-in-out">{{ old('description', $motorradAd->description) }}</textarea>
                     @error('description')
                         <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                     @enderror
@@ -191,7 +203,8 @@
                     </div>
 
                     {{-- New image input --}}
-                    <input type="file" name="images[]" multiple @change="addNewFiles($event)" class="block w-full border p-2 rounded" />
+                    <input type="file" name="images[]" multiple @change="addNewFiles($event)"
+                        class="block w-full border p-2 rounded" />
                     @error('images')
                         <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                     @enderror
@@ -215,7 +228,7 @@
             {{-- Submit Button --}}
             <div class="pt-6 border-t border-gray-200 flex justify-end">
                 <button type="submit"
-                        class="bg-blue-600 text-white px-8 py-3 rounded-lg font-semibold text-lg hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-300 transition-all duration-300 shadow-lg">
+                    class="bg-blue-600 text-white px-8 py-3 rounded-lg font-semibold text-lg hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-300 transition-all duration-300 shadow-lg">
                     Anzeige aktualisieren
                 </button>
             </div>

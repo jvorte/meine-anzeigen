@@ -26,8 +26,8 @@ class MotorradAdController extends Controller
         $initialModels = [];
         if (old('motorcycle_brand_id')) {
             $initialModels = MotorcycleModel::where('motorcycle_brand_id', old('motorcycle_brand_id'))
-                                     ->orderBy('name')
-                                     ->pluck('name', 'id');
+                ->orderBy('name')
+                ->pluck('name', 'id');
         }
 
         $colors = ['Schwarz', 'Weiß', 'Rot', 'Blau', 'Grün', 'Gelb', 'Orange', 'Silber', 'Grau', 'Braun', 'Andere'];
@@ -44,6 +44,7 @@ class MotorradAdController extends Controller
         $validatedData = $request->validate([
             'images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'title' => 'required|string|max:255',
+            'price' => 'required|numeric|min:0|max:9999999.99',
             'description' => 'required|string',
             'motorcycle_brand_id' => 'required|exists:motorcycle_brands,id',
             'motorcycle_model_id' => [
@@ -63,6 +64,7 @@ class MotorradAdController extends Controller
         $motorradAd->user_id = Auth::id();
         $motorradAd->title = $validatedData['title'];
         $motorradAd->description = $validatedData['description'];
+        $motorradAd->price = $validatedData['price'];
         $motorradAd->motorcycle_brand_id = $validatedData['motorcycle_brand_id'];
         $motorradAd->motorcycle_model_id = $validatedData['motorcycle_model_id'];
         $motorradAd->first_registration = $validatedData['first_registration'];
@@ -107,8 +109,8 @@ class MotorradAdController extends Controller
         $initialModels = [];
         if ($motorradAd->motorcycle_brand_id) {
             $initialModels = MotorcycleModel::where('motorcycle_brand_id', $motorradAd->motorcycle_brand_id)
-                                     ->orderBy('name')
-                                     ->pluck('name', 'id');
+                ->orderBy('name')
+                ->pluck('name', 'id');
         }
 
         $colors = ['Schwarz', 'Weiß', 'Rot', 'Blau', 'Grün', 'Gelb', 'Orange', 'Silber', 'Grau', 'Braun', 'Andere'];
@@ -130,6 +132,7 @@ class MotorradAdController extends Controller
             'images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'title' => 'required|string|max:255',
             'description' => 'required|string',
+            'price' => 'required|numeric|min:0|max:9999999.99',
             'motorcycle_brand_id' => 'required|exists:motorcycle_brands,id',
             'motorcycle_model_id' => [
                 'required',
@@ -150,6 +153,7 @@ class MotorradAdController extends Controller
         $motorradAd->description = $validatedData['description'];
         $motorradAd->motorcycle_brand_id = $validatedData['motorcycle_brand_id'];
         $motorradAd->motorcycle_model_id = $validatedData['motorcycle_model_id'];
+        $motorradAd->price = $validatedData['price'];
         $motorradAd->first_registration = $validatedData['first_registration'];
         $motorradAd->mileage = $validatedData['mileage'];
         $motorradAd->power = $validatedData['power'];
@@ -205,8 +209,8 @@ class MotorradAdController extends Controller
     public function getModelsByBrand($brandId)
     {
         $models = MotorcycleModel::where('motorcycle_brand_id', $brandId)
-                          ->orderBy('name')
-                          ->pluck('name', 'id');
+            ->orderBy('name')
+            ->pluck('name', 'id');
         // dd($models); // <--- THIS LINE IS COMMENTED OUT
         return response()->json($models);
     }
