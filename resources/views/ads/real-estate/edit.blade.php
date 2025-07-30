@@ -480,7 +480,7 @@
             </section>
 
             
-               <section class="bg-gray-50 p-6 rounded-lg shadow-inner">
+ <section class="bg-gray-50 p-6 rounded-lg shadow-inner">
     <h4 class="text-xl font-semibold text-gray-700 mb-6">Fotos hinzufügen</h4>
 
     {{-- Initial Alpine.js data with existing images --}}

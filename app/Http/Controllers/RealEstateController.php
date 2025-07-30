@@ -281,15 +281,8 @@ class RealEstateController extends Controller
             'verkaufsbericht_link' => ['nullable', 'url', 'max:2048'],
 
             // Contact
-            'contact_name' => ['required', 'string', 'max:255'],
-            // 'contact_tel' => ['nullable', 'string', 'max:255'],
-            // 'contact_email' => ['required', 'email', 'max:255'],
-            // 'firmenname' => ['nullable', 'string', 'max:255'],
-            'homepage' => ['nullable', 'url', 'max:2048'],
-            // 'telefon2' => ['nullable', 'string', 'max:255'],
-            // 'fax' => ['nullable', 'string', 'max:255'],
-            // 'immocard_id' => ['nullable', 'string', 'max:255'],
-            // 'immocard_firma_id' => ['nullable', 'string', 'max:255'],
+            'contact_name' => ['required', 'string', 'max:255'],      
+            'homepage' => ['nullable', 'url', 'max:2048'],           
             'zusatzkontakt' => ['boolean'],
         ]);
 
@@ -345,15 +338,21 @@ class RealEstateController extends Controller
 
         // Logic to remove individual images:
         // Assume you have an array of image IDs to be removed in the request, e.g., 'remove_images_ids'
-        if ($request->has('remove_images_ids')) {
-            $imageIdsToRemove = $request->input('remove_images_ids');
-            $imagesToDelete = RealEstateImage::whereIn('id', $imageIdsToRemove)
-                                ->where('real_estate_id', $realEstate->id)
-                                ->get();
-            foreach ($imagesToDelete as $image) {
-                Storage::disk('public')->delete($image->image_path);
-                $image->delete();
-            }
+   // Διαγραφή επιλεγμένων εικόνων (από hidden input με array IDs)
+if ($request->filled('existing_images_to_delete')) {
+    $imageIdsToRemove = explode(',', $request->input('existing_images_to_delete'));
+
+    $imagesToDelete = RealEstateImage::where('real_estate_id', $realEstate->id)
+                        ->whereIn('id', $imageIdsToRemove)
+                        ->get();
+
+    foreach ($imagesToDelete as $image) {
+        // Διαγραφή από storage
+        Storage::disk('public')->delete($image->image_path);
+
+        // Διαγραφή από βάση
+        $image->delete();
+    }
             // If the thumbnail was deleted, find a new one
             if ($realEstate->images()->where('is_thumbnail', true)->doesntExist() && $realEstate->images()->count() > 0) {
                 $realEstate->images()->first()->update(['is_thumbnail' => true]);
