@@ -56,7 +56,7 @@ Route::prefix('categories')->name('categories.')->group(function () {
     Route::get('/electronics/{electronic}', [ElectronicController::class, 'show'])->name('electronics.show');
     Route::get('/haushalt/{householdItem}', [HouseholdItemController::class, 'show'])->name('haushalt.show');
     Route::get('/real-estate/{realEstate}', [RealEstateController::class, 'show'])->name('real-estate.show');
-    Route::get('/dienstleistungen/{service}', [ServiceController::class, 'show'])->name('dienstleistungen.show');
+    Route::get('/services/{service}', [ServiceController::class, 'show'])->name('services.show');
     Route::get('/sonstiges/{other}', [OtherController::class, 'show'])->name('sonstiges.show');
     Route::get('/motorrad/{motorradAd}', [MotorradAdController::class, 'show'])->name('motorrad.show');
     Route::get('/commercial-vehicles/{commercialVehicle}', [CommercialVehicleController::class, 'show'])->name('commercial-vehicles.show');
@@ -89,7 +89,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/ads/cars/{car}/edit', [CarController::class, 'edit'])->name('ads.cars.edit');
     Route::put('/ads/cars/{car}', [CarController::class, 'update'])->name('ads.cars.update');
     Route::delete('/ads/cars/{car}', [CarController::class, 'destroy'])->name('ads.cars.destroy');
-Route::get('/ads/cars/{car}', [CarController::class, 'show'])->name('ads.cars.show');
+    Route::get('/ads/cars/{car}', [CarController::class, 'show'])->name('ads.cars.show');
 
     // FIX: Changed this route to match the frontend AJAX request URL
     // Ensure your CarController has a public method named `getModelsByBrand`
@@ -155,32 +155,41 @@ Route::get('/ads/cars/{car}', [CarController::class, 'show'])->name('ads.cars.sh
     // ADDED: Destroy Image route for Electronics (within ElectronicController)
     Route::delete('/ads/electronics/images/{electronicImage}', [ElectronicController::class, 'destroyImage'])->name('ads.electronics.images.destroy');
 
-// ---------------------------------------------------
+    // ---------------------------------------------------
     // Household Items
     Route::get('/ads/household/create', [HouseholdItemController::class, 'create'])->name('ads.household.create');
     Route::post('/ads/household', [HouseholdItemController::class, 'store'])->name('ads.household.store');
     Route::get('/ads/household-item/{householdItem}/edit', [HouseholdItemController::class, 'edit'])->name('ads.household-items.edit');
     Route::delete('/ads/household-item/{householdItem}/destroy', [HouseholdItemController::class, 'destroy'])->name('ads.household-items.destroy');
     Route::put('/ads/household-item/{householdItem}/update', [HouseholdItemController::class, 'update'])->name('ads.household-items.update');
-// ---------------------------------------------------
- 
-
-// Real Estate
-Route::prefix('ads/real-estate')->name('ads.real-estate.')->group(function () {
-    Route::get('/create', [RealEstateController::class, 'create'])->name('create');
-    Route::post('/', [RealEstateController::class, 'store'])->name('store');
-    Route::get('/{realEstate}', [RealEstateController::class, 'show'])->name('show');
-    Route::get('/{realEstate}/edit', [RealEstateController::class, 'edit'])->name('edit');
-    Route::put('/{realEstate}', [RealEstateController::class, 'update'])->name('update');
-    Route::delete('/{realEstate}', [RealEstateController::class, 'destroy'])->name('destroy');
-});
+    // ---------------------------------------------------
 
 
- 
+    // Real Estate
+    Route::prefix('ads/real-estate')->name('ads.real-estate.')->group(function () {
+        Route::get('/create', [RealEstateController::class, 'create'])->name('create');
+        Route::post('/', [RealEstateController::class, 'store'])->name('store');
+        Route::get('/{realEstate}', [RealEstateController::class, 'show'])->name('show');
+        Route::get('/{realEstate}/edit', [RealEstateController::class, 'edit'])->name('edit');
+        Route::put('/{realEstate}', [RealEstateController::class, 'update'])->name('update');
+        Route::delete('/{realEstate}', action: [RealEstateController::class, 'destroy'])->name('destroy');
+       
+    });
+
+
     // Services - Fixed typo 'servises' to 'services'
-    Route::get('/ads/services/create', [ServiceController::class, 'create'])->name('ads.services.create'); // <-- CORRECTED NAME
-    // Consider if this should be /ads/services for consistency or if /services is a top-level resource
-    Route::post('/services', [ServiceController::class, 'store'])->name('ads.services.store');
+        Route::name('ads.')->group(function () {
+        // Other 'ads' related routes would go here as well
+        Route::delete('ads/services/destroy', [ServiceController::class, 'destroy'])->name('services.destroy');
+        Route::get('/ads/services/create', [ServiceController::class, 'create'])->name('services.create'); // <-- CORRECTED NAME
+        // Consider if this should be /ads/services for consistency or if /services is a top-level resource
+        Route::post('/services', [ServiceController::class, 'store'])->name('services.store');
+        Route::get('ads/services/edit', [ServiceController::class, 'edit'])->name('services.edit');
+    });
+
+
+
+
 
     // Others
     Route::get('/ads/others/create', [OtherController::class, 'create'])->name('ads.others.create');
@@ -188,20 +197,20 @@ Route::prefix('ads/real-estate')->name('ads.real-estate.')->group(function () {
     Route::post('/others', [OtherController::class, 'store'])->name('ads.others.store');
 
     // Route::get('/ads/others', [OtherController::class, 'index'])->name('ads.others.index');
-// Route::get('/ads/others/create', [OtherController::class, 'create'])->name('ads.others.create'); // You already have this
-// Route::post('/ads/others', [OtherController::class, 'store'])->name('ads.others.store'); // You already have this
- Route::get('/ads/others/{other}/edit', [OtherController::class, 'edit'])->name('ads.others.edit'); Route::put('/ads/others/{other}', [OtherController::class, 'update'])->name('ads.others.update');
- Route::delete('/ads/others/{other}', [OtherController::class, 'destroy'])->name('ads.others.destroy');
- Route::get('/ads/others/{other}', [OtherController::class, 'show'])->name('ads.others.show'); // You already have this
+    // Route::get('/ads/others/create', [OtherController::class, 'create'])->name('ads.others.create'); // You already have this
+    // Route::post('/ads/others', [OtherController::class, 'store'])->name('ads.others.store'); // You already have this
+    Route::get('/ads/others/{other}/edit', [OtherController::class, 'edit'])->name('ads.others.edit');
+    Route::put('/ads/others/{other}', [OtherController::class, 'update'])->name('ads.others.update');
+    Route::delete('/ads/others/{other}', [OtherController::class, 'destroy'])->name('ads.others.destroy');
+    Route::get('/ads/others/{other}', [OtherController::class, 'show'])->name('ads.others.show'); // You already have this
 
     // --- Remaining PartController routes ---
     Route::post('/parts', [PartController::class, 'store'])->name('parts.store');
     Route::get('/ads/parts/create', [PartController::class, 'create'])->name('ads.parts.create');
-
 });
 
 
-Route::get('/messages/create/{userId}', function($userId) {
+Route::get('/messages/create/{userId}', function ($userId) {
     // This is a placeholder. You would typically return a view with a form
     // for sending a message to the user with $userId.
     // Make sure you have a MessageController and a view for this.

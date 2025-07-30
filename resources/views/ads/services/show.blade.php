@@ -34,47 +34,42 @@
     </div>
 
     {{-- Action Buttons (Consistent placement and styling) --}}
-    <div class="max-w-6xl mx-auto my-5 flex space-x-4 justify-end">
+<div class="max-w-6xl mx-auto my-5 flex justify-between items-center">
+    <!-- Αριστερό κουμπί -->
+    <div>
         <a href="{{ route('dashboard') }}" class="inline-flex items-center px-4 py-2 bg-slate-600 border border-slate-300 rounded-md font-semibold text-xs text-gray-100 uppercase tracking-widest hover:bg-gray-300 focus:outline-none focus:border-gray-900 focus:ring ring-gray-300 disabled:opacity-25 transition ease-in-out duration-150">
             Zurück zum Dashboard
         </a>
-        {{-- Contact Seller Button --}}
-        @if ($service->user) {{-- Only show the button if a user exists for the service --}}
-            <a href="{{ route('messages.create', $service->user->id) }}" class="inline-flex items-center px-4 py-2 bg-slate-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-slate-700 active:bg-blue-900 focus:outline-none focus:border-blue-900 focus:ring ring-blue-300 disabled:opacity-25 transition ease-in-out duration-150">
+    </div>
+
+    <!-- Δεξιό μπλοκ κουμπιών -->
+    <div class="flex space-x-4 items-center">
+        @if ($service->user)
+            <a href="{{ route('messages.create', $service->user->id) }}" class="inline-flex items-center px-4 py-2 bg-slate-600 text-xs text-white rounded-md hover:bg-slate-700 transition">
                 Contact
             </a>
         @else
-            {{-- Optionally, display a message or a different button if no seller is available --}}
-            <p class="text-red-800 dark:text-red-700 italic flex items-center">
+            <p class="text-red-800 italic flex items-center">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-red-500" viewBox="0 0 20 20" fill="currentColor">
                     <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
                 </svg>
                 Informationen zum Anbieter nicht verfügbar.
             </p>
         @endif
-        {{-- Edit/Delete Buttons (Visible to owner or admin) --}}
+
         @auth
             @if (auth()->id() === $service->user_id || (auth()->user() && auth()->user()->isAdmin()))
-                <a href="{{ route('ads.services.edit', $service->id) }}"
-                   class="inline-flex items-center justify-center px-4 py-2 border border-blue-600 text-sm font-medium rounded-md text-blue-600 bg-transparent
-                          hover:bg-blue-50 hover:text-blue-700
-                          focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500
-                          transition ease-in-out duration-150">
+                <a href="{{ route('ads.services.edit', $service->id) }}" class="inline-flex items-center px-4 py-2 border border-blue-600 text-blue-600 text-xs rounded-md hover:bg-blue-50 transition">
                     Anzeige bearbeiten
                 </a>
                 <form action="{{ route('ads.services.destroy', $service->id) }}" method="POST"
-                      onsubmit="return confirm('Sind Sie sicher, dass Sie diese Anzeige löschen möchten? Diese Aktion kann nicht rückgängig gemacht werden.');">
+                    onsubmit="return confirm('Sind Sie sicher, dass Sie diese Anzeige löschen möchten? Diese Aktion kann nicht rückgängig gemacht werden.');">
                     @csrf
                     @method('DELETE')
-                    <button type="submit" class="inline-flex items-center justify-center px-4 py-2 border border-red-600 text-sm font-medium rounded-md text-red-600 bg-transparent
-                                                 hover:bg-red-50 hover:text-red-700
-                                                 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500
-                                                 transition ease-in-out duration-150">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1.5" viewBox="0 0 20 20" fill="currentColor">
+                    <button type="submit" class="inline-flex items-center px-4 py-2 border border-red-600 text-red-600 text-xs rounded-md hover:bg-red-50 transition">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1.5" fill="currentColor" viewBox="0 0 20 20">
                             <path d="M6 8a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1z" />
-                            <path fill-rule="evenodd"
-                                  d="M4 5a2 2 0 012-2h8a2 2 0 012 2v10a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm2 0v10h8V5H6z"
-                                  clip-rule="evenodd" />
+                            <path fill-rule="evenodd" d="M4 5a2 2 0 012-2h8a2 2 0 012 2v10a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm2 0v10h8V5H6z" clip-rule="evenodd" />
                         </svg>
                         Anzeige löschen
                     </button>
@@ -82,13 +77,14 @@
             @endif
         @endauth
     </div>
+</div>
 
     <div class="max-w-6xl mx-auto p-6 bg-white rounded-lg shadow-xl my-6">
 
         {{-- Main Title of the Ad --}}
         <h1 class="text-3xl font-bold text-gray-800 mb-8">{{ $service->title }}</h1>
 
-        ---
+  
 
         {{-- Prices Section --}}
         <section class="bg-gray-50 p-6 rounded-lg shadow-inner mb-8">
@@ -105,7 +101,7 @@
             </div>
         </section>
 
-        ---
+ 
 
         {{-- Description Section --}}
         <section class="bg-gray-50 p-6 rounded-lg shadow-inner mb-8">
@@ -116,7 +112,7 @@
             </div>
         </section>
 
-        ---
+
 
         {{-- Service Details Section --}}
         <section class="bg-gray-50 p-6 rounded-lg shadow-inner mb-8">
@@ -144,8 +140,6 @@
             </div>
         </section>
 
-        ---
-
         {{-- Photos & Documents Section --}}
         <section class="bg-gray-50 p-6 rounded-lg shadow-inner mb-8">
             <h4 class="text-xl font-semibold text-gray-700 mb-6">Fotos & Dokumente</h4>
@@ -168,7 +162,7 @@
             </div>
         </section>
 
-        ---
+ 
 
         {{-- Contact Information Section --}}
         <section class="bg-gray-50 p-6 rounded-lg shadow-inner mb-8">
