@@ -1,39 +1,34 @@
-{{-- resources/views/ads/real-estate/create.blade.php --}}
+{{-- resources/views/ads/real-estate/edit.blade.php --}}
 <x-app-layout>
-  
 
-    
-           {{-- -----------------------------------breadcrumbs ---------------------------------------------- --}}
-   <x-slot name="header">
+    <x-slot name="header">
         <h2 class="text-3xl font-extrabold text-gray-900 leading-tight mb-2">
-           Neue  Anzeige Immobilie erstellen
+            Anzeige Immobilie bearbeiten: {{ $realEstateAd->title }}
         </h2>
         <p class="text-md text-gray-700 dark:text-gray-500">
-            Wähle eine passende Kategorie und fülle die erforderlichen Felder aus, um deine Anzeige zu erstellen.
+            Passe die Details deiner Immobilienanzeige an und speichere die Änderungen.
         </p>
-
     </x-slot>
 
-   <div class="py-2">
-    <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-        {{-- Breadcrumbs component --}}
-        <x-breadcrumbs :items="[
-            {{-- Link to the general Cars category listing --}}
-            ['label' => 'Cars Anzeigen', 'url' => route('categories.show', 'cars')],
-
-            {{-- The current page (New Car Ad creation) - set URL to null --}}
-            ['label' => 'Neue Auto Anzeige', 'url' => null],
-        ]" />
+    <div class="py-2">
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+            {{-- Breadcrumbs component --}}
+            <x-breadcrumbs :items="[
+                ['label' => 'Immobilien Anzeigen', 'url' => route('categories.show', 'immobilien')],
+                ['label' => $realEstateAd->title, 'url' => route('ads.real-estate.show', $realEstateAd->id)],
+                ['label' => 'Bearbeiten', 'url' => null],
+            ]" />
+        </div>
     </div>
-</div>
-{{-- --------------------------------------------------------------------------------- --}}
-    <div class="max-w-6xl mx-auto p-6 bg-white rounded-lg shadow-xl mt-6">
 
-        <form method="POST" action="{{ route('ads.realestate.store') }}" enctype="multipart/form-data" class="space-y-8">
+    <div class="max-w-6xl mx-auto p-6 bg-white rounded-lg shadow-xl my-6">
+
+        <form method="POST" action="{{ route('ads.real-estate.update', $realEstateAd->id) }}" enctype="multipart/form-data" class="space-y-8">
             @csrf
+            @method('PUT') {{-- Use PUT method for updates --}}
 
-            {{-- Hidden field for category_slug --}}
-            <input type="hidden" name="category_slug" value="immobilien">
+            {{-- Hidden field for category_slug (assuming it's not editable) --}}
+            <input type="hidden" name="category_slug" value="{{ old('category_slug', $realEstateAd->category_slug) }}">
 
             {{-- Basisdaten Section --}}
             <section class="bg-gray-50 p-6 rounded-lg shadow-inner">
@@ -42,7 +37,7 @@
                     {{-- Titel --}}
                     <div class="lg:col-span-3">
                         <label for="title" class="block text-sm font-semibold text-gray-800 mb-2">Anzeigentitel</label>
-                        <input type="text" name="title" id="title" value="{{ old('title') }}"
+                        <input type="text" name="title" id="title" value="{{ old('title', $realEstateAd->title) }}"
                                placeholder="Aussagekräftiger Titel für deine Anzeige"
                                class="w-full p-3 border border-gray-300 rounded-md shadow-sm bg-white text-gray-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50">
                         @error('title')
@@ -57,7 +52,7 @@
                                 class="form-select w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
                             <option value="">Bitte wählen</option>
                             @foreach(['Wohnung', 'Haus', 'Grundstück', 'Gewerbeobjekt', 'Garage/Stellplatz', 'Andere'] as $type)
-                                <option value="{{ $type }}" {{ old('immobilientyp') == $type ? 'selected' : '' }}>{{ $type }}</option>
+                                <option value="{{ $type }}" {{ (old('immobilientyp', $realEstateAd->immobilientyp) == $type) ? 'selected' : '' }}>{{ $type }}</option>
                             @endforeach
                         </select>
                         @error('immobilientyp')
@@ -72,7 +67,7 @@
                                 class="form-select w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
                             <option value="">Bitte wählen</option>
                             @foreach(['Kauf', 'Miete'] as $type)
-                                <option value="{{ $type }}" {{ old('objekttyp') == $type ? 'selected' : '' }}>{{ $type }}</option>
+                                <option value="{{ $type }}" {{ (old('objekttyp', $realEstateAd->objekttyp) == $type) ? 'selected' : '' }}>{{ $type }}</option>
                             @endforeach
                         </select>
                         @error('objekttyp')
@@ -87,7 +82,7 @@
                                 class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
                             <option value="">Bitte wählen</option>
                             @foreach(['Neubau / Erstbezug', 'Saniert', 'Renovierungsbedürftig', 'Altbau', 'Rohbau'] as $cond)
-                                <option value="{{ $cond }}" {{ old('zustand') == $cond ? 'selected' : '' }}>{{ $cond }}</option>
+                                <option value="{{ $cond }}" {{ (old('zustand', $realEstateAd->zustand) == $cond) ? 'selected' : '' }}>{{ $cond }}</option>
                             @endforeach
                         </select>
                         @error('zustand')
@@ -98,7 +93,7 @@
                     {{-- Anzahl Zimmer --}}
                     <div>
                         <label for="anzahl_zimmer" class="block text-sm font-medium text-gray-700 mb-2">Anzahl Zimmer (optional)</label>
-                        <input type="number" step="0.5" name="anzahl_zimmer" id="anzahl_zimmer" value="{{ old('anzahl_zimmer') }}" placeholder="z.B. 3.5" min="0.5"
+                        <input type="number" step="0.5" name="anzahl_zimmer" id="anzahl_zimmer" value="{{ old('anzahl_zimmer', $realEstateAd->anzahl_zimmer) }}" placeholder="z.B. 3.5" min="0.5"
                                class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
                         @error('anzahl_zimmer')
                             <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
@@ -112,7 +107,7 @@
                                 class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
                             <option value="">Bitte wählen</option>
                             @foreach(['Massivbau', 'Fertigteilhaus', 'Holzbau', 'Ziegelbau', 'Stahlbeton'] as $type)
-                                <option value="{{ $type }}" {{ old('bautyp') == $type ? 'selected' : '' }}>{{ $type }}</option>
+                                <option value="{{ $type }}" {{ (old('bautyp', $realEstateAd->bautyp) == $type) ? 'selected' : '' }}>{{ $type }}</option>
                             @endforeach
                         </select>
                         @error('bautyp')
@@ -127,7 +122,7 @@
                                 class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
                             <option value="">Bitte wählen</option>
                             @foreach(['Sofort', 'Nach Vereinbarung', 'Ab [Datum]'] as $avail)
-                                <option value="{{ $avail }}" {{ old('verfugbarkeit') == $avail ? 'selected' : '' }}>{{ $avail }}</option>
+                                <option value="{{ $avail }}" {{ (old('verfugbarkeit', $realEstateAd->verfugbarkeit) == $avail) ? 'selected' : '' }}>{{ $avail }}</option>
                             @endforeach
                         </select>
                         @error('verfugbarkeit')
@@ -142,7 +137,7 @@
                                 class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
                             <option value="">Bitte wählen</option>
                             @foreach(['Unbefristet', 'Befristet'] as $term)
-                                <option value="{{ $term }}" {{ old('befristung') == $term ? 'selected' : '' }}>{{ $term }}</option>
+                                <option value="{{ $term }}" {{ (old('befristung', $realEstateAd->befristung) == $term) ? 'selected' : '' }}>{{ $term }}</option>
                             @endforeach
                         </select>
                         @error('befristung')
@@ -153,7 +148,7 @@
                     {{-- Befristung Ende --}}
                     <div>
                         <label for="befristung_ende" class="block text-sm font-medium text-gray-700 mb-2">Befristung Ende (optional)</label>
-                        <input type="date" name="befristung_ende" id="befristung_ende" value="{{ old('befristung_ende') }}"
+                        <input type="date" name="befristung_ende" id="befristung_ende" value="{{ old('befristung_ende', $realEstateAd->befristung_ende) }}"
                                class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
                         @error('befristung_ende')
                             <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
@@ -171,7 +166,7 @@
                         <label for="description" class="block text-sm font-medium text-gray-700 mb-2">Hauptbeschreibung</label>
                         <textarea name="description" id="description" rows="5"
                                   placeholder="Gib hier die Hauptbeschreibung deiner Immobilie ein."
-                                  class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">{{ old('description') }}</textarea>
+                                  class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">{{ old('description', $realEstateAd->description) }}</textarea>
                         @error('description')
                             <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                         @enderror
@@ -182,7 +177,7 @@
                         <label for="objektbeschreibung" class="block text-sm font-medium text-gray-700 mb-2">Objektbeschreibung (optional)</label>
                         <textarea name="objektbeschreibung" id="objektbeschreibung" rows="3"
                                   placeholder="Detaillierte Beschreibung des Objekts."
-                                  class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">{{ old('objektbeschreibung') }}</textarea>
+                                  class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">{{ old('objektbeschreibung', $realEstateAd->objektbeschreibung) }}</textarea>
                         @error('objektbeschreibung')
                             <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                         @enderror
@@ -193,7 +188,7 @@
                         <label for="lage" class="block text-sm font-medium text-gray-700 mb-2">Lage (optional)</label>
                         <textarea name="lage" id="lage" rows="3"
                                   placeholder="Beschreibung der Lage und Umgebung."
-                                  class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">{{ old('lage') }}</textarea>
+                                  class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">{{ old('lage', $realEstateAd->lage) }}</textarea>
                         @error('lage')
                             <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                         @enderror
@@ -204,7 +199,7 @@
                         <label for="sonstiges" class="block text-sm font-medium text-gray-700 mb-2">Sonstiges (optional)</label>
                         <textarea name="sonstiges" id="sonstiges" rows="3"
                                   placeholder="Weitere allgemeine Informationen."
-                                  class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">{{ old('sonstiges') }}</textarea>
+                                  class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">{{ old('sonstiges', $realEstateAd->sonstiges) }}</textarea>
                         @error('sonstiges')
                             <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                         @enderror
@@ -215,7 +210,7 @@
                         <label for="zusatzinformation" class="block text-sm font-medium text-gray-700 mb-2">Zusatzinformation (optional)</label>
                         <textarea name="zusatzinformation" id="zusatzinformation" rows="3"
                                   placeholder="Zusätzliche Informationen, die für den Käufer/Mieter relevant sein könnten."
-                                  class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">{{ old('zusatzinformation') }}</textarea>
+                                  class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">{{ old('zusatzinformation', $realEstateAd->zusatzinformation) }}</textarea>
                         @error('zusatzinformation')
                             <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                         @enderror
@@ -230,7 +225,7 @@
                     {{-- Land --}}
                     <div>
                         <label for="land" class="block text-sm font-medium text-gray-700 mb-2">Land</label>
-                        <input type="text" name="land" id="land" value="{{ old('land') ?? 'Österreich' }}" placeholder="z.B. Österreich"
+                        <input type="text" name="land" id="land" value="{{ old('land', $realEstateAd->land) ?? 'Österreich' }}" placeholder="z.B. Österreich"
                                class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
                         @error('land')
                             <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
@@ -240,7 +235,7 @@
                     {{-- PLZ --}}
                     <div>
                         <label for="plz" class="block text-sm font-medium text-gray-700 mb-2">Postleitzahl</label>
-                        <input type="text" name="plz" id="plz" value="{{ old('plz') }}" placeholder="z.B. 1010"
+                        <input type="text" name="plz" id="plz" value="{{ old('plz', $realEstateAd->plz) }}" placeholder="z.B. 1010"
                                class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
                         @error('plz')
                             <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
@@ -250,7 +245,7 @@
                     {{-- Ort --}}
                     <div>
                         <label for="ort" class="block text-sm font-medium text-gray-700 mb-2">Ort</label>
-                        <input type="text" name="ort" id="ort" value="{{ old('ort') }}" placeholder="z.B. Wien"
+                        <input type="text" name="ort" id="ort" value="{{ old('ort', $realEstateAd->ort) }}" placeholder="z.B. Wien"
                                class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
                         @error('ort')
                             <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
@@ -260,7 +255,7 @@
                     {{-- Straße --}}
                     <div>
                         <label for="strasse" class="block text-sm font-medium text-gray-700 mb-2">Straße (optional)</label>
-                        <input type="text" name="strasse" id="strasse" value="{{ old('strasse') }}" placeholder="z.B. Musterstraße 123"
+                        <input type="text" name="strasse" id="strasse" value="{{ old('strasse', $realEstateAd->strasse) }}" placeholder="z.B. Musterstraße 123"
                                class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
                         @error('strasse')
                             <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
@@ -276,7 +271,7 @@
                     {{-- Gesamtmiete --}}
                     <div>
                         <label for="gesamtmiete" class="block text-sm font-medium text-gray-700 mb-2">Gesamtmiete (in €)</label>
-                        <input type="number" step="0.01" name="gesamtmiete" id="gesamtmiete" value="{{ old('gesamtmiete') }}" placeholder="z.B. 1200.00"
+                        <input type="number" step="0.01" name="gesamtmiete" id="gesamtmiete" value="{{ old('gesamtmiete', $realEstateAd->gesamtmiete) }}" placeholder="z.B. 1200.00"
                                class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
                         @error('gesamtmiete')
                             <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
@@ -286,7 +281,7 @@
                     {{-- Wohnfläche --}}
                     <div>
                         <label for="wohnflaeche" class="block text-sm font-medium text-gray-700 mb-2">Wohnfläche (in m²)</label>
-                        <input type="number" step="0.01" name="wohnflaeche" id="wohnflaeche" value="{{ old('wohnflaeche') }}" placeholder="z.B. 90.50"
+                        <input type="number" step="0.01" name="wohnflaeche" id="wohnflaeche" value="{{ old('wohnflaeche', $realEstateAd->wohnflaeche) }}" placeholder="z.B. 90.50"
                                class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
                         @error('wohnflaeche')
                             <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
@@ -296,7 +291,7 @@
                     {{-- Grundfläche --}}
                     <div>
                         <label for="grundflaeche" class="block text-sm font-medium text-gray-700 mb-2">Grundfläche (in m²)</label>
-                        <input type="number" step="0.01" name="grundflaeche" id="grundflaeche" value="{{ old('grundflaeche') }}" placeholder="z.B. 500.00"
+                        <input type="number" step="0.01" name="grundflaeche" id="grundflaeche" value="{{ old('grundflaeche', $realEstateAd->grundflaeche) }}" placeholder="z.B. 500.00"
                                class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
                         @error('grundflaeche')
                             <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
@@ -306,7 +301,7 @@
                     {{-- Kaution --}}
                     <div>
                         <label for="kaution" class="block text-sm font-medium text-gray-700 mb-2">Kaution (in €)</label>
-                        <input type="number" step="0.01" name="kaution" id="kaution" value="{{ old('kaution') }}" placeholder="z.B. 3600.00"
+                        <input type="number" step="0.01" name="kaution" id="kaution" value="{{ old('kaution', $realEstateAd->kaution) }}" placeholder="z.B. 3600.00"
                                class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
                         @error('kaution')
                             <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
@@ -316,7 +311,7 @@
                     {{-- Maklerprovision --}}
                     <div>
                         <label for="maklerprovision" class="block text-sm font-medium text-gray-700 mb-2">Maklerprovision (in €)</label>
-                        <input type="number" step="0.01" name="maklerprovision" id="maklerprovision" value="{{ old('maklerprovision') }}" placeholder="z.B. 2400.00"
+                        <input type="number" step="0.01" name="maklerprovision" id="maklerprovision" value="{{ old('maklerprovision', $realEstateAd->maklerprovision) }}" placeholder="z.B. 2400.00"
                                class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
                         @error('maklerprovision')
                             <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
@@ -326,7 +321,7 @@
                     {{-- Ablöse --}}
                     <div>
                         <label for="abloese" class="block text-sm font-medium text-gray-700 mb-2">Ablöse (in €)</label>
-                        <input type="number" step="0.01" name="abloese" id="abloese" value="{{ old('abloese') }}" placeholder="z.B. 5000.00"
+                        <input type="number" step="0.01" name="abloese" id="abloese" value="{{ old('abloese', $realEstateAd->abloese) }}" placeholder="z.B. 5000.00"
                                class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
                         @error('abloese')
                             <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
@@ -346,7 +341,7 @@
                                 class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
                             <option value="">Bitte wählen</option>
                             @foreach(['Zentralheizung', 'Etagenheizung', 'Fußbodenheizung', 'Fernwärme', 'Gasheizung', 'Ölheizung', 'Elektroheizung', 'Kamin/Ofen'] as $heat)
-                                <option value="{{ $heat }}" {{ old('heizung') == $heat ? 'selected' : '' }}>{{ $heat }}</option>
+                                <option value="{{ $heat }}" {{ (old('heizung', $realEstateAd->heizung) == $heat) ? 'selected' : '' }}>{{ $heat }}</option>
                             @endforeach
                         </select>
                         @error('heizung')
@@ -370,7 +365,7 @@
                                 <div class="flex items-center">
                                     <input type="checkbox" name="ausstattung[]" id="ausstattung_{{ Str::slug($option) }}" value="{{ $option }}"
                                            class="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
-                                           {{ in_array($option, old('ausstattung', [])) ? 'checked' : '' }}>
+                                           {{ in_array($option, old('ausstattung', $realEstateAd->ausstattung ?? [])) ? 'checked' : '' }}>
                                     <label for="ausstattung_{{ Str::slug($option) }}" class="ml-2 text-sm text-gray-700">{{ $option }}</label>
                                 </div>
                             @endforeach
@@ -384,22 +379,113 @@
 
             {{-- Fotos & Dokumente Section --}}
             <section class="bg-gray-50 p-6 rounded-lg shadow-inner">
-
                 <h4 class="text-xl font-semibold text-gray-700 mb-6">Fotos & Dokumente</h4>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    {{-- Multiple Images --}}
-                    {{-- <div>
-                        <label for="images" class="block text-sm font-medium text-gray-700 mb-2">Fotos hinzufügen</label>
-                        <input type="file" name="images[]" id="images" multiple accept="image/*"
-                               class="w-full text-base text-gray-700 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 cursor-pointer" />
+
+                {{-- Multiple Images --}}
+                <div class="mb-6">
+                    <label for="images" class="block text-sm font-medium text-gray-700 mb-2">Fotos hinzufügen/verwalten</label>
+                    <div x-data="multiImageUploader(@json($realEstateAd->images->map(fn($img) => ['id' => $img->id, 'path' => Storage::url($img->image_path)])))" class="space-y-4">
+                        {{-- Display existing images with checkboxes to keep them --}}
+                        @if($realEstateAd->images->isNotEmpty())
+                            <div class="mb-4">
+                                <h5 class="text-lg font-medium text-gray-700 mb-3">Aktuelle Bilder:</h5>
+                                <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+                                    <template x-for="(image, index) in existingImages" :key="`existing-${image.id}`">
+                                        <div class="relative group border border-gray-300 p-2 rounded shadow">
+                                            <img :src="image.path" class="w-full h-32 object-cover rounded">
+                                            <label :for="`existing_image_${image.id}`" class="block text-center text-sm mt-2">
+                                                <input type="checkbox" :id="`existing_image_${image.id}`"
+                                                       name="existing_image_ids[]" :value="image.id" x-model="selectedExistingImageIds"
+                                                       class="rounded border-gray-300 text-blue-600 shadow-sm focus:ring-blue-500">
+                                                Behalten
+                                            </label>
+                                        </div>
+                                    </template>
+                                </div>
+                                <p class="text-sm text-gray-600 mt-2">Deaktiviere die Checkboxen der Bilder, die du löschen möchtest.</p>
+                            </div>
+                        @endif
+
+                        {{-- Input for new images --}}
+                        <label for="new_images" class="block text-sm font-medium text-gray-700 mb-2">Neue Fotos hinzufügen:</label>
+                        <input type="file" name="images[]" multiple @change="addFiles($event)" id="new_images" accept="image/*" class="block w-full border p-2 rounded" />
                         @error('images')
                             <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                         @enderror
-                    </div> --}}
+                        @error('images.*')
+                            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                        @enderror
 
+                        {{-- Previews for newly added images --}}
+                        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4">
+                            <template x-for="(image, index) in previews" :key="`new-${index}`">
+                                <div class="relative group">
+                                    <img :src="image" class="w-full h-32 object-cover rounded shadow">
+                                    <button type="button" @click="removeNew(index)"
+                                            class="absolute top-1 right-1 bg-red-700 text-white w-6 h-6 rounded-full text-xs flex items-center justify-center hidden group-hover:flex">✕</button>
+                                </div>
+                            </template>
+                        </div>
+                    </div>
+                </div>
+
+                {{-- Alpine.js Script for Image Previews --}}
+                <script>
+                    function multiImageUploader(initialImages) {
+                        return {
+                            files: [], // Stores File objects for new uploads
+                            previews: [], // Stores URLs for new image previews
+                            existingImages: initialImages, // Array of { id, path } for images already saved
+                            selectedExistingImageIds: [], // To store IDs of images the user wants to keep
+
+                            init() {
+                                // On initialization, assume all existing images are to be kept by default
+                                this.selectedExistingImageIds = this.existingImages.map(img => img.id);
+                            },
+
+                            addFiles(event) {
+                                const newFiles = Array.from(event.target.files);
+
+                                newFiles.forEach(file => {
+                                    this.files.push(file);
+                                    this.previews.push(URL.createObjectURL(file));
+                                });
+
+                                // Update the actual file input's files property for submission
+                                const dataTransfer = new DataTransfer();
+                                this.files.forEach(file => dataTransfer.items.add(file));
+                                event.target.files = dataTransfer.files;
+                            },
+
+                            removeNew(index) {
+                                URL.revokeObjectURL(this.previews[index]); // Revoke URL to prevent memory leaks
+
+                                this.files.splice(index, 1);
+                                this.previews.splice(index, 1);
+
+                                // Update the file input to reflect removed new files
+                                const fileInput = this.$el.querySelector('input[type="file"][name="images[]"]');
+                                if (fileInput) {
+                                    const dataTransfer = new DataTransfer();
+                                    this.files.forEach(file => dataTransfer.items.add(file));
+                                    fileInput.files = dataTransfer.files;
+                                }
+                            }
+                        };
+                    }
+                </script>
+                ---
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     {{-- Grundriss --}}
                     <div>
                         <label for="grundriss_path" class="block text-sm font-medium text-gray-700 mb-2">Grundriss (PDF/Bild, optional)</label>
+                        @if ($realEstateAd->grundriss_path)
+                            <p class="mb-2 text-sm text-gray-600">Aktuelle Datei:
+                                <a href="{{ Storage::url($realEstateAd->grundriss_path) }}" target="_blank" class="text-blue-600 hover:underline">Anzeigen</a>
+                                <input type="checkbox" name="delete_grundriss" value="1" class="ml-2 rounded border-gray-300 text-red-600 shadow-sm focus:ring-red-500"> <span class="text-sm text-gray-600">Löschen</span>
+                            </p>
+                        @endif
                         <input type="file" name="grundriss_path" id="grundriss_path" accept=".pdf,image/*"
                                class="w-full text-base text-gray-700 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 cursor-pointer" />
                         @error('grundriss_path')
@@ -410,6 +496,12 @@
                     {{-- Energieausweis --}}
                     <div>
                         <label for="energieausweis_path" class="block text-sm font-medium text-gray-700 mb-2">Energieausweis (PDF/Bild, optional)</label>
+                        @if ($realEstateAd->energieausweis_path)
+                            <p class="mb-2 text-sm text-gray-600">Aktuelle Datei:
+                                <a href="{{ Storage::url($realEstateAd->energieausweis_path) }}" target="_blank" class="text-blue-600 hover:underline">Anzeigen</a>
+                                <input type="checkbox" name="delete_energieausweis" value="1" class="ml-2 rounded border-gray-300 text-red-600 shadow-sm focus:ring-red-500"> <span class="text-sm text-gray-600">Löschen</span>
+                            </p>
+                        @endif
                         <input type="file" name="energieausweis_path" id="energieausweis_path" accept=".pdf,image/*"
                                class="w-full text-base text-gray-700 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 cursor-pointer" />
                         @error('energieausweis_path')
@@ -420,7 +512,7 @@
                     {{-- Rundgang Link --}}
                     <div>
                         <label for="rundgang_link" class="block text-sm font-medium text-gray-700 mb-2">360° Rundgang Link (optional)</label>
-                        <input type="url" name="rundgang_link" id="rundgang_link" value="{{ old('rundgang_link') }}" placeholder="https://..."
+                        <input type="url" name="rundgang_link" id="rundgang_link" value="{{ old('rundgang_link', $realEstateAd->rundgang_link) }}" placeholder="https://..."
                                class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
                         @error('rundgang_link')
                             <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
@@ -430,7 +522,7 @@
                     {{-- Objektinformationen Link --}}
                     <div>
                         <label for="objektinformationen_link" class="block text-sm font-medium text-gray-700 mb-2">Objektinformationen Link (optional)</label>
-                        <input type="url" name="objektinformationen_link" id="objektinformationen_link" value="{{ old('objektinformationen_link') }}" placeholder="https://..."
+                        <input type="url" name="objektinformationen_link" id="objektinformationen_link" value="{{ old('objektinformationen_link', $realEstateAd->objektinformationen_link) }}" placeholder="https://..."
                                class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
                         @error('objektinformationen_link')
                             <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
@@ -440,7 +532,7 @@
                     {{-- Zustandsbericht Link --}}
                     <div>
                         <label for="zustandsbericht_link" class="block text-sm font-medium text-gray-700 mb-2">Zustandsbericht Link (optional)</label>
-                        <input type="url" name="zustandsbericht_link" id="zustandsbericht_link" value="{{ old('zustandsbericht_link') }}" placeholder="https://..."
+                        <input type="url" name="zustandsbericht_link" id="zustandsbericht_link" value="{{ old('zustandsbericht_link', $realEstateAd->zustandsbericht_link) }}" placeholder="https://..."
                                class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
                         @error('zustandsbericht_link')
                             <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
@@ -450,7 +542,7 @@
                     {{-- Verkaufsbericht Link --}}
                     <div>
                         <label for="verkaufsbericht_link" class="block text-sm font-medium text-gray-700 mb-2">Verkaufsbericht Link (optional)</label>
-                        <input type="url" name="verkaufsbericht_link" id="verkaufsbericht_link" value="{{ old('verkaufsbericht_link') }}" placeholder="https://..."
+                        <input type="url" name="verkaufsbericht_link" id="verkaufsbericht_link" value="{{ old('verkaufsbericht_link', $realEstateAd->verkaufsbericht_link) }}" placeholder="https://..."
                                class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
                         @error('verkaufsbericht_link')
                             <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
@@ -466,154 +558,32 @@
                     {{-- Contact Name --}}
                     <div>
                         <label for="contact_name" class="block text-sm font-medium text-gray-700 mb-2">Name des Ansprechpartners</label>
-                        <input type="text" name="contact_name" id="contact_name" value="{{ old('contact_name') }}" placeholder="Max Mustermann"
+                        <input type="text" name="contact_name" id="contact_name" value="{{ old('contact_name', $realEstateAd->contact_name) }}" placeholder="Max Mustermann"
                                class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
                         @error('contact_name')
                             <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                         @enderror
                     </div>
 
-
                     {{-- Homepage --}}
                     <div>
                         <label for="homepage" class="block text-sm font-medium text-gray-700 mb-2">Homepage (optional)</label>
-                        <input type="url" name="homepage" id="homepage" value="{{ old('homepage') }}" placeholder="https://www.example.com"
+                        <input type="url" name="homepage" id="homepage" value="{{ old('homepage', $realEstateAd->homepage) }}" placeholder="https://www.example.com"
                                class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
                         @error('homepage')
                             <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                         @enderror
                     </div>
-
-            
                 </div>
-            </section>
-
-               {{-- Photo Upload Section (with Alpine.js for previews) --}}
-            <section class="bg-gray-50 p-6 rounded-lg shadow-inner">
-                <h4 class="text-xl font-semibold text-gray-700 mb-6">Fotos hinzufügen</h4>
-
-                <div x-data="multiImageUploader()" class="space-y-4">
-                    <input type="file" name="images[]" multiple @change="addFiles($event)" class="block w-full border p-2 rounded" />
-                    @error('images')
-                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-                    @enderror
-                    @error('images.*')
-                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-                    @enderror
-
-                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-                        <template x-for="(image, index) in previews" :key="index">
-                            <div class="relative group">
-                                <img :src="image" class="w-full h-32 object-cover rounded shadow">
-                                <button type="button" @click="remove(index)"
-                                    class="absolute top-1 right-1 bg-red-700 text-white w-6 h-6 rounded-full text-xs flex items-center justify-center hidden group-hover:flex">✕</button>
-                            </div>
-                        </template>
-                    </div>
-                </div>
-
-                {{-- Alpine.js Script for Image Previews and Main Form Logic --}}
-                <script>
-                    function multiImageUploader() {
-                        return {
-                            files: [],
-                            previews: [],
-
-                            addFiles(event) {
-                                const newFiles = Array.from(event.target.files);
-
-                                newFiles.forEach(file => {
-                                    this.files.push(file);
-                                    this.previews.push(URL.createObjectURL(file));
-                                });
-
-                                const dataTransfer = new DataTransfer();
-                                this.files.forEach(file => dataTransfer.items.add(file));
-                                event.target.files = dataTransfer.files;
-                            },
-
-                            remove(index) {
-                                URL.revokeObjectURL(this.previews[index]);
-
-                                this.files.splice(index, 1);
-                                this.previews.splice(index, 1);
-
-                                const fileInput = this.$el.querySelector('input[type="file"][name="images[]"]');
-                                if (fileInput) {
-                                    const dataTransfer = new DataTransfer();
-                                    this.files.forEach(file => dataTransfer.items.add(file));
-                                    fileInput.files = dataTransfer.files;
-                                }
-                            }
-                        };
-                    }
-
-                    // Define the Alpine.js component for the motorcycle form
-                    document.addEventListener('alpine:init', () => {
-                        Alpine.data('motorcycleAdForm', (initialBrandId, initialModelId, initialModels) => ({
-                            selectedMotorcycleBrandId: initialBrandId || '',
-                            selectedMotorcycleModelId: initialModelId || '',
-                            motorcycleModels: initialModels || {}, // Ensure it's an object, not null
-
-                            // Define the async function first, so it's available when init() calls it
-                            async fetchMotorcycleModels() {
-                                console.log('fetchMotorcycleModels triggered. Current selectedBrandId (before fetch):', this.selectedMotorcycleBrandId);
-
-                                // The fix for the AJAX URL should be `/api/motorcycle-models/...`
-                                // Double-check your routes/api.php and the previous conversation for the correct URL prefix.
-                                // If you moved it to web.php and removed the /api prefix, then it should match that.
-                                // For consistency, it's generally better to use /api for such endpoints.
-                                const fetchUrl = `/api/motorcycle-models/${this.selectedMotorcycleBrandId}`; // Assuming API route is /api/motorcycle-models
-                                console.log('Attempting to fetch models from URL:', fetchUrl);
-                                try {
-                                    const response = await fetch(fetchUrl);
-                                    if (!response.ok) {
-                                        console.error('HTTP error! Status:', response.status, 'Response text:', await response.text());
-                                        throw new Error(`HTTP error! status: ${response.status}`);
-                                    }
-                                    const data = await response.json();
-                                    console.log('Models fetched successfully:', data);
-                                    this.motorcycleModels = data;
-
-                                    // If the previously selected model is not in the new list, clear it
-                                    if (this.selectedMotorcycleModelId && !Object.keys(this.motorcycleModels).includes(String(this.selectedMotorcycleModelId))) {
-                                        this.selectedMotorcycleModelId = '';
-                                        console.log('Cleared selectedMotorcycleModelId as it was not in the new list.');
-                                    }
-                                } catch (error) {
-                                    console.error('Error fetching motorcycle models:', error);
-                                    this.motorcycleModels = {}; // Clear models on error
-                                    this.selectedMotorcycleModelId = ''; // Clear selected model on error
-                                }
-                            },
-
-                            // The init method for the component
-                            init() {
-                                // Call fetch on init to handle cases where old('brand_id') exists on page load
-                                // Use $nextTick to ensure all component properties are fully initialized
-                                this.$nextTick(() => {
-                                    this.fetchMotorcycleModels();
-                                });
-
-                                // Watch for changes on the brand select element's x-model bound variable
-                                this.$watch('selectedMotorcycleBrandId', (value) => {
-                                    console.log('selectedMotorcycleBrandId changed to (via $watch):', value);
-                                    this.fetchMotorcycleModels();
-                                });
-                            },
-                        }));
-                    });
-                </script>
             </section>
 
             {{-- Submit Button --}}
             <div class="pt-6 border-t border-gray-200 flex justify-end">
                 <button type="submit"
                         class="bg-blue-600 text-white px-8 py-3 rounded-lg font-semibold text-lg hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-300 transition-all duration-300 shadow-lg">
-                    Anzeige erstellen
+                    Änderungen speichern
                 </button>
             </div>
-
         </form>
     </div>
 </x-app-layout>

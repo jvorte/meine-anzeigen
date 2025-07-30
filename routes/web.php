@@ -168,6 +168,17 @@ Route::get('/ads/cars/{car}', [CarController::class, 'show'])->name('ads.cars.sh
     // Consider if this should be /ads/real-estate for consistency or if /realestate is a top-level resource
     Route::post('/realestate', [RealEstateController::class, 'store'])->name('ads.realestate.store');
 
+    Route::middleware(['auth'])->group(function () {
+    Route::get('/ads/real-estate/create', [RealEstateController::class, 'create'])->name('real-estate.create');
+    Route::post('/ads/real-estate', [RealEstateController::class, 'store'])->name('real-estate.store');
+    Route::get('/ads/real-estate/{realEstate}', [RealEstateController::class, 'show'])->name('real-estate.show');
+    Route::get('/ads/real-estate/{realEstate}/edit', [RealEstateController::class, 'edit'])->name('real-estate.edit');
+    Route::put('/ads/real-estate/{realEstate}', [RealEstateController::class, 'update'])->name('real-estate.update');
+    Route::delete('/ads/real-estate/{realEstate}', [RealEstateController::class, 'destroy'])->name('real-estate.destroy');
+});
+
+
+
     // Services - Fixed typo 'servises' to 'services'
     Route::get('/ads/services/create', [ServiceController::class, 'create'])->name('ads.services.create'); // <-- CORRECTED NAME
     // Consider if this should be /ads/services for consistency or if /services is a top-level resource
