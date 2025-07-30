@@ -1,9 +1,8 @@
 {{-- resources/views/ads/motorrad/show.blade.php --}}
 
 <x-app-layout>
-{{-- ----------------------------------breadcrumbs --------------------------------------------------- --}}
-
     <x-slot name="header">
+        {{-- "Neu Anzeige" button (consistent with other show pages, assuming it's always relevant) --}}
         <div class="px-4 py-1 md:py-1 flex justify-end items-center">
             <a href="{{ route('ads.create') }}"
                 class="inline-flex items-center px-6 py-3 border border-transparent text-base font-semibold rounded-full shadow-lg text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-all duration-300 transform hover:scale-105">
@@ -14,106 +13,204 @@
                 Neu Anzeige
             </a>
         </div>
+        {{-- Main page title --}}
         <h2 class="text-3xl font-extrabold text-gray-900 leading-tight mb-2">
-            motorradAd Anzeige
+            Motorrad Anzeige
         </h2>
         <p class="text-md text-gray-700 dark:text-gray-500">
-            Wähle eine passende Kategorie und fülle die erforderlichen Felder aus, um deine Anzeige zu erstellen.
+            Detaillierte Informationen zur Motorrad Anzeige.
         </p>
-
     </x-slot>
 
     <div class="py-2">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             {{-- Breadcrumbs component --}}
             <x-breadcrumbs :items="[
-        ['label' => 'motorradAd Anzeigen', 'url' => route('ads.create')],
-        ['label' => 'motorradAd Anzeige', 'url' => route('ads.create')],
-    ]" />
-
+                ['label' => 'Alle Anzeigen', 'url' => route('ads.index')],
+                ['label' => 'Motorrad Anzeigen', 'url' => route('categories.show', 'motorrad')],
+                ['label' => $motorradAd->title, 'url' => null],
+            ]" />
         </div>
     </div>
 
-    {{-- ------------------------------------------------------------------------------------- --}}
+    {{-- Action Buttons (Consistent placement and styling) --}}
+    <div class="max-w-6xl mx-auto my-5 flex space-x-4 justify-end">
+        <a href="{{ route('dashboard') }}" class="inline-flex items-center px-4 py-2 bg-slate-600 border border-slate-300 rounded-md font-semibold text-xs text-gray-100 uppercase tracking-widest hover:bg-gray-300 focus:outline-none focus:border-gray-900 focus:ring ring-gray-300 disabled:opacity-25 transition ease-in-out duration-150">
+            Zurück zum Dashboard
+        </a>
+        {{-- Contact Seller Button --}}
+        @if ($motorradAd->user) {{-- Only show the button if a user exists for the motorcycle ad --}}
+            <a href="{{ route('messages.create', $motorradAd->user->id) }}" class="inline-flex items-center px-4 py-2 bg-slate-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-slate-700 active:bg-blue-900 focus:outline-none focus:border-blue-900 focus:ring ring-blue-300 disabled:opacity-25 transition ease-in-out duration-150">
+                Contact
+            </a>
+        @else
+            {{-- Optionally, display a message or a different button if no seller is available --}}
+            <p class="text-red-800 dark:text-red-700 italic flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-red-500" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
+                </svg>
+                Informationen zum Verkäufer nicht verfügbar.
+            </p>
+        @endif
+        {{-- Edit/Delete Buttons (Visible to owner or admin) --}}
+        @auth
+            @if (auth()->id() === $motorradAd->user_id || (auth()->user() && auth()->user()->isAdmin()))
+                <a href="{{ route('ads.motorrad.edit', $motorradAd->id) }}"
+                   class="inline-flex items-center justify-center px-4 py-2 border border-blue-600 text-sm font-medium rounded-md text-blue-600 bg-transparent
+                          hover:bg-blue-50 hover:text-blue-700
+                          focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500
+                          transition ease-in-out duration-150">
+                    Anzeige bearbeiten
+                </a>
+                <form action="{{ route('ads.motorrad.destroy', $motorradAd->id) }}" method="POST"
+                      onsubmit="return confirm('Sind Sie sicher, dass Sie diese Anzeige löschen möchten? Diese Aktion kann nicht rückgängig gemacht werden.');">
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit" class="inline-flex items-center justify-center px-4 py-2 border border-red-600 text-sm font-medium rounded-md text-red-600 bg-transparent
+                                                 hover:bg-red-50 hover:text-red-700
+                                                 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500
+                                                 transition ease-in-out duration-150">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1.5" viewBox="0 0 20 20" fill="currentColor">
+                            <path d="M6 8a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1z" />
+                            <path fill-rule="evenodd"
+                                  d="M4 5a2 2 0 012-2h8a2 2 0 012 2v10a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm2 0v10h8V5H6z"
+                                  clip-rule="evenodd" />
+                        </svg>
+                        Anzeige löschen
+                    </button>
+                </form>
+            @endif
+        @endauth
+    </div>
 
+    <div class="max-w-6xl mx-auto p-6 bg-white rounded-lg shadow-xl my-6">
 
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white dark:bg-white rounded-lg shadow-md overflow-hidden">
-                <div class="px-6 py-5 bg-white dark:bg-gray-100 border-b border-gray-200 dark:border-gray-300">
-                    <h3 class="text-4xl font-extrabold text-gray-700 dark:text-gray-800 mb-2 leading-tight">{{ $motorradAd->title }}</h3>
-                    <p class="text-2xl font-bold text-indigo-500 dark:text-indigo-600">
-                        {{ number_format($motorradAd->price ?? 0, 2, ',', '.') }} €
-                    </p>
-                    <div class="flex flex-col sm:flex-row items-center space-y-3 sm:space-y-0 sm:space-x-4">
-                        @if (isset($motorradAd->user_id)) {{-- Assuming you have a user_id on your model --}}
-                            <a href="{{ route('messages.create', $motorradAd->user_id) }}"
-                               class="inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 w-full sm:w-auto transition ease-in-out duration-150">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
-                                    <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z" />
-                                    <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z" />
-                                </svg>
-                                Verkäufer kontaktieren
-                            </a>
-                        @else
-                            <p class="text-red-800 dark:text-red-700 italic">Informationen zum Verkäufer nicht verfügbar.</p>
-                        @endif
-                    </div>
+        {{-- Main Title of the Ad --}}
+        <h1 class="text-3xl font-bold text-gray-800 mb-8">{{ $motorradAd->title }}</h1>
+
+        ---
+
+        {{-- Prices Section --}}
+        <section class="bg-gray-50 p-6 rounded-lg shadow-inner mb-8">
+            <h4 class="text-xl font-semibold text-gray-700 mb-6">Preise</h4>
+            <div>
+                <p class="text-sm font-semibold text-gray-800">Preis:</p>
+                <p class="text-gray-700">&euro;{{ number_format($motorradAd->price ?? 0, 2, ',', '.') }}</p>
+            </div>
+        </section>
+
+        ---
+
+        {{-- Description Section --}}
+        <section class="bg-gray-50 p-6 rounded-lg shadow-inner mb-8">
+            <h4 class="text-xl font-semibold text-gray-700 mb-6">Beschreibung</h4>
+            <div>
+                <p class="text-sm font-semibold text-gray-800">Hauptbeschreibung:</p>
+                <p class="text-gray-700 leading-relaxed">{{ $motorradAd->description ?? 'Keine Beschreibung verfügbar.' }}</p>
+            </div>
+        </section>
+
+        ---
+
+        {{-- Motorcycle Details Section --}}
+        <section class="bg-gray-50 p-6 rounded-lg shadow-inner mb-8">
+            <h4 class="text-xl font-semibold text-gray-700 mb-6">Motorrad-Details</h4>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                @if($motorradAd->motorcycleBrand)
+                <div>
+                    <p class="text-sm font-semibold text-gray-800">Marke:</p>
+                    <p class="text-gray-700">{{ $motorradAd->motorcycleBrand->name }}</p>
                 </div>
+                @endif
+                @if($motorradAd->motorcycleModel)
+                <div>
+                    <p class="text-sm font-semibold text-gray-800">Modell:</p>
+                    <p class="text-gray-700">{{ $motorradAd->motorcycleModel->name }}</p>
+                </div>
+                @endif
+                @if($motorradAd->first_registration)
+                <div>
+                    <p class="text-sm font-semibold text-gray-800">Erstzulassung:</p>
+                    <p class="text-gray-700">{{ \Carbon\Carbon::parse($motorradAd->first_registration)->format('d.m.Y') }}</p>
+                </div>
+                @endif
+                @if(isset($motorradAd->mileage))
+                <div>
+                    <p class="text-sm font-semibold text-gray-800">Kilometerstand:</p>
+                    <p class="text-gray-700">{{ number_format($motorradAd->mileage, 0, ',', '.') }} km</p>
+                </div>
+                @endif
+                @if($motorradAd->power)
+                <div>
+                    <p class="text-sm font-semibold text-gray-800">Leistung:</p>
+                    <p class="text-gray-700">{{ $motorradAd->power }} PS</p>
+                </div>
+                @endif
+                @if($motorradAd->color)
+                <div>
+                    <p class="text-sm font-semibold text-gray-800">Farbe:</p>
+                    <p class="text-gray-700">{{ $motorradAd->color }}</p>
+                </div>
+                @endif
+                @if($motorradAd->condition)
+                <div>
+                    <p class="text-sm font-semibold text-gray-800">Zustand:</p>
+                    <p class="text-gray-700">{{ $motorradAd->condition }}</p>
+                </div>
+                @endif
+            </div>
+        </section>
 
-                <div class="p-6">
-                    <p class="text-gray-600 mb-6 leading-relaxed">{{ $motorradAd->description }}</p>
+        ---
 
-                    <h4 class="text-xl font-semibold text-gray-600 mb-4 border-b pb-2 border-gray-200 dark:border-gray-300">Motorrad Details</h4>
-
-                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-y-3 gap-x-6 mb-6 text-sm">
-                        {{-- Use a consistent structure for each detail item --}}
-                        <div class="flex justify-between items-center bg-gray-50 dark:bg-gray-100 p-3 rounded-md">
-                            <span class="font-semibold text-gray-500 dark:text-gray-600">Marke:</span>
-                            <span class="text-gray-700 dark:text-gray-800">{{ $motorradAd->brand ?? 'N/A' }}</span>
+        {{-- Photos & Documents Section --}}
+        <section class="bg-gray-50 p-6 rounded-lg shadow-inner mb-8">
+            <h4 class="text-xl font-semibold text-gray-700 mb-6">Fotos & Dokumente</h4>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                @if ($motorradAd->images->count() > 0)
+                    <div class="md:col-span-2">
+                        <p class="text-sm font-semibold text-gray-800 mb-2">Bilder:</p>
+                        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                            @foreach ($motorradAd->images as $image)
+                                <a href="{{ Storage::url($image->path) }}" target="_blank" class="block">
+                                    <img src="{{ Storage::url($image->path) }}" alt="Motorradbild" class="w-full h-32 object-cover rounded-md shadow-sm">
+                                </a>
+                            @endforeach
                         </div>
-                        <div class="flex justify-between items-center bg-gray-50 dark:bg-gray-100 p-3 rounded-md">
-                            <span class="font-semibold text-gray-500 dark:text-gray-600">Modell:</span>
-                            <span class="text-gray-700 dark:text-gray-800">{{ $motorradAd->model ?? 'N/A' }}</span>
-                        </div>
-                        <div class="flex justify-between items-center bg-gray-50 dark:bg-gray-100 p-3 rounded-md">
-                            <span class="font-semibold text-gray-500 dark:text-gray-600">Baujahr:</span>
-                            <span class="text-gray-700 dark:text-gray-800">{{ $motorradAd->year ?? 'N/A' }}</span>
-                        </div>
-                        <div class="flex justify-between items-center bg-gray-50 dark:bg-gray-100 p-3 rounded-md">
-                            <span class="font-semibold text-gray-500 dark:text-gray-600">Kilometerstand:</span>
-                            <span class="text-gray-700 dark:text-gray-800">{{ number_format($motorradAd->mileage ?? 0, 0, ',', '.') }} km</span>
-                        </div>
-                        <div class="flex justify-between items-center bg-gray-50 dark:bg-gray-100 p-3 rounded-md">
-                            <span class="font-semibold text-gray-500 dark:text-gray-600">Hubraum:</span>
-                            <span class="text-gray-700 dark:text-gray-800">{{ $motorradAd->engine_size ?? 'N/A' }} ccm</span>
-                        </div>
-                        <div class="flex justify-between items-center bg-gray-50 dark:bg-gray-100 p-3 rounded-md">
-                            <span class="font-semibold text-gray-500 dark:text-gray-600">Zustand:</span>
-                            <span class="text-gray-700 dark:text-gray-800">{{ $motorradAd->condition ?? 'N/A' }}</span>
-                        </div>
-                        {{-- Add more motorcycle-specific details here based on your table --}}
                     </div>
+                @else
+                    <p class="text-gray-600 italic">Es sind keine Bilder für dieses Motorrad verfügbar.</p>
+                @endif
+                {{-- Add any other document links here if they exist on the $motorradAd model --}}
+            </div>
+        </section>
 
-                    {{-- Example for displaying images if you have a relationship --}}
-                    @if (isset($motorradAd->images) && $motorradAd->images->count() > 0)
-                        <div class="mt-6">
-                            <h4 class="text-xl font-semibold text-gray-600 dark:text-gray-700 mb-3 border-b pb-2 border-gray-200 dark:border-gray-300">Bilder</h4>
-                            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                                @foreach ($motorradAd->images as $image)
-                                    <img src="{{ asset('storage/' . $image->path) }}" alt="Motorradbild" class="w-full h-48 object-cover rounded-lg shadow-sm">
-                                @endforeach
-                            </div>
-                        </div>
-                    @endif
+        ---
 
-                    <div class="mt-8 text-center">
-                        <a href="{{ url()->previous() }}" class="inline-flex items-center px-4 py-2 bg-blue-300 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-400 active:bg-blue-500 focus:outline-none focus:border-blue-600 focus:ring ring-blue-100 disabled:opacity-25 transition ease-in-out duration-150">
-                            Zurück zur Suche
-                        </a>
-                    </div>
+        {{-- Contact Information Section --}}
+        <section class="bg-gray-50 p-6 rounded-lg shadow-inner mb-8">
+            <h4 class="text-xl font-semibold text-gray-700 mb-6">Kontaktinformationen</h4>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                @if($motorradAd->user)
+                <div>
+                    <p class="text-sm font-semibold text-gray-800">Name des Ansprechpartners:</p>
+                    <p class="text-gray-700">{{ $motorradAd->user->name }}</p>
+                </div>
+                {{-- Assuming user or motorradAd has a contact number or email --}}
+                {{-- @if($motorradAd->user->phone)
+                <div>
+                    <p class="text-sm font-semibold text-gray-800">Telefon:</p>
+                    <p class="text-gray-700">{{ $motorradAd->user->phone }}</p>
+                </div>
+                @endif --}}
+                @else
+                    <p class="text-gray-600 italic md:col-span-3">Kontaktdaten des Verkäufers sind nicht verfügbar.</p>
+                @endif
+                <div>
+                    <p class="text-sm font-semibold text-gray-800">Anzeigedatum:</p>
+                    <p class="text-gray-700">{{ $motorradAd->created_at->format('d.m.Y H:i') ?? 'N/A' }}</p>
                 </div>
             </div>
-        </div>
+        </section>
     </div>
 </x-app-layout>

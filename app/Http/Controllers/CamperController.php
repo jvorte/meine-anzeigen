@@ -7,7 +7,7 @@ use App\Models\CamperImage;
 use App\Http\Requests\StoreCamperRequest;
 use App\Http\Requests\UpdateCamperRequest;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\Auth; // Don't forget to import Auth
+use Illuminate\Support\Facades\Auth; 
 
 class CamperController extends Controller
 {

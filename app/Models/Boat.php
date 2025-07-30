@@ -27,13 +27,7 @@ class Boat extends Model
         'engine_power',
         'operating_hours',
         'last_service',
-        'country',
-        'zip_code',
-        'city',
-        'street',
-        'seller_name',
-        'seller_phone',
-        'seller_email',
+   
     ];
 
     /**

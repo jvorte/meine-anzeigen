@@ -45,17 +45,9 @@ class BoatController extends Controller
             'operating_hours' => 'nullable|integer|min:0',
             'last_service' => 'nullable|date',
 
-            // 'country' => 'required|string|max:255',
-            // 'zip_code' => 'nullable|string|max:20',
-            // 'city' => 'required|string|max:255',
-            // 'street' => 'nullable|string|max:255',
-
-            // 'seller_name' => 'required|string|max:255',
-            // 'seller_phone' => 'nullable|string|max:50',
-            // 'seller_email' => 'nullable|email|max:255',
-            // 'images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+        
         ]);
-
+    // dd( $validatedData);
         $boat = new Boat();
         $boat->user_id = Auth::id();
         $boat->fill($validatedData);
@@ -117,6 +109,7 @@ public function update(Request $request, $id)
         'images.*' => 'nullable|image|max:2048',
         'deleted_images' => 'nullable|string', // comma separated IDs of images to delete
     ]);
+
 
     // Ανάθεσε τιμές
     $boat->fill($validated);

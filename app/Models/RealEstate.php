@@ -37,29 +37,21 @@ class RealEstate extends Model
         'maklerprovision',
         'abloese',
         'ausstattung',
-        'heizung',
-        // 'images' ist HIER NICHT MEHR ERFORDERLICH, da es eine Beziehung ist
+        'heizung',       
         'grundriss_path',
         'energieausweis_path',
         'rundgang_link',
         'objektinformationen_link',
         'zustandsbericht_link',
         'verkaufsbericht_link',
-        'contact_name',
-        'contact_tel',
-        'contact_email',
-        'firmenname',
+        'contact_name',    
+        'contact_email',     
         'homepage',
-        'telefon2',
-        'fax',
-        'immocard_id',
-        'immocard_firma_id',
-        'zusatzkontakt',
+  
     ];
 
     protected $casts = [
-        'ausstattung' => 'array',
-        // 'images' ist HIER NICHT MEHR ERFORDERLICH, da es eine Beziehung ist
+        'ausstattung' => 'array',  
         'befristung_ende' => 'date',
         'zusatzkontakt' => 'boolean',
     ];

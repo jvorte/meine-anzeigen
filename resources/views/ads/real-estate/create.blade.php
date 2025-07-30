@@ -39,7 +39,7 @@
             <section class="bg-gray-50 p-6 rounded-lg shadow-inner">
                 <h4 class="text-xl font-semibold text-gray-700 mb-6">Basisdaten</h4>
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {{-- Titel --}}
+              {{-- Titel --}}
                     <div class="lg:col-span-3">
                         <label for="title" class="block text-sm font-semibold text-gray-800 mb-2">Anzeigentitel</label>
                         <input type="text" name="title" id="title" value="{{ old('title') }}"
@@ -50,6 +50,8 @@
                         @enderror
                     </div>
 
+
+                    
                     {{-- Immobilientyp --}}
                     <div>
                         <label for="immobilientyp" class="block text-sm font-medium text-gray-700 mb-2">Immobilientyp</label>
@@ -384,17 +386,10 @@
 
             {{-- Fotos & Dokumente Section --}}
             <section class="bg-gray-50 p-6 rounded-lg shadow-inner">
+
                 <h4 class="text-xl font-semibold text-gray-700 mb-6">Fotos & Dokumente</h4>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    {{-- Multiple Images --}}
-                    <div>
-                        <label for="images" class="block text-sm font-medium text-gray-700 mb-2">Fotos hinzufügen</label>
-                        <input type="file" name="images[]" id="images" multiple accept="image/*"
-                               class="w-full text-base text-gray-700 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 cursor-pointer" />
-                        @error('images')
-                            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-                        @enderror
-                    </div>
+               
 
                     {{-- Grundriss --}}
                     <div>
@@ -472,35 +467,6 @@
                         @enderror
                     </div>
 
-                    {{-- Contact Tel --}}
-                    <div>
-                        <label for="contact_tel" class="block text-sm font-medium text-gray-700 mb-2">Telefon (optional)</label>
-                        <input type="tel" name="contact_tel" id="contact_tel" value="{{ old('contact_tel') }}" placeholder="+43 664 1234567"
-                               class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
-                        @error('contact_tel')
-                            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-                        @enderror
-                    </div>
-
-                    {{-- Contact Email --}}
-                    <div>
-                        <label for="contact_email" class="block text-sm font-medium text-gray-700 mb-2">E-Mail</label>
-                        <input type="email" name="contact_email" id="contact_email" value="{{ old('contact_email') }}" placeholder="max.mustermann@example.com"
-                               class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
-                        @error('contact_email')
-                            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-                        @enderror
-                    </div>
-
-                    {{-- Firmenname --}}
-                    <div>
-                        <label for="firmenname" class="block text-sm font-medium text-gray-700 mb-2">Firmenname (optional)</label>
-                        <input type="text" name="firmenname" id="firmenname" value="{{ old('firmenname') }}" placeholder="Muster Immobilien GmbH"
-                               class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
-                        @error('firmenname')
-                            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-                        @enderror
-                    </div>
 
                     {{-- Homepage --}}
                     <div>
@@ -512,59 +478,162 @@
                         @enderror
                     </div>
 
-                    {{-- Telefon 2 --}}
-                    <div>
-                        <label for="telefon2" class="block text-sm font-medium text-gray-700 mb-2">Telefon 2 (optional)</label>
-                        <input type="tel" name="telefon2" id="telefon2" value="{{ old('telefon2') }}" placeholder="+43 1 2345678"
-                               class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
-                        @error('telefon2')
-                            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-                        @enderror
-                    </div>
+            
+                </div>
+            </section>
 
-                    {{-- Fax --}}
-                    <div>
-                        <label for="fax" class="block text-sm font-medium text-gray-700 mb-2">Fax (optional)</label>
-                        <input type="tel" name="fax" id="fax" value="{{ old('fax') }}" placeholder="+43 1 9876543"
-                               class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
-                        @error('fax')
-                            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-                        @enderror
-                    </div>
+               {{-- Photo Upload Section (with Alpine.js for previews) --}}
+            <section class="bg-gray-50 p-6 rounded-lg shadow-inner">
+                <h4 class="text-xl font-semibold text-gray-700 mb-6">Fotos hinzufügen</h4>
 
-                    {{-- Immocard ID --}}
-                    <div>
-                        <label for="immocard_id" class="block text-sm font-medium text-gray-700 mb-2">Immocard ID (optional)</label>
-                        <input type="text" name="immocard_id" id="immocard_id" value="{{ old('immocard_id') }}" placeholder="ID des Objekts"
-                               class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
-                        @error('immocard_id')
-                            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-                        @enderror
-                    </div>
+                <div x-data="multiImageUploader()" class="space-y-4">
+                    <input type="file" name="images[]" multiple @change="addFiles($event)" class="block w-full border p-2 rounded" />
+                    @error('images')
+                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                    @enderror
+                    @error('images.*')
+                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                    @enderror
 
-                    {{-- Immocard Firma ID --}}
-                    <div>
-                        <label for="immocard_firma_id" class="block text-sm font-medium text-gray-700 mb-2">Immocard Firma ID (optional)</label>
-                        <input type="text" name="immocard_firma_id" id="immocard_firma_id" value="{{ old('immocard_firma_id') }}" placeholder="ID der Firma"
-                               class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
-                        @error('immocard_firma_id')
-                            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-                        @enderror
-                    </div>
-
-                    {{-- Zusatzkontakt --}}
-                    <div class="md:col-span-full">
-                        <div class="flex items-center">
-                            <input type="checkbox" name="zusatzkontakt" id="zusatzkontakt" value="1"
-                                   class="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
-                                   {{ old('zusatzkontakt') ? 'checked' : '' }}>
-                            <label for="zusatzkontakt" class="ml-2 text-sm font-medium text-gray-700">Zusätzlicher Kontakt gewünscht</label>
-                        </div>
-                        @error('zusatzkontakt')
-                            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-                        @enderror
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                        <template x-for="(image, index) in previews" :key="index">
+                            <div class="relative group">
+                                <img :src="image" class="w-full h-32 object-cover rounded shadow">
+                                <button type="button" @click="remove(index)"
+                                    class="absolute top-1 right-1 bg-red-700 text-white w-6 h-6 rounded-full text-xs flex items-center justify-center hidden group-hover:flex">✕</button>
+                            </div>
+                        </template>
                     </div>
                 </div>
+
+                <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const objekttypSelect = document.getElementById('objekttyp');
+        const gesamtmieteField = document.getElementById('gesamtmiete').closest('div'); // Get parent div
+        const kautionField = document.getElementById('kaution').closest('div');
+        const maklerprovisionField = document.getElementById('maklerprovision').closest('div');
+        const abloeseField = document.getElementById('abloese').closest('div');
+        const purchasePriceField = document.getElementById('purchasePriceField');
+
+        function togglePriceFields() {
+            if (objekttypSelect.value === 'Kauf') {
+                gesamtmieteField.style.display = 'none';
+                kautionField.style.display = 'none';
+                maklerprovisionField.style.display = 'none';
+                abloeseField.style.display = 'none';
+                purchasePriceField.style.display = 'block';
+            } else if (objekttypSelect.value === 'Miete') {
+                gesamtmieteField.style.display = 'block';
+                kautionField.style.display = 'block';
+                maklerprovisionField.style.display = 'block';
+                abloeseField.style.display = 'block';
+                purchasePriceField.style.display = 'none';
+            } else { // No selection
+                gesamtmieteField.style.display = 'block'; // Or 'none' depending on default
+                kautionField.style.display = 'block';
+                maklerprovisionField.style.display = 'block';
+                abloeseField.style.display = 'block';
+                purchasePriceField.style.display = 'none';
+            }
+        }
+
+        objekttypSelect.addEventListener('change', togglePriceFields);
+        togglePriceFields(); // Call on load to set initial state based on old() value
+    });
+</script>
+
+                {{-- Alpine.js Script for Image Previews and Main Form Logic --}}
+                <script>
+                    function multiImageUploader() {
+                        return {
+                            files: [],
+                            previews: [],
+
+                            addFiles(event) {
+                                const newFiles = Array.from(event.target.files);
+
+                                newFiles.forEach(file => {
+                                    this.files.push(file);
+                                    this.previews.push(URL.createObjectURL(file));
+                                });
+
+                                const dataTransfer = new DataTransfer();
+                                this.files.forEach(file => dataTransfer.items.add(file));
+                                event.target.files = dataTransfer.files;
+                            },
+
+                            remove(index) {
+                                URL.revokeObjectURL(this.previews[index]);
+
+                                this.files.splice(index, 1);
+                                this.previews.splice(index, 1);
+
+                                const fileInput = this.$el.querySelector('input[type="file"][name="images[]"]');
+                                if (fileInput) {
+                                    const dataTransfer = new DataTransfer();
+                                    this.files.forEach(file => dataTransfer.items.add(file));
+                                    fileInput.files = dataTransfer.files;
+                                }
+                            }
+                        };
+                    }
+
+                    // Define the Alpine.js component for the motorcycle form
+                    document.addEventListener('alpine:init', () => {
+                        Alpine.data('motorcycleAdForm', (initialBrandId, initialModelId, initialModels) => ({
+                            selectedMotorcycleBrandId: initialBrandId || '',
+                            selectedMotorcycleModelId: initialModelId || '',
+                            motorcycleModels: initialModels || {}, // Ensure it's an object, not null
+
+                            // Define the async function first, so it's available when init() calls it
+                            async fetchMotorcycleModels() {
+                                console.log('fetchMotorcycleModels triggered. Current selectedBrandId (before fetch):', this.selectedMotorcycleBrandId);
+
+                                // The fix for the AJAX URL should be `/api/motorcycle-models/...`
+                                // Double-check your routes/api.php and the previous conversation for the correct URL prefix.
+                                // If you moved it to web.php and removed the /api prefix, then it should match that.
+                                // For consistency, it's generally better to use /api for such endpoints.
+                                const fetchUrl = `/api/motorcycle-models/${this.selectedMotorcycleBrandId}`; // Assuming API route is /api/motorcycle-models
+                                console.log('Attempting to fetch models from URL:', fetchUrl);
+                                try {
+                                    const response = await fetch(fetchUrl);
+                                    if (!response.ok) {
+                                        console.error('HTTP error! Status:', response.status, 'Response text:', await response.text());
+                                        throw new Error(`HTTP error! status: ${response.status}`);
+                                    }
+                                    const data = await response.json();
+                                    console.log('Models fetched successfully:', data);
+                                    this.motorcycleModels = data;
+
+                                    // If the previously selected model is not in the new list, clear it
+                                    if (this.selectedMotorcycleModelId && !Object.keys(this.motorcycleModels).includes(String(this.selectedMotorcycleModelId))) {
+                                        this.selectedMotorcycleModelId = '';
+                                        console.log('Cleared selectedMotorcycleModelId as it was not in the new list.');
+                                    }
+                                } catch (error) {
+                                    console.error('Error fetching motorcycle models:', error);
+                                    this.motorcycleModels = {}; // Clear models on error
+                                    this.selectedMotorcycleModelId = ''; // Clear selected model on error
+                                }
+                            },
+
+                            // The init method for the component
+                            init() {
+                                // Call fetch on init to handle cases where old('brand_id') exists on page load
+                                // Use $nextTick to ensure all component properties are fully initialized
+                                this.$nextTick(() => {
+                                    this.fetchMotorcycleModels();
+                                });
+
+                                // Watch for changes on the brand select element's x-model bound variable
+                                this.$watch('selectedMotorcycleBrandId', (value) => {
+                                    console.log('selectedMotorcycleBrandId changed to (via $watch):', value);
+                                    this.fetchMotorcycleModels();
+                                });
+                            },
+                        }));
+                    });
+                </script>
             </section>
 
             {{-- Submit Button --}}

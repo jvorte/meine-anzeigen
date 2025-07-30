@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use App\Models\ElectronicBrand;
 use App\Models\Electronic;
 use App\Models\ElectronicImage; // Import the ElectronicImage Model
 use App\Models\Brand;
@@ -19,87 +19,89 @@ class ElectronicController extends Controller
     /**
      * Show the form for creating a new electronic ad.
      */
-    public function create()
+public function create()
     {
-        $brands = Brand::orderBy('name')->get();
         $categories = [
-            'Mobiltelefone',
-            'Fernseher',
-            'Computer & Laptops',
-            'Haushaltsgeräte',
-            'Kameras & Foto',
-            'Audio & HiFi',
-            'Gaming Konsolen',
-            'Wearables',
-            'Drohnen',
-            'Sonstiges'
+            'Mobile Phone',
+            'TV',
+            'Laptop',
+            'Camera',
+            'Audio Device',
+            'Gaming Console',
+            'Smartwatch',
+            'Tablet',
+            'Other'
         ];
-        $conditions = ['neu', 'gebraucht', 'defekt'];
-        $warrantyStatuses = ['Keine Garantie', 'Herstellergarantie', 'Händlergarantie', 'Garantie abgelaufen'];
 
+        $warrantyStatuses = [
+            'No warranty',
+            'Manufacturer Warranty',
+            'Retailer Warranty',
+            'Used Warranty'
+        ];
+
+        // Fetch brands from the NEW ElectronicBrand model
+        $electronicBrands = ElectronicBrand::orderBy('name')->get();
+
+        // Handle pre-selected old value for electronic models if brand_id was already selected
         $initialElectronicModels = [];
-        // Important: check if old('brand_id') exists and is NOT empty, because old('') returns null if not present
-        if (!empty(old('brand_id'))) { // Changed from old('brand_id') to !empty(old('brand_id'))
-            $initialElectronicModels = ElectronicModel::where('brand_id', old('brand_id'))
-                ->orderBy('name')
-                ->pluck('name', 'id');
+        if (old('brand_id')) { // brand_id here still refers to the foreign key in electronics table
+            $initialElectronicModels = ElectronicModel::where('brand_id', old('brand_id'))->pluck('name', 'id')->toArray();
         }
 
-        return view('ads.electronics.create', compact(
-            'brands',
-            'categories',
-            'conditions',
-            'warrantyStatuses',
-            'initialElectronicModels'
-        ));
+        return view('ads.electronics.create', compact('categories', 'warrantyStatuses', 'electronicBrands', 'initialElectronicModels'));
     }
 
-    /**
-     * Store a newly created electronic ad in storage.
-     */
-    public function store(Request $request)
+
+public function store(Request $request)
     {
-        // 1. Validation
-        $validatedData = $request->validate([
-            'images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048', // Validation for uploaded files
+        // ... (validation rules and logic remain the same as previous answer) ...
+        $rules = [
+            'images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'title' => 'required|string|max:255',
             'description' => 'required|string',
-            'price' => 'nullable|numeric|min:0',
+            'price' => 'required|numeric|min:0',
             'condition' => 'required|in:neu,gebraucht,defekt',
-            'category' => 'required|string|max:100',
-            // Corrected validation rules:
-            'brand_id' => 'nullable|exists:brands,id', // 'brand' text input is removed from form
-            'electronic_model_id' => [
-                'nullable',
-                'exists:electronic_models,id',
-                // Optional: Ensure the model belongs to the selected brand_id for stricter validation
-                function ($attribute, $value, $fail) use ($request) {
-                    if (
-                        $value && $request->input('brand_id') &&
-                        !ElectronicModel::where('id', $value)->where('brand_id', $request->input('brand_id'))->exists()
-                    ) {
-                        $fail('The selected model does not belong to the selected brand.');
-                    }
-                },
-            ],
-            // Removed 'model' as it's no longer a direct form input
-            // 'model' => 'nullable|exists:brands,id', // This was also incorrect, 'model' should reference 'electronic_models'
+            'category' => 'required|string|max:255',
+            'brand_id' => 'nullable|exists:electronic_brands,id', // IMPORTANT: Validate against electronic_brands
+            'electronic_model_id' => 'nullable|exists:electronic_models,id',
             'year_of_purchase' => 'nullable|integer|min:1950|max:' . date('Y'),
-            'warranty_status' => 'nullable|string|max:100',
-            'accessories' => 'nullable|string|max:1000',
-        ]);
-        // dd($validatedData); // Remove this dd() to allow form submission
+            'warranty_status' => 'nullable|string|max:255',
+            'accessories' => 'nullable|string|max:65535',
+        ];
 
-        // Separate image files from other validated data
+        // Define rules for fields that are conditionally required based on category
+        $conditionalRules = [
+            // ... (keep your conditional rules as before) ...
+            'Mobile Phone' => [
+                'color' => 'nullable|string|max:50',
+                'usage_time' => 'nullable|string|max:100',
+                'operating_system' => 'nullable|string|max:100',
+                'storage_capacity' => 'nullable|string|max:100',
+                'processor' => 'nullable|string|max:100',
+                'ram' => 'nullable|string|max:100',
+            ],
+            'TV' => [
+                'screen_size' => 'nullable|string|max:100',
+                'usage_time' => 'nullable|string|max:100',
+            ],
+        ];
+
+        $selectedCategory = $request->input('category');
+        if ($selectedCategory && isset($conditionalRules[$selectedCategory])) {
+            $rules = array_merge($rules, $conditionalRules[$selectedCategory]);
+        }
+
+        $validatedData = $request->validate($rules);
+
         $imageFiles = $request->file('images');
         $dataToCreateElectronic = Arr::except($validatedData, ['images']);
+        $dataToCreateElectronic['user_id'] = Auth::id();
+        $dataToCreateElectronic['status'] = 'active';
 
-        // 2. Create the Electronic record
-        $electronic = Electronic::create(array_merge($dataToCreateElectronic, [
-            'user_id' => Auth::id(), // Assign the authenticated user's ID
-        ]));
+        $electronic = Electronic::create($dataToCreateElectronic);
 
-        // 3. Handle image uploads and save to ElectronicImage model
+        // ... (image handling remains the same) ...
         if ($imageFiles) {
             foreach ($imageFiles as $index => $image) {
                 $path = $image->store('electronic_images', 'public');
@@ -111,15 +113,23 @@ class ElectronicController extends Controller
             }
         }
 
-        // 4. Redirect with success message
         return redirect()->route('dashboard')->with('success', 'Elektronik Anzeige erfolgreich erstellt!');
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Electronic $electronic)
+public function show(Electronic $electronic)
     {
+        // Eager load all necessary relationships for the show page
+        $electronic->load(['electronicBrand', 'electronicModel', 'images']);
+
+        // --- DEBUG STEP ---
+        // Temporarily uncomment the line below to see all the data.
+        // This is the most important step to understand what's missing.
+        // dd($electronic->toArray());
+        // ------------------
+
         return view('ads.electronics.show', compact('electronic'));
     }
 
@@ -177,16 +187,20 @@ class ElectronicController extends Controller
 }
 
 
-    public function destroy(Electronic $electronic)
-    {
-        // ✅ Delete images
-        foreach ($electronic->images as $image) {
+public function destroy(Electronic $electronic)
+{
+    // Delete images
+    foreach ($electronic->images as $image) {
+        // Check if the path exists before attempting to delete the file
+        if ($image->path) { // <--- ADD THIS CHECK
             Storage::delete($image->path);
-            $image->delete();
         }
-
-        $electronic->delete();
-
-        return redirect()->route('categories.show', 'elektronik')->with('success', 'Anzeige gelöscht.');
+        // Always delete the image record from the database, regardless of file existence
+        $image->delete();
     }
+
+    $electronic->delete();
+
+    return redirect()->route('dashboard', 'elektronik')->with('success', 'Anzeige gelöscht.');
+}
 }

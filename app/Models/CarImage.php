@@ -2,21 +2,25 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory; // Added this
 use Illuminate\Database\Eloquent\Model;
 
 class CarImage extends Model
 {
-    // Define the table name if it's not 'car_images' (e.g., if it's still 'vehicle_images')
-    // protected $table = 'vehicle_images'; // Uncomment and set if your table is still named 'vehicle_images'
+    use HasFactory; // Added this
+
+    // If your migration created 'car_images' table, this line is NOT needed.
+    // If your table is still named 'vehicle_images', uncomment and set it:
+    // protected $table = 'vehicle_images';
 
     protected $fillable = [
         'car_id',
         'image_path',
-        'is_thumbnail',
+        'is_thumbnail', // Ensure this column exists in your migration if you're using it
     ];
 
-    public function car() 
+    public function car()
     {
-        return $this->belongsTo(Car::class); 
+        return $this->belongsTo(Car::class);
     }
 }

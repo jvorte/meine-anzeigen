@@ -11,14 +11,11 @@ class Other extends Model
 
     protected $fillable = [
         'user_id',
-        'category_slug',
         'title',
-        'description',
         'price',
         'condition',
-        'location',
-        'contact_phone',
-       
+        'description',
+        'category_slug',
     ];
 
     protected $casts = [

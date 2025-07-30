@@ -13,20 +13,24 @@ return new class extends Migration
     {
         Schema::create('motorrad_ads', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained()->onDelete('cascade'); // Assuming ads are linked to users
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade'); // Assuming 'users' table exists
             $table->string('title');
             $table->text('description');
-            $table->foreignId('brand_id')->constrained('brands')->onDelete('cascade'); // Assuming you have a 'brands' table
-            $table->foreignId('car_model_id')->constrained('car_models')->onDelete('cascade'); // Assuming you have a 'car_models' table (even for motorcycles, name it consistently if needed)
+            // Changed to link directly to motorcycle_brands table
+            $table->foreignId('motorcycle_brand_id')->nullable()->constrained('motorcycle_brands')->onDelete('set null');
+            // Changed to link directly to motorcycle_models table
+            $table->foreignId('motorcycle_model_id')->nullable()->constrained('motorcycle_models')->onDelete('set null');
             $table->date('first_registration');
             $table->unsignedInteger('mileage');
             $table->unsignedInteger('power');
             $table->string('color');
             $table->string('condition'); // e.g., 'neu', 'gebraucht'
             $table->timestamps();
+            // Add soft deletes if you want to be able to "archive" ads instead of permanently deleting
+            // $table->softDeletes();
         });
 
-        // If you want a separate table for images associated with motorrad ads
+        // This table definition for images is correct as you provided it
         Schema::create('motorrad_ad_images', function (Blueprint $table) {
             $table->id();
             $table->foreignId('motorrad_ad_id')->constrained('motorrad_ads')->onDelete('cascade');

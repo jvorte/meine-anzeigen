@@ -4,7 +4,7 @@
             Neue Anzeige erstellen
         </h2>
         <p class="text-md text-gray-600 dark:text-gray-400">
-            Wähle eine passende Kategorie und fülle die erforderlichen Felder aus, um deine Anzeige zu erstellen.
+            Wähle eine psende Kategorie und fülle die erforderlichen Felder aus, um deine Anzeige zu erstellen.
         </p>
     </x-slot>
 

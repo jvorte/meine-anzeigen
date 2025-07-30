@@ -9,9 +9,12 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Arr; // Import Arr helper
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 class HouseholdItemController extends Controller
 {
+
+    use AuthorizesRequests;
     /**
      * Show the form for creating a new household item ad.
      */
@@ -19,8 +22,16 @@ class HouseholdItemController extends Controller
     {
         $brands = Brand::pluck('name', 'id');
         $categories = [
-            'Möbel', 'Küchengeräte', 'Waschmaschinen & Trockner', 'Staubsauger & Reinigungsgeräte',
-            'Beleuchtung', 'Dekoration', 'Gartenmöbel & -geräte', 'Sport & Freizeit', 'Baby & Kind', 'Sonstiges'
+            'Möbel',
+            'Küchengeräte',
+            'Waschmaschinen & Trockner',
+            'Staubsauger & Reinigungsgeräte',
+            'Beleuchtung',
+            'Dekoration',
+            'Gartenmöbel & -geräte',
+            'Sport & Freizeit',
+            'Baby & Kind',
+            'Sonstiges'
         ];
         $conditions = ['neu', 'gebraucht', 'stark gebraucht', 'defekt'];
 
@@ -38,8 +49,10 @@ class HouseholdItemController extends Controller
     {
         // 1. Validation
         $validatedData = $request->validate([
+
             'images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048', // Validation for files
-            'title' => 'required|string|max:255',
+            'title' => 'nullable|string|max:255',
+            'brand' => 'required|string|max:255',
             'description' => 'required|string',
             'price' => 'nullable|numeric|min:0',
             'condition' => 'required|in:neu,gebraucht,stark gebraucht,defekt',
@@ -50,7 +63,7 @@ class HouseholdItemController extends Controller
             'color' => 'nullable|string|max:50',
             'dimensions' => 'nullable|string|max:255',
         ]);
-
+        // dd(Auth::id());
         // Separate image files from other validated data
         $imageFiles = $request->file('images'); // Get the uploaded image files
         // Remove 'images' (the file objects) from $validatedData before creating the HouseholdItem record
@@ -85,5 +98,102 @@ class HouseholdItemController extends Controller
         return view('ads.household.show', compact('householdItem'));
     }
 
-    // You can add edit, update, destroy methods as needed
+    public function edit(HouseholdItem $householdItem)
+    {
+        // Φόρτωσε τις κατηγορίες για το dropdown (αν χρειάζεται)
+        $categories = ['Möbel', 'Elektronik', 'Küche', 'Sonstiges']; // Παράδειγμα, φέρε από τη βάση αν έχεις
+
+        return view('ads.household.edit', compact('householdItem', 'categories'));
+    }
+
+
+    public function update(Request $request, HouseholdItem $householdItem)
+    {
+        $validated = $request->validate([
+            'category' => 'required|string|max:255',
+            'brand' => 'nullable|string|max:255',
+            'model_name' => 'nullable|string|max:255',
+            'price' => 'required|numeric|min:0',
+            'condition' => 'required|string|in:neu,gebraucht,stark gebraucht,defekt',
+            'material' => 'nullable|string|max:255',
+            'color' => 'nullable|string|max:255',
+            'dimensions' => 'nullable|string|max:255',
+            'title' => 'required|string|max:255',
+            'description' => 'required|string',
+            'images.*' => 'nullable|image|max:2048', // For newly uploaded images
+            // No validation for existing_images_to_delete as it's an internal mechanism
+        ]);
+
+        // Update main HouseholdItem fields
+        $householdItem->fill([
+            'category' => $validated['category'],
+            'brand' => $validated['brand'] ?? null,
+            'model_name' => $validated['model_name'] ?? null,
+            'price' => $validated['price'],
+            'condition' => $validated['condition'],
+            'material' => $validated['material'] ?? null,
+            'color' => $validated['color'] ?? null,
+            'dimensions' => $validated['dimensions'] ?? null,
+            'title' => $validated['title'],
+            'description' => $validated['description'],
+        ])->save();
+
+
+        // 1. Handle deletion of existing images
+        if ($request->has('existing_images_to_delete')) {
+            $idsToDelete = array_filter(explode(',', $request->input('existing_images_to_delete'))); // Split string by comma and remove empty values
+
+            if (!empty($idsToDelete)) {
+                // Get the image records that belong to THIS householdItem AND are in the $idsToDelete array
+                $imagesToDelete = $householdItem->images()->whereIn('id', $idsToDelete)->get();
+
+                foreach ($imagesToDelete as $image) {
+                    // Delete the file from storage
+                    if ($image->image_path && Storage::disk('public')->exists($image->image_path)) {
+                        Storage::disk('public')->delete($image->image_path);
+                    }
+                    // Delete the image record from the database
+                    $image->delete();
+                }
+            }
+        }
+
+        // 2. Handle upload of new images
+        if ($request->hasFile('images')) {
+            foreach ($request->file('images') as $imageFile) {
+                $path = $imageFile->store('household_images', 'public');
+
+                $householdItem->images()->create([
+                    'image_path' => $path,
+                    'is_thumbnail' => false, // Set appropriately, perhaps based on original order
+                ]);
+            }
+        }
+
+        return redirect()->route('dashboard')->with('success', 'Anzeige erfolgreich aktualisiert.');
+    }
+
+    public function destroy($id)
+    {
+        // Correct variable name: fetch HouseholdItem and assign to $householdItem
+        $householdItem = HouseholdItem::findOrFail($id);
+
+        // Delete associated images (files and database records)
+        // Ensure image_path is not null before attempting to delete
+        foreach ($householdItem->images as $image) {
+            // Delete file from storage
+            // Add a check to ensure the path exists before attempting deletion to prevent errors
+            if ($image->image_path && Storage::disk('public')->exists($image->image_path)) {
+                Storage::disk('public')->delete($image->image_path);
+            }
+            // Delete the image record from the database
+            $image->delete();
+        }
+
+        // Delete the HouseholdItem itself
+        $householdItem->delete();
+
+        return redirect()->route('dashboard') // or any other appropriate redirect route
+            ->with('success', 'Anzeige erfolgreich gelöscht.');
+    }
 }

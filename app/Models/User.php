@@ -47,7 +47,10 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
-
+  public function isAdmin(): bool
+    {
+        return $this->role === 'admin'; // Assuming 'admin' is the role for administrators
+    }
     public function campers()
     {
         return $this->hasMany(Camper::class);

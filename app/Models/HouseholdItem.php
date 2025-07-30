@@ -17,17 +17,15 @@ class HouseholdItem extends Model
         'price',
         'condition',
         'category',
-        'brand_id',
+        'brand',
         'model_name',
         'material',
         'color',
         'dimensions',
-      
-    ];
-
-    protected $casts = [
 
     ];
+
+    protected $casts = [];
 
     /**
      * Get the brand associated with the household item.

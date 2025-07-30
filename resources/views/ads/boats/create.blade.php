@@ -259,56 +259,22 @@
                 </div>
             </section>
 
+                {{-- Preise Section --}}
+            <section class="bg-gray-50 p-6 rounded-lg shadow-inner">
+                <h4 class="text-xl font-semibold text-gray-700 mb-6">Preise</h4>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    {{-- Preis --}}
+                    <div>
+                        <label for="price" class="block text-sm font-medium text-gray-700 mb-2">Preis (in €)</label>
+                        <input type="number" step="0.01" name="price" id="price" value="" placeholder="z.B. 15000.00"
+                               class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
+                        @error('price')
+                            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                        @enderror
+                    </div>
+                </div>
+            </section>
             
-
-{{-- Standort (Adresse) --}}
-{{-- <section class="bg-gray-50 p-6 rounded-lg shadow-inner mt-6">
-    <h4 class="text-xl font-semibold text-gray-700 mb-6">Standort</h4>
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <div>
-            <label for="country" class="block text-sm font-medium text-gray-700 mb-2">Land</label>
-            <input type="text" name="country" id="country" value="{{ old('country') }}" placeholder="z.B. Deutschland" class="...">
-            @error('country') <p class="text-red-500 text-sm mt-1">{{ $message }}</p> @enderror
-        </div>
-        <div>
-            <label for="zip_code" class="block text-sm font-medium text-gray-700 mb-2">Postleitzahl</label>
-            <input type="text" name="zip_code" id="zip_code" value="{{ old('zip_code') }}" placeholder="z.B. 10115" class="...">
-            @error('zip_code') <p class="text-red-500 text-sm mt-1">{{ $message }}</p> @enderror
-        </div>
-        <div>
-            <label for="city" class="block text-sm font-medium text-gray-700 mb-2">Stadt</label>
-            <input type="text" name="city" id="city" value="{{ old('city') }}" placeholder="z.B. Berlin" class="...">
-            @error('city') <p class="text-red-500 text-sm mt-1">{{ $message }}</p> @enderror
-        </div>
-        <div>
-            <label for="street" class="block text-sm font-medium text-gray-700 mb-2">Straße</label>
-            <input type="text" name="street" id="street" value="{{ old('street') }}" placeholder="z.B. Musterstraße 1" class="...">
-            @error('street') <p class="text-red-500 text-sm mt-1">{{ $message }}</p> @enderror
-        </div>
-    </div>
-</section> --}}
-
-{{-- Verkäufer (Seller) --}}
-{{-- <section class="bg-gray-50 p-6 rounded-lg shadow-inner mt-6">
-    <h4 class="text-xl font-semibold text-gray-700 mb-6">Verkäufer Informationen</h4>
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div>
-            <label for="seller_name" class="block text-sm font-medium text-gray-700 mb-2">Name des Verkäufers</label>
-            <input type="text" name="seller_name" id="seller_name" value="{{ old('seller_name') }}" placeholder="Max Mustermann" class="...">
-            @error('seller_name') <p class="text-red-500 text-sm mt-1">{{ $message }}</p> @enderror
-        </div>
-        <div>
-            <label for="seller_phone" class="block text-sm font-medium text-gray-700 mb-2">Telefonnummer</label>
-            <input type="text" name="seller_phone" id="seller_phone" value="{{ old('seller_phone') }}" placeholder="+49 123 4567890" class="...">
-            @error('seller_phone') <p class="text-red-500 text-sm mt-1">{{ $message }}</p> @enderror
-        </div>
-        <div>
-            <label for="seller_email" class="block text-sm font-medium text-gray-700 mb-2">E-Mail Adresse</label>
-            <input type="email" name="seller_email" id="seller_email" value="{{ old('seller_email') }}" placeholder="max@example.com" class="...">
-            @error('seller_email') <p class="text-red-500 text-sm mt-1">{{ $message }}</p> @enderror
-        </div>
-    </div>
-</section> --}}
 
 
 

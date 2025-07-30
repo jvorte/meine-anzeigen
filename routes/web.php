@@ -5,9 +5,8 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\AdController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\CategoryController;
-// Removed VehicleController as CarController is taking its place for "cars"
 use App\Http\Controllers\PartController;
-use App\Http\Controllers\ElectronicController; // Ensure this is imported
+use App\Http\Controllers\ElectronicController;
 use App\Http\Controllers\RealEstateController;
 use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\BoatController;
@@ -54,14 +53,10 @@ Route::prefix('categories')->name('categories.')->group(function () {
     Route::get('/cars/{car}', [CarController::class, 'show'])->name('cars.show');
     Route::get('/boats/{boat}', [BoatController::class, 'show'])->name('boats.show');
     Route::get('/fahrzeugeteile/{usedVehiclePart}', [UsedVehiclePartController::class, 'show'])->name('fahrzeugeteile.show');
-    // Ensure this show route for electronics is correct, as the `show` method for specific
-    // electronics ads is usually `categories.electronics.show` with a slug or ID.
-    // The previous advice had this as categories.electronics.show (with slug/id),
-    // but your current structure has it as categories.electronics.show (with electronic model binding).
     Route::get('/electronics/{electronic}', [ElectronicController::class, 'show'])->name('electronics.show');
     Route::get('/haushalt/{householdItem}', [HouseholdItemController::class, 'show'])->name('haushalt.show');
-    Route::get('/immobilien/{realEstate}', [RealEstateController::class, 'show'])->name('immobilien.show');
-    Route::get('/dienstleistungen/{service}', [ServiceController::class, 'show'])->name('dienstleistungen.show');
+    Route::get('/real-estate/{realEstate}', [RealEstateController::class, 'show'])->name('real-estate.show');
+    Route::get('/services/{service}', [ServiceController::class, 'show'])->name('services.show');
     Route::get('/sonstiges/{other}', [OtherController::class, 'show'])->name('sonstiges.show');
     Route::get('/motorrad/{motorradAd}', [MotorradAdController::class, 'show'])->name('motorrad.show');
     Route::get('/commercial-vehicles/{commercialVehicle}', [CommercialVehicleController::class, 'show'])->name('commercial-vehicles.show');
@@ -88,17 +83,31 @@ Route::middleware(['auth'])->group(function () {
 
     // --- Specific Ad Type Creation/Storage Routes ---
 
-    // Cars (formerly 'autos' and 'fahrzeuge' for creation/storage)
-    // Assuming createAutos and storeFahrzeuge methods are now simply 'create' and 'store' in CarController
+    // Cars
     Route::get('/ads/cars/create', [CarController::class, 'create'])->name('ads.cars.create');
     Route::post('/ads/cars', [CarController::class, 'store'])->name('ads.cars.store');
     Route::get('/ads/cars/{car}/edit', [CarController::class, 'edit'])->name('ads.cars.edit');
     Route::put('/ads/cars/{car}', [CarController::class, 'update'])->name('ads.cars.update');
     Route::delete('/ads/cars/{car}', [CarController::class, 'destroy'])->name('ads.cars.destroy');
+    Route::get('/ads/cars/{car}', [CarController::class, 'show'])->name('ads.cars.show');
+
+    // FIX: Changed this route to match the frontend AJAX request URL
+    // Ensure your CarController has a public method named `getModelsByBrand`
+    // that accepts a $brandId and returns the car models.
+    Route::get('/car-models/{brandId}', [CarController::class, 'getModelsByBrand']);
 
     // Motorrad Ads
     Route::get('/ads/motorrad/create', [MotorradAdController::class, 'create'])->name('ads.motorrad.create');
     Route::post('/ads/motorrad', [MotorradAdController::class, 'store'])->name('ads.motorrad.store');
+
+    // Route for fetching motorcycle models dynamically (for Alpine.js)
+    Route::get('/motorcycle-models/{brandId}', [MotorradAdController::class, 'getModelsByBrand']);
+
+    Route::get('/ads/motorrad/{motorradAd}', [MotorradAdController::class, 'show'])->name('ads.motorrad.show');
+    Route::get('/ads/motorrad/{motorradAd}/edit', [MotorradAdController::class, 'edit'])->name('ads.motorrad.edit');
+    Route::put('/ads/motorrad/{motorradAd}', [MotorradAdController::class, 'update'])->name('ads.motorrad.update');
+    Route::delete('/ads/motorrad/{motorradAd}', [MotorradAdController::class, 'destroy'])->name('ads.motorrad.destroy');
+
 
     // Commercial Vehicles
     Route::prefix('ads/commercial-vehicles')->name('ads.commercial-vehicles.')->group(function () {
@@ -146,38 +155,62 @@ Route::middleware(['auth'])->group(function () {
     // ADDED: Destroy Image route for Electronics (within ElectronicController)
     Route::delete('/ads/electronics/images/{electronicImage}', [ElectronicController::class, 'destroyImage'])->name('ads.electronics.images.destroy');
 
-
+    // ---------------------------------------------------
     // Household Items
     Route::get('/ads/household/create', [HouseholdItemController::class, 'create'])->name('ads.household.create');
     Route::post('/ads/household', [HouseholdItemController::class, 'store'])->name('ads.household.store');
+    Route::get('/ads/household-item/{householdItem}/edit', [HouseholdItemController::class, 'edit'])->name('ads.household-items.edit');
+    Route::delete('/ads/household-item/{householdItem}/destroy', [HouseholdItemController::class, 'destroy'])->name('ads.household-items.destroy');
+    Route::put('/ads/household-item/{householdItem}/update', [HouseholdItemController::class, 'update'])->name('ads.household-items.update');
+    // ---------------------------------------------------
+
 
     // Real Estate
-    Route::get('/ads/real-estate/create', [RealEstateController::class, 'create'])->name('ads.realestate.create');
-    // Consider if this should be /ads/real-estate for consistency or if /realestate is a top-level resource
-    Route::post('/realestate', [RealEstateController::class, 'store'])->name('ads.realestate.store');
+    Route::prefix('ads/real-estate')->name('ads.real-estate.')->group(function () {
+        Route::get('/create', [RealEstateController::class, 'create'])->name('create');
+        Route::post('/', [RealEstateController::class, 'store'])->name('store');
+        Route::get('/{realEstate}', [RealEstateController::class, 'show'])->name('show');
+        Route::get('/{realEstate}/edit', [RealEstateController::class, 'edit'])->name('edit');
+        Route::put('/{realEstate}', [RealEstateController::class, 'update'])->name('update');
+        Route::delete('/{realEstate}', action: [RealEstateController::class, 'destroy'])->name('destroy');
+       
+    });
+
 
     // Services - Fixed typo 'servises' to 'services'
-    Route::get('/ads/services/create', [ServiceController::class, 'create'])->name('ads.services.create'); // <-- CORRECTED NAME
-    // Consider if this should be /ads/services for consistency or if /services is a top-level resource
-    Route::post('/services', [ServiceController::class, 'store'])->name('ads.services.store');
+        Route::name('ads.')->group(function () {
+        // Other 'ads' related routes would go here as well
+        Route::delete('ads/services/destroy', [ServiceController::class, 'destroy'])->name('services.destroy');
+        Route::get('/ads/services/create', [ServiceController::class, 'create'])->name('services.create'); // <-- CORRECTED NAME
+        // Consider if this should be /ads/services for consistency or if /services is a top-level resource
+        Route::post('/services', [ServiceController::class, 'store'])->name('services.store');
+        Route::get('ads/services/edit', [ServiceController::class, 'edit'])->name('services.edit');
+    });
+
+
+
+
 
     // Others
     Route::get('/ads/others/create', [OtherController::class, 'create'])->name('ads.others.create');
     // Consider if this should be /ads/others for consistency or if /others is a top-level resource
     Route::post('/others', [OtherController::class, 'store'])->name('ads.others.store');
 
+    // Route::get('/ads/others', [OtherController::class, 'index'])->name('ads.others.index');
+    // Route::get('/ads/others/create', [OtherController::class, 'create'])->name('ads.others.create'); // You already have this
+    // Route::post('/ads/others', [OtherController::class, 'store'])->name('ads.others.store'); // You already have this
+    Route::get('/ads/others/{other}/edit', [OtherController::class, 'edit'])->name('ads.others.edit');
+    Route::put('/ads/others/{other}', [OtherController::class, 'update'])->name('ads.others.update');
+    Route::delete('/ads/others/{other}', [OtherController::class, 'destroy'])->name('ads.others.destroy');
+    Route::get('/ads/others/{other}', [OtherController::class, 'show'])->name('ads.others.show'); // You already have this
+
     // --- Remaining PartController routes ---
-    // The previous '/vehicles' route was likely intended for cars. If so, it's replaced by '/ads/cars' or '/cars'.
-    // If 'vehicles.store' was a generic catch-all, you might need to reconsider its purpose.
-    // For now, I'm assuming it's part of the 'Car' flow or is generic but less critical.
-    // Removed the conflicting '/ads/fahrzeuge' route.
     Route::post('/parts', [PartController::class, 'store'])->name('parts.store');
     Route::get('/ads/parts/create', [PartController::class, 'create'])->name('ads.parts.create');
-
 });
 
 
-Route::get('/messages/create/{userId}', function($userId) {
+Route::get('/messages/create/{userId}', function ($userId) {
     // This is a placeholder. You would typically return a view with a form
     // for sending a message to the user with $userId.
     // Make sure you have a MessageController and a view for this.
