@@ -27,7 +27,7 @@ class DashboardController extends Controller
 
         $adsByCategory = [
             'cars' => Car::with('images')->orderBy('created_at', 'desc')->limit(4)->get(),
-            'fahrzeugeteile' => UsedVehiclePart::with('images')->orderBy('created_at', 'desc')->limit(4)->get(),
+            'vehicles-parts' => UsedVehiclePart::with('images')->orderBy('created_at', 'desc')->limit(4)->get(),
             'electronics' => Electronic::with('images')->orderBy('created_at', 'desc')->limit(4)->get(),
             'household' => HouseholdItem::with('images')->orderBy('created_at', 'desc')->limit(4)->get(),
             'real-estate' => RealEstate::with('images')->orderBy('created_at', 'desc')->limit(4)->get(),

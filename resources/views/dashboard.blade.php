@@ -33,7 +33,7 @@
                 @php
                     $categoryBackgrounds = [
                         'cars' => asset('storage/images/cars.jpg'),
-                        'fahrzeugeteile' => asset('storage/images/parts.jpg'),
+                        'vehicles-parts' => asset('storage/images/parts.jpg'),
                         'boats' => asset('storage/images/boats.jpg'),
                         'electronics' => asset('storage/images/tv.jpg'),
                         'household' => asset('storage/images/car.jpg'),
@@ -166,7 +166,7 @@
                                                             $adRouteName = 'categories.services.show';
                                                             $adParamName = 'service';
                                                         } elseif ($ad instanceof \App\Models\UsedVehiclePart) {
-                                                            $adRouteName = 'categories.fahrzeugeteile.show';
+                                                            $adRouteName = 'categories.vehicles-parts.show';
                                                             $adParamName = 'usedVehiclePart';
                                                         } else {
                                                             $adRouteName = 'ads.show';

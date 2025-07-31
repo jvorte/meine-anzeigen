@@ -52,7 +52,7 @@ Route::prefix('categories')->name('categories.')->group(function () {
 
     Route::get('/cars/{car}', [CarController::class, 'show'])->name('cars.show');
     Route::get('/boats/{boat}', [BoatController::class, 'show'])->name('boats.show');
-    Route::get('/fahrzeugeteile/{usedVehiclePart}', [UsedVehiclePartController::class, 'show'])->name('fahrzeugeteile.show');
+    Route::get('/vehicles-parts/{usedVehiclePart}', [UsedVehiclePartController::class, 'show'])->name('vehicles-parts.show');
     Route::get('/electronics/{electronic}', [ElectronicController::class, 'show'])->name('electronics.show');
     Route::get('/household/{householdItem}', [HouseholdItemController::class, 'show'])->name('household.show');
     Route::get('/real-estate/{realEstate}', [RealEstateController::class, 'show'])->name('real-estate.show');
@@ -131,9 +131,14 @@ Route::middleware(['auth'])->group(function () {
 
 
     // Used Vehicle Parts
-    Route::get('/ads/used-vehicle-parts/create', [UsedVehiclePartController::class, 'create'])->name('ads.used-vehicle-parts.create');
-    Route::post('/ads/used-vehicle-parts', [UsedVehiclePartController::class, 'store'])->name('ads.used-vehicle-parts.store');
-
+    Route::prefix('ads/used-vehicle-parts')->name('ads.used-vehicle-parts.')->group(function () {
+        Route::get('/create', [UsedVehiclePartController::class, 'create'])->name('create');
+        Route::post('/', [UsedVehiclePartController::class, 'store'])->name('store');
+        Route::get('/{usedVehiclePart}', [UsedVehiclePartController::class, 'show'])->name('show'); // Added show route
+        Route::get('/{usedVehiclePart}/edit', [UsedVehiclePartController::class, 'edit'])->name('edit'); // Added edit route
+        Route::put('/{usedVehiclePart}', [UsedVehiclePartController::class, 'update'])->name('update'); // Added update route
+        Route::delete('/{usedVehiclePart}', [UsedVehiclePartController::class, 'destroy'])->name('destroy'); // Added destroy route
+    });
     // Boats
     Route::prefix('ads/boats')->name('ads.boats.')->group(function () {
         Route::get('/', [BoatController::class, 'index'])->name('index');
