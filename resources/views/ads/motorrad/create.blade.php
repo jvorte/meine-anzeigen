@@ -189,7 +189,8 @@
                             <option value="">Bitte wählen</option>
                             @foreach($conditions as $condition)
                                 <option value="{{ $condition }}" {{ old('condition') == $condition ? 'selected' : '' }}>
-                                    {{ $condition }}</option>
+                                    {{ $condition }}
+                                </option>
                             @endforeach
                         </select>
                         @error('condition')
@@ -224,16 +225,19 @@
                 </div>
             </section>
 
-        {{-- Photo Upload Section (with Alpine.js for previews and existing photos) --}}
+            {{-- Photo Upload Section (with Alpine.js for previews) --}}
             <section class="bg-gray-50 p-6 rounded-lg shadow-inner">
-                <h4 class="text-xl font-semibold text-gray-700 mb-6">Fotos verwalten</h4>
+                <h4 class="text-xl font-semibold text-gray-700 mb-6">Fotos hinzufügen</h4>
 
+                {{-- Pass existing images to Alpine.js --}}
                 <div x-data="multiImageUploader(
-                    {{ json_encode($usedVehiclePart->images->map(fn($image) => ['id' => $image->id, 'url' => asset('storage/' . $image->path)])) }}
-                )" class="space-y-4">
-                    <label for="images" class="block text-sm font-medium text-gray-700 mb-2">Neue Fotos
-                        hinzufügen</label>
-                    <input type="file" name="images[]" id="images" multiple @change="addNewFiles($event)"
+        {{ json_encode($motorradAd->images->map(fn($image) => [
+    'id' => $image->id,
+    'url' => asset('storage/' . $image->image_path),
+    'is_thumbnail' => $image->is_thumbnail, // Include this if you need to mark thumbnails
+])) }}
+    )" class="space-y-4">
+                    <input type="file" name="images[]" multiple @change="addNewFiles($event)"
                         class="block w-full border p-2 rounded" />
                     @error('images')
                         <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
@@ -243,64 +247,84 @@
                     @enderror
 
                     <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-                        {{-- Existing Images --}}
-                        <template x-for="(image, index) in existingImages" :key="'existing-' + image.id">
+                        {{-- Loop through existing images --}}
+                        <template x-for="(image, index) in existingImages" :key="'existing-' + index">
                             <div class="relative group">
                                 <img :src="image.url" class="w-full h-32 object-cover rounded shadow">
-                                <button type="button" @click="removeExistingImage(index)"
+                                {{-- Hidden input to send existing image ID to controller --}}
+                                <input type="hidden" :name="'existing_images[]'" :value="image.id">
+
+                                {{-- Button to remove existing image --}}
+                                <button type="button" @click="removeExisting(index)"
                                     class="absolute top-1 right-1 bg-red-700 text-white w-6 h-6 rounded-full text-xs flex items-center justify-center hidden group-hover:flex">✕</button>
+
+                                {{-- Optionally, an indicator for thumbnail if applicable --}}
+                                {{-- <template x-if="image.is_thumbnail">
+                                    <span
+                                        class="absolute bottom-1 left-1 bg-blue-500 text-white px-2 py-1 text-xs rounded-full">Thumbnail</span>
+                                </template> --}}
                             </div>
                         </template>
-                        {{-- Newly Uploaded Images --}}
-                        <template x-for="(image, index) in newImagePreviews" :key="'new-' + index">
+
+                        {{-- Loop through new previews (from uploaded files) --}}
+                        <template x-for="(preview, index) in newFilePreviews" :key="'new-' + index">
                             <div class="relative group">
-                                <img :src="image" class="w-full h-32 object-cover rounded shadow">
-                                <button type="button" @click="removeNewImage(index)"
+                                <img :src="preview" class="w-full h-32 object-cover rounded shadow">
+                                {{-- Button to remove new image --}}
+                                <button type="button" @click="removeNewFile(index)"
                                     class="absolute top-1 right-1 bg-red-700 text-white w-6 h-6 rounded-full text-xs flex items-center justify-center hidden group-hover:flex">✕</button>
                             </div>
                         </template>
                     </div>
-
-                    {{-- Hidden input to send IDs of images to be deleted --}}
-                    <template x-for="id in imagesToDelete" :key="'delete-' + id">
-                        <input type="hidden" :name="'images_to_delete[]'" :value="id">
-                    </template>
                 </div>
 
                 {{-- Alpine.js Script for Image Previews and Main Form Logic --}}
                 <script>
                     function multiImageUploader(initialImages = []) {
                         return {
-                            existingImages: initialImages, // [{ id: ..., url: ... }]
-                            newFiles: [], // File objects for new uploads
-                            newImagePreviews: [], // URLs for new uploads
-                            imagesToDelete: [], // IDs of existing images to delete
+                            existingImages: initialImages, // Images already saved in DB
+                            newFiles: [], // Newly selected File objects
+                            newFilePreviews: [], // URLs for new file previews
+
+                            // Initialize with existing images and add their previews
+                            init() {
+                                // This data is already in initialImages.url
+                            },
 
                             addNewFiles(event) {
                                 const files = Array.from(event.target.files);
                                 files.forEach(file => {
                                     this.newFiles.push(file);
-                                    this.newImagePreviews.push(URL.createObjectURL(file));
+                                    this.newFilePreviews.push(URL.createObjectURL(file));
                                 });
-                                // Clear the file input to allow selecting the same files again if needed
-
+                                this.updateFileInput();
                             },
 
-                            removeExistingImage(index) {
-                                const imageId = this.existingImages[index].id;
-                                this.imagesToDelete.push(imageId);
+                            removeExisting(index) {
+                                // Remove from existingImages array, which will also remove the hidden input
+                                URL.revokeObjectURL(this.existingImages[index].url); // Clean up blob URL if applicable
                                 this.existingImages.splice(index, 1);
                             },
 
-                            removeNewImage(index) {
-                                URL.revokeObjectURL(this.newImagePreviews[index]); // Free up memory
+                            removeNewFile(index) {
+                                // Remove from newFiles and newFilePreviews
+                                URL.revokeObjectURL(this.newFilePreviews[index]);
                                 this.newFiles.splice(index, 1);
-                                this.newImagePreviews.splice(index, 1);
+                                this.newFilePreviews.splice(index, 1);
+                                this.updateFileInput();
                             },
+
+                            updateFileInput() {
+                                // Update the actual file input element with current newFiles
+                                const dataTransfer = new DataTransfer();
+                                this.newFiles.forEach(file => dataTransfer.items.add(file));
+                                this.$el.querySelector('input[type="file"][name="images[]"]').files = dataTransfer.files;
+                            }
                         };
                     }
                 </script>
-            </section>
+         
+
 
             {{-- Submit Button --}}
             <div class="pt-6 border-t border-gray-200 flex justify-end">

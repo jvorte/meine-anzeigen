@@ -24,7 +24,7 @@
 
         <form method="POST" action="{{ route('ads.motorrad.update', $motorradAd) }}" enctype="multipart/form-data" class="space-y-8">
             @csrf
-            @method('PUT') {{-- Use PUT method for updates --}}
+            @method('PUT')
 
             <section class="bg-gray-50 p-6 rounded-lg shadow-inner">
                 <h4 class="text-xl font-semibold text-gray-700 mb-6">Fahrzeugdetails</h4>
@@ -212,32 +212,23 @@
                 </div>
             </section>
 
-            {{-- Photo Upload Section --}}
+            ---
+
             <section class="bg-gray-50 p-6 rounded-lg shadow-inner">
+                <h4 class="text-xl font-semibold text-gray-700 mb-6">Fotos verwalten und hinzufügen</h4>
 
-   {{-- Existing Photos Section --}}
-@if ($motorradAd->images->count() > 0)
-    <section class="bg-gray-50 p-6 rounded-lg shadow-inner mb-6">
-        <h4 class="text-xl font-semibold text-gray-700 mb-6">Vorhandene Fotos</h4>
-        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-            @foreach ($motorradAd->images as $image)
-                <div class="relative group">
-                    <img src="{{ asset('storage/' . $image->image_path) }}" alt="Motorrad Foto" class="w-full h-48 object-cover rounded-lg shadow-sm">
-                    <label class="absolute top-2 right-2 bg-red-600 text-white text-xs px-2 py-1 rounded-full cursor-pointer opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-                        <input type="checkbox" name="delete_images[]" value="{{ $image->id }}" class="mr-1"> Löschen
-                    </label>
-                </div>
-            @endforeach
-        </div>
-        <p class="text-sm text-gray-600 mt-4">Wähle Fotos zum Löschen aus.</p>
-    </section>
-@endif
+                {{-- Unified Alpine.js component for both existing and new images --}}
+                <div x-data="multiImageUploader(
+                    {{ json_encode($motorradAd->images->map(fn($image) => [
+                        'id' => $image->id,
+                        'url' => asset('storage/' . $image->image_path),
+                        'is_thumbnail' => $image->is_thumbnail ?? false, // Ensure this maps correctly if you use it
+                    ])) }}
+                )" class="space-y-4">
 
-                
-                <h4 class="text-xl font-semibold text-gray-700 mb-6">Fotos hinzufügen</h4>
-
-                <div x-data="multiImageUploader()" class="space-y-4">
-                    <input type="file" name="images[]" multiple @change="addFiles($event)" class="block w-full border p-2 rounded" />
+                    {{-- Input for new files --}}
+                    <input type="file" name="images[]" multiple @change="addNewFiles($event)"
+                        class="block w-full border p-2 rounded" />
                     @error('images')
                         <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                     @enderror
@@ -246,45 +237,78 @@
                     @enderror
 
                     <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-                        <template x-for="(image, index) in previews" :key="index">
+                        {{-- Loop through EXISTING images, now managed by Alpine --}}
+                        <template x-for="(image, index) in existingImages" :key="'existing-' + image.id">
                             <div class="relative group">
-                                <img :src="image" class="w-full h-32 object-cover rounded shadow">
-                                <button type="button" @click="remove(index)"
+                                <img :src="image.url" class="w-full h-32 object-cover rounded shadow">
+                                {{-- THIS IS THE HIDDEN INPUT FOR EXISTING IMAGES TO KEEP --}}
+                                <input type="hidden" :name="'existing_images[]'" :value="image.id">
+
+                                {{-- Button to remove existing image (which removes its hidden input) --}}
+                                <button type="button" @click="removeExisting(index)"
+                                    class="absolute top-1 right-1 bg-red-700 text-white w-6 h-6 rounded-full text-xs flex items-center justify-center hidden group-hover:flex">✕</button>
+                            </div>
+                        </template>
+
+                        {{-- Loop through NEW previews (from uploaded files) --}}
+                        <template x-for="(preview, index) in newFilePreviews" :key="'new-' + index">
+                            <div class="relative group">
+                                <img :src="preview" class="w-full h-32 object-cover rounded shadow">
+                                {{-- Button to remove new image --}}
+                                <button type="button" @click="removeNewFile(index)"
                                     class="absolute top-1 right-1 bg-red-700 text-white w-6 h-6 rounded-full text-xs flex items-center justify-center hidden group-hover:flex">✕</button>
                             </div>
                         </template>
                     </div>
                 </div>
 
+                {{-- Alpine.js Script for Image Previews and Main Form Logic --}}
                 <script>
-                    function multiImageUploader() {
+                    function multiImageUploader(initialImages = []) {
                         return {
-                            files: [],
-                            previews: [],
+                            existingImages: initialImages, // Images already saved in DB
+                            newFiles: [], // Newly selected File objects
+                            newFilePreviews: [], // URLs for new file previews
 
-                            addFiles(event) {
-                                const newFiles = Array.from(event.target.files);
+                            // `init` is not strictly necessary if `initialImages` is directly assigned
+                            // but good practice if you had complex setup on mount.
+                            // init() {
+                            //    console.log('Alpine component initialized with existing images:', this.existingImages);
+                            // },
 
-                                newFiles.forEach(file => {
-                                    this.files.push(file);
-                                    this.previews.push(URL.createObjectURL(file));
+                            addNewFiles(event) {
+                                const files = Array.from(event.target.files);
+                                files.forEach(file => {
+                                    this.newFiles.push(file);
+                                    this.newFilePreviews.push(URL.createObjectURL(file));
                                 });
-
-                                const dataTransfer = new DataTransfer();
-                                this.files.forEach(file => dataTransfer.items.add(file));
-                                event.target.files = dataTransfer.files;
+                                this.updateFileInput(); // Update the native file input so it sends the files
                             },
 
-                            remove(index) {
-                                URL.revokeObjectURL(this.previews[index]);
+                            removeExisting(index) {
+                                // Important: This removes the image from the `existingImages` array.
+                                // Because the `<template x-for>` is reactive, this also removes the
+                                // hidden input for that image, effectively telling the backend to delete it.
+                                URL.revokeObjectURL(this.existingImages[index].url); // Clean up blob URL
+                                this.existingImages.splice(index, 1);
+                            },
 
-                                this.files.splice(index, 1);
-                                this.previews.splice(index, 1);
+                            removeNewFile(index) {
+                                // Remove from newFiles and newFilePreviews
+                                URL.revokeObjectURL(this.newFilePreviews[index]); // Clean up blob URL
+                                this.newFiles.splice(index, 1);
+                                this.newFilePreviews.splice(index, 1);
+                                this.updateFileInput(); // Update the native file input
+                            },
 
+                            updateFileInput() {
+                                // This is crucial: it reconstructs the FileList for the original
+                                // input[type="file"] element, ensuring only the currently selected
+                                // new files are actually sent.
+                                const dataTransfer = new DataTransfer();
+                                this.newFiles.forEach(file => dataTransfer.items.add(file));
                                 const fileInput = this.$el.querySelector('input[type="file"][name="images[]"]');
                                 if (fileInput) {
-                                    const dataTransfer = new DataTransfer();
-                                    this.files.forEach(file => dataTransfer.items.add(file));
                                     fileInput.files = dataTransfer.files;
                                 }
                             }
@@ -292,6 +316,8 @@
                     }
                 </script>
             </section>
+
+            ---
 
             {{-- Submit Button --}}
             <div class="pt-6 border-t border-gray-200 flex justify-end">

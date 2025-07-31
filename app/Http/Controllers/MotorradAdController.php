@@ -124,7 +124,7 @@ class MotorradAdController extends Controller
 
     $colors = ['Schwarz', 'Weiß', 'Rot', 'Blau', 'Grün', 'Gelb', 'Orange', 'Silber', 'Grau', 'Braun', 'Andere'];
     $conditions = ['neu', 'gebraucht', 'unfallfahrzeug'];
-
+//  dd($motorradAd->images->toArray());
     return view('ads.motorrad.edit', compact('motorradAd', 'brands', 'initialModels', 'colors', 'conditions'));
 }
     /**
@@ -156,7 +156,7 @@ class MotorradAdController extends Controller
             'existing_images' => 'nullable|array',
             'existing_images.*' => 'exists:motorrad_ad_images,id',
         ]);
-
+    // dd($validatedData['existing_images'] ?? 'No existing images sent');
         $motorradAd->title = $validatedData['title'];
         $motorradAd->description = $validatedData['description'];
         $motorradAd->motorcycle_brand_id = $validatedData['motorcycle_brand_id'];
@@ -168,11 +168,11 @@ class MotorradAdController extends Controller
         $motorradAd->color = $validatedData['color'];
         $motorradAd->condition = $validatedData['condition'];
         $motorradAd->save();
-
-        $currentImageIds = $motorradAd->images->pluck('id')->toArray();
-        $imagesToKeep = $validatedData['existing_images'] ?? [];
+    // dd($motorradAd->images->pluck('id')->toArray());
+   $currentImageIds = $motorradAd->images->pluck('id')->toArray();
+        $imagesToKeep = $validatedData['existing_images'] ?? []; // This will now receive IDs from the Blade!
         $imagesToDelete = array_diff($currentImageIds, $imagesToKeep);
-
+//    dd(array_diff($currentImageIds, $imagesToKeep));
         foreach ($imagesToDelete as $imageId) {
             $image = MotorradAdImage::find($imageId);
             if ($image) {
@@ -180,7 +180,6 @@ class MotorradAdController extends Controller
                 $image->delete();
             }
         }
-
         if ($request->hasFile('images')) {
             foreach ($request->file('images') as $file) {
                 $path = $file->store('motorrad_ads_images', 'public');
