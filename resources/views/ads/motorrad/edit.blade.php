@@ -13,36 +13,33 @@
     <div class="py-2">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <x-breadcrumbs :items="[
-        ['label' => 'Motorrad Anzeigen', 'url' => route('categories.show', 'motorrad')],
-        ['label' => $motorradAd->title, 'url' => route('ads.motorrad.show', $motorradAd)],
-        ['label' => 'Bearbeiten', 'url' => null],
-    ]" />
+                ['label' => 'Motorrad Anzeigen', 'url' => route('categories.show', 'motorrad')],
+                ['label' => $motorradAd->title, 'url' => route('ads.motorrad.show', $motorradAd)],
+                ['label' => 'Bearbeiten', 'url' => null],
+            ]" />
         </div>
     </div>
 
     <div class="max-w-6xl mx-auto p-6 bg-white rounded-lg shadow-xl mt-6">
 
-        <form method="POST" action="{{ route('ads.motorrad.update', $motorradAd) }}" enctype="multipart/form-data"
-            class="space-y-8">
+        <form method="POST" action="{{ route('ads.motorrad.update', $motorradAd) }}" enctype="multipart/form-data" class="space-y-8">
             @csrf
             @method('PUT') {{-- Use PUT method for updates --}}
 
-            {{-- Vehicle Details Section (Marke & Modell) --}}
             <section class="bg-gray-50 p-6 rounded-lg shadow-inner">
                 <h4 class="text-xl font-semibold text-gray-700 mb-6">Fahrzeugdetails</h4>
-                {{-- Alpine.js x-data now references the defined component --}}
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6" x-data="motorcycleAdEditFormInitializer"> {{--
-                    Reference the initializer component --}}
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
 
                     {{-- Marke --}}
                     <div>
-                        <label for="motorcycle_brand_id"
-                            class="block text-sm font-medium text-gray-700 mb-2">Marke</label>
-                        <select name="motorcycle_brand_id" id="motorcycle_brand_id" x-model="selectedMotorcycleBrandId"
+                        <label for="motorcycle_brand_id" class="block text-sm font-medium text-gray-700 mb-2">Marke</label>
+                        <select name="motorcycle_brand_id" id="motorcycle_brand_id" onchange="loadModels(this.value)"
                             class="form-select w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
                             <option value="">Bitte wählen</option>
                             @foreach($brands as $id => $name)
-                                <option value="{{ $id }}">{{ $name }}</option>
+                                <option value="{{ $id }}" {{ (old('motorcycle_brand_id', $motorradAd->motorcycle_brand_id) == $id) ? 'selected' : '' }}>
+                                    {{ $name }}
+                                </option>
                             @endforeach
                         </select>
                         @error('motorcycle_brand_id')
@@ -50,34 +47,81 @@
                         @enderror
                     </div>
 
-                    {{-- Modell (Dynamic with Alpine.js) --}}
-                    <div x-show="Object.keys(motorcycleModels).length > 0" x-transition>
-                        <label for="motorcycle_model_id"
-                            class="block text-sm font-medium text-gray-700 mb-2">Modell</label>
-                        <select name="motorcycle_model_id" id="motorcycle_model_id" x-model="selectedMotorcycleModelId"
+                    {{-- Modell --}}
+                    <div>
+                        <label for="motorcycle_model_id" class="block text-sm font-medium text-gray-700 mb-2">Modell</label>
+                        <select name="motorcycle_model_id" id="motorcycle_model_id"
                             class="form-select w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
                             <option value="">Bitte wählen</option>
-                            <template x-for="(name, id) in motorcycleModels" :key="id">
-                                <option :value="id" x-text="name"></option>
-                            </template>
+                            @foreach($initialModels as $id => $name)
+                                <option value="{{ $id }}" {{ (old('motorcycle_model_id', $motorradAd->motorcycle_model_id) == $id) ? 'selected' : '' }}>
+                                    {{ $name }}
+                                </option>
+                            @endforeach
                         </select>
                         @error('motorcycle_model_id')
                             <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                         @enderror
                     </div>
+
                 </div>
             </section>
 
-            {{-- Basic Data Section (Erstzulassung, Kilometerstand, Leistung, Price) --}}
+            <script>
+                async function loadModels(brandId, selectedModelId = null) {
+                    const modelSelect = document.getElementById('motorcycle_model_id');
+                    modelSelect.innerHTML = '<option value="">Bitte wählen</option>'; // Clear
+
+                    if (!brandId) return;
+
+                    try {
+                        const response = await fetch(`/api/motorcycle-brands/${brandId}/models`);
+                        if (!response.ok) throw new Error('Network response was not ok');
+                        const models = await response.json();
+
+                        models.forEach(model => {
+                            const option = document.createElement('option');
+                            option.value = model.id;
+                            option.textContent = model.name;
+                            modelSelect.appendChild(option);
+                        });
+
+                        if (selectedModelId) {
+                            modelSelect.value = selectedModelId;
+                        }
+                    } catch (error) {
+                        console.error('Error loading models:', error);
+                    }
+                }
+
+                document.addEventListener('DOMContentLoaded', function() {
+                    const brandId = '{{ old('motorcycle_brand_id', $motorradAd->motorcycle_brand_id ?? '') }}';
+                    const modelId = '{{ old('motorcycle_model_id', $motorradAd->motorcycle_model_id ?? '') }}';
+
+                    if (brandId) {
+                        loadModels(brandId, modelId);
+                    }
+                });
+            </script>
+
+            {{-- Basic Data Section --}}
             <section class="bg-gray-50 p-6 rounded-lg shadow-inner">
                 <h4 class="text-xl font-semibold text-gray-700 mb-6">Basisdaten</h4>
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
 
-                
-                    {{-- Erstzulassung --}}
                     <div>
-                        <label for="first_registration"
-                            class="block text-sm font-medium text-gray-700 mb-2">Erstzulassung</label>
+                        <label for="price" class="block text-sm font-medium text-gray-700 mb-2">Preis (€)</label>
+                        <input type="number" name="price" id="price" value="{{ old('price', $motorradAd->price ?? '') }}"
+                               placeholder="z.B. 7.500"
+                               class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50"
+                               min="0" step="0.01">
+                        @error('price')
+                            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <div>
+                        <label for="first_registration" class="block text-sm font-medium text-gray-700 mb-2">Erstzulassung</label>
                         <input type="date" name="first_registration" id="first_registration"
                             value="{{ old('first_registration', $motorradAd->first_registration ? \Carbon\Carbon::parse($motorradAd->first_registration)->format('Y-m-d') : '') }}"
                             class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
@@ -86,10 +130,8 @@
                         @enderror
                     </div>
 
-                    {{-- Kilometerstand --}}
                     <div>
-                        <label for="mileage" class="block text-sm font-medium text-gray-700 mb-2">Kilometerstand (in
-                            km)</label>
+                        <label for="mileage" class="block text-sm font-medium text-gray-700 mb-2">Kilometerstand (in km)</label>
                         <input type="number" name="mileage" id="mileage"
                             value="{{ old('mileage', $motorradAd->mileage) }}" placeholder="z.B. 50.000"
                             class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
@@ -98,7 +140,6 @@
                         @enderror
                     </div>
 
-                    {{-- Leistung (PS) --}}
                     <div>
                         <label for="power" class="block text-sm font-medium text-gray-700 mb-2">Leistung (PS)</label>
                         <input type="number" name="power" id="power" value="{{ old('power', $motorradAd->power) }}"
@@ -108,26 +149,15 @@
                             <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                         @enderror
                     </div>
-                        {{-- price --}}
-                    <div>
-                        <label for="price" class="block text-sm font-medium text-gray-700 mb-2">Preis (€)</label>
-                        <input type="number" name="price" id="price" value="{{ old('price', $motorradAd->price) }}"
-                            placeholder="z.B. 7.500"
-                            class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50"
-                            min="0" step="0.01">
-                        @error('price')
-                            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-                        @enderror
-                    </div>
 
-           
+                </div>
             </section>
 
-            {{-- Type & Condition Section (Farbe & Zustand) --}}
+            {{-- Type & Condition Section --}}
             <section class="bg-gray-50 p-6 rounded-lg shadow-inner">
                 <h4 class="text-xl font-semibold text-gray-700 mb-6">Typ & Zustand</h4>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    {{-- Farbe --}}
+
                     <div>
                         <label for="color" class="block text-sm font-medium text-gray-700 mb-2">Farbe</label>
                         <select name="color" id="color"
@@ -142,7 +172,6 @@
                         @enderror
                     </div>
 
-                    {{-- Zustand --}}
                     <div>
                         <label for="condition" class="block text-sm font-medium text-gray-700 mb-2">Zustand</label>
                         <select name="condition" id="condition"
@@ -156,12 +185,12 @@
                             <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                         @enderror
                     </div>
+
                 </div>
             </section>
 
             {{-- Title & Description Section --}}
             <section class="bg-white p-6 rounded-lg shadow">
-                {{-- Titel --}}
                 <div class="mb-6">
                     <label for="title" class="block text-sm font-semibold text-gray-800 mb-2">Anzeigentitel</label>
                     <input type="text" name="title" id="title" value="{{ old('title', $motorradAd->title) }}"
@@ -172,7 +201,6 @@
                     @enderror
                 </div>
 
-                {{-- Beschreibung --}}
                 <div>
                     <label for="description" class="block text-sm font-medium text-gray-800 mb-2">Beschreibung</label>
                     <textarea name="description" id="description" rows="7"
@@ -184,27 +212,32 @@
                 </div>
             </section>
 
-            {{-- Photo Upload Section (with Alpine.js for previews) --}}
+            {{-- Photo Upload Section --}}
             <section class="bg-gray-50 p-6 rounded-lg shadow-inner">
+
+   {{-- Existing Photos Section --}}
+@if ($motorradAd->images->count() > 0)
+    <section class="bg-gray-50 p-6 rounded-lg shadow-inner mb-6">
+        <h4 class="text-xl font-semibold text-gray-700 mb-6">Vorhandene Fotos</h4>
+        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+            @foreach ($motorradAd->images as $image)
+                <div class="relative group">
+                    <img src="{{ asset('storage/' . $image->image_path) }}" alt="Motorrad Foto" class="w-full h-48 object-cover rounded-lg shadow-sm">
+                    <label class="absolute top-2 right-2 bg-red-600 text-white text-xs px-2 py-1 rounded-full cursor-pointer opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                        <input type="checkbox" name="delete_images[]" value="{{ $image->id }}" class="mr-1"> Löschen
+                    </label>
+                </div>
+            @endforeach
+        </div>
+        <p class="text-sm text-gray-600 mt-4">Wähle Fotos zum Löschen aus.</p>
+    </section>
+@endif
+
+                
                 <h4 class="text-xl font-semibold text-gray-700 mb-6">Fotos hinzufügen</h4>
 
-                <div x-data="multiImageUploaderInitializer"> {{-- Reference the initializer component --}}
-                    {{-- Existing images --}}
-                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
-                        <template x-for="(image, index) in existingPreviews" :key="image.id">
-                            <div class="relative group">
-                                <img :src="image.path" class="w-full h-32 object-cover rounded shadow">
-                                {{-- Hidden input to send existing image IDs back to the server --}}
-                                <input type="hidden" :name="'existing_images[]'" :value="image.id">
-                                <button type="button" @click="removeExisting(index)"
-                                    class="absolute top-1 right-1 bg-red-700 text-white w-6 h-6 rounded-full text-xs flex items-center justify-center hidden group-hover:flex">✕</button>
-                            </div>
-                        </template>
-                    </div>
-
-                    {{-- New image input --}}
-                    <input type="file" name="images[]" multiple @change="addNewFiles($event)"
-                        class="block w-full border p-2 rounded" />
+                <div x-data="multiImageUploader()" class="space-y-4">
+                    <input type="file" name="images[]" multiple @change="addFiles($event)" class="block w-full border p-2 rounded" />
                     @error('images')
                         <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                     @enderror
@@ -212,17 +245,52 @@
                         <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                     @enderror
 
-                    {{-- Previews for newly added images --}}
-                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4">
-                        <template x-for="(image, index) in newPreviews" :key="index">
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                        <template x-for="(image, index) in previews" :key="index">
                             <div class="relative group">
                                 <img :src="image" class="w-full h-32 object-cover rounded shadow">
-                                <button type="button" @click="removeNew(index)"
+                                <button type="button" @click="remove(index)"
                                     class="absolute top-1 right-1 bg-red-700 text-white w-6 h-6 rounded-full text-xs flex items-center justify-center hidden group-hover:flex">✕</button>
                             </div>
                         </template>
                     </div>
                 </div>
+
+                <script>
+                    function multiImageUploader() {
+                        return {
+                            files: [],
+                            previews: [],
+
+                            addFiles(event) {
+                                const newFiles = Array.from(event.target.files);
+
+                                newFiles.forEach(file => {
+                                    this.files.push(file);
+                                    this.previews.push(URL.createObjectURL(file));
+                                });
+
+                                const dataTransfer = new DataTransfer();
+                                this.files.forEach(file => dataTransfer.items.add(file));
+                                event.target.files = dataTransfer.files;
+                            },
+
+                            remove(index) {
+                                URL.revokeObjectURL(this.previews[index]);
+
+                                this.files.splice(index, 1);
+                                this.previews.splice(index, 1);
+
+                                const fileInput = this.$el.querySelector('input[type="file"][name="images[]"]');
+                                if (fileInput) {
+                                    const dataTransfer = new DataTransfer();
+                                    this.files.forEach(file => dataTransfer.items.add(file));
+                                    fileInput.files = dataTransfer.files;
+                                }
+                            }
+                        };
+                    }
+                </script>
             </section>
 
             {{-- Submit Button --}}
@@ -236,113 +304,4 @@
         </form>
     </div>
 
-    {{-- Alpine.js Script for Image Previews and Main Form Logic --}}
-    <script>
-        // Data prepared by Blade for Alpine.js
-        const initialBrandId = @json(old('motorcycle_brand_id', $motorradAd->motorcycle_brand_id));
-        const initialModelId = @json(old('motorcycle_model_id', $motorradAd->motorcycle_model_id));
-        const initialMotorcycleModels = @json($initialModels);
-        const initialImagesData = @json($motorradAd->images->map(fn($image) => ['id' => $image->id, 'path' => asset('storage/' . $image->image_path)]));
-
-        document.addEventListener('alpine:init', () => {
-            // Define the multiImageUploader component
-            Alpine.data('multiImageUploaderInitializer', () => ({
-                existingPreviews: initialImagesData || [], // For images already saved (objects with id and path)
-                newFiles: [], // Stores new File objects
-                newPreviews: [], // Stores URLs for new image previews
-
-                addNewFiles(event) {
-                    const files = Array.from(event.target.files);
-                    files.forEach(file => {
-                        this.newFiles.push(file);
-                        this.newPreviews.push(URL.createObjectURL(file));
-                    });
-
-                    // Update the actual file input's files property for submission
-                    const dataTransfer = new DataTransfer();
-                    this.newFiles.forEach(file => dataTransfer.items.add(file));
-                    event.target.files = dataTransfer.files;
-                },
-
-                removeExisting(index) {
-                    // Remove from existing previews array
-                    this.existingPreviews.splice(index, 1);
-                    // The corresponding hidden input will be removed from the DOM by Alpine,
-                    // so its ID will not be sent, indicating it should be deleted.
-                },
-
-                removeNew(index) {
-                    URL.revokeObjectURL(this.newPreviews[index]); // Revoke URL for new image
-                    this.newFiles.splice(index, 1);
-                    this.newPreviews.splice(index, 1);
-
-                    // Update the new file input's files property
-                    const fileInput = this.$el.querySelector('input[type="file"][name="images[]"]');
-                    if (fileInput) {
-                        const dataTransfer = new DataTransfer();
-                        this.newFiles.forEach(file => dataTransfer.items.add(file));
-                        fileInput.files = dataTransfer.files;
-                    }
-                }
-            }));
-
-            // Define the Alpine.js component for the motorcycle form (Brand/Model dropdowns)
-            Alpine.data('motorcycleAdEditFormInitializer', () => ({
-                selectedMotorcycleBrandId: initialBrandId || '',
-                selectedMotorcycleModelId: initialModelId || '',
-                motorcycleModels: initialMotorcycleModels || {}, // Ensure it's an object, not null
-
-                async fetchMotorcycleModels() {
-                    console.log('fetchMotorcycleModels triggered. Current selectedBrandId (before fetch):', this.selectedMotorcycleBrandId);
-
-                    if (this.selectedMotorcycleBrandId) {
-                        const fetchUrl = `/motorcycle-models/${this.selectedMotorcycleBrandId}`;
-                        console.log('Attempting to fetch models from URL:', fetchUrl);
-                        try {
-                            const response = await fetch(fetchUrl);
-                            if (!response.ok) {
-                                console.error('HTTP error! Status:', response.status, 'Response text:', await response.text());
-                                throw new Error(`HTTP error! status: ${response.status}`);
-                            }
-                            const data = await response.json();
-                            console.log('Models fetched successfully:', data);
-                            this.motorcycleModels = data;
-
-                            // If the previously selected model is not in the new list, clear it
-                            if (this.selectedMotorcycleModelId && !Object.keys(this.motorcycleModels).includes(String(this.selectedMotorcycleModelId))) {
-                                this.selectedMotorcycleModelId = '';
-                                console.log('Cleared selectedMotorcycleModelId as it was not in the new list.');
-                            }
-                        } catch (error) {
-                            console.error('Error fetching motorcycle models:', error);
-                            this.motorcycleModels = {}; // Clear models on error
-                            this.selectedMotorcycleModelId = ''; // Clear selected model on error
-                        }
-                    } else {
-                        console.log('No brand selected, clearing models.');
-                        this.motorcycleModels = {};
-                        this.selectedMotorcycleModelId = '';
-                    }
-                },
-
-                init() {
-                    console.log('motorcycleAdEditForm init() called.');
-                    console.log('Initial selectedMotorcycleBrandId:', this.selectedMotorcycleBrandId);
-                    console.log('Initial selectedMotorcycleModelId:', this.selectedMotorcycleModelId);
-                    console.log('Initial motorcycleModels (from controller):', this.motorcycleModels);
-
-                    // Call fetch on init to handle cases where the ad's brand_id exists on page load
-                    this.$nextTick(() => {
-                        this.fetchMotorcycleModels();
-                    });
-
-                    // Watch for changes on the brand select element's x-model bound variable
-                    this.$watch('selectedMotorcycleBrandId', (value) => {
-                        console.log('selectedMotorcycleBrandId changed to (via $watch):', value);
-                        this.fetchMotorcycleModels();
-                    });
-                },
-            }));
-        });
-    </script>
 </x-app-layout>

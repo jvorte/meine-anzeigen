@@ -58,15 +58,15 @@ Route::prefix('categories')->name('categories.')->group(function () {
     Route::get('/household/{householdItem}', [HouseholdItemController::class, 'show'])->name('household.show');
     Route::get('/real-estate/{realEstate}', [RealEstateController::class, 'show'])->name('real-estate.show');
     Route::get('/services/{service}', [ServiceController::class, 'show'])->name('services.show');
+  
     
-
     Route::get('/others/{other}', [OtherController::class, 'show'])->name('others.show');
-    Route::get('/motorrad/{motorradAd}', [MotorradAdController::class, 'show'])->name('motorrad.show');
+    Route::get('/motorcycles/{motorradAd}', [MotorradAdController::class, 'show'])->name('motorcycles.show');
     Route::get('/commercial-vehicles/{commercialVehicle}', [CommercialVehicleController::class, 'show'])->name('commercial-vehicles.show');
     Route::get('/campers/{camper}', [CamperController::class, 'show'])->name('campers.show');
 });
 
-
+// 
 // --- AUTHENTICATED ROUTES ---
 Route::middleware(['auth'])->group(function () {
 
@@ -94,19 +94,10 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('/ads/cars/{car}', [CarController::class, 'destroy'])->name('ads.cars.destroy');
     Route::get('/ads/cars/{car}', [CarController::class, 'show'])->name('ads.cars.show');
 
-Route::get('/car-brands/{id}/models', [CarController::class, 'getModels']);
 
 
-
-Route::get('/car-brands/{id}/models', [CarController::class, 'getModels']);
-
-
-
-
-    // FIX: Changed this route to match the frontend AJAX request URL
-    // Ensure your CarController has a public method named `getModelsByBrand`
-    // that accepts a $brandId and returns the car models.
-    Route::get('/car-models/{brandId}', [CarController::class, 'getModelsByBrand']);
+Route::get('/api/car-brands/{brandId}/models', [CarController::class, 'getModelsByBrand'])->name('api.car-brands.models');
+  
 
     // Motorrad Ads
     Route::get('/ads/motorrad/create', [MotorradAdController::class, 'create'])->name('ads.motorrad.create');

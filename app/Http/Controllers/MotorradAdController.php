@@ -18,10 +18,11 @@ class MotorradAdController extends Controller
      */
     public function create()
     {
+   
         $brands = MotorcycleBrand::orderBy('name')->pluck('name', 'id');
 
-        // --- DEBUG: Check what $brands contains on page load ---
-        // dd($brands); // <--- THIS LINE IS NOW COMMENTED OUT
+    
+        // dd($brands);
 
         $initialModels = [];
         if (old('motorcycle_brand_id')) {
@@ -36,13 +37,20 @@ class MotorradAdController extends Controller
         return view('ads.motorrad.create', compact('brands', 'initialModels', 'colors', 'conditions'));
     }
 
-    /**
-     * Store a newly created motorrad ad in storage.
-     */
+    public function getModels($id)
+{
+    return response()->json(
+        MotorcycleModel::where('motorcycle_brand_id', $id)->get(['id', 'name'])
+    );
+}
+
+
+  
     public function store(Request $request)
     {
+        // dd('fff');
         $validatedData = $request->validate([
-            'images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:4048',
             'title' => 'required|string|max:255',
             'price' => 'required|numeric|min:0|max:9999999.99',
             'description' => 'required|string',
@@ -59,6 +67,7 @@ class MotorradAdController extends Controller
             'color' => 'required|string|max:50',
             'condition' => 'required|in:neu,gebraucht,unfallfahrzeug',
         ]);
+        // dd($validatedData );
 
         $motorradAd = new MotorradAd();
         $motorradAd->user_id = Auth::id();
@@ -98,27 +107,26 @@ class MotorradAdController extends Controller
     /**
      * Show the form for editing the specified motorrad ad.
      */
-    public function edit(MotorradAd $motorradAd)
-    {
-        if (Auth::id() !== $motorradAd->user_id && (!Auth::user() || !Auth::user()->isAdmin())) {
-            abort(403, 'Unauthorized action.');
-        }
-
-        $brands = MotorcycleBrand::orderBy('name')->pluck('name', 'id');
-
-        $initialModels = [];
-        if ($motorradAd->motorcycle_brand_id) {
-            $initialModels = MotorcycleModel::where('motorcycle_brand_id', $motorradAd->motorcycle_brand_id)
-                ->orderBy('name')
-                ->pluck('name', 'id');
-        }
-
-        $colors = ['Schwarz', 'Weiß', 'Rot', 'Blau', 'Grün', 'Gelb', 'Orange', 'Silber', 'Grau', 'Braun', 'Andere'];
-        $conditions = ['neu', 'gebraucht', 'unfallfahrzeug'];
-
-        return view('ads.motorrad.edit', compact('motorradAd', 'brands', 'initialModels', 'colors', 'conditions'));
+ public function edit(MotorradAd $motorradAd)
+{
+    if (Auth::id() !== $motorradAd->user_id && (!Auth::user() || !Auth::user()->isAdmin())) {
+        abort(403, 'Unauthorized action.');
     }
 
+    // Πάρε τις μάρκες μοτοσυκλετών σωστά
+    $brands = MotorcycleBrand::pluck('name', 'id');
+
+    // Μοντέλα της συγκεκριμένης μάρκας (αν υπάρχει)
+    $initialModels = [];
+    if ($motorradAd->motorcycle_brand_id) {
+        $initialModels = MotorcycleModel::where('motorcycle_brand_id', $motorradAd->motorcycle_brand_id)->pluck('name', 'id');
+    }
+
+    $colors = ['Schwarz', 'Weiß', 'Rot', 'Blau', 'Grün', 'Gelb', 'Orange', 'Silber', 'Grau', 'Braun', 'Andere'];
+    $conditions = ['neu', 'gebraucht', 'unfallfahrzeug'];
+
+    return view('ads.motorrad.edit', compact('motorradAd', 'brands', 'initialModels', 'colors', 'conditions'));
+}
     /**
      * Update the specified motorrad ad in storage.
      */

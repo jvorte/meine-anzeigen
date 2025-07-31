@@ -155,7 +155,7 @@
                                                             $adParamName = 'householdItem'; 
                                                         } elseif ($ad instanceof \App\Models\MotorradAd) {
                                                             $adRouteName = 'categories.motorcycles.show';
-                                                            $adParamName = 'motorcycles';
+                                                          $adParamName = 'motorradAd'; 
                                                         } elseif ($ad instanceof \App\Models\Other) {
                                                             $adRouteName = 'categories.others.show';
                                                             $adParamName = 'other';

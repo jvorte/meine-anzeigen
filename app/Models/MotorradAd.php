@@ -8,14 +8,14 @@ use Illuminate\Database\Eloquent\SoftDeletes; // Assuming you might want soft de
 
 class MotorradAd extends Model
 {
-    use HasFactory; // Removed SoftDeletes here as it wasn't in your provided MotorradAd model, but added it back if you need it.
+    use HasFactory; 
 
     protected $fillable = [
         'user_id',
         'title',
         'description',
-        'motorcycle_brand_id', // Changed from 'brand_id'
-        'motorcycle_model_id', // Changed from 'car_model_id'
+        'motorcycle_brand_id', 
+        'motorcycle_model_id',
         'first_registration',
         'mileage',
         'power',
@@ -26,7 +26,7 @@ class MotorradAd extends Model
     /**
      * Get the motorcycle brand associated with the motorrad ad.
      */
-    public function motorcycleBrand() // Changed relationship name
+    public function motorcycleBrand() 
     {
         return $this->belongsTo(MotorcycleBrand::class);
     }
@@ -34,7 +34,7 @@ class MotorradAd extends Model
     /**
      * Get the motorcycle model associated with the motorrad ad.
      */
-    public function motorcycleModel() // Changed relationship name
+    public function motorcycleModel() 
     {
         return $this->belongsTo(MotorcycleModel::class);
     }

@@ -139,8 +139,8 @@
                                                 $detailRoute = route('categories.services.show', $ad);
                                             } elseif ($category->slug == 'others') {
                                                 $detailRoute = route('categories.others.show', $ad);
-                                            } elseif ($category->slug == 'motorrad') {
-                                                $detailRoute = route('categories.motorrad.show', $ad);
+                                            } elseif ($category->slug == 'motorcycles') {
+                                                $detailRoute = route('categories.motorcycles.show', $ad);
                                             } elseif ($category->slug == 'nutzfahrzeuge') {
                                                 $detailRoute = route('categories.nutzfahrzeuge.show', $ad);
                                             } elseif ($category->slug == 'campers') {
