@@ -23,7 +23,8 @@
 
     <div class="max-w-6xl mx-auto p-6 bg-white rounded-lg shadow-xl mt-6">
 
-        <form method="POST" action="{{ route('ads.services.update', $ad->id) }}" enctype="multipart/form-data" class="space-y-8">
+        <form method="POST" action="{{ route('ads.services.update', $ad->id) }}" enctype="multipart/form-data"
+            class="space-y-8">
             @csrf
             @method('PUT') {{-- Essential for updating resources --}}
 
@@ -36,12 +37,14 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     {{-- Dienstleistung Kategorie --}}
                     <div>
-                        <label for="dienstleistung_kategorie" class="block text-sm font-medium text-gray-700 mb-2">Kategorie</label>
+                        <label for="dienstleistung_kategorie"
+                            class="block text-sm font-medium text-gray-700 mb-2">Kategorie</label>
                         <select name="dienstleistung_kategorie" id="dienstleistung_kategorie"
-                                class="form-select w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
+                            class="form-select w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
                             <option value="">Bitte wählen</option>
                             @foreach(['reinigung', 'handwerk', 'it', 'beratung', 'transport', 'sonstiges'] as $category)
-                                <option value="{{ $category }}" {{ old('dienstleistung_kategorie', $ad->dienstleistung_kategorie) == $category ? 'selected' : '' }}>{{ ucfirst($category) }}</option>
+                                <option value="{{ $category }}" {{ old('dienstleistung_kategorie', $ad->dienstleistung_kategorie) == $category ? 'selected' : '' }}>{{ ucfirst($category) }}
+                                </option>
                             @endforeach
                         </select>
                         @error('dienstleistung_kategorie')
@@ -51,9 +54,11 @@
 
                     {{-- Titel der Dienstleistung --}}
                     <div class="md:col-span-2">
-                        <label for="titel" class="block text-sm font-medium text-gray-700 mb-2">Titel der Dienstleistung</label>
-                        <input type="text" name="titel" id="titel" value="{{ old('titel', $ad->title) }}" placeholder="z.B. Professionelle Fensterreinigung"
-                               class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
+                        <label for="titel" class="block text-sm font-medium text-gray-700 mb-2">Titel der
+                            Dienstleistung</label>
+                        <input type="text" name="titel" id="titel" value="{{ old('titel', $ad->title) }}"
+                            placeholder="z.B. Professionelle Fensterreinigung"
+                            class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
                         @error('titel')
                             <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                         @enderror
@@ -62,8 +67,9 @@
                     {{-- Region / Ort --}}
                     <div>
                         <label for="region" class="block text-sm font-medium text-gray-700 mb-2">Region / Ort</label>
-                        <input type="text" name="region" id="region" value="{{ old('region', $ad->region) }}" placeholder="z.B. Wien, Niederösterreich"
-                               class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
+                        <input type="text" name="region" id="region" value="{{ old('region', $ad->region) }}"
+                            placeholder="z.B. Wien, Niederösterreich"
+                            class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
                         @error('region')
                             <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                         @enderror
@@ -71,9 +77,11 @@
 
                     {{-- Preis (optional) --}}
                     <div>
-                        <label for="preis" class="block text-sm font-medium text-gray-700 mb-2">Preis (in €/Stunde/Pauschale, optional)</label>
-                        <input type="number" step="0.01" name="preis" id="preis" value="{{ old('preis', $ad->price) }}" placeholder="z.B. 50.00"
-                               class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
+                        <label for="preis" class="block text-sm font-medium text-gray-700 mb-2">Preis (in
+                            €/Stunde/Pauschale, optional)</label>
+                        <input type="number" step="0.01" name="preis" id="preis" value="{{ old('preis', $ad->price) }}"
+                            placeholder="z.B. 50.00"
+                            class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
                         @error('preis')
                             <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                         @enderror
@@ -81,9 +89,10 @@
 
                     {{-- Verfügbarkeit --}}
                     <div>
-                        <label for="verfugbarkeit" class="block text-sm font-medium text-gray-700 mb-2">Verfügbarkeit (optional)</label>
+                        <label for="verfugbarkeit" class="block text-sm font-medium text-gray-700 mb-2">Verfügbarkeit
+                            (optional)</label>
                         <select name="verfugbarkeit" id="verfugbarkeit"
-                                class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
+                            class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
                             <option value="">Bitte wählen</option>
                             @foreach(['sofort', 'nach_vereinbarung', 'während_wochentagen', 'wochenende'] as $avail)
                                 <option value="{{ $avail }}" {{ old('verfugbarkeit', $ad->verfugbarkeit) == $avail ? 'selected' : '' }}>{{ ucfirst(str_replace('_', ' ', $avail)) }}</option>
@@ -97,10 +106,11 @@
 
                 {{-- Beschreibung --}}
                 <div class="mt-6">
-                    <label for="beschreibung" class="block text-sm font-medium text-gray-700 mb-2">Beschreibung der Dienstleistung</label>
+                    <label for="beschreibung" class="block text-sm font-medium text-gray-700 mb-2">Beschreibung der
+                        Dienstleistung</label>
                     <textarea name="beschreibung" id="beschreibung" rows="7"
-                                  placeholder="Beschreibe hier deine Dienstleistung detailliert. Was bietest du an? Welche Erfahrungen hast du?"
-                                  class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">{{ old('beschreibung', $ad->description) }}</textarea>
+                        placeholder="Beschreibe hier deine Dienstleistung detailliert. Was bietest du an? Welche Erfahrungen hast du?"
+                        class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">{{ old('beschreibung', $ad->description) }}</textarea>
                     @error('beschreibung')
                         <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                     @enderror
@@ -114,12 +124,14 @@
                 <div x-data="multiImageUploader(
                     {{ json_encode($ad->images->map(fn($image) => ['id' => $image->id, 'url' => asset('storage/' . $image->path)])) }}
                 )" class="space-y-4">
-                    <label for="new_images" class="block text-sm font-medium text-gray-700 mb-2">Neue Fotos hinzufügen</label>
-                    <input type="file" name="new_images[]" id="new_images" multiple @change="addNewFiles($event)" class="block w-full border p-2 rounded" />
-                    @error('new_images')
+                    <label for="images" class="block text-sm font-medium text-gray-700 mb-2">Neue Fotos
+                        hinzufügen</label>
+                    <input type="file" name="images[]" id="images" multiple @change="addNewFiles($event)"
+                        class="block w-full border p-2 rounded" />
+                    @error('images')
                         <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                     @enderror
-                    @error('new_images.*')
+                    @error('images.*')
                         <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                     @enderror
 
@@ -164,7 +176,7 @@
                                     this.newImagePreviews.push(URL.createObjectURL(file));
                                 });
                                 // Clear the file input to allow selecting the same files again if needed
-                                event.target.value = '';
+                              
                             },
 
                             removeExistingImage(index) {
@@ -186,13 +198,13 @@
             {{-- Submit Button --}}
             <div class="pt-6 border-t border-gray-200 flex justify-end">
                 <button type="submit"
-                        class="bg-blue-600 text-white px-8 py-3 rounded-lg font-semibold text-lg hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-300 transition-all duration-300 shadow-lg">
+                    class="bg-blue-600 text-white px-8 py-3 rounded-lg font-semibold text-lg hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-300 transition-all duration-300 shadow-lg">
                     Anzeige aktualisieren
                 </button>
             </div>
         </form>
 
-    
+
 
     </div>
 </x-app-layout>

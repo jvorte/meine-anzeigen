@@ -9,7 +9,8 @@ class Service extends Model
 {
     use HasFactory;
 
-    protected $fillable = [
+   protected $fillable = [
+        'user_id', 
         'category_slug',
         'dienstleistung_kategorie',
         'title',
@@ -17,11 +18,8 @@ class Service extends Model
         'region',
         'price',
         'verfugbarkeit',
-        'contact_name',
-        'contact_tel',
-        'contact_email',
-    
     ];
+
 
     protected $casts = [
   

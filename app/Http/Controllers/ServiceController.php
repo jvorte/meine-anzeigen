@@ -95,23 +95,18 @@ class ServiceController extends Controller
 
     public function edit(Service $ad) // Using route model binding
     {
-        // Ensure the authenticated user owns this ad before allowing edit
-        // if (auth()->user()->id !== $ad->user_id) {
-        //     abort(403, 'Unauthorized action.');
-        // }
-
+     
         return view('ads.services.edit', compact('ad'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Service $ad) // Using route model binding
+ // ... (previous code)
+
+/**
+ * Update the specified resource in storage.
+ */
+public function update(Request $request, Service $ad) // Using route model binding
     {
-        // Ensure the authenticated user owns this ad before allowing update
-        // if (auth()->user()->id !== $ad->user_id) {
-        //     abort(403, 'Unauthorized action.');
-        // }
+        
 
         $validated = $request->validate([
             'dienstleistung_kategorie' => ['required', 'string', Rule::in(['reinigung', 'handwerk', 'it', 'beratung', 'transport', 'sonstiges'])],
@@ -120,42 +115,46 @@ class ServiceController extends Controller
             'preis' => ['nullable', 'numeric', 'min:0'],
             'verfugbarkeit' => ['nullable', 'string', Rule::in(['sofort', 'nach_vereinbarung', 'während_wochentagen', 'wochenende'])],
             'beschreibung' => ['required', 'string'],
-            'new_images.*' => ['nullable', 'image', 'max:2048'], // Max 2MB per image
+            'images.*' => ['nullable', 'image', 'max:2048'], // Max 2MB per image
             'images_to_delete' => ['nullable', 'array'],
-            'images_to_delete.*' => ['integer', 'exists:images,id'], // Ensure IDs exist in the images table
+            'images_to_delete.*' => ['integer', 'exists:service_images,id'], // CORRECTED TABLE NAME
         ]);
 
         // Update the basic ad details
         $ad->update([
             'dienstleistung_kategorie' => $validated['dienstleistung_kategorie'],
-            'titel' => $validated['titel'],
+            'title' => $validated['titel'], // Use 'title' if that's your DB column
             'region' => $validated['region'],
-            'preis' => $validated['preis'],
+            'price' => $validated['preis'], // Use 'price' if that's your DB column
             'verfugbarkeit' => $validated['verfugbarkeit'],
-            'beschreibung' => $validated['beschreibung'],
+            'description' => $validated['beschreibung'], // Use 'description' if that's your DB column
         ]);
 
         // Handle image deletions
         if (isset($validated['images_to_delete'])) {
             foreach ($validated['images_to_delete'] as $imageId) {
                 $image = ServiceImage::find($imageId);
-                if ($image && $image->service_ad_id === $ad->id) { // Ensure the image belongs to this ad
-                    Storage::disk('public')->delete($image->path);
+                // Ensure the image exists and belongs to this ad (using service_id)
+                if ($image && $image->service_id === $ad->id) { // CORRECTED FOREIGN KEY NAME
+                    Storage::disk('public')->delete($image->image_path); // CORRECTED PATH ATTRIBUTE
                     $image->delete();
                 }
             }
         }
 
         // Handle new image uploads
-        if ($request->hasFile('new_images')) {
-            foreach ($request->file('new_images') as $imageFile) {
-                $path = $imageFile->store('ads/images', 'public'); // Store in 'storage/app/public/ads/images'
-                $ad->images()->create([
-                    'path' => $path,
-                    // 'name' => $imageFile->getClientOriginalName(), // Optional: store original name
-                    // 'size' => $imageFile->getSize(), // Optional: store size
+        if ($request->hasFile('images')) {
+            foreach ($request->file('images') as $imageFile) {
+                $path = $imageFile->store('service_images', 'public'); // CORRECTED STORAGE PATH
+                // Use the correct relationship method from the Service model
+                $ad->images()->create([ // Assuming 'serviceImages' relationship on Service model
+                    'image_path' => $path, // CORRECTED COLUMN NAME
+                    'is_thumbnail' => false, // New images typically aren't thumbnails by default
                 ]);
             }
+
+           
+
         }
 
         return redirect()->route('ads.services.show', $ad)->with('success', 'Dienstleistung Anzeige erfolgreich aktualisiert.');
@@ -166,11 +165,7 @@ class ServiceController extends Controller
      */
     public function destroy(Service $ad) // Using route model binding
     {
-        // Ensure the authenticated user owns this ad before allowing deletion
-        // if (auth()->user()->id !== $ad->user_id) {
-        //     abort(403, 'Unauthorized action.');
-        // }
-
+        
         // Delete associated images from storage
         foreach ($ad->images as $image) {
             Storage::disk('public')->delete($image->path);
