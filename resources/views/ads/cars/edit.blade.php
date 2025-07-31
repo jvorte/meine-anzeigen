@@ -37,46 +37,89 @@
             @method('PUT') {{-- Use PUT method for updates --}}
 
             {{-- Vehicle Details Section (Marke & Modell) --}}
-                 <section class="bg-gray-50 p-6 rounded-lg shadow-inner">
-                <h4 class="text-xl font-semibold text-gray-700 mb-6">Fahrzeugdetails</h4>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6"
-                     x-data="carAdForm(
-                             @json(old('car_brand_id')),
-                             @json(old('car_model_id')),
-                             @json($initialModels ?? [])
-                         )">
-                    {{-- Marke --}}
-                    <div>
-                        <label for="car_brand_id" class="block text-sm font-medium text-gray-700 mb-2">Marke</label>
-                        <select name="car_brand_id" id="car_brand_id" x-model="selectedCarBrandId"
-                                class="form-select w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
-                            <option value="">Bitte wählen</option>
-                            @foreach($brands as $id => $name)
-                                <option value="{{ $id }}">{{ $name }}</option>
-                            @endforeach
-                        </select>
-                        @error('car_brand_id')
-                            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-                        @enderror
-                    </div>
+<section class="bg-gray-50 p-6 rounded-lg shadow-inner">
+    <h4 class="text-xl font-semibold text-gray-700 mb-6">Fahrzeugdetails</h4>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
 
-                    {{-- Modell (Dynamic with Alpine.js) --}}
-                    {{-- FIX: Added x-cloak to prevent flash of unstyled content before Alpine.js hides it --}}
-                    <div x-show="Object.keys(carModels).length > 0" x-transition x-cloak>
-                        <label for="car_model_id" class="block text-sm font-medium text-gray-700 mb-2">Modell</label>
-                        <select name="car_model_id" id="car_model_id" x-model="selectedCarModelId"
-                                class="form-select w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
-                            <option value="">Bitte wählen</option>
-                            <template x-for="(name, id) in carModels" :key="id">
-                                <option :value="id" x-text="name"></option>
-                            </template>
-                        </select>
-                        @error('car_model_id')
-                            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-                        @enderror
-                    </div>
-                </div>
-            </section>
+   
+     {{-- Marke --}}
+<div>
+    <label for="car_brand_id" class="block text-sm font-medium text-gray-700 mb-2">Marke</label>
+    <select name="car_brand_id" id="car_brand_id" onchange="loadModels(this.value)"
+        class="form-select w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
+        <option value="">Bitte wählen</option>
+        @foreach($brands as $id => $name)
+            <option value="{{ $id }}" {{ (old('car_brand_id', $car->brand_id ?? '') == $id) ? 'selected' : '' }}>
+                {{-- FIX: Changed $car->car_brand_id to $car->brand_id --}}
+                {{ $name }}
+            </option>
+        @endforeach
+    </select>
+    @error('car_brand_id')
+        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+    @enderror
+</div>
+
+        {{-- Modell --}}
+    <div>
+            <label for="car_model_id" class="block text-sm font-medium text-gray-700 mb-2">Modell</label>
+            <select name="car_model_id" id="car_model_id"
+                class="form-select w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
+                <option value="">Bitte wählen</option>
+                @foreach($initialModels as $id => $name)
+                    <option value="{{ $id }}" {{ (old('car_model_id', $car->car_model_id ?? '') == $id) ? 'selected' : '' }}>
+                        {{ $name }}
+                    </option>
+                @endforeach
+            </select>
+            @error('car_model_id')
+                <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+            @enderror
+        </div>
+
+    </div>
+</section>
+
+<script>
+    function loadModels(brandId) {
+        const modelSelect = document.getElementById('car_model_id');
+        modelSelect.innerHTML = '<option value="">Bitte wählen</option>'; // Καθαρισμός
+
+        if (!brandId) return;
+
+        fetch(`/api/car-brands/${brandId}/models`)
+            .then(response => {
+                if (!response.ok) throw new Error('Network response was not ok');
+                return response.json();
+            })
+            .then(models => {
+                models.forEach(model => {
+                    const option = document.createElement('option');
+                    option.value = model.id;
+                    option.textContent = model.name;
+                    modelSelect.appendChild(option);
+                });
+            })
+            .catch(error => {
+                console.error('Error loading car models:', error);
+            });
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const brandId = '{{ old('car_brand_id', $car->car_brand_id ?? '') }}';
+        const modelId = '{{ old('car_model_id', $car->car_model_id ?? '') }}';
+
+        if (brandId) {
+            loadModels(brandId);
+
+            // Μετά από λίγο ορίζεις το επιλεγμένο μοντέλο
+            setTimeout(() => {
+                document.getElementById('car_model_id').value = modelId;
+            }, 500);
+        }
+    });
+</script>
+
 
             {{-- Basic Data Section (Erstzulassung, Kilometerstand, Leistung) --}}
             <section class="bg-gray-50 p-6 rounded-lg shadow-inner">

@@ -17,9 +17,9 @@ use App\Http\Controllers\CamperController;
 use App\Http\Controllers\UsedVehiclePartController;
 use App\Http\Controllers\HouseholdItemController;
 use App\Http\Controllers\CarController; // Keeping CarController as the dedicated controller for cars
-use App\Models\Brand;
+use App\Models\CarBrand;
 use Illuminate\Http\Request;
-
+use App\Models\CarModel;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -30,6 +30,7 @@ use Illuminate\Http\Request;
 | contains the "web" middleware group. Now create something great!
 |
 */
+
 
 // --- PUBLIC ROUTES ---
 Route::get('/ads/search', [AdController::class, 'search'])->name('ads.search');
@@ -92,6 +93,14 @@ Route::middleware(['auth'])->group(function () {
     Route::put('/ads/cars/{car}', [CarController::class, 'update'])->name('ads.cars.update');
     Route::delete('/ads/cars/{car}', [CarController::class, 'destroy'])->name('ads.cars.destroy');
     Route::get('/ads/cars/{car}', [CarController::class, 'show'])->name('ads.cars.show');
+
+
+
+
+Route::get('/car-brands/{id}/models', [CarController::class, 'getModels']);
+
+
+
 
     // FIX: Changed this route to match the frontend AJAX request URL
     // Ensure your CarController has a public method named `getModelsByBrand`

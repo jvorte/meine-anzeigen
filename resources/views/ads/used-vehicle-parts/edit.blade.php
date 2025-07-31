@@ -114,35 +114,63 @@
                         @json(old('car_model_id', $usedVehiclePart->car_model_id)),
                         @json($initialModels ?? []) {{-- Pass initial models for the current brand if available --}}
                     )">
-                    {{-- Marke --}}
-                    <div>
-                        <label for="car_brand_id" class="block text-sm font-medium text-gray-700 mb-2">Marke</label>
-                        <select name="car_brand_id" id="car_brand_id" x-model="selectedCarBrandId"
-                            class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
-                            <option value="">Bitte wählen</option>
-                            @foreach($brands as $id => $name)
-                                <option value="{{ $id }}">{{ $name }}</option>
-                            @endforeach
-                        </select>
-                        @error('car_brand_id')
-                            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-                        @enderror
-                    </div>
+                 @php
+$selectedBrandId = $usedVehiclePart->car_brand_id;
+$selectedModelId = $usedVehiclePart->car_model_id;
+@endphp
 
-                    {{-- Modell (Dynamic with Alpine.js) --}}
-                    <div x-show="Object.keys(carModels).length > 0 || selectedCarModelId" x-transition x-cloak>
-                        <label for="car_model_id" class="block text-sm font-medium text-gray-700 mb-2">Modell</label>
-                        <select name="car_model_id" id="car_model_id" x-model="selectedCarModelId"
-                            class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
-                            <option value="">Bitte wählen</option>
-                            <template x-for="(name, id) in carModels" :key="id">
-                                <option :value="id" x-text="name"></option>
-                            </template>
-                        </select>
-                        @error('car_model_id')
-                            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-                        @enderror
-                    </div>
+<div class="mb-4">
+    <label for="car_brand_id">Marke</label>
+    <select name="car_brand_id" id="car_brand_id" class="border rounded w-full">
+        <option value="">Bitte wählen</option>
+        @foreach ($brands as $id => $name)
+            <option value="{{ $id }}" {{ $selectedBrandId == $id ? 'selected' : '' }}>
+                {{ $name }}
+            </option>
+        @endforeach
+    </select>
+</div>
+
+<div class="mb-4">
+    <label for="car_model_id">Modell</label>
+    <select name="car_model_id" id="car_model_id" class="border rounded w-full">
+        <option value="">Bitte zuerst Marke wählen</option>
+        @foreach ($initialModels as $id => $name)
+            <option value="{{ $id }}" {{ $selectedModelId == $id ? 'selected' : '' }}>
+                {{ $name }}
+            </option>
+        @endforeach
+    </select>
+</div>
+
+<script>
+document.getElementById('car_brand_id').addEventListener('change', function () {
+    const brandId = this.value;
+    const modelSelect = document.getElementById('car_model_id');
+    modelSelect.innerHTML = '<option>Loading...</option>';
+
+    if (!brandId) {
+        modelSelect.innerHTML = '<option value="">Bitte zuerst Marke wählen</option>';
+        return;
+    }
+
+    fetch(`/car-models/${brandId}`)
+        .then(response => response.json())
+        .then(data => {
+            modelSelect.innerHTML = '<option value="">Bitte Modell wählen</option>';
+            for (const [id, name] of Object.entries(data)) {
+                const option = document.createElement('option');
+                option.value = id;
+                option.textContent = name;
+                modelSelect.appendChild(option);
+            }
+        })
+        .catch(error => {
+            modelSelect.innerHTML = '<option>Fehler beim Laden der Modelle</option>';
+        });
+});
+</script>
+
 
                     {{-- Compatible Year From --}}
                     <div>

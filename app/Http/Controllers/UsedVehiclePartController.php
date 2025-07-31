@@ -98,6 +98,16 @@ class UsedVehiclePartController extends Controller
         abort(403, 'Unauthorized action.');
     }
 
+   if ($usedVehiclePart->compatible_brand_id) {
+    $initialModels = CarModel::where('car_brand_id', $usedVehiclePart->compatible_brand_id)
+                             ->orderBy('name')
+                             ->pluck('name', 'id')
+                             ->toArray();
+} else {
+    $initialModels = [];
+}
+
+
     // ✅ Φόρτωσε τις εικόνες
     $usedVehiclePart->load('images');
 
@@ -134,10 +144,14 @@ class UsedVehiclePartController extends Controller
     public function update(Request $request, UsedVehiclePart $usedVehiclePart)
     {
         // Policy check: Ensure the authenticated user owns this ad
-        if (Auth::id() !== $usedVehiclePart->user_id) {
-            abort(403, 'Unauthorized action.');
-        }
-
+       if ($usedVehiclePart->compatible_brand_id) {
+    $initialModels = CarModel::where('car_brand_id', $usedVehiclePart->compatible_brand_id)
+                             ->orderBy('name')
+                             ->pluck('name', 'id')
+                             ->toArray();
+} else {
+    $initialModels = [];
+}
         $validatedData = $request->validate([
             'images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048', // New images being uploaded
             'title' => 'required|string|max:255',
