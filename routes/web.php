@@ -94,6 +94,7 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('/ads/cars/{car}', [CarController::class, 'destroy'])->name('ads.cars.destroy');
     Route::get('/ads/cars/{car}', [CarController::class, 'show'])->name('ads.cars.show');
 
+Route::get('/car-brands/{id}/models', [CarController::class, 'getModels']);
 
 
 

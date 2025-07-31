@@ -49,7 +49,7 @@
         class="form-select w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
         <option value="">Bitte wählen</option>
         @foreach($brands as $id => $name)
-            <option value="{{ $id }}" {{ (old('car_brand_id', $car->brand_id ?? '') == $id) ? 'selected' : '' }}>
+            <option value="{{ $id }}" {{ (old('car_brand_id', $car->car_brand_id ?? '') == $id) ? 'selected' : '' }}>
                 {{-- FIX: Changed $car->car_brand_id to $car->brand_id --}}
                 {{ $name }}
             </option>

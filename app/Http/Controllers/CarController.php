@@ -3,24 +3,22 @@
 namespace App\Http\Controllers;
 
 use App\Models\Car;
-use App\Models\CarBrand; // Make sure this is imported
-use App\Models\CarModel; // Make sure this is imported
-use App\Models\CarImage; // Assuming you have a CarImage model for car-specific images
+use App\Models\CarBrand;
+use App\Models\CarModel; 
+use App\Models\CarImage;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Validation\Rule; // Needed for dynamic model validation
+use Illuminate\Validation\Rule; 
 
 class CarController extends Controller
 {
-    /**
-     * Show the form for creating a new car ad.
-     * (Retained for completeness, assuming it exists)
-     */
+    
     public function create()
     {
         $brands = CarBrand::orderBy('name')->pluck('name', 'id');
+        
         $initialModels = []; // No models initially selected
 
         $colors = ['Schwarz', 'Weiß', 'Rot', 'Blau', 'Grün', 'Gelb', 'Orange', 'Silber', 'Grau', 'Braun', 'Andere'];
@@ -44,10 +42,10 @@ class CarController extends Controller
         ));
     }
 
-    /**
-     * Store a newly created car ad in storage.
-     * (Retained for completeness, assuming it exists)
-     */
+
+
+
+
     public function store(Request $request)
     {
     //    dd('dd');
@@ -83,7 +81,7 @@ class CarController extends Controller
 
         $mappedData = [
             'category_slug' => $data['category_slug'],
-            'brand_id'  => $data['car_brand_id'], 
+            'car_brand_id'  => $data['car_brand_id'], 
             'car_model_id'  => $data['car_model_id'] ?? null,
             'price' => $data['price_from'],
             'mileage' => $data['mileage_from'],
@@ -120,10 +118,7 @@ class CarController extends Controller
         return redirect()->route('dashboard', $car)->with('success', 'Auto Anzeige erfolgreich erstellt!');
     }
 
-    /**
-     * Display the specified car ad.
-     * (Retained for completeness, assuming it exists)
-     */
+
     public function show(Car $car)
     {
         $car->load(['carBrand', 'carModel', 'user', 'images']); // Assuming relationships are named carBrand and carModel
@@ -152,11 +147,21 @@ class CarController extends Controller
 
     return view('ads.cars.edit', compact('car', 'brands', 'initialModels', 'colors'));
 }
+
+
 public function getModels($id)
 {
-    $models = CarModel::where('car_brand_id', $id)->pluck('name', 'id');
-    return response()->json($models);
+    return response()->json(
+        CarModel::where('car_brand_id', $id)->get(['id', 'name'])
+    );
 }
+
+
+// public function getModels($id)
+// {
+//     $models = CarModel::where('car_brand_id', $id)->pluck('name', 'id');
+//     return response()->json($models);
+// }
     /**
      * Update the specified car advertisement in storage.
      *

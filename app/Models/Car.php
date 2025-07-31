@@ -11,7 +11,7 @@ class Car extends Model
 
  protected $fillable = [
         'category_slug',
-        'brand_id', 
+        'car_brand_id', 
         'car_model_id',
         'price',
         'mileage',
