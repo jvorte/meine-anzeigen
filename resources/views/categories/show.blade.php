@@ -54,9 +54,9 @@
                         $ads = \App\Models\Car::with('images')->orderBy('created_at', 'desc')->paginate(12); // Changed from Vehicle
                     } elseif ($category->slug == 'boats') {
                         $ads = \App\Models\Boat::with('images')->orderBy('created_at', 'desc')->paginate(12);
-                    } elseif ($category->slug == 'fahrzeugeteile') {
+                    } elseif ($category->slug == 'vehicles-parts') {
                         // Assuming Part is for generic parts, UsedVehiclePart is for specific "used vehicle parts"
-                        // Based on your imports in DashboardController, UsedVehiclePart was explicitly used for 'fahrzeugeteile'
+                        // Based on your imports in DashboardController, UsedVehiclePart was explicitly used for 'Vehicles parts'
                         $ads = \App\Models\UsedVehiclePart::with('images')->orderBy('created_at', 'desc')->paginate(12);
                     } elseif ($category->slug == 'electronics') {
                         $ads = \App\Models\Electronic::with('images')->orderBy('created_at', 'desc')->paginate(12);
@@ -127,8 +127,8 @@
                                                 $detailRoute = route('categories.cars.show', $ad); // Changed from 'fahrzeuge'
                                             } elseif ($category->slug == 'boats') {
                                                 $detailRoute = route('categories.boats.show', $ad);
-                                            } elseif ($category->slug == 'fahrzeugeteile') {
-                                                $detailRoute = route('categories.fahrzeugeteile.show', $ad);
+                                            } elseif ($category->slug == 'vehicles-parts') {
+                                                $detailRoute = route('categories.vehicles-parts.show', $ad);
                                             } elseif ($category->slug == 'electronics') {
                                                 $detailRoute = route('categories.electronics.show', $ad);
                                             } elseif ($category->slug == 'household') {
