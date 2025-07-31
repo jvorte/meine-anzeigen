@@ -117,7 +117,7 @@ public function update(Request $request, Service $ad) // Using route model bindi
             'beschreibung' => ['required', 'string'],
             'images.*' => ['nullable', 'image', 'max:2048'], // Max 2MB per image
             'images_to_delete' => ['nullable', 'array'],
-            'images_to_delete.*' => ['integer', 'exists:service_images,id'], // CORRECTED TABLE NAME
+            'images_to_delete.*' => ['integer', 'exists:service_images,id'], 
         ]);
 
         // Update the basic ad details
@@ -135,8 +135,8 @@ public function update(Request $request, Service $ad) // Using route model bindi
             foreach ($validated['images_to_delete'] as $imageId) {
                 $image = ServiceImage::find($imageId);
                 // Ensure the image exists and belongs to this ad (using service_id)
-                if ($image && $image->service_id === $ad->id) { // CORRECTED FOREIGN KEY NAME
-                    Storage::disk('public')->delete($image->image_path); // CORRECTED PATH ATTRIBUTE
+                if ($image && $image->service_id === $ad->id) { 
+                    Storage::disk('public')->delete($image->image_path); 
                     $image->delete();
                 }
             }
@@ -145,11 +145,11 @@ public function update(Request $request, Service $ad) // Using route model bindi
         // Handle new image uploads
         if ($request->hasFile('images')) {
             foreach ($request->file('images') as $imageFile) {
-                $path = $imageFile->store('service_images', 'public'); // CORRECTED STORAGE PATH
+                $path = $imageFile->store('service_images', 'public'); 
                 // Use the correct relationship method from the Service model
-                $ad->images()->create([ // Assuming 'serviceImages' relationship on Service model
-                    'image_path' => $path, // CORRECTED COLUMN NAME
-                    'is_thumbnail' => false, // New images typically aren't thumbnails by default
+                $ad->images()->create([ 
+                    'image_path' => $path, 
+                    'is_thumbnail' => false, 
                 ]);
             }
 

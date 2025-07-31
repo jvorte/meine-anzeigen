@@ -178,8 +178,7 @@ Route::middleware(['auth'])->group(function () {
     });
 
 
-// Services - Fixed typo 'servises' to 'services'
-// Services - CORRECTED BLOCK
+
     // Using Route::prefix and Route::name with dot notation for consistency
     Route::prefix('ads/services')->name('ads.services.')->group(function () {
         Route::get('/create', [ServiceController::class, 'create'])->name('create');
