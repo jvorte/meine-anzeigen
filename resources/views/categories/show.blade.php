@@ -57,28 +57,28 @@
                     //    as the loop later accesses $ad->images.
                     if ($category->slug == 'cars') { // Changed from 'fahrzeuge'
                         $ads = \App\Models\Car::with('images')->orderBy('created_at', 'desc')->paginate(12); // Changed from Vehicle
-                    } elseif ($category->slug == 'boote') {
+                    } elseif ($category->slug == 'boats') {
                         $ads = \App\Models\Boat::with('images')->orderBy('created_at', 'desc')->paginate(12);
                     } elseif ($category->slug == 'fahrzeugeteile') {
                         // Assuming Part is for generic parts, UsedVehiclePart is for specific "used vehicle parts"
                         // Based on your imports in DashboardController, UsedVehiclePart was explicitly used for 'fahrzeugeteile'
                         $ads = \App\Models\UsedVehiclePart::with('images')->orderBy('created_at', 'desc')->paginate(12);
-                    } elseif ($category->slug == 'elektronik') {
+                    } elseif ($category->slug == 'electronics') {
                         $ads = \App\Models\Electronic::with('images')->orderBy('created_at', 'desc')->paginate(12);
-                    } elseif ($category->slug == 'haushalt') {
+                    } elseif ($category->slug == 'household') {
                         $ads = \App\Models\HouseholdItem::with('images')->orderBy('created_at', 'desc')->paginate(12);
-                    } elseif ($category->slug == 'immobilien') {
+                    } elseif ($category->slug == 'realestate') {
                         $ads = \App\Models\RealEstate::with('images')->orderBy('created_at', 'desc')->paginate(12);
-                    } elseif ($category->slug == 'dienstleistungen') {
+                    } elseif ($category->slug == 'services') {
                         $ads = \App\Models\Service::with('images')->orderBy('created_at', 'desc')->paginate(12);
                     } elseif ($category->slug == 'sonstiges') {
                         $ads = \App\Models\Other::with('images')->orderBy('created_at', 'desc')->paginate(12);
-                    } elseif ($category->slug == 'motorrad') {
+                    } elseif ($category->slug == 'motorcycles') {
                         // Changed from Motorcycle to MotorradAd as per your controller imports
                         $ads = \App\Models\MotorradAd::with('images')->orderBy('created_at', 'desc')->paginate(12);
-                    } elseif ($category->slug == 'nutzfahrzeuge') {
+                    } elseif ($category->slug == 'commercial-vehicle') {
                         $ads = \App\Models\CommercialVehicle::with('images')->orderBy('created_at', 'desc')->paginate(12);
-                    } elseif ($category->slug == 'wohnmobile') {
+                    } elseif ($category->slug == 'campers') {
                         // Changed from RV to Camper as per your controller imports
                         $ads = \App\Models\Camper::with('images')->orderBy('created_at', 'desc')->paginate(12);
                     }

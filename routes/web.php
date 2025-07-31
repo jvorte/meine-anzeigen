@@ -54,7 +54,7 @@ Route::prefix('categories')->name('categories.')->group(function () {
     Route::get('/boats/{boat}', [BoatController::class, 'show'])->name('boats.show');
     Route::get('/fahrzeugeteile/{usedVehiclePart}', [UsedVehiclePartController::class, 'show'])->name('fahrzeugeteile.show');
     Route::get('/electronics/{electronic}', [ElectronicController::class, 'show'])->name('electronics.show');
-    Route::get('/haushalt/{householdItem}', [HouseholdItemController::class, 'show'])->name('haushalt.show');
+    Route::get('/household/{householdItem}', [HouseholdItemController::class, 'show'])->name('household.show');
     Route::get('/real-estate/{realEstate}', [RealEstateController::class, 'show'])->name('real-estate.show');
     Route::get('/services/{service}', [ServiceController::class, 'show'])->name('services.show');
     Route::get('/sonstiges/{other}', [OtherController::class, 'show'])->name('sonstiges.show');
@@ -186,9 +186,6 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/services', [ServiceController::class, 'store'])->name('services.store');
         Route::get('ads/services/edit', [ServiceController::class, 'edit'])->name('services.edit');
     });
-
-
-
 
 
     // Others

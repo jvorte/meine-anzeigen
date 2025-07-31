@@ -36,11 +36,11 @@
                         'fahrzeugeteile' => asset('storage/images/parts.jpg'),
                         'boats' => asset('storage/images/boats.jpg'),
                         'electronics' => asset('storage/images/tv.jpg'),
-                        'haushalt' => asset('storage/images/car.jpg'), // Consider changing these placeholders
+                        'household' => asset('storage/images/car.jpg'), // Consider changing these placeholders
                         'realestate' => asset('storage/images/car.jpg'), // Consider changing these placeholders
                         'services' => asset('storage/images/car.jpg'), // Consider changing these placeholders
                         'sonstiges' => asset('storage/images/car.jpg'), // Consider changing these placeholders
-                        'motorrad' => asset('storage/images/motorcycle.jpg'), // Added new
+                        'motorcycles' => asset('storage/images/motorcycle.jpg'), // Added new
                         'commercial-vehicle' => asset('storage/images/trucks.jpg'), // Added new
                         'campers' => asset('storage/images/camper.jpg'), // Added new
                     ];
@@ -151,11 +151,11 @@
                                                             $adRouteName = 'categories.electronics.show';
                                                             $adParamName = 'electronic';
                                                         } elseif ($ad instanceof \App\Models\HouseholdItem) {
-                                                            $adRouteName = 'categories.haushalt.show';
+                                                            $adRouteName = 'categories.household.show';
                                                             $adParamName = 'householdItem'; 
                                                         } elseif ($ad instanceof \App\Models\MotorradAd) {
-                                                            $adRouteName = 'categories.motorrad.show';
-                                                            $adParamName = 'motorradAd';
+                                                            $adRouteName = 'categories.motorcycles.show';
+                                                            $adParamName = 'motorcycles';
                                                         } elseif ($ad instanceof \App\Models\Other) {
                                                             $adRouteName = 'categories.sonstiges.show';
                                                             $adParamName = 'other';
