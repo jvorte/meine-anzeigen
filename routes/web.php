@@ -57,7 +57,7 @@ Route::prefix('categories')->name('categories.')->group(function () {
     Route::get('/household/{householdItem}', [HouseholdItemController::class, 'show'])->name('household.show');
     Route::get('/real-estate/{realEstate}', [RealEstateController::class, 'show'])->name('real-estate.show');
     Route::get('/services/{service}', [ServiceController::class, 'show'])->name('services.show');
-    Route::get('/sonstiges/{other}', [OtherController::class, 'show'])->name('sonstiges.show');
+    Route::get('/others/{other}', [OtherController::class, 'show'])->name('others.show');
     Route::get('/motorrad/{motorradAd}', [MotorradAdController::class, 'show'])->name('motorrad.show');
     Route::get('/commercial-vehicles/{commercialVehicle}', [CommercialVehicleController::class, 'show'])->name('commercial-vehicles.show');
     Route::get('/campers/{camper}', [CamperController::class, 'show'])->name('campers.show');

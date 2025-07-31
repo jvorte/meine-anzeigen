@@ -36,13 +36,13 @@
                         'fahrzeugeteile' => asset('storage/images/parts.jpg'),
                         'boats' => asset('storage/images/boats.jpg'),
                         'electronics' => asset('storage/images/tv.jpg'),
-                        'household' => asset('storage/images/car.jpg'), // Consider changing these placeholders
-                        'realestate' => asset('storage/images/car.jpg'), // Consider changing these placeholders
-                        'services' => asset('storage/images/car.jpg'), // Consider changing these placeholders
-                        'sonstiges' => asset('storage/images/car.jpg'), // Consider changing these placeholders
-                        'motorcycles' => asset('storage/images/motorcycle.jpg'), // Added new
-                        'commercial-vehicle' => asset('storage/images/trucks.jpg'), // Added new
-                        'campers' => asset('storage/images/camper.jpg'), // Added new
+                        'household' => asset('storage/images/car.jpg'),
+                        'realestate' => asset('storage/images/car.jpg'), 
+                        'services' => asset('storage/images/car.jpg'), 
+                        'others' => asset('storage/images/car.jpg'),
+                        'motorcycles' => asset('storage/images/motorcycle.jpg'), 
+                        'commercial-vehicle' => asset('storage/images/trucks.jpg'), 
+                        'campers' => asset('storage/images/camper.jpg'), 
                     ];
                 @endphp
 
@@ -157,7 +157,7 @@
                                                             $adRouteName = 'categories.motorcycles.show';
                                                             $adParamName = 'motorcycles';
                                                         } elseif ($ad instanceof \App\Models\Other) {
-                                                            $adRouteName = 'categories.sonstiges.show';
+                                                            $adRouteName = 'categories.others.show';
                                                             $adParamName = 'other';
                                                         } elseif ($ad instanceof \App\Models\RealEstate) {
                                                             $adRouteName = 'categories.real-estate.show';
