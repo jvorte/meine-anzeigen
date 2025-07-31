@@ -20,10 +20,6 @@ return new class extends Migration
             $table->decimal('price', 10, 2)->nullable(); // Corresponds to 'preis' in frontend
             $table->string('verfugbarkeit')->nullable(); // Verfügbarkeit
 
-            // Kontakt Information
-            $table->string('contact_name'); // Corresponds to 'kontakt_name' in frontend
-            $table->string('contact_tel')->nullable(); // Corresponds to 'kontakt_tel' in frontend
-            $table->string('contact_email'); // Corresponds to 'kontakt_email' in frontend
 
             // Images (from 'bilder[]' in frontend)
          

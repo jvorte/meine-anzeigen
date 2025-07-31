@@ -57,6 +57,8 @@ Route::prefix('categories')->name('categories.')->group(function () {
     Route::get('/household/{householdItem}', [HouseholdItemController::class, 'show'])->name('household.show');
     Route::get('/real-estate/{realEstate}', [RealEstateController::class, 'show'])->name('real-estate.show');
     Route::get('/services/{service}', [ServiceController::class, 'show'])->name('services.show');
+    
+
     Route::get('/others/{other}', [OtherController::class, 'show'])->name('others.show');
     Route::get('/motorrad/{motorradAd}', [MotorradAdController::class, 'show'])->name('motorrad.show');
     Route::get('/commercial-vehicles/{commercialVehicle}', [CommercialVehicleController::class, 'show'])->name('commercial-vehicles.show');
@@ -173,20 +175,20 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/{realEstate}/edit', [RealEstateController::class, 'edit'])->name('edit');
         Route::put('/{realEstate}', [RealEstateController::class, 'update'])->name('update');
         Route::delete('/{realEstate}', action: [RealEstateController::class, 'destroy'])->name('destroy');
-       
     });
 
 
-    // Services - Fixed typo 'servises' to 'services'
-        Route::name('ads.')->group(function () {
-        // Other 'ads' related routes would go here as well
-        Route::delete('ads/services/destroy', [ServiceController::class, 'destroy'])->name('services.destroy');
-        Route::get('/ads/services/create', [ServiceController::class, 'create'])->name('services.create'); // <-- CORRECTED NAME
-        // Consider if this should be /ads/services for consistency or if /services is a top-level resource
-        Route::post('/services', [ServiceController::class, 'store'])->name('services.store');
-        Route::get('ads/services/edit', [ServiceController::class, 'edit'])->name('services.edit');
+// Services - Fixed typo 'servises' to 'services'
+// Services - CORRECTED BLOCK
+    // Using Route::prefix and Route::name with dot notation for consistency
+    Route::prefix('ads/services')->name('ads.services.')->group(function () {
+        Route::get('/create', [ServiceController::class, 'create'])->name('create');
+        Route::post('/', [ServiceController::class, 'store'])->name('store');
+        Route::get('/{ad}/edit', [ServiceController::class, 'edit'])->name('edit'); // <-- THIS ONE
+        Route::put('/{ad}', [ServiceController::class, 'update'])->name('update');
+        Route::delete('/{ad}', [ServiceController::class, 'destroy'])->name('destroy');
+        Route::get('/{service}', [ServiceController::class, 'show'])->name('show');
     });
-
 
     // Others
     Route::get('/ads/others/create', [OtherController::class, 'create'])->name('ads.others.create');
