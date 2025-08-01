@@ -16,8 +16,8 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained()->onDelete('cascade'); // Link to users table
             $table->string('title');
             $table->text('description');
-            $table->foreignId('brand_id')->constrained('brands')->onDelete('cascade');
-            $table->foreignId('car_model_id')->constrained('car_models')->onDelete('cascade'); // Assuming CarModel covers commercial vehicle models
+            $table->foreignId('commercial_brand_id')->constrained('commercial_brands')->cascadeOnDelete(); 
+            $table->foreignId('commercial_model_id')->constrained('commercial_models')->cascadeOnDelete(); 
             $table->date('first_registration');
             $table->unsignedInteger('mileage');
             $table->unsignedInteger('power')->nullable(); // Horsepower, can be null

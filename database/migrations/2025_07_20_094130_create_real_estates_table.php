@@ -19,7 +19,7 @@ return new class extends Migration
             // Basisdaten
             $table->string('immobilientyp');
             $table->string('title');
-             $table->decimal('purchase_price', 12, 2)->nullable()->after('gesamtmiete'); 
+             $table->decimal('purchase_price', 12, 2)->nullable(); 
             $table->string('objekttyp')->nullable();
             $table->string('zustand')->nullable();
             $table->integer('anzahl_zimmer')->nullable();

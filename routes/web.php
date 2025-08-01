@@ -47,7 +47,7 @@ Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard
 // Generic category show route - This handles /categories/{slug} for all categories
 Route::get('/categories/{slug}', [CategoryController::class, 'show'])->name('categories.show');
 
-
+Route::get('/commercial-vehicles/{commercialVehicle}', [App\Http\Controllers\CommercialVehicleController::class, 'show'])->name('commercial-vehicles.show');
 // Specific ad detail pages for each model type (Publicly accessible)
 Route::prefix('categories')->name('categories.')->group(function () {
 
@@ -57,14 +57,15 @@ Route::prefix('categories')->name('categories.')->group(function () {
     Route::get('/electronics/{electronic}', [ElectronicController::class, 'show'])->name('electronics.show');
     Route::get('/household/{householdItem}', [HouseholdItemController::class, 'show'])->name('household.show');
     Route::get('/real-estate/{realEstate}', [RealEstateController::class, 'show'])->name('real-estate.show');
-    Route::get('/services/{service}', [ServiceController::class, 'show'])->name('services.show');
-  
-    
+    Route::get('/services/{service}', [ServiceController::class, 'show'])->name('services.show');    Route::get('/{commercialVehicle}', [CommercialVehicleController::class, 'show'])->name('show');
     Route::get('/others/{other}', [OtherController::class, 'show'])->name('others.show');
     Route::get('/motorcycles/{motorradAd}', [MotorradAdController::class, 'show'])->name('motorcycles.show');
-    Route::get('/commercial-vehicles/{commercialVehicle}', [CommercialVehicleController::class, 'show'])->name('commercial-vehicles.show');
+    Route::get('/commercial-vehicles/}', [CommercialVehicleController::class, 'show'])->name('commercial-vehicles.show');
     Route::get('/campers/{camper}', [CamperController::class, 'show'])->name('campers.show');
+    Route::get('/commercial-vehicles/{commercialVehicle}', [CommercialVehicleController::class, 'show'])
+    ->name('ads.commercial-vehicles.show');
 });
+
 
 // 
 // --- AUTHENTICATED ROUTES ---
@@ -116,10 +117,12 @@ Route::get('/api/car-brands/{brandId}/models', [CarController::class, 'getModels
     Route::prefix('ads/commercial-vehicles')->name('ads.commercial-vehicles.')->group(function () {
         Route::get('/create', [CommercialVehicleController::class, 'create'])->name('create');
         Route::post('/', [CommercialVehicleController::class, 'store'])->name('store');
-        Route::get('/{ad}/edit', [CommercialVehicleController::class, 'edit'])->name('edit');
-        Route::put('/{ad}', [CommercialVehicleController::class, 'update'])->name('update');
+          Route::get('/{commercialAd}/edit', [CommercialVehicleController::class, 'edit'])->name('edit');
+    Route::put('/{commercialAd}', [CommercialVehicleController::class, 'update'])->name('update');
+
         Route::delete('/{ad}', [CommercialVehicleController::class, 'destroy'])->name('destroy');
         Route::get('/{commercialVehicle}', [CommercialVehicleController::class, 'show'])->name('show');
+
     });
 
     // Campers

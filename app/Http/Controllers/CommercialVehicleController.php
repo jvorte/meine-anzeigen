@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\CommercialVehicle;
-use App\Models\Brand;
-use App\Models\CarModel;
+use App\Models\CommercialVehicle; // Assuming this is your ad model: CommercialVehicle
+use App\Models\Brand; // You might still need this for other sections (e.g., cars)
+use App\Models\CommercialBrand; // Correct import for commercial brands
+use App\Models\CommercialModel; // Correct import for commercial models
+use App\Models\CarModel; // You might still need this for cars
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Auth;
@@ -16,17 +18,20 @@ class CommercialVehicleController extends Controller
      */
     public function create()
     {
-        $brands = Brand::pluck('name', 'id');
-        $models = CarModel::pluck('name', 'id'); // Assuming CarModel covers commercial models
+        // --- FIX START: Define $commercialBrands here ---
+        $commercialBrands = CommercialBrand::orderBy('name')->get(); // Fetch commercial brands
+    
+
         $colors = ['Schwarz', 'Weiß', 'Rot', 'Blau', 'Grün', 'Gelb', 'Orange', 'Silber', 'Grau', 'Braun', 'Violett', 'Andere'];
-        $commercialVehicleTypes = ['LKW', 'Transporter', 'Bus', 'Anhänger', 'Spezialfahrzeug', 'Andere'];
+        // You mentioned mini-vans/mini-buses, so review this list. 'LKW', 'Anhänger', 'Spezialfahrzeug' might be too broad.
+        $commercialVehicleTypes = ['Kleintransporter', 'Minibus', 'Kastenwagen', 'Kombi', 'Pick-up', 'Spezialumbau', 'Andere'];
         $fuelTypes = ['Diesel', 'Benzin', 'Elektro', 'Hybrid', 'Gas'];
         $transmissions = ['Manuell', 'Automatik'];
         $emissionClasses = ['Euro 1', 'Euro 2', 'Euro 3', 'Euro 4', 'Euro 5', 'Euro 6', 'Euro 6d-TEMP', 'Euro 6d'];
 
         return view('ads.commercial-vehicles.create', compact(
-            'brands',
-            'models',
+            'commercialBrands', // Now correctly defined
+            // Removed the duplicate 'commercialBrands'
             'colors',
             'commercialVehicleTypes',
             'fuelTypes',
@@ -35,6 +40,10 @@ class CommercialVehicleController extends Controller
         ));
     }
 
+
+
+
+
     /**
      * Store a newly created commercial vehicle ad in storage.
      */
@@ -42,12 +51,15 @@ class CommercialVehicleController extends Controller
     {
         // 1. Validation
         $validatedData = $request->validate([
-            
             'images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048', // Validate each image
             'title' => 'required|string|max:255',
             'description' => 'required|string',
-            'brand_id' => 'required|exists:brands,id',
-            'car_model_id' => 'required|exists:car_models,id',
+            
+            // --- FIX START: Use commercial_brand_id and commercial_model_id ---
+            'commercial_brand_id' => 'required|exists:commercial_brands,id', // Use your new table
+            'commercial_model_id' => 'required|exists:commercial_models,id', // Use your new table
+            // --- FIX END ---
+
             'first_registration' => 'required|date',
             'mileage' => 'required|integer|min:0',
             'power' => 'nullable|integer|min:1',
@@ -63,8 +75,9 @@ class CommercialVehicleController extends Controller
             'emission_class' => 'nullable|string|max:50',
             'seats' => 'nullable|integer|min:1',
         ]);
-//    dd($validatedData);
-        // 2. Create the CommercialVehicle
+        // dd($validatedData); // For debugging, uncomment if needed
+
+      
         $commercialVehicle = new CommercialVehicle();
         $commercialVehicle->user_id = Auth::id(); // Assign the authenticated user's ID
         $commercialVehicle->fill($validatedData); // Fill all validated data
@@ -80,36 +93,73 @@ class CommercialVehicleController extends Controller
             }
         }
 
-        // 4. Redirect with success message
+    
         return redirect()->route('dashboard')->with('success', 'Nutzfahrzeug Anzeige erfolgreich erstellt!');
     }
+
+
+
+
+
 
     /**
      * Display the specified resource.
      */
-    public function show(CommercialVehicle $commercialVehicle)
-    {
-        return view('ads.commercial-vehicles.show', compact('commercialVehicle'));
+public function show(CommercialVehicle $commercialVehicle)
+{
+
+    $commercialVehicle->load(['commercialBrand', 'commercialModel', 'images', 'user']);
+
+    // dd($commercialVehicle);
+
+    return view('ads.commercial-vehicles.show', compact('commercialVehicle'));
+}
+
+
+
+
+
+    /**
+     * Show the form for editing the specified commercial vehicle ad.
+     *
+     * @param  \App\Models\CommercialVehicle  $commercialAd
+     * @return \Illuminate\Http\Response
+     */
+public function edit(CommercialVehicle $commercialAd) // Renamed parameter for clarity with your Blade
+{
+    // Eager load for the edit form if you need to display them this way
+    $commercialAd->load(['commercialBrand', 'commercialModel']);
+
+    // Pass the necessary data to the view
+    $commercialBrands = CommercialBrand::orderBy('name')->get();
+    // You might also need to pass initial models for the selected brand
+    $initialCommercialModels = collect(); // Initialize empty collection
+    if ($commercialAd->commercial_brand_id) {
+        $initialCommercialModels = CommercialModel::where('commercial_brand_id', $commercialAd->commercial_brand_id)->get();
     }
 
-  public function edit($id)
-    {
-        $commercialVehicle = CommercialVehicle::findOrFail($id);
+    // Define your static arrays if they are not coming from the database
+    $colors = ['Rot', 'Blau', 'Grün', 'Schwarz', 'Weiß', 'Grau', 'Silber', 'Gelb', 'Orange', 'Braun', 'Beige', 'Violett', 'Metallic', 'Andere'];
+    $commercialVehicleTypes = ['Kastenwagen', 'LKW', 'Transporter', 'Bus', 'Anhänger', 'Sattelzugmaschine', 'Kipper', 'Pritsche', 'Sonderfahrzeug', 'Wohnmobil']; // Example types
+    $fuelTypes = ['Diesel', 'Benzin', 'Elektro', 'Hybrid', 'Gas', 'Ethanol', 'Andere']; // Example types
+    $transmissions = ['Manuell', 'Automatik']; // Example types
+    $emissionClasses = ['Euro 1', 'Euro 2', 'Euro 3', 'Euro 4', 'Euro 5', 'Euro 6', 'Euro 6d']; // Example types
 
-        $brands = Brand::pluck('name', 'id');
-        $models = CarModel::pluck('name', 'id');
-        $colors = ['Schwarz', 'Weiß', 'Rot', 'Blau', 'Grün', 'Gelb', 'Orange', 'Silber', 'Grau', 'Braun', 'Violett', 'Andere'];
-        $commercialVehicleTypes = ['LKW', 'Transporter', 'Bus', 'Anhänger', 'Spezialfahrzeug', 'Andere'];
-        $fuelTypes = ['Diesel', 'Benzin', 'Elektro', 'Hybrid', 'Gas'];
-        $transmissions = ['Manuell', 'Automatik'];
-        $emissionClasses = ['Euro 1', 'Euro 2', 'Euro 3', 'Euro 4', 'Euro 5', 'Euro 6', 'Euro 6d-TEMP', 'Euro 6d'];
+    return view('ads.commercial-vehicles.edit', compact(
+        'commercialAd', // The main model
+        'commercialBrands',
+        'initialCommercialModels', // For the model dropdown
+        'colors',
+        'commercialVehicleTypes',
+        'fuelTypes',
+        'transmissions',
+        'emissionClasses'
+    ));
+}
 
-        return view('ads.commercial-vehicles.edit', compact(
-            'commercialVehicle', 'brands', 'models', 'colors',
-            'commercialVehicleTypes', 'fuelTypes',
-            'transmissions', 'emissionClasses'
-        ));
-    }
+
+
+
 
     public function update(Request $request, $id)
     {
@@ -118,8 +168,12 @@ class CommercialVehicleController extends Controller
         $validated = $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'required|string',
-            'brand_id' => 'required|exists:brands,id',
-            'car_model_id' => 'required|exists:car_models,id',
+            
+            // --- FIX START: Use commercial_brand_id and commercial_model_id ---
+            'commercial_brand_id' => 'required|exists:commercial_brands,id', // Use your new table
+            'commercial_model_id' => 'required|exists:commercial_models,id', // Use your new table
+            // --- FIX END ---
+
             'first_registration' => 'required|date',
             'mileage' => 'required|integer|min:0',
             'power' => 'nullable|integer|min:1',
@@ -136,10 +190,13 @@ class CommercialVehicleController extends Controller
             'seats' => 'nullable|integer|min:1',
             'images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
-//    dd($validated);
+        // dd($validated); // For debugging, uncomment if needed
+
+        // Make sure your CommercialVehicle model's $fillable array includes
+        // 'commercial_brand_id' and 'commercial_model_id'
         $commercialVehicle->update($validated);
 
-        // Αν θέλεις να υποστηρίξεις upload νέων εικόνων στο edit, πχ:
+        // Handle new image uploads (existing images are not affected by this logic)
         if ($request->hasFile('images')) {
             foreach ($request->file('images') as $image) {
                 $path = $image->store('commercial_vehicle_images', 'public');
@@ -149,17 +206,21 @@ class CommercialVehicleController extends Controller
             }
         }
 
-    return redirect()->route('ads.commercial-vehicles.show', $commercialVehicle);
-
+        return redirect()->route('ads.commercial-vehicles.show', $commercialVehicle);
     }
+
+
+
+
+
 
     public function destroy($id)
     {
         $commercialVehicle = CommercialVehicle::findOrFail($id);
 
-        // Διαγραφή εικόνων από storage και DB
+        // Delete images from storage and DB
         foreach ($commercialVehicle->images as $image) {
-            Storage::disk('public')->delete($image->image_path); // Σημείωση: Στο show blade εσύ χρησιμοποιείς 'path' ή 'image_path'? (Εδώ βάζω image_path)
+            Storage::disk('public')->delete($image->image_path); // Assuming 'image_path'
             $image->delete();
         }
 
@@ -168,5 +229,34 @@ class CommercialVehicleController extends Controller
         return redirect()->route('categories.show', 'commercial-vehicle')
             ->with('success', 'Anzeige gelöscht');
     }
+
+
+
+
+
+
+    /**
+     * Get commercial models by brand ID for AJAX requests.
+     *
+     * @param  int  $brandId
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getCommercialModelsByBrand(int $brandId)
+    {
+        $brand = CommercialBrand::find($brandId);
+
+        if (!$brand) {
+            return response()->json(['error' => 'Brand not found.'], 404);
+        }
+
+        // Get all models related to this brand, ordered by name
+        $models = $brand->models()->select('id', 'name')->orderBy('name')->get();
+
+        return response()->json($models);
+    }
+
+
+
+
 
 }

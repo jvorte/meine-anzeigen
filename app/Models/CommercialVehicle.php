@@ -9,12 +9,12 @@ class CommercialVehicle extends Model
 {
     use HasFactory;
 
-    protected $fillable = [
+   protected $fillable = [
         'user_id',
         'title',
         'description',
-        'brand_id',
-        'car_model_id',
+        'commercial_brand_id',
+        'commercial_model_id',
         'first_registration',
         'mileage',
         'power',
@@ -30,6 +30,24 @@ class CommercialVehicle extends Model
         'emission_class',
         'seats',
     ];
+    // Define the relationship to CommercialBrand
+    public function commercialBrand()
+    {
+        return $this->belongsTo(CommercialBrand::class, 'commercial_brand_id');
+    }
+
+    // Define the relationship to CommercialModel
+    public function commercialModel()
+    {
+        return $this->belongsTo(CommercialModel::class, 'commercial_model_id');
+    }
+  public function images()
+{
+    // Assumes an 'images' table with a 'commercial_vehicle_id' column
+    // and that you have an App\Models\Image model.
+    return $this->hasMany(CommercialVehicleImage::class, 'commercial_vehicle_id');
+}
+    // You might already have this for images
 
     /**
      * Get the brand associated with the commercial vehicle.
@@ -50,11 +68,7 @@ class CommercialVehicle extends Model
     /**
      * Get the images for the commercial vehicle.
      */
-    public function images()
-    {
-        return $this->hasMany(CommercialVehicleImage::class);
-    }
-
+ 
     /**
      * Get the user that owns the commercial vehicle ad.
      */
@@ -62,4 +76,6 @@ class CommercialVehicle extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    
 }

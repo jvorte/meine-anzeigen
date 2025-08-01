@@ -22,7 +22,7 @@
             ['label' => 'commercial-vehicles Anzeigen', 'url' => route('categories.show', 'commercial-vehicles')],
 
             {{-- Link to the specific camper's show page --}}
-            ['label' => 'commercial-vehicle Anzeige', 'url' => route('categories.commercial-vehicles.show', $commercialVehicle->id)],
+            ['label' => 'commercial-vehicle Anzeige', 'url' => route('categories.commercial-vehicles.show', $commercialAd->id)],
 
             {{-- The current page (Camper Edit) - set URL to null as it's the current page --}}
             ['label' => 'commercial-vehicle bearbeiten', 'url' => null],
@@ -33,7 +33,8 @@
 
     <div class="py-6">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <form method="POST" action="{{ route('ads.commercial-vehicles.update', $commercialVehicle->id) }}" enctype="multipart/form-data" class="space-y-8 bg-white p-6 rounded-lg shadow">
+           <form method="POST" action="{{ route('ads.commercial-vehicles.update', ['commercialAd' => $commercialAd->id]) }}" enctype="multipart/form-data">
+
                 @csrf
                 @method('PUT')
 
@@ -41,113 +42,114 @@
 
                     <div>
                         <label for="title" class="block text-sm font-medium text-gray-700 mb-1">Titel</label>
-                        <input type="text" name="title" id="title" value="{{ old('title', $commercialVehicle->title) }}"
+                        <input type="text" name="title" id="title" value="{{ old('title', $commercialAd->title) }}"
                                class="w-full border border-gray-300 rounded-md shadow-sm px-3 py-2 focus:ring-indigo-500 focus:border-indigo-500" />
                     </div>
 
                     <div>
                         <label for="price" class="block text-sm font-medium text-gray-700 mb-1">Preis (€)</label>
-                        <input type="number" step="0.01" name="price" id="price" value="{{ old('price', $commercialVehicle->price) }}"
+                        <input type="number" step="0.01" name="price" id="price" value="{{ old('price', $commercialAd->price) }}"
                                class="w-full border border-gray-300 rounded-md shadow-sm px-3 py-2 focus:ring-indigo-500 focus:border-indigo-500" />
                     </div>
 
                     <div>
-                        <label for="brand_id" class="block text-sm font-medium text-gray-700 mb-1">Marke</label>
-                        <select name="brand_id" id="brand_id"
+                        <label for="commercial_brand_id" class="block text-sm font-medium text-gray-700 mb-1">Marke</label>
+                        <select name="commercial_brand_id" id="commercial_brand_id" {{-- Changed name and id --}}
                                 class="w-full border border-gray-300 rounded-md shadow-sm px-3 py-2 focus:ring-indigo-500 focus:border-indigo-500">
                             <option value="">-- Bitte wählen --</option>
-                            @foreach($brands as $id => $name)
-                                <option value="{{ $id }}" {{ old('brand_id', $commercialVehicle->brand_id) == $id ? 'selected' : '' }}>{{ $name }}</option>
+                            @foreach($commercialBrands as $brand) {{-- Iterating over $commercialBrands --}}
+                                <option value="{{ $brand->id }}" {{ old('commercial_brand_id', $commercialAd->commercial_brand_id) == $brand->id ? 'selected' : '' }}>{{ $brand->name }}</option>
                             @endforeach
                         </select>
                     </div>
 
-                    <div>
-                        <label for="car_model_id" class="block text-sm font-medium text-gray-700 mb-1">Modell</label>
-                        <select name="car_model_id" id="car_model_id"
+               <div>
+                        <label for="commercial_model_id" class="block text-sm font-medium text-gray-700 mb-1">Modell</label>
+                        <select name="commercial_model_id" id="commercial_model_id"
                                 class="w-full border border-gray-300 rounded-md shadow-sm px-3 py-2 focus:ring-indigo-500 focus:border-indigo-500">
                             <option value="">-- Bitte wählen --</option>
-                            @foreach($models  as $id => $name)
-                                <option value="{{ $id }}" {{ old('car_model_id', $commercialVehicle->car_model_id) == $id ? 'selected' : '' }}>{{ $name }}</option>
+                            {{-- CHANGE THIS LINE: from $commercialModels to $initialCommercialModels --}}
+                            @foreach($initialCommercialModels as $model)
+                                <option value="{{ $model->id }}" {{ old('commercial_model_id', $commercialAd->commercial_model_id) == $model->id ? 'selected' : '' }}>{{ $model->name }}</option>
                             @endforeach
                         </select>
                     </div>
 
                     <div>
                         <label for="first_registration" class="block text-sm font-medium text-gray-700 mb-1">Erstzulassung</label>
-                        <input type="date" name="first_registration" id="first_registration" value="{{ old('first_registration', $commercialVehicle->first_registration) }}"
+                        <input type="date" name="first_registration" id="first_registration" value="{{ old('first_registration', $commercialAd->first_registration) }}"
                                class="w-full border border-gray-300 rounded-md shadow-sm px-3 py-2 focus:ring-indigo-500 focus:border-indigo-500" />
                     </div>
 
                     <div>
                         <label for="mileage" class="block text-sm font-medium text-gray-700 mb-1">Kilometerstand (km)</label>
-                        <input type="number" name="mileage" id="mileage" value="{{ old('mileage', $commercialVehicle->mileage) }}"
+                        <input type="number" name="mileage" id="mileage" value="{{ old('mileage', $commercialAd->mileage) }}"
                                class="w-full border border-gray-300 rounded-md shadow-sm px-3 py-2 focus:ring-indigo-500 focus:border-indigo-500" />
                     </div>
 
                     <div>
                         <label for="power" class="block text-sm font-medium text-gray-700 mb-1">Leistung (PS)</label>
-                        <input type="number" name="power" id="power" value="{{ old('power', $commercialVehicle->power) }}"
+                        <input type="number" name="power" id="power" value="{{ old('power', $commercialAd->power) }}"
                                class="w-full border border-gray-300 rounded-md shadow-sm px-3 py-2 focus:ring-indigo-500 focus:border-indigo-500" />
                     </div>
 
                     <div>
                         <label for="color" class="block text-sm font-medium text-gray-700 mb-1">Farbe</label>
-                        <input type="text" name="color" id="color" value="{{ old('color', $commercialVehicle->color) }}"
+                        <input type="text" name="color" id="color" value="{{ old('color', $commercialAd->color) }}"
                                class="w-full border border-gray-300 rounded-md shadow-sm px-3 py-2 focus:ring-indigo-500 focus:border-indigo-500" />
                     </div>
 
                     <div>
                         <label for="condition" class="block text-sm font-medium text-gray-700 mb-1">Zustand</label>
-                        <input type="text" name="condition" id="condition" value="{{ old('condition', $commercialVehicle->condition) }}"
+                        <input type="text" name="condition" id="condition" value="{{ old('condition', $commercialAd->condition) }}"
                                class="w-full border border-gray-300 rounded-md shadow-sm px-3 py-2 focus:ring-indigo-500 focus:border-indigo-500" />
                     </div>
 
                     <div>
                         <label for="commercial_vehicle_type" class="block text-sm font-medium text-gray-700 mb-1">Fahrzeugtyp</label>
-                        <input type="text" name="commercial_vehicle_type" id="commercial_vehicle_type" value="{{ old('commercial_vehicle_type', $commercialVehicle->commercial_vehicle_type) }}"
+                        <input type="text" name="commercial_vehicle_type" id="commercial_vehicle_type" value="{{ old('commercial_vehicle_type', $commercialAd->commercial_vehicle_type) }}"
                                class="w-full border border-gray-300 rounded-md shadow-sm px-3 py-2 focus:ring-indigo-500 focus:border-indigo-500" />
                     </div>
 
                     <div>
                         <label for="fuel_type" class="block text-sm font-medium text-gray-700 mb-1">Kraftstoffart</label>
-                        <input type="text" name="fuel_type" id="fuel_type" value="{{ old('fuel_type', $commercialVehicle->fuel_type) }}"
+                        <input type="text" name="fuel_type" id="fuel_type" value="{{ old('fuel_type', $commercialAd->fuel_type) }}"
                                class="w-full border border-gray-300 rounded-md shadow-sm px-3 py-2 focus:ring-indigo-500 focus:border-indigo-500" />
                     </div>
 
                     <div>
                         <label for="transmission" class="block text-sm font-medium text-gray-700 mb-1">Getriebe</label>
-                        <input type="text" name="transmission" id="transmission" value="{{ old('transmission', $commercialVehicle->transmission) }}"
+                        <input type="text" name="transmission" id="transmission" value="{{ old('transmission', $commercialAd->transmission) }}"
                                class="w-full border border-gray-300 rounded-md shadow-sm px-3 py-2 focus:ring-indigo-500 focus:border-indigo-500" />
                     </div>
 
                     <div>
                         <label for="payload_capacity" class="block text-sm font-medium text-gray-700 mb-1">Nutzlast (kg)</label>
-                        <input type="number" name="payload_capacity" id="payload_capacity" value="{{ old('payload_capacity', $commercialVehicle->payload_capacity) }}"
+                        <input type="number" name="payload_capacity" id="payload_capacity" value="{{ old('payload_capacity', $commercialAd->payload_capacity) }}"
                                class="w-full border border-gray-300 rounded-md shadow-sm px-3 py-2 focus:ring-indigo-500 focus:border-indigo-500" />
                     </div>
 
                     <div>
                         <label for="gross_vehicle_weight" class="block text-sm font-medium text-gray-700 mb-1">Zulässiges Gesamtgewicht (kg)</label>
-                        <input type="number" name="gross_vehicle_weight" id="gross_vehicle_weight" value="{{ old('gross_vehicle_weight', $commercialVehicle->gross_vehicle_weight) }}"
+                        <input type="number" name="gross_vehicle_weight" id="gross_vehicle_weight" value="{{ old('gross_vehicle_weight', $commercialAd->gross_vehicle_weight) }}"
                                class="w-full border border-gray-300 rounded-md shadow-sm px-3 py-2 focus:ring-indigo-500 focus:border-indigo-500" />
                     </div>
 
                     <div>
                         <label for="number_of_axles" class="block text-sm font-medium text-gray-700 mb-1">Anzahl der Achsen</label>
-                        <input type="number" name="number_of_axles" id="number_of_axles" value="{{ old('number_of_axles', $commercialVehicle->number_of_axles) }}"
+                        <input type="number" name="number_of_axles" id="number_of_axles" value="{{ old('number_of_axles', $commercialAd->number_of_axles) }}"
                                class="w-full border border-gray-300 rounded-md shadow-sm px-3 py-2 focus:ring-indigo-500 focus:border-indigo-500" />
                     </div>
 
                     <div>
                         <label for="emission_class" class="block text-sm font-medium text-gray-700 mb-1">Emissionsklasse</label>
-                        <input type="text" name="emission_class" id="emission_class" value="{{ old('emission_class', $commercialVehicle->emission_class) }}"
+                        <input type="text" name="emission_class" id="emission_class" value="{{ old('emission_class', $commercialAd->emission_class) }}"
                                class="w-full border border-gray-300 rounded-md shadow-sm px-3 py-2 focus:ring-indigo-500 focus:border-indigo-500" />
                     </div>
 
                     <div>
                         <label for="seats" class="block text-sm font-medium text-gray-700 mb-1">Sitze</label>
-                        <input type="number" name="seats" id="seats" value="{{ old('seats', $commercialVehicle->seats) }}"
+                        <input type="number" name="seats" id="seats" value="{{ old('seats', $commercialAd->seats) }}"
                                class="w-full border border-gray-300 rounded-md shadow-sm px-3 py-2 focus:ring-indigo-500 focus:border-indigo-500" />
                     </div>
 
@@ -156,17 +158,17 @@
                 <div>
                     <label for="description" class="block text-sm font-medium text-gray-700 mb-1">Beschreibung</label>
                     <textarea name="description" id="description" rows="6"
-                              class="w-full border border-gray-300 rounded-md shadow-sm px-3 py-2 focus:ring-indigo-500 focus:border-indigo-500">{{ old('description', $commercialVehicle->description) }}</textarea>
+                              class="w-full border border-gray-300 rounded-md shadow-sm px-3 py-2 focus:ring-indigo-500 focus:border-indigo-500">{{ old('description', $commercialAd->description) }}</textarea>
                 </div>
 
 
                 
             {{-- Existing Photos Section --}}
-            @if ($commercialVehicle->images->count() > 0)
+            @if ($commercialAd->images->count() > 0)
                 <section class="bg-gray-50 p-6 rounded-lg shadow-inner">
                     <h4 class="text-xl font-semibold text-gray-700 mb-6">Vorhandene Fotos</h4>
                     <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                        @foreach ($commercialVehicle->images as $image)
+                        @foreach ($commercialAd->images as $image)
                             <div class="relative group">
                                 <img src="{{ asset('storage/' . $image->image_path) }}" alt="Car Image" class="w-full h-48 object-cover rounded-lg shadow-sm">
                                 <label class="absolute top-2 right-2 bg-red-600 text-white text-xs px-2 py-1 rounded-full cursor-pointer opacity-0 group-hover:opacity-100 transition-opacity duration-200">
