@@ -125,7 +125,7 @@
         <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
       {{-- Updated Header Section with Gradient and Prominent CTA --}}
         <div class="relative flex flex-col md:flex-row items-center justify-between space-y-4 md:space-y-0 md:space-x-4 p-6 bg-cover bg-center shadow-lg rounded-lg"
-            style="background-image: url('/storage/images/2.jpg');"> {{-- Replaced with a stable placeholder image --}}
+            style="background-image: url('/storage/images/real-estate.jpg');"> {{-- Replaced with a stable placeholder image --}}
             {{-- Overlay for better text readability --}}
             <div class="absolute inset-0 bg-black opacity-20 rounded-lg"></div> {{-- Adjust opacity (e.g., 10 to 40) --}}
 
