@@ -50,36 +50,29 @@
                 @php
                     $ads = collect(); // Initialize an empty collection
 
-                    // --- IMPORTANT CHANGES HERE ---
-                    // 1. Changed 'fahrzeuge' to 'cars' for the slug.
-                    // 2. Changed \App\Models\Vehicle::class to \App\Models\Car::class.
-                    // 3. Added ->with('images') to eager load images for all models,
-                    //    as the loop later accesses $ad->images.
                     if ($category->slug == 'cars') { // Changed from 'fahrzeuge'
                         $ads = \App\Models\Car::with('images')->orderBy('created_at', 'desc')->paginate(12); // Changed from Vehicle
-                    } elseif ($category->slug == 'boote') {
+                    } elseif ($category->slug == 'boats') {
                         $ads = \App\Models\Boat::with('images')->orderBy('created_at', 'desc')->paginate(12);
-                    } elseif ($category->slug == 'fahrzeugeteile') {
+                    } elseif ($category->slug == 'vehicles-parts') {
                         // Assuming Part is for generic parts, UsedVehiclePart is for specific "used vehicle parts"
-                        // Based on your imports in DashboardController, UsedVehiclePart was explicitly used for 'fahrzeugeteile'
+                        // Based on your imports in DashboardController, UsedVehiclePart was explicitly used for 'Vehicles parts'
                         $ads = \App\Models\UsedVehiclePart::with('images')->orderBy('created_at', 'desc')->paginate(12);
-                    } elseif ($category->slug == 'elektronik') {
+                    } elseif ($category->slug == 'electronics') {
                         $ads = \App\Models\Electronic::with('images')->orderBy('created_at', 'desc')->paginate(12);
-                    } elseif ($category->slug == 'haushalt') {
+                    } elseif ($category->slug == 'household') {
                         $ads = \App\Models\HouseholdItem::with('images')->orderBy('created_at', 'desc')->paginate(12);
-                    } elseif ($category->slug == 'immobilien') {
+                    } elseif ($category->slug == 'realestate') {
                         $ads = \App\Models\RealEstate::with('images')->orderBy('created_at', 'desc')->paginate(12);
-                    } elseif ($category->slug == 'dienstleistungen') {
+                    } elseif ($category->slug == 'services') {
                         $ads = \App\Models\Service::with('images')->orderBy('created_at', 'desc')->paginate(12);
-                    } elseif ($category->slug == 'sonstiges') {
+                    } elseif ($category->slug == 'others') {
                         $ads = \App\Models\Other::with('images')->orderBy('created_at', 'desc')->paginate(12);
-                    } elseif ($category->slug == 'motorrad') {
-                        // Changed from Motorcycle to MotorradAd as per your controller imports
+                    } elseif ($category->slug == 'motorcycles') {                      
                         $ads = \App\Models\MotorradAd::with('images')->orderBy('created_at', 'desc')->paginate(12);
-                    } elseif ($category->slug == 'nutzfahrzeuge') {
+                    } elseif ($category->slug == 'commercial-vehicle') {
                         $ads = \App\Models\CommercialVehicle::with('images')->orderBy('created_at', 'desc')->paginate(12);
-                    } elseif ($category->slug == 'wohnmobile') {
-                        // Changed from RV to Camper as per your controller imports
+                    } elseif ($category->slug == 'campers') {                      
                         $ads = \App\Models\Camper::with('images')->orderBy('created_at', 'desc')->paginate(12);
                     }
                 @endphp
@@ -132,26 +125,26 @@
                                             $detailRoute = '#'; // Default fallback
                                             if ($category->slug == 'cars') { // Changed from 'fahrzeuge'
                                                 $detailRoute = route('categories.cars.show', $ad); // Changed from 'fahrzeuge'
-                                            } elseif ($category->slug == 'boote') {
-                                                $detailRoute = route('categories.boote.show', $ad);
-                                            } elseif ($category->slug == 'fahrzeugeteile') {
-                                                $detailRoute = route('categories.fahrzeugeteile.show', $ad);
-                                            } elseif ($category->slug == 'elektronik') {
-                                                $detailRoute = route('categories.elektronik.show', $ad);
-                                            } elseif ($category->slug == 'haushalt') {
-                                                $detailRoute = route('categories.haushalt.show', $ad);
-                                            } elseif ($category->slug == 'immobilien') {
-                                                $detailRoute = route('categories.immobilien.show', $ad);
-                                            } elseif ($category->slug == 'dienstleistungen') {
-                                                $detailRoute = route('categories.dienstleistungen.show', $ad);
-                                            } elseif ($category->slug == 'sonstiges') {
-                                                $detailRoute = route('categories.sonstiges.show', $ad);
-                                            } elseif ($category->slug == 'motorrad') {
-                                                $detailRoute = route('categories.motorrad.show', $ad);
+                                            } elseif ($category->slug == 'boats') {
+                                                $detailRoute = route('categories.boats.show', $ad);
+                                            } elseif ($category->slug == 'vehicles-parts') {
+                                                $detailRoute = route('categories.vehicles-parts.show', $ad);
+                                            } elseif ($category->slug == 'electronics') {
+                                                $detailRoute = route('categories.electronics.show', $ad);
+                                            } elseif ($category->slug == 'household') {
+                                                $detailRoute = route('categories.household.show', $ad);
+                                            } elseif ($category->slug == 'real-estate') {
+                                                $detailRoute = route('categories.real-estate.show', $ad);
+                                            } elseif ($category->slug == 'services') {
+                                                $detailRoute = route('categories.services.show', $ad);
+                                            } elseif ($category->slug == 'others') {
+                                                $detailRoute = route('categories.others.show', $ad);
+                                            } elseif ($category->slug == 'motorcycles') {
+                                                $detailRoute = route('categories.motorcycles.show', $ad);
                                             } elseif ($category->slug == 'nutzfahrzeuge') {
                                                 $detailRoute = route('categories.nutzfahrzeuge.show', $ad);
-                                            } elseif ($category->slug == 'wohnmobile') {
-                                                $detailRoute = route('categories.wohnmobile.show', $ad);
+                                            } elseif ($category->slug == 'campers') {
+                                                $detailRoute = route('categories.campers.show', $ad);
                                             }
                                         @endphp
                                         <a href="{{ $detailRoute }}" class="inline-block bg-blue-600 text-white px-4 py-2 rounded-md text-sm font-semibold hover:bg-blue-700 transition-colors duration-300 shadow-sm hover:shadow-md">Details ansehen</a>

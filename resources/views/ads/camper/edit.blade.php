@@ -306,33 +306,6 @@
             </section>
 
 
-            {{-- Verkäufer (Seller) --}}
-            {{-- <section class="bg-gray-50 p-6 rounded-lg shadow-inner mt-6">
-                <h4 class="text-xl font-semibold text-gray-700 mb-6">Verkäufer Informationen</h4>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                        <label for="seller_name" class="block text-sm font-medium text-gray-700 mb-2">Name des
-                            Verkäufers</label>
-                        <input type="text" name="seller_name" id="seller_name" value="{{ old('seller_name', $camper->seller_name) }}"
-                            placeholder="Max Mustermann" class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
-                        @error('seller_name') <p class="text-red-500 text-sm mt-1">{{ $message }}</p> @enderror
-                    </div>
-                    <div>
-                        <label for="seller_phone"
-                            class="block text-sm font-medium text-gray-700 mb-2">Telefonnummer</label>
-                        <input type="text" name="seller_phone" id="seller_phone" value="{{ old('seller_phone', $camper->seller_phone) }}"
-                            placeholder="+49 123 4567890" class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
-                        @error('seller_phone') <p class="text-red-500 text-sm mt-1">{{ $message }}</p> @enderror
-                    </div>
-                    <div>
-                        <label for="seller_email" class="block text-sm font-medium text-gray-700 mb-2">E-Mail
-                            Adresse</label>
-                        <input type="email" name="seller_email" id="seller_email" value="{{ old('seller_email', $camper->seller_email) }}"
-                            placeholder="max@example.com" class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
-                        @error('seller_email') <p class="text-red-500 text-sm mt-1">{{ $message }}</p> @enderror
-                    </div>
-                </div>
-            </section> --}}
 
              {{-- Existing Photos Section --}}
             @if ($camper->images->count() > 0)

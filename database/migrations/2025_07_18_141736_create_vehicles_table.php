@@ -17,7 +17,7 @@ Schema::create('vehicles', function (Blueprint $table) {
     $table->string('slug')->unique();
     $table->text('description')->nullable();
     $table->string('category_slug');
-    $table->foreignId('brand_id')->nullable()->constrained('car_brands');
+    $table->foreignId('car_brand_id')->nullable()->constrained('car_brands');
     $table->foreignId('car_model_id')->nullable()->constrained('car_models');
     $table->unsignedInteger('price')->nullable();
     $table->unsignedInteger('mileage')->nullable();

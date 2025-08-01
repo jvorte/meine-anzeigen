@@ -18,6 +18,7 @@ class ServiceController extends Controller
      */
     public function create()
     {
+      
         // Define options for dropdowns, matching the Blade form
         $dienstleistungKategorieOptions = ['reinigung', 'handwerk', 'it', 'beratung', 'transport', 'sonstiges'];
         $verfugbarkeitOptions = ['sofort', 'nach_vereinbarung', 'während_wochentagen', 'wochenende'];
@@ -34,27 +35,24 @@ class ServiceController extends Controller
      */
     public function store(Request $request)
     {
+        // dd('dsdsds');
         // 1. Validation
         $validatedData = $request->validate([
             'category_slug' => ['required', 'string', 'max:255', Rule::in(['dienstleistungen'])],
             'dienstleistung_kategorie' => ['required', 'string', 'max:255', Rule::in(['reinigung', 'handwerk', 'it', 'beratung', 'transport', 'sonstiges'])],
             'titel' => ['required', 'string', 'max:255'], // Titel der Dienstleistung
             'beschreibung' => ['required', 'string'], // Beschreibung
-            'bilder.*' => ['nullable', 'image', 'max:2048'], // 'bilder[]' validates each file in the array (max 2MB per image)
+            'images.*' => ['nullable', 'image', 'max:2048'], // 'images[]' validates each file in the array (max 2MB per image)
             'region' => ['required', 'string', 'max:255'], // Region / Ort
             'preis' => ['nullable', 'numeric', 'min:0'], // Preis
             'verfugbarkeit' => ['nullable', 'string', Rule::in(['sofort', 'nach_vereinbarung', 'während_wochentagen', 'wochenende'])], // Verfügbarkeit
 
-            // Contact Information
-            'kontakt_name' => ['required', 'string', 'max:255'], // Name
-            'kontakt_tel' => ['nullable', 'string', 'max:255'], // Telefon
-            'kontakt_email' => ['required', 'email', 'max:255'], // E-Mail
         ]);
-
+// dd($validatedData);
         // Separate image files from other validated data
-        $imageFiles = $request->file('bilder'); // Get the uploaded image files
+        $imageFiles = $request->file('images'); // Get the uploaded image files
         // Remove 'bilder' (the file objects) from $validatedData before creating the Service record
-        $dataToCreateService = Arr::except($validatedData, ['bilder']); // Changed from 'images' to 'bilder'
+        $dataToCreateService = Arr::except($validatedData, ['images']); // Changed from 'images' to 'bilder'
 
         // 2. Create the Service record first
         $service = Service::create(array_merge($dataToCreateService, [
@@ -66,11 +64,7 @@ class ServiceController extends Controller
             // Map 'preis' from form to 'price' in DB
             'price' => $validatedData['preis'],
             // Map 'kontakt_name' from form to 'contact_name' in DB
-            'contact_name' => $validatedData['kontakt_name'],
-            // Map 'kontakt_tel' from form to 'contact_tel' in DB
-            'contact_tel' => $validatedData['kontakt_tel'],
-            // Map 'kontakt_email' from form to 'contact_email' in DB
-            'contact_email' => $validatedData['kontakt_email'],
+   
         ]));
 
         // 3. Handle image uploads and save to ServiceImage model
@@ -99,5 +93,87 @@ class ServiceController extends Controller
         return view('ads.services.show', compact('service'));
     }
 
-    // You can add edit, update, destroy methods as needed
+    public function edit(Service $ad) // Using route model binding
+    {
+     
+        return view('ads.services.edit', compact('ad'));
+    }
+
+ // ... (previous code)
+
+/**
+ * Update the specified resource in storage.
+ */
+public function update(Request $request, Service $ad) // Using route model binding
+    {
+        
+
+        $validated = $request->validate([
+            'dienstleistung_kategorie' => ['required', 'string', Rule::in(['reinigung', 'handwerk', 'it', 'beratung', 'transport', 'sonstiges'])],
+            'titel' => ['required', 'string', 'max:255'],
+            'region' => ['required', 'string', 'max:255'],
+            'preis' => ['nullable', 'numeric', 'min:0'],
+            'verfugbarkeit' => ['nullable', 'string', Rule::in(['sofort', 'nach_vereinbarung', 'während_wochentagen', 'wochenende'])],
+            'beschreibung' => ['required', 'string'],
+            'images.*' => ['nullable', 'image', 'max:2048'], // Max 2MB per image
+            'images_to_delete' => ['nullable', 'array'],
+            'images_to_delete.*' => ['integer', 'exists:service_images,id'], 
+        ]);
+
+        // Update the basic ad details
+        $ad->update([
+            'dienstleistung_kategorie' => $validated['dienstleistung_kategorie'],
+            'title' => $validated['titel'], // Use 'title' if that's your DB column
+            'region' => $validated['region'],
+            'price' => $validated['preis'], // Use 'price' if that's your DB column
+            'verfugbarkeit' => $validated['verfugbarkeit'],
+            'description' => $validated['beschreibung'], // Use 'description' if that's your DB column
+        ]);
+
+        // Handle image deletions
+        if (isset($validated['images_to_delete'])) {
+            foreach ($validated['images_to_delete'] as $imageId) {
+                $image = ServiceImage::find($imageId);
+                // Ensure the image exists and belongs to this ad (using service_id)
+                if ($image && $image->service_id === $ad->id) { 
+                    Storage::disk('public')->delete($image->image_path); 
+                    $image->delete();
+                }
+            }
+        }
+
+        // Handle new image uploads
+        if ($request->hasFile('images')) {
+            foreach ($request->file('images') as $imageFile) {
+                $path = $imageFile->store('service_images', 'public'); 
+                // Use the correct relationship method from the Service model
+                $ad->images()->create([ 
+                    'image_path' => $path, 
+                    'is_thumbnail' => false, 
+                ]);
+            }
+
+           
+
+        }
+
+        return redirect()->route('ads.services.show', $ad)->with('success', 'Dienstleistung Anzeige erfolgreich aktualisiert.');
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy(Service $ad) // Using route model binding
+    {
+        
+        // Delete associated images from storage
+        foreach ($ad->images as $image) {
+            Storage::disk('public')->delete($image->path);
+        }
+
+        // Delete the ad and its associated images from the database
+        $ad->delete();
+
+        return redirect()->route('dashboard')->with('success', 'Dienstleistung Anzeige erfolgreich gelöscht.'); // Redirect to user's dashboard or ad list
+    }
 }

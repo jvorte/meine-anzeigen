@@ -3,24 +3,22 @@
 namespace App\Http\Controllers;
 
 use App\Models\Car;
-use App\Models\CarBrand; // Make sure this is imported
-use App\Models\CarModel; // Make sure this is imported
-use App\Models\CarImage; // Assuming you have a CarImage model for car-specific images
+use App\Models\CarBrand;
+use App\Models\CarModel; 
+use App\Models\CarImage;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Validation\Rule; // Needed for dynamic model validation
+use Illuminate\Validation\Rule; 
 
 class CarController extends Controller
 {
-    /**
-     * Show the form for creating a new car ad.
-     * (Retained for completeness, assuming it exists)
-     */
+    
     public function create()
     {
         $brands = CarBrand::orderBy('name')->pluck('name', 'id');
+        
         $initialModels = []; // No models initially selected
 
         $colors = ['Schwarz', 'Weiß', 'Rot', 'Blau', 'Grün', 'Gelb', 'Orange', 'Silber', 'Grau', 'Braun', 'Andere'];
@@ -44,10 +42,10 @@ class CarController extends Controller
         ));
     }
 
-    /**
-     * Store a newly created car ad in storage.
-     * (Retained for completeness, assuming it exists)
-     */
+
+
+
+
     public function store(Request $request)
     {
     //    dd('dd');
@@ -78,12 +76,12 @@ class CarController extends Controller
             'title' => ['required', 'string', 'max:255'],
             'description' => ['required', 'string'],
             'images' => ['nullable', 'array', 'max:10'], // Max 10 images
-            'images.*' => ['image', 'mimes:jpeg,png,jpg,gif,svg', 'max:2048'], // Individual image rules
+            'images.*' => ['image', 'mimes:jpeg,png,jpg,gif,svg'], // Individual image rules
         ]);
-//  dd( $data);
+
         $mappedData = [
             'category_slug' => $data['category_slug'],
-            'brand_id'  => $data['car_brand_id'], 
+            'car_brand_id'  => $data['car_brand_id'], 
             'car_model_id'  => $data['car_model_id'] ?? null,
             'price' => $data['price_from'],
             'mileage' => $data['mileage_from'],
@@ -104,7 +102,7 @@ class CarController extends Controller
             'user_id' => Auth::id(),
             'slug' => Str::slug($data['title'] . '-' . uniqid()),
         ];
-// dd( $mappedData);
+
         $car = Car::create($mappedData);
 
         if ($request->hasFile('images')) {
@@ -120,10 +118,7 @@ class CarController extends Controller
         return redirect()->route('dashboard', $car)->with('success', 'Auto Anzeige erfolgreich erstellt!');
     }
 
-    /**
-     * Display the specified car ad.
-     * (Retained for completeness, assuming it exists)
-     */
+
     public function show(Car $car)
     {
         $car->load(['carBrand', 'carModel', 'user', 'images']); // Assuming relationships are named carBrand and carModel
@@ -136,48 +131,37 @@ class CarController extends Controller
      * @param  \App\Models\Car  $car The Car model instance to be edited.
      * @return \Illuminate\Http\Response
      */
-public function edit(Car $car) // Correct type-hinting for Car model
+// In your CarsController@edit method:
+  public function edit(Car $car)
     {
-    
-        if (Auth::id() !== $car->user_id) {
-            abort(403, 'Unauthorized action. You do not own this car advertisement.');
-        }
+    $brands = CarBrand::pluck('name', 'id');
 
-        // Fetch car brands for the dropdown
-        $brands = CarBrand::orderBy('name')->pluck('name', 'id');
-
-        // Fetch car models for the dropdown, pre-filtered by the car's current brand
-        $initialModels = [];
-        if ($car->car_brand_id) {
-            $initialModels = CarModel::where('car_brand_id', $car->car_brand_id)
-                                     ->orderBy('name')
-                                     ->pluck('name', 'id')
-                                     ->toArray();
-        }
-
-        // Define options for dropdowns (consistent with your Blade and store method)
-        $colors = ['Schwarz', 'Weiß', 'Rot', 'Blau', 'Grün', 'Gelb', 'Orange', 'Silber', 'Grau', 'Braun', 'Andere'];
-        $conditions = ['Neu', 'Gebraucht', 'Unfallfahrzeug'];
-        $vehicleTypes = ['Limousine', 'Kombi', 'SUV/Geländewagen', 'Coupé', 'Cabrio', 'Minivan', 'Kleinwagen', 'Pickup'];
-        $fuelTypes = ['Benzin', 'Diesel', 'Elektro', 'Hybrid', 'LPG', 'CNG'];
-        $transmissions = ['Manuell', 'Automatik'];
-        $drives = ['Vorderradantrieb', 'Hinterradantrieb', 'Allrad'];
-        $sellerTypes = ['Privat', 'Händler'];
-
-        return view('ads.cars.edit', compact(
-            'car',
-            'brands',
-            'initialModels',
-            'colors',
-            'conditions',
-            'vehicleTypes',
-            'fuelTypes',
-            'transmissions',
-            'drives',
-            'sellerTypes'
-        ));
+    // Make sure $initialModels contains models for the *actual* brand_id of the car
+    $initialModels = [];
+    if ($car->brand_id) { // Use $car->brand_id (the correct DB column)
+        // Assuming CarModel has a foreign key 'car_brand_id' to CarBrand table
+        $initialModels = CarModel::where('car_brand_id', $car->brand_id)->pluck('name', 'id');
     }
 
+    $colors = ['Schwarz', 'Weiß', 'Grau', 'Silber', 'Rot', 'Blau', 'Grün', 'Gelb', 'Braun', 'Orange', 'Violett', 'Metallic']; // Example
+
+    return view('ads.cars.edit', compact('car', 'brands', 'initialModels', 'colors'));
+}
+
+
+public function getModels($id)
+{
+    return response()->json(
+        CarModel::where('car_brand_id', $id)->get(['id', 'name'])
+    );
+}
+
+
+// public function getModels($id)
+// {
+//     $models = CarModel::where('car_brand_id', $id)->pluck('name', 'id');
+//     return response()->json($models);
+// }
     /**
      * Update the specified car advertisement in storage.
      *
@@ -187,16 +171,17 @@ public function edit(Car $car) // Correct type-hinting for Car model
      */
     public function update(Request $request, Car $car)
     {  
+
+      
         // Ensure only the owner can update the car ad
         if (Auth::id() !== $car->user_id) {
             abort(403, 'Unauthorized action. You do not own this car advertisement.');
         }
-// dd( 'hh');
-        // 1. Validation
+ 
         $validatedData = $request->validate([
               
             'category_slug' => ['required', 'string', 'max:255'], // Assuming this is still sent
-            'brand_id' => ['required', 'exists:car_brands,id'],
+            'car_brand_id' => ['required', 'exists:car_brands,id'],
             'car_model_id' => [
                 'nullable',
                 Rule::exists('car_models', 'id')->where(function ($query) use ($request) {
@@ -299,14 +284,8 @@ public function edit(Car $car) // Correct type-hinting for Car model
     }
 
     /**
-     * Get car models by brand ID (for AJAX/Alpine.js).
-     * Assumes CarModel has a 'car_brand_id' foreign key.
+  * @param  \App\Models\CarBrand  $brand The CarBrand model instance resolved by route model binding.
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function getModelsByBrand($brandId)
-    {
-        $models = CarModel::where('car_brand_id', $brandId)
-                          ->orderBy('name')
-                          ->pluck('name', 'id');
-        return response()->json($models);
-    }
+
 }

@@ -31,47 +31,89 @@
         <form method="POST" action="{{ route('ads.cars.store') }}" enctype="multipart/form-data" class="space-y-8">
             @csrf
 
-            {{-- Vehicle Details Section (Marke & Modell) --}}
-            <section class="bg-gray-50 p-6 rounded-lg shadow-inner">
-                <h4 class="text-xl font-semibold text-gray-700 mb-6">Fahrzeugdetails</h4>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6"
-                     x-data="carAdForm(
-                             @json(old('car_brand_id')),
-                             @json(old('car_model_id')),
-                             @json($initialModels ?? [])
-                         )">
-                    {{-- Marke --}}
-                    <div>
-                        <label for="car_brand_id" class="block text-sm font-medium text-gray-700 mb-2">Marke</label>
-                        <select name="car_brand_id" id="car_brand_id" x-model="selectedCarBrandId"
-                                class="form-select w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
-                            <option value="">Bitte wählen</option>
-                            @foreach($brands as $id => $name)
-                                <option value="{{ $id }}">{{ $name }}</option>
-                            @endforeach
-                        </select>
-                        @error('car_brand_id')
-                            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-                        @enderror
-                    </div>
+<section class="bg-gray-50 p-6 rounded-lg shadow-inner">
+    <h4 class="text-xl font-semibold text-gray-700 mb-6">Fahrzeugdetails</h4>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
 
-                    {{-- Modell (Dynamic with Alpine.js) --}}
-                    {{-- FIX: Added x-cloak to prevent flash of unstyled content before Alpine.js hides it --}}
-                    <div x-show="Object.keys(carModels).length > 0" x-transition x-cloak>
-                        <label for="car_model_id" class="block text-sm font-medium text-gray-700 mb-2">Modell</label>
-                        <select name="car_model_id" id="car_model_id" x-model="selectedCarModelId"
-                                class="form-select w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
-                            <option value="">Bitte wählen</option>
-                            <template x-for="(name, id) in carModels" :key="id">
-                                <option :value="id" x-text="name"></option>
-                            </template>
-                        </select>
-                        @error('car_model_id')
-                            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-                        @enderror
-                    </div>
-                </div>
-            </section>
+        {{-- Marke --}}
+        <div>
+            <label for="car_brand_id" class="block text-sm font-medium text-gray-700 mb-2">Marke</label>
+            <select name="car_brand_id" id="car_brand_id" onchange="loadModels(this.value)"
+                    class="form-select w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
+                <option value="">Bitte wählen</option>
+                @foreach($brands as $id => $name)
+                    <option value="{{ $id }}"
+                        {{ old('car_brand_id') == $id ? 'selected' : '' }}>
+                        {{ $name }}
+                    </option>
+                @endforeach
+            </select>
+            @error('car_brand_id')
+                <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+            @enderror
+        </div>
+
+        {{-- Modell --}}
+        <div>
+            <label for="car_model_id" class="block text-sm font-medium text-gray-700 mb-2">Modell</label>
+            <select name="car_model_id" id="car_model_id"
+                    class="form-select w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
+                <option value="">Bitte wählen</option>
+                {{-- Δεν φορτώνουμε μοντέλα server side στο create --}}
+            </select>
+            @error('car_model_id')
+                <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+            @enderror
+        </div>
+
+    </div>
+</section>
+
+<script>
+function loadModels(brandId) {
+    const modelSelect = document.getElementById('car_model_id');
+    modelSelect.innerHTML = '<option>Loading...</option>';
+
+    if (!brandId) {
+        modelSelect.innerHTML = '<option value="">Bitte zuerst eine Marke wählen</option>';
+        return;
+    }
+
+    fetch(`/api/car-brands/${brandId}/models`)
+        .then(response => {
+            if (!response.ok) throw new Error('Network response was not ok');
+            return response.json();
+        })
+        .then(models => {
+            modelSelect.innerHTML = '<option value="">Bitte wählen</option>';
+            models.forEach(model => {
+                const option = document.createElement('option');
+                option.value = model.id;
+                option.textContent = model.name;
+
+                // Επιλογή αν υπάρχει old('car_model_id') (πχ μετά από validation error)
+                const oldModelId = "{{ old('car_model_id') }}";
+                if (model.id == oldModelId) {
+                    option.selected = true;
+                }
+
+                modelSelect.appendChild(option);
+            });
+        })
+        .catch(error => {
+            console.error('Error loading car models:', error);
+            modelSelect.innerHTML = '<option value="">Fehler beim Laden</option>';
+        });
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    const selectedBrandId = document.getElementById('car_brand_id').value;
+    if (selectedBrandId) {
+        loadModels(selectedBrandId);
+    }
+});
+</script>
+
 
             {{-- Basic Data Section (Erstzulassung, Kilometerstand, Leistung) --}}
             <section class="bg-gray-50 p-6 rounded-lg shadow-inner">
@@ -398,81 +440,7 @@
                         };
                     }
 
-                    // Define the Alpine.js component for the car form
-                    document.addEventListener('alpine:init', () => {
-                        Alpine.data('carAdForm', (initialBrandId, initialModelId, initialModels) => ({
-                            selectedCarBrandId: initialBrandId || '',
-                            selectedCarModelId: initialModelId || '',
-                            carModels: initialModels || {},
-
-                            async fetchCarModels() {
-                                console.log('fetchCarModels triggered. Current selectedCarBrandId (before fetch):', this.selectedCarBrandId);
-
-                                if (this.selectedCarBrandId) {
-                                    const fetchUrl = `/car-models/${this.selectedCarBrandId}`;
-                                    console.log('Attempting to fetch models from URL:', fetchUrl);
-                                    try {
-                                        const response = await fetch(fetchUrl);
-                                        if (!response.ok) {
-                                            console.error('HTTP error! Status:', response.status, 'Response text:', await response.text());
-                                            throw new Error(`HTTP error! status: ${response.status}`);
-                                        }
-                                        const data = await response.json();
-                                        console.log('Models fetched successfully:', data);
-                                        this.carModels = data;
-
-                                        // If the previously selected model is not in the new list, clear it
-                                        if (this.selectedCarModelId && !Object.keys(this.carModels).includes(String(this.selectedCarModelId))) {
-                                            this.selectedCarModelId = '';
-                                            console.log('Cleared selectedCarModelId as it was not in the new list.');
-                                        }
-                                    } catch (error) {
-                                        console.error('Error fetching car models:', error);
-                                        this.carModels = {}; // Clear models on error
-                                        this.selectedCarModelId = ''; // Clear selected model on error
-                                    }
-                                } else {
-                                    console.log('No brand selected, clearing models.');
-                                    this.carModels = {};
-                                    this.selectedCarModelId = '';
-                                }
-                            },
-
-                            init() {
-                                console.log('carAdForm init() called.');
-                                console.log('  Initial state in init(): selectedCarBrandId:', this.selectedCarBrandId);
-                                console.log('  Initial state in init(): selectedCarModelId:', this.selectedCarModelId);
-                                console.log('  Initial state in init(): carModels (should be empty initially or pre-populated):', this.carModels);
-
-                                this.$nextTick(async () => {
-                                    console.log('  $nextTick callback entered.');
-                                    // Only fetch models on init if a brand was previously selected (e.g., after validation error)
-                                    if (this.selectedCarBrandId) {
-                                        await this.fetchCarModels();
-                                        // After models are fetched and rendered, try to set the old model ID
-                                        if (initialModelId && Object.keys(this.carModels).includes(String(initialModelId))) {
-                                            this.selectedCarModelId = initialModelId;
-                                            console.log('  Final check: Successfully re-set selectedCarModelId to initialModelId:', this.selectedCarModelId);
-                                        } else if (initialModelId) {
-                                            console.log('  Final check: Initial model ID', initialModelId, 'not found in fetched models. Clearing selection.');
-                                            this.selectedCarModelId = ''; // Clear if old model isn't valid for the brand
-                                        }
-                                    } else {
-                                        // If no brand is selected initially, ensure models are empty and hidden
-                                        this.carModels = {};
-                                        this.selectedCarModelId = '';
-                                        console.log('  No initial brand selected, ensuring models are cleared and hidden.');
-                                    }
-                                });
-
-                                this.$watch('selectedCarBrandId', (value) => {
-                                    console.log('selectedCarBrandId changed to (via $watch):', value);
-                                    this.selectedCarModelId = ''; // Always clear model when brand changes
-                                    this.fetchCarModels();
-                                });
-                            },
-                        }));
-                    });
+                   
                 </script>
             </section>
 

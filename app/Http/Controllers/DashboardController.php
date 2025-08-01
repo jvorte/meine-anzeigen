@@ -27,14 +27,14 @@ class DashboardController extends Controller
 
         $adsByCategory = [
             'cars' => Car::with('images')->orderBy('created_at', 'desc')->limit(4)->get(),
-            'fahrzeugeteile' => UsedVehiclePart::with('images')->orderBy('created_at', 'desc')->limit(4)->get(),
+            'vehicles-parts' => UsedVehiclePart::with('images')->orderBy('created_at', 'desc')->limit(4)->get(),
             'electronics' => Electronic::with('images')->orderBy('created_at', 'desc')->limit(4)->get(),
-            'haushalt' => HouseholdItem::with('images')->orderBy('created_at', 'desc')->limit(4)->get(),
-            'realestate' => RealEstate::with('images')->orderBy('created_at', 'desc')->limit(4)->get(),
+            'household' => HouseholdItem::with('images')->orderBy('created_at', 'desc')->limit(4)->get(),
+            'real-estate' => RealEstate::with('images')->orderBy('created_at', 'desc')->limit(4)->get(),
             'services' => Service::with('images')->orderBy('created_at', 'desc')->limit(4)->get(),
             'boats' => Boat::with('images')->orderBy('created_at', 'desc')->limit(4)->get(),
-            'sonstiges' => Other::with('images')->orderBy('created_at', 'desc')->limit(4)->get(),
-            'motorrad' => MotorradAd::with('images')->orderBy('created_at', 'desc')->limit(4)->get(),
+            'others' => Other::with('images')->orderBy('created_at', 'desc')->limit(4)->get(),
+            'motorcycles' => MotorradAd::with('images')->orderBy('created_at', 'desc')->limit(4)->get(),
             'commercial-vehicle' => CommercialVehicle::with('images')->orderBy('created_at', 'desc')->limit(4)->get(),
             'campers' => Camper::with('images')->orderBy('created_at', 'desc')->limit(4)->get(),
         ];

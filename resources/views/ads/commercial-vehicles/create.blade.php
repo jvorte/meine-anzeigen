@@ -36,38 +36,97 @@
 
             {{-- Vehicle Details Section (Marke & Modell) --}}
             <section class="bg-gray-50 p-6 rounded-lg shadow-inner">
-                <h4 class="text-xl font-semibold text-gray-700 mb-6">Fahrzeugdetails</h4>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    {{-- Marke --}}
-                    <div>
-                        <label for="brand_id" class="block text-sm font-medium text-gray-700 mb-2">Marke</label>
-                        <select name="brand_id" id="brand_id"
-                                class="form-select w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
-                            <option value="">Bitte wählen</option>
-                            @foreach($brands as $id => $name)
-                                <option value="{{ $id }}" {{ old('brand_id') == $id ? 'selected' : '' }}>{{ $name }}</option>
-                            @endforeach
-                        </select>
-                        @error('brand_id')
-                            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-                        @enderror
-                    </div>
+                {{-- In your commercial ad creation/edit form --}}
 
-                    {{-- Modell --}}
-                    <div>
-                        <label for="car_model_id" class="block text-sm font-medium text-gray-700 mb-2">Modell</label>
-                        <select name="car_model_id" id="car_model_id"
-                                class="form-select w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
-                            <option value="">Bitte wählen</option>
-                            @foreach($models as $id => $name)
-                                <option value="{{ $id }}" {{ old('car_model_id') == $id ? 'selected' : '' }}>{{ $name }}</option>
-                            @endforeach
-                        </select>
-                        @error('car_model_id')
-                            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-                        @enderror
-                    </div>
-                </div>
+{{-- Commercial Brand Dropdown --}}
+<div class="mb-4">
+    <label for="commercial_brand_id" class="block text-sm font-medium text-gray-700 mb-2">Commercial Brand</label>
+    <select name="commercial_brand_id" id="commercial_brand_id" onchange="loadCommercialModels(this.value)"
+        class="form-select w-full border-gray-300 rounded-md shadow-sm">
+        <option value="">Select a Brand</option>
+        @foreach($commercialBrands as $brand) {{-- This variable needs to be passed from your controller --}}
+            <option value="{{ $brand->id }}" {{ (old('commercial_brand_id', $commercialAd->commercial_brand_id ?? '') == $brand->id) ? 'selected' : '' }}>
+                {{ $brand->name }}
+            </option>
+        @endforeach
+    </select>
+    @error('commercial_brand_id')
+        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+    @enderror
+</div>
+
+{{-- Commercial Model Dropdown --}}
+<div class="mb-4">
+    <label for="commercial_model_id" class="block text-sm font-medium text-gray-700 mb-2">Commercial Model</label>
+    <select name="commercial_model_id" id="commercial_model_id"
+        class="form-select w-full border-gray-300 rounded-md shadow-sm">
+        <option value="">Select a Model</option>
+        {{-- Models will be loaded here by JavaScript --}}
+        {{-- If editing, we might need to pre-fill. This depends on your controller passing initial models. --}}
+        @isset($initialCommercialModels)
+            @foreach($initialCommercialModels as $model)
+                <option value="{{ $model->id }}" {{ (old('commercial_model_id', $commercialAd->commercial_model_id ?? '') == $model->id) ? 'selected' : '' }}>
+                    {{ $model->name }}
+                </option>
+            @endforeach
+        @endisset
+    </select>
+    @error('commercial_model_id')
+        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+    @enderror
+</div>
+
+<script>
+    async function loadCommercialModels(brandId, selectedModelId = null) {
+        const modelSelect = document.getElementById('commercial_model_id');
+        modelSelect.innerHTML = '<option value="">Select a Model</option>'; // Clear existing options
+
+        if (!brandId) return;
+
+        try {
+            // Using the API endpoint you just confirmed
+            const response = await fetch(`/api/commercial-brands/${brandId}/models`);
+            if (!response.ok) {
+                // Handle HTTP errors
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            const models = await response.json();
+
+            models.forEach(model => {
+                const option = document.createElement('option');
+                option.value = model.id;
+                option.textContent = model.name;
+                modelSelect.appendChild(option);
+            });
+
+            // If editing an ad, pre-select the existing model
+            if (selectedModelId) {
+                modelSelect.value = selectedModelId;
+            }
+        } catch (error) {
+            console.error('Error loading commercial models:', error);
+            // Optionally, display an error message to the user
+            modelSelect.innerHTML = '<option value="">Error loading models</option>';
+        }
+    }
+
+    // This block ensures models are loaded on page load if a brand is already selected
+    // (e.g., when the form is redisplayed after a validation error, or when editing an existing ad)
+    document.addEventListener('DOMContentLoaded', function() {
+        // Use old() helper for repopulating after validation error, or existing ad data
+        const oldBrandId = '{{ old('commercial_brand_id') }}';
+        const existingAdBrandId = '{{ $commercialAd->commercial_brand_id ?? '' }}';
+        const initialBrandId = oldBrandId || existingAdBrandId;
+
+        const oldModelId = '{{ old('commercial_model_id') }}';
+        const existingAdModelId = '{{ $commercialAd->commercial_model_id ?? '' }}';
+        const initialModelId = oldModelId || existingAdModelId;
+
+        if (initialBrandId) {
+            loadCommercialModels(initialBrandId, initialModelId);
+        }
+    });
+</script>
             </section>
 
             {{-- Basic Data Section --}}

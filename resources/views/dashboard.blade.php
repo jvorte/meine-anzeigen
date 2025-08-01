@@ -33,16 +33,16 @@
                 @php
                     $categoryBackgrounds = [
                         'cars' => asset('storage/images/cars.jpg'),
-                        'fahrzeugeteile' => asset('storage/images/parts.jpg'),
+                        'vehicles-parts' => asset('storage/images/parts.jpg'),
                         'boats' => asset('storage/images/boats.jpg'),
                         'electronics' => asset('storage/images/tv.jpg'),
-                        'haushalt' => asset('storage/images/car.jpg'), // Consider changing these placeholders
-                        'realestate' => asset('storage/images/car.jpg'), // Consider changing these placeholders
-                        'services' => asset('storage/images/car.jpg'), // Consider changing these placeholders
-                        'sonstiges' => asset('storage/images/car.jpg'), // Consider changing these placeholders
-                        'motorrad' => asset('storage/images/motorcycle.jpg'), // Added new
-                        'commercial-vehicle' => asset('storage/images/trucks.jpg'), // Added new
-                        'campers' => asset('storage/images/camper.jpg'), // Added new
+                        'household' => asset('storage/images/car.jpg'),
+                        'realestate' => asset('storage/images/car.jpg'), 
+                        'services' => asset('storage/images/car.jpg'), 
+                        'others' => asset('storage/images/car.jpg'),
+                        'motorcycles' => asset('storage/images/motorcycle.jpg'), 
+                        'commercial-vehicle' => asset('storage/images/trucks.jpg'), 
+                        'campers' => asset('storage/images/camper.jpg'), 
                     ];
                 @endphp
 
@@ -151,13 +151,13 @@
                                                             $adRouteName = 'categories.electronics.show';
                                                             $adParamName = 'electronic';
                                                         } elseif ($ad instanceof \App\Models\HouseholdItem) {
-                                                            $adRouteName = 'categories.haushalt.show';
+                                                            $adRouteName = 'categories.household.show';
                                                             $adParamName = 'householdItem'; 
                                                         } elseif ($ad instanceof \App\Models\MotorradAd) {
-                                                            $adRouteName = 'categories.motorrad.show';
-                                                            $adParamName = 'motorradAd';
+                                                            $adRouteName = 'categories.motorcycles.show';
+                                                          $adParamName = 'motorradAd'; 
                                                         } elseif ($ad instanceof \App\Models\Other) {
-                                                            $adRouteName = 'categories.sonstiges.show';
+                                                            $adRouteName = 'categories.others.show';
                                                             $adParamName = 'other';
                                                         } elseif ($ad instanceof \App\Models\RealEstate) {
                                                             $adRouteName = 'categories.real-estate.show';
@@ -166,7 +166,7 @@
                                                             $adRouteName = 'categories.services.show';
                                                             $adParamName = 'service';
                                                         } elseif ($ad instanceof \App\Models\UsedVehiclePart) {
-                                                            $adRouteName = 'categories.fahrzeugeteile.show';
+                                                            $adRouteName = 'categories.vehicles-parts.show';
                                                             $adParamName = 'usedVehiclePart';
                                                         } else {
                                                             $adRouteName = 'ads.show';

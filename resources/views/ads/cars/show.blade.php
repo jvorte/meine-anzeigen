@@ -222,29 +222,6 @@
             </div>
         </section>
 
-    
-
-        {{-- Contact Information Section --}}
-        <section class="bg-gray-50 p-6 rounded-lg shadow-inner mb-8">
-            <h4 class="text-xl font-semibold text-gray-700 mb-6">Kontaktinformationen</h4>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                @if($car->user)
-                <div>
-                    <p class="text-sm font-semibold text-gray-800">Name des Ansprechpartners:</p>
-                    <p class="text-gray-700">{{ $car->user->name }}</p>
-                </div>
-                {{-- Assuming user or car has a contact number or email --}}
-                {{-- @if($car->user->phone)
-                <div>
-                    <p class="text-sm font-semibold text-gray-800">Telefon:</p>
-                    <p class="text-gray-700">{{ $car->user->phone }}</p>
-                </div>
-                @endif --}}
-                @else
-                    <p class="text-gray-600 italic md:col-span-3">Kontaktdaten des Verkäufers sind nicht verfügbar.</p>
-                @endif
-            </div>
-        </section>
 
     </div>
 </x-app-layout>

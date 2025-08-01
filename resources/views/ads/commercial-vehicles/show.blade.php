@@ -87,9 +87,7 @@
         {{-- Main Title of the Ad --}}
         <h1 class="text-3xl font-bold text-gray-800 mb-8">{{ $commercialVehicle->title }}</h1>
 
-        ---
-
-        {{-- Prices Section --}}
+            {{-- Prices Section --}}
         <section class="bg-gray-50 p-6 rounded-lg shadow-inner mb-8">
             <h4 class="text-xl font-semibold text-gray-700 mb-6">Preise</h4>
             <div>
@@ -98,8 +96,7 @@
             </div>
         </section>
 
-        ---
-
+     
         {{-- Description Section --}}
         <section class="bg-gray-50 p-6 rounded-lg shadow-inner mb-8">
             <h4 class="text-xl font-semibold text-gray-700 mb-6">Beschreibung</h4>
@@ -109,24 +106,25 @@
             </div>
         </section>
 
-        ---
+       
 
         {{-- Vehicle Details Section --}}
         <section class="bg-gray-50 p-6 rounded-lg shadow-inner mb-8">
             <h4 class="text-xl font-semibold text-gray-700 mb-6">Fahrzeugdetails</h4>
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                @if($commercialVehicle->brand)
-                <div>
-                    <p class="text-sm font-semibold text-gray-800">Marke:</p>
-                    <p class="text-gray-700">{{ $commercialVehicle->brand->name }}</p>
-                </div>
-                @endif
-                @if($commercialVehicle->carModel)
-                <div>
-                    <p class="text-sm font-semibold text-gray-800">Modell:</p>
-                    <p class="text-gray-700">{{ $commercialVehicle->carModel->name }}</p>
-                </div>
-                @endif
+           @if($commercialVehicle->commercialBrand) {{-- Check if the brand relationship exists --}}
+    <div>
+        <p class="text-sm font-semibold text-gray-800">Marke:</p>
+        <p class="text-gray-700">{{ $commercialVehicle->commercialBrand->name }}</p>
+    </div>
+@endif
+
+@if($commercialVehicle->commercialModel) {{-- Check if the model relationship exists --}}
+    <div>
+        <p class="text-sm font-semibold text-gray-800">Modell:</p>
+        <p class="text-gray-700">{{ $commercialVehicle->commercialModel->name }}</p>
+    </div>
+@endif
                 @if($commercialVehicle->first_registration)
                 <div>
                     <p class="text-sm font-semibold text-gray-800">Erstzulassung:</p>
@@ -208,7 +206,7 @@
             </div>
         </section>
 
-        ---
+   
 
         {{-- Photos & Documents Section --}}
         <section class="bg-gray-50 p-6 rounded-lg shadow-inner mb-8">
@@ -228,40 +226,11 @@
                 @else
                     <p class="text-gray-600 italic">Es sind keine Bilder für dieses Fahrzeug verfügbar.</p>
                 @endif
-                {{-- Add any other document links here if they exist on the $commercialVehicle model --}}
-                {{-- Example: --}}
-                {{-- @if($commercialVehicle->service_history_document_path)
-                <div>
-                    <p class="text-sm font-semibold text-gray-800">Servicehistorie:</p>
-                    <a href="{{ Storage::url($commercialVehicle->service_history_document_path) }}" target="_blank" class="text-blue-600 hover:underline">Ansehen</a>
-                </div>
-                @endif --}}
+         
             </div>
         </section>
 
-        ---
 
-        {{-- Contact Information Section --}}
-        <section class="bg-gray-50 p-6 rounded-lg shadow-inner mb-8">
-            <h4 class="text-xl font-semibold text-gray-700 mb-6">Kontaktinformationen</h4>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                @if($commercialVehicle->user)
-                <div>
-                    <p class="text-sm font-semibold text-gray-800">Name des Ansprechpartners:</p>
-                    <p class="text-gray-700">{{ $commercialVehicle->user->name }}</p>
-                </div>
-                {{-- Assuming user or commercialVehicle has a contact number or email --}}
-                {{-- @if($commercialVehicle->user->phone)
-                <div>
-                    <p class="text-sm font-semibold text-gray-800">Telefon:</p>
-                    <p class="text-gray-700">{{ $commercialVehicle->user->phone }}</p>
-                </div>
-                @endif --}}
-                @else
-                    <p class="text-gray-600 italic md:col-span-3">Kontaktdaten des Verkäufers sind nicht verfügbar.</p>
-                @endif
-            </div>
-        </section>
 
     </div>
 </x-app-layout>
