@@ -24,6 +24,8 @@ class DatabaseSeeder extends Seeder
               CarBrandsAndModelsSeeder::class, 
                CommercialBrandSeeder::class,
             CommercialModelSeeder::class,
+            CamperBrandSeeder::class,
+        CamperModelSeeder::class,
         ]);
   
         
@@ -32,6 +34,7 @@ class DatabaseSeeder extends Seeder
         User::factory()->create([
             'name' => 'Test User',
             'email' => 'test@example.com',
+            
         ]);
     }
 }

@@ -12,7 +12,7 @@ return new class extends Migration
         Schema::create('real_estate_images', function (Blueprint $table) {
             $table->id();
             $table->foreignId('real_estate_id')->constrained()->onDelete('cascade'); // Singular: real_estate_id
-            $table->string('path');
+            $table->string('image_path');
             $table->boolean('is_thumbnail')->default(false);
             $table->timestamps();
         });

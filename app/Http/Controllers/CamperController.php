@@ -4,10 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Models\Camper;
 use App\Models\CamperImage;
+use App\Models\CamperBrand; // Import the CamperBrand model
+use App\Models\CamperModel; // Import the CamperModel model
 use App\Http\Requests\StoreCamperRequest;
 use App\Http\Requests\UpdateCamperRequest;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\Auth; 
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\Request; // Make sure this is imported for getModelsByBrand
 
 class CamperController extends Controller
 {
@@ -18,13 +21,26 @@ class CamperController extends Controller
     private $transmissions = ['Manual', 'Automatic'];
     private $emissionClasses = ['Euro 1', 'Euro 2', 'Euro 3', 'Euro 4', 'Euro 5', 'Euro 6'];
 
+    /**
+     * Get models by brand ID for AJAX requests.
+     */
+    public function getModelsByBrand($brandId)
+    {
+        // IMPORTANT: Fetch from CamperModel, not Camper, and use pluck('name', 'id')
+        $models = CamperModel::where('camper_brand_id', $brandId)->orderBy('name')->pluck('name', 'id');
+        return response()->json($models);
+    }
 
     /**
      * Show the form for creating a new camper.
      */
     public function create()
     {
+        // Pass all camper brands to the view for the initial dropdown
+        $camperBrands = CamperBrand::orderBy('name')->get();
+
         return view('ads.camper.create', [
+            'camperBrands' => $camperBrands,
             'colors' => $this->colors,
             'camperTypes' => $this->camperTypes,
             'fuelTypes' => $this->fuelTypes,
@@ -33,11 +49,10 @@ class CamperController extends Controller
         ]);
     }
 
-    /**
-     * Store a newly created camper in storage.
-     */
+ 
     public function store(StoreCamperRequest $request)
     {
+   
         $validatedData = $request->validated();
 
         // Create the camper
@@ -48,6 +63,7 @@ class CamperController extends Controller
             foreach ($request->file('images') as $image) {
                 $path = $image->store('camper_images', 'public'); // Store in 'storage/app/public/camper_images'
                 $camper->images()->create(['image_path' => $path]);
+                
             }
         }
 
@@ -60,6 +76,9 @@ class CamperController extends Controller
      */
     public function show(Camper $camper)
     {
+        // Eager load relationships needed for the show view, e.g., brand and model
+        $camper->load('user', 'images', 'camperBrand', 'camperModel');
+
         return view('ads.camper.show', compact('camper')); // You'll need to create this view
     }
 
@@ -72,10 +91,24 @@ class CamperController extends Controller
         if (Auth::user()->id !== $camper->user_id) {
             abort(403, 'Unauthorized action.');
         }
+
         $camper->load('images'); // This fetches all associated images for the camper
+
+        // Pass all camper brands to the view
+        $camperBrands = CamperBrand::orderBy('name')->get();
+
+        // Pass models specific to the camper's current brand for the initial model dropdown state
+        $currentCamperModels = [];
+        if ($camper->camper_brand_id) {
+            $currentCamperModels = CamperModel::where('camper_brand_id', $camper->camper_brand_id)
+                                                ->orderBy('name')
+                                                ->get();
+        }
 
         return view('ads.camper.edit', [
             'camper' => $camper,
+            'camperBrands' => $camperBrands,       // New parameter
+            'currentCamperModels' => $currentCamperModels, // New parameter for edit view's model dropdown
             'colors' => $this->colors,
             'camperTypes' => $this->camperTypes,
             'fuelTypes' => $this->fuelTypes,
@@ -87,39 +120,39 @@ class CamperController extends Controller
     /**
      * Update the specified camper in storage.
      */
-   public function update(UpdateCamperRequest $request, Camper $camper)
-{
-    $validatedData = $request->validated();
+    public function update(UpdateCamperRequest $request, Camper $camper)
+    {
+      
+        $validatedData = $request->validated();
 
-    // Ενημέρωση των πεδίων του camper
-    $camper->update($validatedData);
+     
+        $camper->update($validatedData);
 
-    // Διαγραφή εικόνων που ο χρήστης τικάρει για διαγραφή
-    if ($request->filled('delete_images')) {
-        $imagesToDelete = $camper->images()->whereIn('id', $request->input('delete_images'))->get();
+        // Delete images that the user checked for deletion
+        if ($request->filled('delete_images')) {
+            $imagesToDelete = $camper->images()->whereIn('id', $request->input('delete_images'))->get();
 
-        foreach ($imagesToDelete as $image) {
-            Storage::disk('public')->delete($image->image_path);
-            $image->delete();
+            foreach ($imagesToDelete as $image) {
+                Storage::disk('public')->delete($image->image_path);
+                $image->delete();
+            }
         }
+
+        // Add new images
+        if ($request->hasFile('images')) {
+            foreach ($request->file('images') as $image) {
+                $path = $image->store('camper_images', 'public');
+                $camper->images()->create(['image_path' => $path]);
+            }
+        }
+
+        return redirect()->route('ads.camper.show', $camper->id)
+                         ->with('success', 'Wohnmobil Anzeige erfolgreich aktualisiert!');
     }
 
-    // Προσθήκη νέων εικόνων
-    if ($request->hasFile('images')) {
-        foreach ($request->file('images') as $image) {
-            $path = $image->store('camper_images', 'public');
-            $camper->images()->create(['image_path' => $path]);
-        }
-    }
-
-    return redirect()->route('ads.camper.show', $camper->id)
-                     ->with('success', 'Wohnmobil Anzeige erfolgreich aktualisiert!');
-}
 
 
-    /**
-     * Remove the specified camper from storage.
-     */
+    
     public function destroy(Camper $camper)
     {
         // Add authorization check
@@ -132,6 +165,7 @@ class CamperController extends Controller
             Storage::disk('public')->delete($image->image_path);
         }
 
+        // Soft delete the camper record
         $camper->delete();
 
         return redirect()->route('dashboard')->with('success', 'Wohnmobil Anzeige erfolgreich gelöscht!');

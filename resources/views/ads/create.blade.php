@@ -269,7 +269,7 @@
                                 <path d="M12 10h.01" />
                                 <path d="M20 20v2" />
                             </svg>
-                            <span>+Wohnmobile</span>
+                            <span>+Campers</span>
                         </a>
                     </div>
                 </div>

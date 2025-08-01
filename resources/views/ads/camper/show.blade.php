@@ -91,30 +91,54 @@
         <section class="bg-gray-50 p-6 rounded-lg shadow-inner mb-8">
             <h4 class="text-xl font-semibold text-gray-700 mb-6">Wohnmobildetails</h4>
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                @if($camper->brand)
+                @if($camper->camper_brand_id)
                 <div>
                     <p class="text-sm font-semibold text-gray-800">Marke:</p>
-                    <p class="text-gray-700">{{ $camper->brand }}</p>
+                    <p class="text-gray-700">{{ $camper->camperBrand->name  }}</p>
                 </div>
                 @endif
-                @if($camper->model)
+                @if($camper->camper_model_id)
                 <div>
                     <p class="text-sm font-semibold text-gray-800">Modell:</p>
-                    <p class="text-gray-700">{{ $camper->model }}</p>
+                    <p class="text-gray-700">{{ $camper->camperModel->name }}</p>
                 </div>
                 @endif
-                @if($camper->year)
+                     @if($camper->color)
+                <div>
+                    <p class="text-sm font-semibold text-gray-800">	color:</p>
+                    <p class="text-gray-700">{{ $camper->color }}</p>
+                </div>
+                @endif
+
+                     @if($camper->emission_class)
+                <div>
+                    <p class="text-sm font-semibold text-gray-800">Euro Class:</p>
+                    <p class="text-gray-700">{{ $camper->emission_class }}</p>
+                </div>
+                @endif
+
+
+                @if($camper->first_registration)
                 <div>
                     <p class="text-sm font-semibold text-gray-800">Baujahr:</p>
-                    <p class="text-gray-700">{{ $camper->year }}</p>
+                    <p class="text-gray-700">{{ $camper->first_registration->format('d.m.Y') }}</p>
                 </div>
                 @endif
+                 @if($camper->camper_type)
+                <div>
+                    <p class="text-sm font-semibold text-gray-800">camper_type:</p>
+                    <p class="text-gray-700">{{ $camper->camper_type }}</p>
+                </div>
+                @endif
+
+                
                 @if($camper->mileage)
                 <div>
                     <p class="text-sm font-semibold text-gray-800">Kilometerstand:</p>
                     <p class="text-gray-700">{{ number_format($camper->mileage, 0, ',', '.') }} km</p>
                 </div>
                 @endif
+                
                 @if($camper->condition)
                 <div>
                     <p class="text-sm font-semibold text-gray-800">Zustand:</p>
@@ -139,31 +163,34 @@
                     <p class="text-gray-700">{{ $camper->transmission }}</p>
                 </div>
                 @endif
-                @if($camper->engine_power_hp)
+                @if($camper->power)
                 <div>
                     <p class="text-sm font-semibold text-gray-800">Motorleistung:</p>
-                    <p class="text-gray-700">{{ $camper->engine_power_hp }} PS</p>
+                    <p class="text-gray-700">{{ $camper->power }} PS</p>
                 </div>
                 @endif
-                @if($camper->length_m)
-                <div>
-                    <p class="text-sm font-semibold text-gray-800">Länge:</p>
-                    <p class="text-gray-700">{{ $camper->length_m }} m</p>
-                </div>
-                @endif
-                @if($camper->width_m)
-                <div>
-                    <p class="text-sm font-semibold text-gray-800">Breite:</p>
-                    <p class="text-gray-700">{{ $camper->width_m }} m</p>
-                </div>
-                @endif
-                @if($camper->height_m)
-                <div>
-                    <p class="text-sm font-semibold text-gray-800">Höhe:</p>
-                    <p class="text-gray-700">{{ $camper->height_m }} m</p>
-                </div>
-                @endif
-                @if($camper->gross_vehicle_weight_kg)
+               @if($camper->total_length)
+    <div>
+        <p class="text-sm font-semibold text-gray-800">Länge:</p>
+        <p class="text-gray-700">{{ $camper->total_length }} m</p>
+    </div>
+@endif
+
+@if($camper->total_width)
+    <div>
+        <p class="text-sm font-semibold text-gray-800">Breite:</p>
+        <p class="text-gray-700">{{ $camper->total_width }} m</p>
+    </div>
+@endif
+
+@if($camper->total_height)
+    <div>
+        <p class="text-sm font-semibold text-gray-800">Höhe:</p>
+        <p class="text-gray-700">{{ $camper->total_height }} m</p>
+    </div>
+@endif
+           
+                @if($camper->gross_vehicle_weight)
                 <div>
                     <p class="text-sm font-semibold text-gray-800">Zul. Gesamtgewicht:</p>
                     <p class="text-gray-700">{{ number_format($camper->gross_vehicle_weight_kg, 0, ',', '.') }} kg</p>
@@ -204,36 +231,13 @@
                         </div>
                     </div>
                 @endif
-                {{-- Add any other document links here if they exist on the $camper model --}}
-                {{-- Example: --}}
-                {{-- @if($camper->service_manual_path)
-                <div>
-                    <p class="text-sm font-semibold text-gray-800">Servicehandbuch:</p>
-                    <a href="{{ Storage::url($camper->service_manual_path) }}" target="_blank" class="text-blue-600 hover:underline">Ansehen</a>
-                </div>
-                @endif --}}
+          
             </div>
         </section>
 
       
 
-        {{-- Contact Information Section --}}
-        <section class="bg-gray-50 p-6 rounded-lg shadow-inner mb-8">
-            <h4 class="text-xl font-semibold text-gray-700 mb-6">Kontaktinformationen</h4>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                @if($camper->user)
-                <div>
-                    <p class="text-sm font-semibold text-gray-800">Name des Ansprechpartners:</p>
-                    <p class="text-gray-700">{{ $camper->user->name }}</p>
-                </div>
-                {{-- Assuming user or camper has a contact number or email --}}
-                {{-- <div>
-                    <p class="text-sm font-semibold text-gray-800">Telefon:</p>
-                    <p class="text-gray-700">{{ $camper->user->phone ?? 'N/A' }}</p>
-                </div> --}}
-                @endif
-            </div>
-        </section>
+     
 
     </div>
 </x-app-layout>

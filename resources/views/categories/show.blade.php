@@ -62,7 +62,7 @@
                         $ads = \App\Models\Electronic::with('images')->orderBy('created_at', 'desc')->paginate(12);
                     } elseif ($category->slug == 'household') {
                         $ads = \App\Models\HouseholdItem::with('images')->orderBy('created_at', 'desc')->paginate(12);
-                    } elseif ($category->slug == 'realestate') {
+                    } elseif ($category->slug == 'real-estate') {
                         $ads = \App\Models\RealEstate::with('images')->orderBy('created_at', 'desc')->paginate(12);
                     } elseif ($category->slug == 'services') {
                         $ads = \App\Models\Service::with('images')->orderBy('created_at', 'desc')->paginate(12);
@@ -142,7 +142,7 @@
                                             } elseif ($category->slug == 'motorcycles') {
                                                 $detailRoute = route('categories.motorcycles.show', $ad);
                                             } elseif ($category->slug == 'nutzfahrzeuge') {
-                                                $detailRoute = route('categories.nutzfahrzeuge.show', $ad);
+                                                $detailRoute = route('categories.campers.show', $ad);
                                             } elseif ($category->slug == 'campers') {
                                                 $detailRoute = route('categories.campers.show', $ad);
                                             }

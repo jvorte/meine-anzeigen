@@ -225,58 +225,37 @@
                 </div>
             </section>
 
-            {{-- Photo Upload Section (with Alpine.js for previews) --}}
-            <section class="bg-gray-50 p-6 rounded-lg shadow-inner">
-                <h4 class="text-xl font-semibold text-gray-700 mb-6">Fotos hinzufügen</h4>
+           {{-- Photo Upload Section (with Alpine.js for previews) --}}
+<section class="bg-gray-50 p-6 rounded-lg shadow-inner">
+    <h4 class="text-xl font-semibold text-gray-700 mb-6">Fotos hinzufügen</h4>
 
-                {{-- Pass existing images to Alpine.js --}}
-                <div x-data="multiImageUploader(
-        {{ json_encode($motorradAd->images->map(fn($image) => [
-    'id' => $image->id,
-    'url' => asset('storage/' . $image->image_path),
-    'is_thumbnail' => $image->is_thumbnail, // Include this if you need to mark thumbnails
-])) }}
-    )" class="space-y-4">
-                    <input type="file" name="images[]" multiple @change="addNewFiles($event)"
-                        class="block w-full border p-2 rounded" />
-                    @error('images')
-                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-                    @enderror
-                    @error('images.*')
-                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-                    @enderror
+    {{-- Pass an empty array for initial images in create form --}}
+    <div x-data="multiImageUploader([])" class="space-y-4">
+        <input type="file" name="images[]" multiple @change="addNewFiles($event)"
+            class="block w-full border p-2 rounded" />
+        @error('images')
+            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+        @enderror
+        @error('images.*')
+            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+        @enderror
 
-                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-                        {{-- Loop through existing images --}}
-                        <template x-for="(image, index) in existingImages" :key="'existing-' + index">
-                            <div class="relative group">
-                                <img :src="image.url" class="w-full h-32 object-cover rounded shadow">
-                                {{-- Hidden input to send existing image ID to controller --}}
-                                <input type="hidden" :name="'existing_images[]'" :value="image.id">
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+            {{-- Loop through existing images (will be empty in create form) --}}
+            <template x-for="(image, index) in existingImages" :key="'existing-' + index">
+                {{-- ... (existing image display logic - won't be shown in create) ... --}}
+            </template>
 
-                                {{-- Button to remove existing image --}}
-                                <button type="button" @click="removeExisting(index)"
-                                    class="absolute top-1 right-1 bg-red-700 text-white w-6 h-6 rounded-full text-xs flex items-center justify-center hidden group-hover:flex">✕</button>
-
-                                {{-- Optionally, an indicator for thumbnail if applicable --}}
-                                {{-- <template x-if="image.is_thumbnail">
-                                    <span
-                                        class="absolute bottom-1 left-1 bg-blue-500 text-white px-2 py-1 text-xs rounded-full">Thumbnail</span>
-                                </template> --}}
-                            </div>
-                        </template>
-
-                        {{-- Loop through new previews (from uploaded files) --}}
-                        <template x-for="(preview, index) in newFilePreviews" :key="'new-' + index">
-                            <div class="relative group">
-                                <img :src="preview" class="w-full h-32 object-cover rounded shadow">
-                                {{-- Button to remove new image --}}
-                                <button type="button" @click="removeNewFile(index)"
-                                    class="absolute top-1 right-1 bg-red-700 text-white w-6 h-6 rounded-full text-xs flex items-center justify-center hidden group-hover:flex">✕</button>
-                            </div>
-                        </template>
-                    </div>
+            {{-- Loop through new previews (from uploaded files) --}}
+            <template x-for="(preview, index) in newFilePreviews" :key="'new-' + index">
+                <div class="relative group">
+                    <img :src="preview" class="w-full h-32 object-cover rounded shadow">
+                    <button type="button" @click="removeNewFile(index)"
+                        class="absolute top-1 right-1 bg-red-700 text-white w-6 h-6 rounded-full text-xs flex items-center justify-center hidden group-hover:flex">✕</button>
                 </div>
+            </template>
+        </div>
+    </div>
 
                 {{-- Alpine.js Script for Image Previews and Main Form Logic --}}
                 <script>

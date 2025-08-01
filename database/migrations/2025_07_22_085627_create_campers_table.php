@@ -11,11 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-      Schema::create('campers', function (Blueprint $table) {
+        Schema::create('campers', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained()->onDelete('cascade'); // Assuming users create campers
-            $table->string('brand');
-            $table->string('model');
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->foreignId('camper_brand_id')->constrained('camper_brands')->onDelete('cascade');
+            $table->foreignId('camper_model_id')->nullable()->constrained('camper_models')->onDelete('set null'); // Model can be null initially
             $table->decimal('price', 10, 2);
             $table->date('first_registration');
             $table->integer('mileage');
@@ -32,17 +32,16 @@ return new class extends Migration
             $table->string('transmission');
             $table->string('emission_class');
             $table->string('title');
-            $table->text('description');
-            $table->string('seller_name')->nullable();
-            $table->string('seller_phone')->nullable();
-            $table->string('seller_email')->nullable();
+            $table->text('description');  
             $table->timestamps();
+            $table->softDeletes(); 
         });
 
-      Schema::create('camper_images', function (Blueprint $table) {
+        Schema::create('camper_images', function (Blueprint $table) {
             $table->id();
             $table->foreignId('camper_id')->constrained()->onDelete('cascade');
             $table->string('image_path');
+              $table->boolean('is_thumbnail')->default(false);
             $table->timestamps();
         });
     }

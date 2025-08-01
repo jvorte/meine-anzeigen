@@ -21,8 +21,9 @@ class StoreCamperRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'brand' => ['required', 'string', 'max:255'],
-            'model' => ['required', 'string', 'max:255'],
+     'camper_brand_id' => ['required', 'exists:camper_brands,id'],
+            'camper_model_id' => ['nullable', 'exists:camper_models,id'], 
+
             'price' => ['required', 'numeric', 'min:0'],
             'first_registration' => ['required', 'date'],
             'mileage' => ['required', 'integer', 'min:0'],
@@ -39,10 +40,7 @@ class StoreCamperRequest extends FormRequest
             'transmission' => ['required', 'string', 'max:255'],
             'emission_class' => ['required', 'string', 'max:255'],
             'title' => ['required', 'string', 'max:255'],
-            'description' => ['required', 'string'],
-            // 'seller_name' => ['nullable', 'string', 'max:255'],
-            // 'seller_phone' => ['nullable', 'string', 'max:255'],
-            // 'seller_email' => ['nullable', 'email', 'max:255'],
+            'description' => ['required', 'string'],       
             'images' => ['nullable', 'array', 'max:10'], // Max 10 images
             'images.*' => ['image', 'mimes:jpeg,png,jpg,gif,svg', 'max:2048'], // Each image must be valid
         ];
