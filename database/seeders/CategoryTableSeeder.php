@@ -18,14 +18,14 @@ class CategoryTableSeeder extends Seeder
 
         $categories = [
             ['name' => 'Cars', 'slug' => 'cars'],
-            ['name' => 'Fahrzeugeteile', 'slug' => 'fahrzeugeteile'],
+            ['name' => 'Vehicles-parts', 'slug' => 'vehicles-parts'],
             ['name' => 'Boats', 'slug' => 'boats'],
             ['name' => 'Electronics', 'slug' => 'electronics'],
-            ['name' => 'Haushalt', 'slug' => 'haushalt'],
-            ['name' => 'Real Estate', 'slug' => 'realestate'],
-            ['name' => 'Dienstleistungen', 'slug' => 'dienstleistungen'],
-            ['name' => 'Sonstiges', 'slug' => 'sonstiges'],
-            ['name' => 'Motorräder', 'slug' => 'motorrad'],
+            ['name' => 'Household', 'slug' => 'household'],
+            ['name' => 'Real Estate', 'slug' => 'real-estate'],
+            ['name' => 'Services', 'slug' => 'services'],
+            ['name' => 'Οthers', 'slug' => 'others'],
+            ['name' => 'Motorcycles', 'slug' => 'motorcycles'],
             ['name' => 'Commercial-vehicle', 'slug' => 'commercial-vehicle'],
             ['name' => 'Campers', 'slug' => 'campers'],
         ];

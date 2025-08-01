@@ -174,14 +174,13 @@
                                                         }
                                                     @endphp
 
-                                                    @if ($adRouteName)
-                                                        <a href="{{ route($adRouteName, [$adParamName => $adParam]) }}"
-                                                            class="inline-block bg-blue-600 text-white px-4 py-2 rounded-md text-sm font-semibold hover:bg-blue-700 transition-colors duration-300 shadow-sm hover:shadow-md">Details
-                                                            ansehen</a>
-                                                    @else
+                                    @if ($adRouteName)
+                                        <a href="{{ route($adRouteName, [$adParamName => $adParam]) }}"
+                                            class="inline-block bg-blue-600 text-white px-4 py-2 rounded-md text-sm font-semibold hover:bg-blue-700 transition-colors duration-300 shadow-sm hover:shadow-md">Details
+                                            ansehen</a>
+                                    @else
                                                         <span
-                                                            class="inline-block bg-gray-400 text-white px-4 py-2 rounded-md text-sm font-semibold">Details
-                                                            (N/A)</span>
+                                                            class="inline-block bg-gray-400 text-white px-4 py-2 rounded-md text-sm font-semibold">Details(N/A)</span>
                                                     @endif
                                                 </div>
                                             </div>
