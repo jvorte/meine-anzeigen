@@ -62,7 +62,7 @@
                         $ads = \App\Models\Electronic::with('images')->orderBy('created_at', 'desc')->paginate(12);
                     } elseif ($category->slug == 'household') {
                         $ads = \App\Models\HouseholdItem::with('images')->orderBy('created_at', 'desc')->paginate(12);
-                    } elseif ($category->slug == 'realestate') {
+                    } elseif ($category->slug == 'real-estate') {
                         $ads = \App\Models\RealEstate::with('images')->orderBy('created_at', 'desc')->paginate(12);
                     } elseif ($category->slug == 'services') {
                         $ads = \App\Models\Service::with('images')->orderBy('created_at', 'desc')->paginate(12);
@@ -83,16 +83,24 @@
                     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
                         @foreach ($ads as $ad)
                             <div class="bg-white dark:bg-white rounded-lg shadow-md overflow-hidden transform transition-all duration-300 hover:scale-105 hover:shadow-xl">
-                                @php
+                              @php
                                     $imageUrl = 'https://placehold.co/400x250/E0E0E0/6C6C6C?text=No+Image'; // Default placeholder
 
                                     if ($ad->relationLoaded('images') && $ad->images->isNotEmpty()) {
                                         $thumbnailImage = $ad->images->firstWhere('is_thumbnail', true);
 
                                         if ($thumbnailImage) {
-                                            $imageUrl = asset('storage/' . $thumbnailImage->path);
+                                            // Χρησιμοποιούμε πάντα image_path, καθώς επιβεβαιώθηκε ότι αυτή είναι η στήλη
+                                            $imagePathToUse = $thumbnailImage->image_path;
+                                            if ($imagePathToUse) {
+                                                $imageUrl = asset('storage/' . $imagePathToUse);
+                                            }
                                         } else {
-                                            $imageUrl = asset('storage/' . $ad->images->first()->path);
+                                            // Χρησιμοποιούμε πάντα image_path
+                                            $imagePathToUse = $ad->images->first()->image_path;
+                                            if ($imagePathToUse) {
+                                                $imageUrl = asset('storage/' . $imagePathToUse);
+                                            }
                                         }
                                     }
                                 @endphp
@@ -142,7 +150,7 @@
                                             } elseif ($category->slug == 'motorcycles') {
                                                 $detailRoute = route('categories.motorcycles.show', $ad);
                                             } elseif ($category->slug == 'nutzfahrzeuge') {
-                                                $detailRoute = route('categories.nutzfahrzeuge.show', $ad);
+                                                $detailRoute = route('categories.campers.show', $ad);
                                             } elseif ($category->slug == 'campers') {
                                                 $detailRoute = route('categories.campers.show', $ad);
                                             }

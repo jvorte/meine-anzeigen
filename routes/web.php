@@ -130,7 +130,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/ads/camper/{camper}/edit', [CamperController::class, 'edit'])->name('ads.camper.edit');
     Route::put('/ads/camper/{camper}', [CamperController::class, 'update'])->name('ads.camper.update');
     Route::delete('/ads/camper/{camper}', [CamperController::class, 'destroy'])->name('ads.camper.destroy');
-
+Route::get('/api/camper-brands/{brandId}/models', [CamperController::class, 'getModelsByBrand'])->name('api.camper-brands.models');
 
     // Used Vehicle Parts
     Route::prefix('ads/used-vehicle-parts')->name('ads.used-vehicle-parts.')->group(function () {
@@ -182,6 +182,8 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/{realEstate}/edit', [RealEstateController::class, 'edit'])->name('edit');
         Route::put('/{realEstate}', [RealEstateController::class, 'update'])->name('update');
         Route::delete('/{realEstate}', action: [RealEstateController::class, 'destroy'])->name('destroy');
+
+        
     });
 
 

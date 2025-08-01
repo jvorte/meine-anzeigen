@@ -12,6 +12,7 @@ class CamperImage extends Model
     protected $fillable = [
         'camper_id',
         'image_path',
+         'is_thumbnail',
     ];
 
     /**

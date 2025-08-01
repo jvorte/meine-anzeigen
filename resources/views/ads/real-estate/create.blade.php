@@ -29,7 +29,7 @@
 {{-- --------------------------------------------------------------------------------- --}}
     <div class="max-w-6xl mx-auto p-6 bg-white rounded-lg shadow-xl mt-6">
 
-        <form method="POST" action="{{ route('ads.realestate.store') }}" enctype="multipart/form-data" class="space-y-8">
+        <form method="POST" action="{{ route('ads.real-estate.store') }}" enctype="multipart/form-data" class="space-y-8">
             @csrf
 
             {{-- Hidden field for category_slug --}}

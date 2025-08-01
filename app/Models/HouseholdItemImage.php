@@ -12,7 +12,7 @@ class HouseholdItemImage extends Model
 
     protected $fillable = [
         'household_item_id',
-        'image_path',   // <--- HIER AUF 'image_path' GEÄNDERT, um dem Schema zu entsprechen
+        'image_path',  
         'is_thumbnail',
     ];
 

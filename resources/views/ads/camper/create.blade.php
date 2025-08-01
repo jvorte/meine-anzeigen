@@ -3,7 +3,7 @@
     {{-- --------------------------------------------------------------------------------- --}}
     <x-slot name="header">
         <h2 class="text-3xl font-extrabold text-gray-900 leading-tight mb-2">
-            Neue Wohnmobil Anzeige erstellen
+            Neue Camper Anzeige erstellen
         </h2>
         <p class="text-md text-gray-700 dark:text-gray-500">
             Wähle eine passende Kategorie und fülle die erforderlichen Felder aus, um deine Anzeige zu erstellen.
@@ -30,35 +30,73 @@
         <form method="POST" action="{{ route('ads.camper.store') }}" enctype="multipart/form-data" class="space-y-8">
             @csrf
 
-            {{-- Vehicle Details Section (Marke & Modell) --}}
-            <section class="bg-gray-50 p-6 rounded-lg shadow-inner">
-                <h4 class="text-xl font-semibold text-gray-700 mb-6">Fahrzeugdetails</h4>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    {{-- Marke (Text Input) --}}
-                    <div>
-                        <label for="brand" class="block text-sm font-medium text-gray-700 mb-2">Marke</label>
-                        <input type="text" name="brand" id="brand" value="{{ old('brand') }}"
-                            placeholder="z.B. Bavaria, Jeanneau"
-                            class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
-                        @error('brand')
-                            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-                        @enderror
-                    </div>
+       {{-- Vehicle Details Section (Marke & Modell) --}}
+<section class="bg-gray-50 p-6 rounded-lg shadow-inner" x-data="{
+    selectedBrand: {{ old('camper_brand_id', $camper->camper_brand_id ?? 'null') }}, // For edit form, pre-select
+    models: [],
+    fetchModels() {
+        if (this.selectedBrand) {
+            fetch(`/api/camper-brands/${this.selectedBrand}/models`) // Adjust API route if needed
+                .then(response => response.json())
+                .then(data => {
+                    this.models = Object.keys(data).map(key => ({ id: key, name: data[key] }));
+                    // If in edit mode and old model exists, ensure it's selected after models load
+                    @if(old('camper_model_id') || (isset($camper) && $camper->camper_model_id))
+                        this.$nextTick(() => {
+                            let oldModelId = {{ old('camper_model_id', $camper->camper_model_id ?? 'null') }};
+                            if (oldModelId && this.models.some(model => model.id == oldModelId)) {
+                                document.getElementById('camper_model_id').value = oldModelId;
+                            }
+                        });
+                    @endif
+                })
+                .catch(error => {
+                    console.error('Error fetching models:', error);
+                    this.models = [];
+                });
+        } else {
+            this.models = [];
+        }
+    }
+}" x-init="fetchModels()">
+    <h4 class="text-xl font-semibold text-gray-700 mb-6">Fahrzeugdetails</h4>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div>
+            {{-- Marke (Dropdown from camper_brands table) --}}
+            <label for="camper_brand_id" class="block text-sm font-medium text-gray-700 mb-2">Marke</label>
+            <select name="camper_brand_id" id="camper_brand_id" x-model="selectedBrand" @change="fetchModels()"
+                class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
+                <option value="">Bitte wählen Sie eine Marke</option>
+                @foreach (App\Models\CamperBrand::orderBy('name')->get() as $brand)
+                    <option value="{{ $brand->id }}" {{ old('camper_brand_id', $camper->camper_brand_id ?? '') == $brand->id ? 'selected' : '' }}>
+                        {{ $brand->name }}
+                    </option>
+                @endforeach
+            </select>
+            @error('camper_brand_id')
+                <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+            @enderror
+        </div>
 
-                    {{-- Modell (Text Input) --}}
-                    <div>
-                        <label for="model" class="block text-sm font-medium text-gray-700 mb-2">Modell</label>
-                        <input type="text" name="model" id="model" value="{{ old('model') }}"
-                            placeholder="z.B. 37 Cruiser"
-                            class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
-                        @error('model')
-                            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-                        @enderror
-                    </div>
-                </div>
-                </div>
-            </section>
+        <div>
+            {{-- Modell (Dynamic Dropdown) --}}
+            <label for="camper_model_id" class="block text-sm font-medium text-gray-700 mb-2">Modell</label>
+            <select name="camper_model_id" id="camper_model_id"
+                class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50"
+                :disabled="!selectedBrand"> {{-- Disable until a brand is selected --}}
+                <option value="">Bitte wählen Sie ein Modell</option>
+                <template x-for="model in models" :key="model.id">
+                    <option :value="model.id" x-text="model.name"
+                        :selected="model.id == {{ old('camper_model_id', $camper->camper_model_id ?? 'null') }}">
+                    </option>
+                </template>
+            </select>
+            @error('camper_model_id')
+                <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+            @enderror
+        </div>
+    </div>
+</section>
 
             {{-- Basic Data Section --}}
             <section class="bg-gray-50 p-6 rounded-lg shadow-inner">
