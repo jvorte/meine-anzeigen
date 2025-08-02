@@ -29,7 +29,7 @@
                         'electronics' => asset('storage/images/tv.jpg'),
                         'household' => asset('storage/images/household_items.jpg'),
                         'real-estate' => asset('storage/images/real-estate.jpg'),
-                        'services' => asset('storage/images/services_banner.jpg'),
+                        'services' => asset('storage/images/worker.jpg'),
                         'others' => asset('storage/images/general_items.jpg'),
                         'motorcycles' => asset('storage/images/motorcycle.jpg'),
                         'commercial-vehicle' => asset('storage/images/trucks.jpg'),
