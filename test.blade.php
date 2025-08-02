@@ -6,10 +6,10 @@
         <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center px-4 py-2">
             <div>
                 <h1 class="text-4xl font-extrabold text-gray-900 leading-tight">
-                    Boots Anzeige
+                     Elektronik Anzeige
                 </h1>
                 <p class="mt-1 text-gray-600 max-w-xl">
-                    Umfangreiche Informationen zu Ihrer Boots-Anzeige
+                 Elektronik Anzeige
                 </p>
             </div>
             <div class="mt-3 sm:mt-0">
@@ -28,14 +28,13 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 p-10"> 
         {{-- Breadcrumbs --}}
         <x-breadcrumbs :items="[
-            ['label' => 'Alle Boots-Anzeigen', 'url' => route('ads.index')],
-            ['label' => 'Boote', 'url' => route('categories.show', 'boats')],
-            ['label' => $boat->title, 'url' => null],
-        ]" class="mb-8" />
+               ['label' => 'Elektronik Anzeigen', 'url' => route('categories.show', 'elektronik')],
+                ['label' => $electronic->title, 'url' => null],
+            ]" />
 
         {{-- Action Buttons and Back link --}}
         <div class="flex flex-col sm:flex-row justify-between items-center mb-8 gap-4">
-            <a href="{{ url()->previous() }}" 
+            <a href="{{ route('dashboard') }}" 
                 class="inline-flex items-center text-gray-700 hover:text-gray-900 transition duration-300 font-medium space-x-1">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M15 19l-7-7 7-7"></path>
@@ -45,12 +44,12 @@
 
             <div class="flex items-center space-x-3 pt-10">
                 @auth
-                    @if (auth()->id() === $boat->user_id || (auth()->user() && auth()->user()->isAdmin()))
-                        <a href="{{ route('ads.boats.edit', $boat->id) }}" 
+                    @if (auth()->id() === $electronic->user_id || (auth()->user() && auth()->user()->isAdmin()))
+                        <a href="{{ route('ads.boats.edit', $electronic->id) }}" 
                             class="px-5 py-2 bg-gray-700 hover:bg-gray-800 text-white rounded-full shadow-lg transition transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2">
                             Anzeige bearbeiten
                         </a>
-                        <form action="{{ route('ads.boats.destroy', $boat->id) }}" method="POST"
+                        <form action="{{ route('ads.boats.destroy', $electronic->id) }}" method="POST"
                             onsubmit="return confirm('Sind Sie sicher, dass Sie diese Anzeige löschen möchten? Diese Aktion kann nicht rückgängig gemacht werden.')">
                             @csrf
                             @method('DELETE')
@@ -72,8 +71,8 @@
 
             {{-- Left Column: Images and Thumbnails --}}
             <section x-data="{
-                images: @js($boat->images->pluck('path')),
-                activeImage: '{{ $boat->images->first()->path ?? '' }}',
+                images: @js($electronic->images->pluck('path')),
+                activeImage: '{{ $electronic->images->first()->image_path ?? '' }}',
                 showModal: false,
                 scaleUp: false,
                 currentIndex: 0,
@@ -134,7 +133,7 @@
 
                 {{-- Thumbnails --}}
                 <div class="flex space-x-4 overflow-x-auto no-scrollbar w-full max-w-xl px-2">
-                    @foreach ($boat->images as $image)
+                    @foreach ($electronic->images as $image)
                         <img src="{{ Storage::url($image->path) }}" alt="Thumbnail"
                             @click="changeImage('{{ $image->path }}')" 
                             class="flex-shrink-0 w-20 h-20 rounded-xl object-cover cursor-pointer shadow-md transform transition duration-300 hover:scale-105 ring-2 focus:ring-4 focus:ring-gray-700 focus:outline-none"
@@ -208,13 +207,13 @@
                 {{-- Title and Pricing --}}
                 <div>
                     <h2 class="text-4xl font-extrabold text-gray-900 mb-4 leading-tight">
-                        {{ $boat->title }}
+                        {{ $electronic->title }}
                     </h2>
 
                     <div class="flex items-baseline space-x-3 mb-6">
-                        @if ($boat->price)
+                        @if ($electronic->price)
                             <p class="text-3xl text-gray-700 font-extrabold [&>span]:text-base [&>span]:font-normal [&>span]:ml-1">
-                                &euro;{{ number_format($boat->price, 2, ',', '.') }}
+                                &euro;{{ number_format($electronic->price, 2, ',', '.') }}
                                 <span> / Einheit</span>
                             </p>
                         @else
@@ -223,8 +222,8 @@
                     </div>
 
                     <div class="prose prose-lg max-w-none text-gray-700">
-                        @if ($boat->description)
-                            {!! nl2br(e($boat->description)) !!}
+                        @if ($electronic->description)
+                            {!! nl2br(e($electronic->description)) !!}
                         @else
                             <p class="italic text-gray-400">Keine Beschreibung verfügbar.</p>
                         @endif
@@ -234,27 +233,30 @@
 
 
 
+
+
+
                    {{-- Seller / Anbieter Info --}}
                     <div class="border-t border-gray-300 pt-6">
                         <h3 class="text-xl font-semibold text-gray-700 mb-3">Anbieterinformationen</h3>
-                        @if ($boat->user)
+                        @if ($electronic->user)
                             <dl class="space-y-2 text-gray-900">
                                 <div>
                                     <dt class="inline font-semibold">Name:</dt>
-                                    <dd class="inline">{{ $boat->user->name }}</dd>
+                                    <dd class="inline">{{ $electronic->user->name }}</dd>
                                 </div>
                                 <div>
                                     <dt class="inline font-semibold">E-Mail:</dt>
-                                    <dd class="inline">{{ $boat->user->email }}</dd>
+                                    <dd class="inline">{{ $electronic->user->email }}</dd>
                                 </div>
                                 @if($boat->user->city)
                                 <div>
                                     <dt class="inline font-semibold">Stadt:</dt>
-                                    <dd class="inline">{{ $boat->user->city }}</dd>
+                                    <dd class="inline">{{ $electronic->user->city }}</dd>
                                 </div>
                                 @endif
                             </dl>
-                            <a href="{{ route('messages.create', $boat->user->id) }}" 
+                            <a href="{{ route('messages.create', $electronic->user->id) }}" 
                                 class="mt-6 block w-full text-center bg-red-700 text-white font-semibold py-3 rounded-full shadow-lg hover:bg-gray-800 transition focus:ring-4 focus:ring-gray-500 focus:ring-opacity-75">
                                 Kontakt aufnehmen
                             </a>
@@ -267,105 +269,100 @@
 
 
 
+
+
+
+
                 <div class="bg-gray-100 shadow-md rounded-2xl p-6 space-y-6">
 
                     {{-- Boat Details Grid --}}
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
 
-                        @if ($boat->brand)
-                            <dl>
-                                <dt class="font-semibold text-gray-700 mb-1">Marke</dt>
-                                <dd class="text-gray-900">{{ $boat->brand }}</dd>
-                            </dl>
-                        @endif
-
-                        @if ($boat->model)
-                            <dl>
-                                <dt class="font-semibold text-gray-700 mb-1">Modell</dt>
-                                <dd class="text-gray-900">{{ $boat->model }}</dd>
-                            </dl>
-                        @endif
-
-                        @if ($boat->year_of_construction)
-                            <dl>
-                                <dt class="font-semibold text-gray-700 mb-1">Baujahr</dt>
-                                <dd class="text-gray-900">{{ $boat->year_of_construction }}</dd>
-                            </dl>
-                        @endif
-
-                        @if ($boat->condition)
-                            <dl>
-                                <dt class="font-semibold text-gray-700 mb-1">Zustand</dt>
-                                <dd class="text-gray-900">{{ $boat->condition }}</dd>
-                            </dl>
-                        @endif
-
-                        @if ($boat->boat_type)
-                            <dl>
-                                <dt class="font-semibold text-gray-700 mb-1">Boots-Typ</dt>
-                                <dd class="text-gray-900">{{ $boat->boat_type }}</dd>
-                            </dl>
-                        @endif
-
-                        @if ($boat->material)
-                            <dl>
-                                <dt class="font-semibold text-gray-700 mb-1">Material</dt>
-                                <dd class="text-gray-900">{{ $boat->material }}</dd>
-                            </dl>
-                        @endif
-
-                        @if ($boat->total_length)
-                            <dl>
-                                <dt class="font-semibold text-gray-700 mb-1">Gesamtlänge</dt>
-                                <dd class="text-gray-900">{{ $boat->total_length }} m</dd>
-                            </dl>
-                        @endif
-
-                        @if ($boat->total_width)
-                            <dl>
-                                <dt class="font-semibold text-gray-700 mb-1">Gesamtbreite</dt>
-                                <dd class="text-gray-900">{{ $boat->total_width }} m</dd>
-                            </dl>
-                        @endif
-
-                        @if ($boat->berths)
-                            <dl>
-                                <dt class="font-semibold text-gray-700 mb-1">Kojen</dt>
-                                <dd class="text-gray-900">{{ $boat->berths }}</dd>
-                            </dl>
-                        @endif
-
-                        @if ($boat->engine_type)
-                            <dl>
-                                <dt class="font-semibold text-gray-700 mb-1">Motortyp</dt>
-                                <dd class="text-gray-900">{{ $boat->engine_type }}</dd>
-                            </dl>
-                        @endif
-
-                        @if ($boat->engine_power)
-                            <dl>
-                                <dt class="font-semibold text-gray-700 mb-1">Motorleistung</dt>
-                                <dd class="text-gray-900">{{ $boat->engine_power }} PS</dd>
-                            </dl>
-                        @endif
-
-                        @if ($boat->operating_hours)
-                            <dl>
-                                <dt class="font-semibold text-gray-700 mb-1">Betriebsstunden</dt>
-                                <dd class="text-gray-900">{{ number_format($boat->operating_hours, 0, ',', '.') }} Std.</dd>
-                            </dl>
-                        @endif
-
-                        @if ($boat->last_service)
-                            <dl>
-                                <dt class="font-semibold text-gray-700 mb-1">Letzter Service</dt>
-                                <dd class="text-gray-900">{{ \Carbon\Carbon::parse($boat->last_service)->format('d.m.Y') }}</dd>
-                            </dl>
-                        @endif
-                    </div>
-
-                 
+                         @if($electronic->electronicBrand)
+                <div>
+                    <p class="text-sm font-semibold text-gray-800">Marke:</p>
+                    <p class="text-gray-700">{{ $electronic->electronicBrand->name }}</p>
                 </div>
+                @endif
+                @if($electronic->electronicModel)
+                <div>
+                    <p class="text-sm font-semibold text-gray-800">Modell:</p>
+                    <p class="text-gray-700">{{ $electronic->electronicModel->name }}</p>
+                </div>
+                @endif
+                @if($electronic->condition)
+                <div>
+                    <p class="text-sm font-semibold text-gray-800">Zustand:</p>
+                    <p class="text-gray-700">{{ $electronic->condition }}</p>
+                </div>
+                @endif
+                @if($electronic->year_of_purchase)
+                <div>
+                    <p class="text-sm font-semibold text-gray-800">Kaufjahr:</p>
+                    <p class="text-gray-700">{{ $electronic->year_of_purchase }}</p>
+                </div>
+                @endif
+                @if($electronic->warranty_status)
+                <div>
+                    <p class="text-sm font-semibold text-gray-800">Garantie-Status:</p>
+                    <p class="text-gray-700">{{ $electronic->warranty_status }}</p>
+                </div>
+                @endif
+                @if($electronic->color)
+                <div>
+                    <p class="text-sm font-semibold text-gray-800">Farbe:</p>
+                    <p class="text-gray-700">{{ $electronic->color }}</p>
+                </div>
+                @endif
+                @if($electronic->usage_time)
+                <div>
+                    <p class="text-sm font-semibold text-gray-800">Nutzungsdauer:</p>
+                    <p class="text-gray-700">{{ $electronic->usage_time }}</p>
+                </div>
+                @endif
+                @if($electronic->power)
+                <div>
+                    <p class="text-sm font-semibold text-gray-800">Leistung:</p>
+                    <p class="text-gray-700">{{ $electronic->power }}</p>
+                </div>
+                @endif
+                @if($electronic->operating_system)
+                <div>
+                    <p class="text-sm font-semibold text-gray-800">Betriebssystem:</p>
+                    <p class="text-gray-700">{{ $electronic->operating_system }}</p>
+                </div>
+                @endif
+                @if($electronic->storage_capacity)
+                <div>
+                    <p class="text-sm font-semibold text-gray-800">Speicherkapazität:</p>
+                    <p class="text-gray-700">{{ $electronic->storage_capacity }}</p>
+                </div>
+                @endif
+                @if($electronic->screen_size)
+                <div>
+                    <p class="text-sm font-semibold text-gray-800">Bildschirmgröße:</p>
+                    <p class="text-gray-700">{{ $electronic->screen_size }}</p>
+                </div>
+                @endif
+                @if($electronic->processor)
+                <div>
+                    <p class="text-sm font-semibold text-gray-800">Prozessor:</p>
+                    <p class="text-gray-700">{{ $electronic->processor }}</p>
+                </div>
+                @endif
+                @if($electronic->ram)
+                <div>
+                    <p class="text-sm font-semibold text-gray-800">RAM:</p>
+                    <p class="text-gray-700">{{ $electronic->ram }}</p>
+                </div>
+                @endif
+                @if($electronic->accessories)
+                <div class="lg:col-span-3"> {{-- Span full width for accessories as it's a longer text field --}}
+                    <p class="text-sm font-semibold text-gray-800">Zubehör:</p>
+                    <p class="text-gray-700">{{ $electronic->accessories }}</p>
+                </div>
+                @endif
+            </div>
             </section>
         </article>
     </div>
