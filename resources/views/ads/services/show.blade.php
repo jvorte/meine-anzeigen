@@ -2,265 +2,298 @@
 
 <x-app-layout>
     <x-slot name="header">
-        {{-- "Neu Anzeige" button --}}
-        <div class="px-4 py-1 md:py-1 flex justify-end items-center">
-            <a href="{{ route('ads.create') }}"
-                class="inline-flex items-center px-6 py-3 border border-transparent text-base font-semibold rounded-full shadow-lg text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-all duration-300 transform hover:scale-105">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
-                    stroke="currentColor" class="w-5 h-5 mr-2">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
-                </svg>
-                Neu Anzeige
-            </a>
-        </div>
-        {{-- Main page title --}}
-        <h2 class="text-3xl font-extrabold text-gray-900 leading-tight mb-2">
-            Dienstleistung Anzeige
-        </h2>
-        <p class="text-md text-gray-700 dark:text-gray-500">
-            Detaillierte Ansicht Ihrer Dienstleistungsanzeige.
-        </p>
-    </x-slot>
-
-    <div class="py-2">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            {{-- Breadcrumbs component --}}
-            <x-breadcrumbs :items="[
-                ['label' => 'Alle Anzeigen', 'url' => route('ads.index')],
-                ['label' => 'Dienstleistungen', 'url' => route('categories.show', 'services')], {{-- Assuming 'services' is the slug for services --}}
-                ['label' => $service->title, 'url' => null],
-            ]" />
-        </div>
-    </div>
-
-    {{-- Action Buttons (Consistent placement and styling) --}}
-<div class="max-w-6xl mx-auto my-5 flex justify-between items-center">
-    <!-- Αριστερό κουμπί -->
-    <div>
-  
-
-<a href="{{ url()->previous() }}" class="inline-flex items-center text-sm text-gray-700 hover:text-indigo-600 transition duration-200">
-    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
-    </svg>
-    {{ __('Back') }}
-</a>
-
-
-    </div>
-
-    <!-- Δεξιό μπλοκ κουμπιών -->
-    <div class="flex space-x-4 items-center">
- 
-
-        @auth
-            @if (auth()->id() === $service->user_id || (auth()->user() && auth()->user()->isAdmin()))
-                <a href="{{ route('ads.services.edit', $service->id) }}" class="inline-flex items-center px-4 py-2 border border-blue-600 text-blue-600 text-xs rounded-md hover:bg-blue-50 transition">
-                    Anzeige bearbeiten
-                </a>
-                <form action="{{ route('ads.services.destroy', $service->id) }}" method="POST"
-                    onsubmit="return confirm('Sind Sie sicher, dass Sie diese Anzeige löschen möchten? Diese Aktion kann nicht rückgängig gemacht werden.');">
-                    @csrf
-                    @method('DELETE')
-                    <button type="submit" class="inline-flex items-center px-4 py-2 border border-red-600 text-red-600 text-xs rounded-md hover:bg-red-50 transition">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1.5" fill="currentColor" viewBox="0 0 20 20">
-                            <path d="M6 8a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1z" />
-                            <path fill-rule="evenodd" d="M4 5a2 2 0 012-2h8a2 2 0 012 2v10a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm2 0v10h8V5H6z" clip-rule="evenodd" />
-                        </svg>
-                        Anzeige löschen
-                    </button>
-                </form>
-            @endif
-        @endauth
-    </div>
-</div>
-
-    <div class="max-w-6xl mx-auto p-6 bg-white rounded-lg shadow-xl my-6">
-
-        {{-- Main Title of the Ad --}}
-        <h1 class="text-3xl font-bold text-gray-800 mb-8">{{ $service->title }}</h1>
-
-  <div x-data="{
-        images: @js($service->images->pluck('path')),
-        activeImage: '{{ $service->images->first()->path ?? '' }}',
-        showModal: false,
-        scaleUp: false,
-        currentIndex: 0,
-        init() {
-            this.currentIndex = this.images.indexOf(this.activeImage);
-        },
-        changeImage(path) {
-            this.scaleUp = false;
-            this.activeImage = path;
-            this.currentIndex = this.images.indexOf(path);
-            setTimeout(() => this.scaleUp = true, 50);
-        },
-        openModal() {
-            this.showModal = true;
-            document.body.classList.add('overflow-hidden');
-        },
-        closeModal() {
-            this.showModal = false;
-            document.body.classList.remove('overflow-hidden');
-        },
-        nextImage() {
-            if (this.currentIndex < this.images.length - 1) {
-                this.changeImage(this.images[++this.currentIndex]);
-            }
-        },
-        prevImage() {
-            if (this.currentIndex > 0) {
-                this.changeImage(this.images[--this.currentIndex]);
-            }
-        }
-    }" 
-    x-init="init"
-    @keydown.escape.window="closeModal"
-    class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12"
->
-    {{-- Κεντρική Εικόνα --}}
-    <div class="flex flex-col items-center">
-        <div class="relative w-full h-96 overflow-hidden rounded-lg cursor-pointer" @click="openModal">
-            <template x-if="activeImage">
-                <img 
-                    :src="'{{ Storage::url('') }}' + activeImage" 
-                    class="absolute inset-0 w-full h-full object-cover rounded-lg shadow transition duration-500 ease-in-out transform"
-                    :class="{ 'scale-105 opacity-100': scaleUp, 'opacity-0': !scaleUp }"
-                    @load="scaleUp = true"
-                    alt="Selected"
-                >
-            </template>
-        </div>
-
-        {{-- Thumbnails --}}
-        <div class="flex mt-4 gap-3 overflow-x-auto">
-            @foreach ($service->images as $image)
-                <img 
-                    src="{{ Storage::url($image->path) }}" 
-                    @click="changeImage('{{ $image->path }}')" 
-                    class="w-24 h-24 object-cover rounded cursor-pointer border-2 transition" 
-                    :class="{ 'border-rose-500': activeImage === '{{ $image->path }}' }"
-                    alt="Thumb"
-                >
-            @endforeach
-        </div>
-    </div>
-
-    {{-- Πληροφορίες Πωλητή --}}
-    <div class="bg-gray-100 p-6 rounded-lg shadow-md">
-        <h3 class="text-lg font-semibold text-gray-800 mb-4">Anbieterinformationen</h3>
-
-        @if($service->user)
-            <p><span class="font-semibold">Name:</span> {{ $service->user->name }}</p>
-            <p><span class="font-semibold">E-Mail:</span> {{ $service->user->email }}</p>
-            <a href="{{ route('messages.create', $service->user->id) }}" class="mt-4 inline-block bg-rose-600 text-white px-4 py-2 rounded hover:bg-rose-700 transition">
-                Kontakt aufnehmen
-            </a>
-        @else
-            <p class="text-red-600 italic">Anbieterinformationen nicht verfügbar.</p>
-        @endif
-    </div>
-
-    {{-- Fullscreen Modal --}}
-    <div 
-        x-show="showModal" 
-        x-transition.opacity 
-        class="fixed inset-0 z-50 bg-black bg-opacity-90 flex items-center justify-center"
-        style="display: none;"
-    >
-        <button @click="closeModal" class="absolute top-6 right-6 text-white text-3xl font-bold">&times;</button>
-
-        <div class="relative max-w-4xl w-full px-4">
-            <button @click="prevImage" class="absolute left-0 top-1/2 transform -translate-y-1/2 text-white text-4xl px-4">&#10094;</button>
-            <img 
-                :src="'{{ Storage::url('') }}' + activeImage" 
-                class="mx-auto max-h-[90vh] object-contain transition duration-500 ease-in-out transform scale-100 opacity-100" 
-                alt="Fullscreen"
-            >
-            <button @click="nextImage" class="absolute right-0 top-1/2 transform -translate-y-1/2 text-white text-4xl px-4">&#10095;</button>
-        </div>
-    </div>
-</div>
-
-
-        {{-- Prices Section --}}
-        <section class="bg-gray-50 p-6 rounded-lg shadow-inner mb-8">
-            <h4 class="text-xl font-semibold text-gray-700 mb-6">Preise</h4>
+        {{-- Header with "Neu Anzeige" button on top right --}}
+        <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center px-4 py-2">
             <div>
-                <p class="text-sm font-semibold text-gray-800">Preis:</p>
-                <p class="text-gray-700">
-                    @if ($service->price)
-                        &euro;{{ number_format($service->price, 2, ',', '.') }}
-                    @else
-                        Nach Absprache
-                    @endif
+                <h1 class="text-4xl font-extrabold text-gray-900 leading-tight">
+                    Dienstleistung Anzeige
+                </h1>
+                <p class="mt-1 text-gray-600 max-w-xl">
+                    Detaillierte Ansicht Ihrer Dienstleistungsanzeige
                 </p>
             </div>
-        </section>
-
- 
-
-        {{-- Description Section --}}
-        <section class="bg-gray-50 p-6 rounded-lg shadow-inner mb-8">
-            <h4 class="text-xl font-semibold text-gray-700 mb-6">Beschreibung</h4>
-            <div>
-                <p class="text-sm font-semibold text-gray-800">Hauptbeschreibung:</p>
-                <p class="text-gray-700 leading-relaxed">{{ $service->description ?? 'Keine Beschreibung verfügbar.' }}</p>
+            <div class="mt-3 sm:mt-0">
+                <a href="{{ route('ads.create') }}" 
+                    class="inline-flex items-center px-6 py-3 bg-red-700 text-white rounded-full shadow-lg hover:bg-gray-800 focus:ring-4 focus:ring-gray-400 focus:ring-opacity-50 transition transform hover:scale-105">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5"
+                        stroke="currentColor" class="w-5 h-5 mr-2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                    </svg>
+                    Neu Anzeige
+                </a>
             </div>
-        </section>
+        </div>
+    </x-slot>
 
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 p-10"> 
+        {{-- Breadcrumbs --}}
+        <x-breadcrumbs :items="[
+            ['label' => 'Alle Anzeigen', 'url' => route('ads.index')],
+            ['label' => 'Dienstleistungen', 'url' => route('categories.show', 'services')],
+            ['label' => $service->title, 'url' => null],
+        ]" class="mb-8" />
 
+        {{-- Action Buttons and Back link --}}
+        <div class="flex flex-col sm:flex-row justify-between items-center mb-8 gap-4">
+            <a href="{{ url()->previous() }}" 
+                class="inline-flex items-center text-gray-700 hover:text-gray-900 transition duration-300 font-medium space-x-1">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M15 19l-7-7 7-7"></path>
+                </svg>
+                <span>Zurück</span>
+            </a>
 
-        {{-- Service Details Section --}}
-        <section class="bg-gray-50 p-6 rounded-lg shadow-inner mb-8">
-            <h4 class="text-xl font-semibold text-gray-700 mb-6">Dienstleistungsdetails</h4>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                @if($service->service_type)
-                <div>
-                    <p class="text-sm font-semibold text-gray-800">Art der Dienstleistung:</p>
-                    <p class="text-gray-700">{{ $service->service_type }}</p>
-                </div>
-                @endif
-                @if($service->availability)
-                <div>
-                    <p class="text-sm font-semibold text-gray-800">Verfügbarkeit:</p>
-                    <p class="text-gray-700">{{ $service->availability }}</p>
-                </div>
-                @endif
-                @if($service->location)
-                <div>
-                    <p class="text-sm font-semibold text-gray-800">Standort / Region:</p>
-                    <p class="text-gray-700">{{ $service->location }}</p>
-                </div>
-                @endif 
-
+            <div class="flex items-center space-x-3 pt-10">
+                @auth
+                    @if (auth()->id() === $service->user_id || (auth()->user() && auth()->user()->isAdmin()))
+                        <a href="{{ route('ads.services.edit', $service->id) }}" 
+                            class="px-5 py-2 bg-gray-700 hover:bg-gray-800 text-white rounded-full shadow-lg transition transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2">
+                            Anzeige bearbeiten
+                        </a>
+                        <form action="{{ route('ads.services.destroy', $service->id) }}" method="POST"
+                            onsubmit="return confirm('Sind Sie sicher, dass Sie diese Anzeige löschen möchten? Diese Aktion kann nicht rückgängig gemacht werden.')">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" 
+                                class="px-5 py-2 bg-red-600 hover:bg-gray-700 text-white rounded-full shadow-lg transition transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 flex items-center space-x-1">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20" class="w-5 h-5">
+                                    <path d="M6 8a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1z" />
+                                    <path fill-rule="evenodd" d="M4 5a2 2 0 012-2h8a2 2 0 012 2v10a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm2 0v10h8V5H6z" clip-rule="evenodd" />
+                                </svg>
+                                <span>Anzeige löschen</span>
+                            </button>
+                        </form>
+                    @endif
+                @endauth
             </div>
-        </section>
+        </div>
 
-        {{-- Photos & Documents Section --}}
-        {{-- <section class="bg-gray-50 p-6 rounded-lg shadow-inner mb-8">
-            <h4 class="text-xl font-semibold text-gray-700 mb-6">Fotos & Dokumente</h4>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                @if (isset($service->images) && $service->images->count() > 0)
-                    <div class="md:col-span-2">
-                        <p class="text-sm font-semibold text-gray-800 mb-2">Bilder:</p>
-                        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                            @foreach ($service->images as $image)
-                                <a href="{{ Storage::url($image->path) }}" target="_blank" class="block">
-                                    <img src="{{ Storage::url($image->path) }}" alt="Dienstleistungsbild" class="w-full h-32 object-cover rounded-md shadow-sm">
-                                </a>
-                            @endforeach
-                        </div>
+        <article class="bg-white rounded-2xl shadow-2xl p-8 lg:p-14 grid grid-cols-1 md:grid-cols-2 gap-12">
+
+            {{-- Left Column: Images and Thumbnails --}}
+            <section x-data="{
+                images: @js($service->images->pluck('path')),
+                activeImage: '{{ $service->images->first()->path ?? '' }}',
+                showModal: false,
+                scaleUp: false,
+                currentIndex: 0,
+                init() {
+                    this.currentIndex = this.images.indexOf(this.activeImage);
+                },
+                changeImage(path) {
+                    this.scaleUp = false;
+                    this.activeImage = path;
+                    this.currentIndex = this.images.indexOf(path);
+                    setTimeout(() => this.scaleUp = true, 50);
+                },
+                openModal() {
+                    this.showModal = true;
+                    document.body.classList.add('overflow-hidden');
+                },
+                closeModal() {
+                    this.showModal = false;
+                    document.body.classList.remove('overflow-hidden');
+                },
+                nextImage() {
+                    if (this.currentIndex < this.images.length - 1) {
+                        this.changeImage(this.images[++this.currentIndex]);
+                    }
+                },
+                prevImage() {
+                    if (this.currentIndex > 0) {
+                        this.changeImage(this.images[--this.currentIndex]);
+                    }
+                }
+            }" 
+            x-init="init"
+            @keydown.escape.window="closeModal"
+            class="flex flex-col items-center space-y-6"
+            >
+
+                {{-- Main Image Container --}}
+                <div class="relative w-full rounded-3xl cursor-pointer shadow-lg overflow-hidden" @click="openModal" style="aspect-ratio: 4 / 3;">
+                    <template x-if="activeImage">
+                        <img 
+                            :src="'{{ Storage::url('') }}' + activeImage" 
+                            alt="Hauptbild"
+                            class="object-cover w-full h-full transition-transform duration-700 ease-in-out rounded-3xl"
+                            :class="{ 'scale-105 opacity-100': scaleUp, 'opacity-0': !scaleUp }"
+                            @load="scaleUp = true"
+                            loading="lazy"
+                            draggable="false"
+                        >
+                    </template>
+
+                    {{-- Overlay icon for fullscreen preview (magnifier) --}}
+                    <div class="absolute bottom-4 right-4 bg-white rounded-full p-2 shadow-lg hover:bg-gray-100 transition">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="w-6 h-6 text-gray-700">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 15l5 5m-1-10a6 6 0 11-12 0 6 6 0 0112 0z" />
+                        </svg>
                     </div>
-                @else
-                    <p class="text-gray-600 italic">Es sind keine Bilder für diese Dienstleistung verfügbar.</p>
-                @endif
-             
-            </div>
-        </section> --}}
+                </div>
 
- 
+                {{-- Thumbnails --}}
+                <div class="flex space-x-4 overflow-x-auto no-scrollbar w-full max-w-xl px-2">
+                    @foreach ($service->images as $image)
+                        <img src="{{ Storage::url($image->path) }}" alt="Thumbnail"
+                            @click="changeImage('{{ $image->path }}')" 
+                            class="flex-shrink-0 w-20 h-20 rounded-xl object-cover cursor-pointer shadow-md transform transition duration-300 hover:scale-105 ring-2 focus:ring-4 focus:ring-gray-700 focus:outline-none"
+                            :class="activeImage === '{{ $image->path }}' ? 'ring-gray-700 ring-4' : 'ring-transparent'" 
+                            loading="lazy"
+                            draggable="false"
+                        >
+                    @endforeach
+                </div>
 
-      
+                {{-- Fullscreen Modal --}}
+                <div 
+                    x-show="showModal" 
+                    x-transition.opacity
+                    class="fixed inset-0 z-[60] bg-white bg-opacity-95 flex items-center justify-center p-4"
+                    style="display: none;"
+                    aria-modal="true" role="dialog"
+                    >
+
+                    {{-- Close Button --}}
+                    <button @click="closeModal" aria-label="Schließen" 
+                        class="absolute top-8 right-8 text-gray-700 text-4xl font-extrabold hover:text-gray-900 transition focus:outline-none focus:ring-4 focus:ring-gray-400 rounded">
+                        &times;
+                    </button>
+
+                    {{-- Previous Button --}}
+                    <button 
+                        @click="prevImage" 
+                        :disabled="currentIndex === 0"
+                        :class="{'opacity-50 cursor-not-allowed': currentIndex === 0}"
+                        aria-label="Vorheriges Bild"
+                        class="absolute left-6 top-1/2 -translate-y-1/2 text-gray-700 bg-white rounded-full p-3 shadow-md hover:bg-gray-100 disabled:pointer-events-none transition focus:outline-none focus:ring-4 focus:ring-gray-400"
+                    >
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" class="w-7 h-7">
+                            <path d="M15 19l-7-7 7-7"/>
+                        </svg>
+                    </button>
+
+                    {{-- Image in Modal --}}
+                    <img 
+                        :src="'{{ Storage::url('') }}' + activeImage" 
+                        alt="Vergrößertes Bild"
+                        class="max-h-[90vh] max-w-full rounded-3xl shadow-xl object-contain select-none"
+                        draggable="false"
+                    >
+
+                    {{-- Next Button --}}
+                    <button 
+                        @click="nextImage" 
+                        :disabled="currentIndex === images.length - 1"
+                        :class="{'opacity-50 cursor-not-allowed': currentIndex === images.length - 1}"
+                        aria-label="Nächstes Bild"
+                        class="absolute right-6 top-1/2 -translate-y-1/2 text-gray-700 bg-white rounded-full p-3 shadow-md hover:bg-gray-100 disabled:pointer-events-none transition focus:outline-none focus:ring-4 focus:ring-gray-400"
+                    >
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" class="w-7 h-7">
+                            <path d="M9 5l7 7-7 7"/>
+                        </svg>
+                    </button>
+                </div>
+
+            </section>
+
+            {{-- Right Column: Details & Seller info --}}
+            <section class="flex flex-col justify-between gap-10">
+
+                {{-- Title and Pricing --}}
+                <div>
+                    <h2 class="text-4xl font-extrabold text-gray-900 mb-4 leading-tight">
+                        {{ $service->title }}
+                    </h2>
+
+                    <div class="flex items-baseline space-x-3 mb-6">
+                        @if ($service->price)
+                            <p class="text-3xl text-gray-700 font-extrabold [&>span]:text-base [&>span]:font-normal [&>span]:ml-1">
+                                &euro;{{ number_format($service->price, 2, ',', '.') }}
+                                <span> / Einheit</span>
+                            </p>
+                        @else
+                            <p class="text-xl italic text-gray-500">Preis auf Anfrage</p>
+                        @endif
+                    </div>
+
+                    <div class="prose prose-lg max-w-none text-gray-700">
+                        @if ($service->description)
+                            {!! nl2br(e($service->description)) !!}
+                        @else
+                            <p class="italic text-gray-400">Keine Beschreibung verfügbar.</p>
+                        @endif
+                    </div>
+                </div>
+
+                <div class="bg-gray-100 shadow-md rounded-2xl p-6 space-y-6">
+
+                    {{-- Service Details Grid --}}
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+
+                        @if ($service->service_type)
+                            <dl>
+                                <dt class="font-semibold text-gray-700 mb-1">Art der Dienstleistung</dt>
+                                <dd class="text-gray-900">{{ $service->service_type }}</dd>
+                            </dl>
+                        @endif
+
+                        @if ($service->availability)
+                            <dl>
+                                <dt class="font-semibold text-gray-700 mb-1">Verfügbarkeit</dt>
+                                <dd class="text-gray-900">{{ $service->availability }}</dd>
+                            </dl>
+                        @endif
+
+                        @if ($service->location)
+                            <dl>
+                                <dt class="font-semibold text-gray-700 mb-1">Standort / Region</dt>
+                                <dd class="text-gray-900">{{ $service->location }}</dd>
+                            </dl>
+                        @endif
+                    </div>
+
+                    {{-- Seller / Anbieter Info --}}
+                    <div class="border-t border-gray-300 pt-6">
+                        <h3 class="text-xl font-semibold text-gray-700 mb-3">Anbieterinformationen</h3>
+                        @if ($service->user)
+                            <dl class="space-y-2 text-gray-900">
+                                <div>
+                                    <dt class="inline font-semibold">Name:</dt>
+                                    <dd class="inline">{{ $service->user->name }}</dd>
+                                </div>
+                                <div>
+                                    <dt class="inline font-semibold">E-Mail:</dt>
+                                    <dd class="inline">{{ $service->user->email }}</dd>
+                                </div>
+                                @if($service->user->city)
+                                <div>
+                                    <dt class="inline font-semibold">Stadt:</dt>
+                                    <dd class="inline">{{ $service->user->city }}</dd>
+                                </div>
+                                @endif
+                            </dl>
+                            <a href="{{ route('messages.create', $service->user->id) }}" 
+                                class="mt-6 block w-full text-center bg-red-700 text-white font-semibold py-3 rounded-full shadow-lg hover:bg-gray-800 transition focus:ring-4 focus:ring-gray-500 focus:ring-opacity-75">
+                                Kontakt aufnehmen
+                            </a>
+                        @else
+                            <p class="italic text-red-600">Anbieterinformationen nicht verfügbar.</p>
+                        @endif
+                    </div>
+                </div>
+            </section>
+        </article>
     </div>
+
+    {{-- Styles for no-scrollbar --}}
+    <style>
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
 </x-app-layout>

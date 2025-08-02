@@ -642,6 +642,26 @@ CREATE TABLE `password_reset_tokens` (
   PRIMARY KEY (`email`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `personal_access_tokens`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `personal_access_tokens` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `tokenable_type` varchar(255) NOT NULL,
+  `tokenable_id` bigint(20) unsigned NOT NULL,
+  `name` text NOT NULL,
+  `token` varchar(64) NOT NULL,
+  `abilities` text DEFAULT NULL,
+  `last_used_at` timestamp NULL DEFAULT NULL,
+  `expires_at` timestamp NULL DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `personal_access_tokens_token_unique` (`token`),
+  KEY `personal_access_tokens_tokenable_type_tokenable_id_index` (`tokenable_type`,`tokenable_id`),
+  KEY `personal_access_tokens_expires_at_index` (`expires_at`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `real_estate_images`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
@@ -727,12 +747,12 @@ DROP TABLE IF EXISTS `services`;
 CREATE TABLE `services` (
   `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
   `category_slug` varchar(255) NOT NULL DEFAULT 'dienstleistungen',
-  `dienstleistung_kategorie` varchar(255) NOT NULL,
+  `service_type` varchar(255) NOT NULL,
   `title` varchar(255) NOT NULL,
   `description` text DEFAULT NULL,
-  `region` varchar(255) DEFAULT NULL,
+  `location` varchar(255) DEFAULT NULL,
   `price` decimal(10,2) DEFAULT NULL,
-  `verfugbarkeit` varchar(255) DEFAULT NULL,
+  `availability` varchar(255) DEFAULT NULL,
   `user_id` bigint(20) unsigned NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
@@ -805,6 +825,12 @@ CREATE TABLE `users` (
   `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(255) NOT NULL,
   `email` varchar(255) NOT NULL,
+  `country` varchar(255) DEFAULT NULL,
+  `city` varchar(255) DEFAULT NULL,
+  `postal_code` varchar(255) DEFAULT NULL,
+  `street_address` varchar(255) DEFAULT NULL,
+  `mobile_phone` varchar(255) DEFAULT NULL,
+  `phone` varchar(255) DEFAULT NULL,
   `role` varchar(255) NOT NULL DEFAULT 'user',
   `email_verified_at` timestamp NULL DEFAULT NULL,
   `password` varchar(255) NOT NULL,
@@ -866,3 +892,5 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (41,'2025_08_01_053
 INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (42,'2025_08_01_053710_create_commercial_models_table',1);
 INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (43,'2025_08_01_053800_create_commercial_vehicles_table',1);
 INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (44,'2025_08_01_061816_rename_brand_and_model_columns_in_commercial_vehicles_table',1);
+INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (45,'2025_08_02_065554_add_profile_fields_to_users_table',2);
+INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (46,'2025_08_02_070831_create_personal_access_tokens_table',3);
