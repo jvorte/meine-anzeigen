@@ -6,10 +6,10 @@
         <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center px-4 py-2">
             <div>
                 <h1 class="text-4xl font-extrabold text-gray-900 leading-tight">
-                       Auto Anzeigen
+                    Dienstleistung Anzeige
                 </h1>
                 <p class="mt-1 text-gray-600 max-w-xl">
-                  Detaillierte Ansicht Ihrer Auto-Anzeige.
+                    Detaillierte Ansicht Ihrer Dienstleistungsanzeige
                 </p>
             </div>
             <div class="mt-3 sm:mt-0">
@@ -27,14 +27,15 @@
 
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 p-10"> 
         {{-- Breadcrumbs --}}
-       <x-breadcrumbs :items="[
-                ['label' => 'Cars Anzeigen', 'url' => route('categories.show', 'cars')], {{-- Adjusted URL to category show --}}
-                ['label' => $car->title, 'url' => null], {{-- Dynamic label using car title --}}
-            ]" />
+        <x-breadcrumbs :items="[
+            ['label' => 'Alle Anzeigen', 'url' => route('ads.index')],
+            ['label' => 'Dienstleistungen', 'url' => route('categories.show', 'services')],
+            ['label' => $service->title, 'url' => null],
+        ]" class="mb-8" />
 
         {{-- Action Buttons and Back link --}}
         <div class="flex flex-col sm:flex-row justify-between items-center mb-8 gap-4">
-            <a href="{{ route('dashboard') }}" 
+            <a href="{{ url()->previous() }}" 
                 class="inline-flex items-center text-gray-700 hover:text-gray-900 transition duration-300 font-medium space-x-1">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M15 19l-7-7 7-7"></path>
@@ -42,18 +43,14 @@
                 <span>Zurück</span>
             </a>
 
-  
-
-
             <div class="flex items-center space-x-3 pt-10">
                 @auth
-                    @if (auth()->id() === $car->user_id || (auth()->user() && auth()->user()->isAdmin()))
-   
-                     <a href="{{ route('ads.cars.edit', $car->id) }}" 
+                    @if (auth()->id() === $service->user_id || (auth()->user() && auth()->user()->isAdmin()))
+                        <a href="{{ route('ads.services.edit', $service->id) }}" 
                             class="px-5 py-2 bg-gray-700 hover:bg-gray-800 text-white rounded-full shadow-lg transition transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2">
                             Anzeige bearbeiten
                         </a>
-                        <form action="{{ route('ads.cars.destroy', $car->id) }}" method="POST"
+                        <form action="{{ route('ads.services.destroy', $service->id) }}" method="POST"
                             onsubmit="return confirm('Sind Sie sicher, dass Sie diese Anzeige löschen möchten? Diese Aktion kann nicht rückgängig gemacht werden.')">
                             @csrf
                             @method('DELETE')
@@ -75,8 +72,8 @@
 
             {{-- Left Column: Images and Thumbnails --}}
             <section x-data="{
-                images: @js($car->images->pluck('image_path')),
-                activeImage: '{{ $car->images->first()->image_path ?? '' }}',
+                images: @js($service->images->pluck('path')),
+                activeImage: '{{ $service->images->first()->path ?? '' }}',
                 showModal: false,
                 scaleUp: false,
                 currentIndex: 0,
@@ -137,15 +134,15 @@
 
                 {{-- Thumbnails --}}
                 <div class="flex space-x-4 overflow-x-auto no-scrollbar w-full max-w-xl px-2">
-                         @foreach ($car->images as $image)
-                <img 
-                    src="{{ Storage::url($image->image_path) }}" 
-                    @click="changeImage('{{ $image->image_path }}')" 
-                    class="w-24 h-24 object-cover rounded cursor-pointer border-2 transition" 
-                    :class="{ 'border-rose-500': activeImage === '{{ $image->path }}' }"
-                    alt="Thumb"
-                >
-            @endforeach
+                    @foreach ($service->images as $image)
+                        <img src="{{ Storage::url($image->path) }}" alt="Thumbnail"
+                            @click="changeImage('{{ $image->path }}')" 
+                            class="flex-shrink-0 w-20 h-20 rounded-xl object-cover cursor-pointer shadow-md transform transition duration-300 hover:scale-105 ring-2 focus:ring-4 focus:ring-gray-700 focus:outline-none"
+                            :class="activeImage === '{{ $image->path }}' ? 'ring-gray-700 ring-4' : 'ring-transparent'" 
+                            loading="lazy"
+                            draggable="false"
+                        >
+                    @endforeach
                 </div>
 
                 {{-- Fullscreen Modal --}}
@@ -203,18 +200,16 @@
             {{-- Right Column: Details & Seller info --}}
             <section class="flex flex-col justify-between gap-10">
 
-
-     
                 {{-- Title and Pricing --}}
                 <div>
                     <h2 class="text-4xl font-extrabold text-gray-900 mb-4 leading-tight">
-                        {{ $car->title }}
+                        {{ $service->title }}
                     </h2>
 
                     <div class="flex items-baseline space-x-3 mb-6">
-                        @if ($car->price)
+                        @if ($service->price)
                             <p class="text-3xl text-gray-700 font-extrabold [&>span]:text-base [&>span]:font-normal [&>span]:ml-1">
-                                &euro;{{ number_format($car->price, 2, ',', '.') }}
+                                &euro;{{ number_format($service->price, 2, ',', '.') }}
                                 <span> / Einheit</span>
                             </p>
                         @else
@@ -223,35 +218,62 @@
                     </div>
 
                     <div class="prose prose-lg max-w-none text-gray-700">
-                        @if ($car->description)
-                            {!! nl2br(e($car->description)) !!}
+                        @if ($service->description)
+                            {!! nl2br(e($service->description)) !!}
                         @else
                             <p class="italic text-gray-400">Keine Beschreibung verfügbar.</p>
                         @endif
                     </div>
                 </div>
 
-                 {{-- Seller / Anbieter Info --}}
+                <div class="bg-gray-100 shadow-md rounded-2xl p-6 space-y-6">
+
+                    {{-- Service Details Grid --}}
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+
+                        @if ($service->service_type)
+                            <dl>
+                                <dt class="font-semibold text-gray-700 mb-1">Art der Dienstleistung</dt>
+                                <dd class="text-gray-900">{{ $service->service_type }}</dd>
+                            </dl>
+                        @endif
+
+                        @if ($service->availability)
+                            <dl>
+                                <dt class="font-semibold text-gray-700 mb-1">Verfügbarkeit</dt>
+                                <dd class="text-gray-900">{{ $service->availability }}</dd>
+                            </dl>
+                        @endif
+
+                        @if ($service->location)
+                            <dl>
+                                <dt class="font-semibold text-gray-700 mb-1">Standort / Region</dt>
+                                <dd class="text-gray-900">{{ $service->location }}</dd>
+                            </dl>
+                        @endif
+                    </div>
+
+                    {{-- Seller / Anbieter Info --}}
                     <div class="border-t border-gray-300 pt-6">
                         <h3 class="text-xl font-semibold text-gray-700 mb-3">Anbieterinformationen</h3>
-                        @if ($car->user)
+                        @if ($service->user)
                             <dl class="space-y-2 text-gray-900">
                                 <div>
                                     <dt class="inline font-semibold">Name:</dt>
-                                    <dd class="inline">{{ $car->user->name }}</dd>
+                                    <dd class="inline">{{ $service->user->name }}</dd>
                                 </div>
                                 <div>
                                     <dt class="inline font-semibold">E-Mail:</dt>
-                                    <dd class="inline">{{ $car->user->email }}</dd>
+                                    <dd class="inline">{{ $service->user->email }}</dd>
                                 </div>
-                                @if($car->user->city)
+                                @if($service->user->city)
                                 <div>
                                     <dt class="inline font-semibold">Stadt:</dt>
-                                    <dd class="inline">{{ $car->user->city }}</dd>
+                                    <dd class="inline">{{ $service->user->city }}</dd>
                                 </div>
                                 @endif
                             </dl>
-                            <a href="{{ route('messages.create', $car->user->id) }}" 
+                            <a href="{{ route('messages.create', $service->user->id) }}" 
                                 class="mt-6 block w-full text-center bg-red-700 text-white font-semibold py-3 rounded-full shadow-lg hover:bg-gray-800 transition focus:ring-4 focus:ring-gray-500 focus:ring-opacity-75">
                                 Kontakt aufnehmen
                             </a>
@@ -259,106 +281,8 @@
                             <p class="italic text-red-600">Anbieterinformationen nicht verfügbar.</p>
                         @endif
                     </div>
-    
-
-
-        {{-- Vehicle Details Section --}}
-        <section class="bg-gray-50 p-6 rounded-lg shadow-inner mb-8">
-            <h4 class="text-xl font-semibold text-gray-700 mb-6">Fahrzeugdetails</h4>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                @if($car->carBrand)
-                <div>
-                    <p class="text-sm font-semibold text-gray-800">Marke:</p>
-                    <p class="text-gray-700">{{ $car->carBrand->name }}</p>
                 </div>
-                @endif
-                @if($car->carModel)
-                <div>
-                    <p class="text-sm font-semibold text-gray-800">Modell:</p>
-                    <p class="text-gray-700">{{ $car->carModel->name }}</p>
-                </div>
-                @endif
-                @if($car->registration)
-                <div>
-                    <p class="text-sm font-semibold text-gray-800">Baujahr:</p>
-                    <p class="text-gray-700">{{ $car->registration }}</p>
-                </div>
-                @endif
-                @if($car->mileage)
-                <div>
-                    <p class="text-sm font-semibold text-gray-800">Kilometerstand:</p>
-                    <p class="text-gray-700">{{ number_format($car->mileage, 0, ',', '.') }} km</p>
-                </div>
-                @endif
-                @if($car->vehicle_type)
-                <div>
-                    <p class="text-sm font-semibold text-gray-800">Fahrzeugtyp:</p>
-                    <p class="text-gray-700">{{ $car->vehicle_type }}</p>
-                </div>
-                @endif
-                @if($car->condition)
-                <div>
-                    <p class="text-sm font-semibold text-gray-800">Zustand:</p>
-                    <p class="text-gray-700">{{ $car->condition }}</p>
-                </div>
-                @endif
-                <div>
-                    <p class="text-sm font-semibold text-gray-800">Garantie:</p>
-                    <p class="text-gray-700">{{ $car->warranty ? 'Ja' : 'Nein' }}</p>
-                </div>
-                @if($car->power)
-                <div>
-                    <p class="text-sm font-semibold text-gray-800">Leistung:</p>
-                    <p class="text-gray-700">{{ $car->power }} PS</p>
-                </div>
-                @endif
-                @if($car->fuel_type)
-                <div>
-                    <p class="text-sm font-semibold text-gray-800">Kraftstoffart:</p>
-                    <p class="text-gray-700">{{ $car->fuel_type }}</p>
-                </div>
-                @endif
-                @if($car->transmission)
-                <div>
-                    <p class="text-sm font-semibold text-gray-800">Getriebe:</p>
-                    <p class="text-gray-700">{{ $car->transmission }}</p>
-                </div>
-                @endif
-                @if($car->drive)
-                <div>
-                    <p class="text-sm font-semibold text-gray-800">Antrieb:</p>
-                    <p class="text-gray-700">{{ $car->drive }}</p>
-                </div>
-                @endif
-                @if($car->color)
-                <div>
-                    <p class="text-sm font-semibold text-gray-800">Farbe:</p>
-                    <p class="text-gray-700">{{ $car->color }}</p>
-                </div>
-                @endif
-                @if($car->doors)
-                <div>
-                    <p class="text-sm font-semibold text-gray-800">Türen:</p>
-                    <p class="text-gray-700">{{ $car->doors }}</p>
-                </div>
-                @endif
-                @if($car->seats)
-                <div>
-                    <p class="text-sm font-semibold text-gray-800">Sitze:</p>
-                    <p class="text-gray-700">{{ $car->seats }}</p>
-                </div>
-                @endif
-                @if($car->seller_type)
-                <div>
-                    <p class="text-sm font-semibold text-gray-800">Verkäufertyp:</p>
-                    <p class="text-gray-700">{{ $car->seller_type }}</p>
-                </div>
-                @endif
-            </div>
-        </section>
-
-        
-
+            </section>
         </article>
     </div>
 
