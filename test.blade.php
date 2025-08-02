@@ -27,11 +27,11 @@
 
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 p-10"> 
         {{-- Breadcrumbs --}}
-        <x-breadcrumbs :items="[
-               ['label' => 'Elektronik Anzeigen', 'url' => route('categories.show', 'elektronik')],
-                ['label' => $electronic->title, 'url' => null],
+                <x-breadcrumbs :items="[
+                ['label' => 'Alle Anzeigen', 'url' => route('ads.index')],
+                ['label' => 'Haushaltsartikel Anzeigen', 'url' => route('categories.show', 'haushaltsartikel')], {{-- Assuming 'haushaltsartikel' is the slug for household items --}}
+                ['label' => $householdItem->title, 'url' => null],
             ]" />
-
         {{-- Action Buttons and Back link --}}
         <div class="flex flex-col sm:flex-row justify-between items-center mb-8 gap-4">
             <a href="{{ route('dashboard') }}" 
@@ -44,12 +44,12 @@
 
             <div class="flex items-center space-x-3 pt-10">
                 @auth
-                    @if (auth()->id() === $electronic->user_id || (auth()->user() && auth()->user()->isAdmin()))
-                        <a href="{{ route('ads.boats.edit', $electronic->id) }}" 
+                    @if (auth()->id() === $householdItem->user_id || (auth()->user() && auth()->user()->isAdmin()))
+                        <a href="{{ route('ads.household-items.edit', $householdItem->id) }}" 
                             class="px-5 py-2 bg-gray-700 hover:bg-gray-800 text-white rounded-full shadow-lg transition transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2">
                             Anzeige bearbeiten
                         </a>
-                        <form action="{{ route('ads.boats.destroy', $electronic->id) }}" method="POST"
+                        <form action="{{ route('ads.household-items.destroy', $householdItem->id) }}" method="POST"
                             onsubmit="return confirm('Sind Sie sicher, dass Sie diese Anzeige löschen möchten? Diese Aktion kann nicht rückgängig gemacht werden.')">
                             @csrf
                             @method('DELETE')
@@ -71,8 +71,8 @@
 
             {{-- Left Column: Images and Thumbnails --}}
             <section x-data="{
-                images: @js($electronic->images->pluck('path')),
-                activeImage: '{{ $electronic->images->first()->image_path ?? '' }}',
+                images: @js($householdItem->images->pluck('path')),
+                activeImage: '{{ $householdItem->images->first()->path ?? '' }}',
                 showModal: false,
                 scaleUp: false,
                 currentIndex: 0,
@@ -133,7 +133,7 @@
 
                 {{-- Thumbnails --}}
                 <div class="flex space-x-4 overflow-x-auto no-scrollbar w-full max-w-xl px-2">
-                    @foreach ($electronic->images as $image)
+                    @foreach ($householdItem->images as $image)
                         <img src="{{ Storage::url($image->path) }}" alt="Thumbnail"
                             @click="changeImage('{{ $image->path }}')" 
                             class="flex-shrink-0 w-20 h-20 rounded-xl object-cover cursor-pointer shadow-md transform transition duration-300 hover:scale-105 ring-2 focus:ring-4 focus:ring-gray-700 focus:outline-none"
@@ -278,90 +278,55 @@
                     {{-- Boat Details Grid --}}
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
 
-                         @if($electronic->electronicBrand)
-                <div>
-                    <p class="text-sm font-semibold text-gray-800">Marke:</p>
-                    <p class="text-gray-700">{{ $electronic->electronicBrand->name }}</p>
-                </div>
-                @endif
-                @if($electronic->electronicModel)
-                <div>
-                    <p class="text-sm font-semibold text-gray-800">Modell:</p>
-                    <p class="text-gray-700">{{ $electronic->electronicModel->name }}</p>
-                </div>
-                @endif
-                @if($electronic->condition)
+                         @if($householdItem->condition)
                 <div>
                     <p class="text-sm font-semibold text-gray-800">Zustand:</p>
-                    <p class="text-gray-700">{{ $electronic->condition }}</p>
+                    <p class="text-gray-700">{{ $householdItem->condition }}</p>
                 </div>
                 @endif
-                @if($electronic->year_of_purchase)
+                @if($householdItem->category)
                 <div>
-                    <p class="text-sm font-semibold text-gray-800">Kaufjahr:</p>
-                    <p class="text-gray-700">{{ $electronic->year_of_purchase }}</p>
+                    <p class="text-sm font-semibold text-gray-800">Kategorie:</p>
+                    <p class="text-gray-700">{{ $householdItem->category }}</p>
                 </div>
                 @endif
-                @if($electronic->warranty_status)
+                @if($householdItem->brand)
                 <div>
-                    <p class="text-sm font-semibold text-gray-800">Garantie-Status:</p>
-                    <p class="text-gray-700">{{ $electronic->warranty_status }}</p>
+                    <p class="text-sm font-semibold text-gray-800">Marke:</p>
+                    <p class="text-gray-700">{{ $householdItem->brand }}</p>
                 </div>
                 @endif
-                @if($electronic->color)
+                @if($householdItem->model_name)
+                <div>
+                    <p class="text-sm font-semibold text-gray-800">Modell:</p>
+                    <p class="text-gray-700">{{ $householdItem->model_name }}</p>
+                </div>
+                @endif
+                @if($householdItem->material)
+                <div>
+                    <p class="text-sm font-semibold text-gray-800">Material:</p>
+                    <p class="text-gray-700">{{ $householdItem->material }}</p>
+                </div>
+                @endif
+                @if($householdItem->color)
                 <div>
                     <p class="text-sm font-semibold text-gray-800">Farbe:</p>
-                    <p class="text-gray-700">{{ $electronic->color }}</p>
+                    <p class="text-gray-700">{{ $householdItem->color }}</p>
                 </div>
                 @endif
-                @if($electronic->usage_time)
+                @if($householdItem->dimensions)
                 <div>
-                    <p class="text-sm font-semibold text-gray-800">Nutzungsdauer:</p>
-                    <p class="text-gray-700">{{ $electronic->usage_time }}</p>
+                    <p class="text-sm font-semibold text-gray-800">Abmessungen:</p>
+                    <p class="text-gray-700">{{ $householdItem->dimensions }}</p>
                 </div>
                 @endif
-                @if($electronic->power)
+                {{-- If you re-add 'age' to your model, uncomment this --}}
+                {{-- @if($householdItem->age)
                 <div>
-                    <p class="text-sm font-semibold text-gray-800">Leistung:</p>
-                    <p class="text-gray-700">{{ $electronic->power }}</p>
+                    <p class="text-sm font-semibold text-gray-800">Alter:</p>
+                    <p class="text-gray-700">{{ $householdItem->age }}</p>
                 </div>
-                @endif
-                @if($electronic->operating_system)
-                <div>
-                    <p class="text-sm font-semibold text-gray-800">Betriebssystem:</p>
-                    <p class="text-gray-700">{{ $electronic->operating_system }}</p>
-                </div>
-                @endif
-                @if($electronic->storage_capacity)
-                <div>
-                    <p class="text-sm font-semibold text-gray-800">Speicherkapazität:</p>
-                    <p class="text-gray-700">{{ $electronic->storage_capacity }}</p>
-                </div>
-                @endif
-                @if($electronic->screen_size)
-                <div>
-                    <p class="text-sm font-semibold text-gray-800">Bildschirmgröße:</p>
-                    <p class="text-gray-700">{{ $electronic->screen_size }}</p>
-                </div>
-                @endif
-                @if($electronic->processor)
-                <div>
-                    <p class="text-sm font-semibold text-gray-800">Prozessor:</p>
-                    <p class="text-gray-700">{{ $electronic->processor }}</p>
-                </div>
-                @endif
-                @if($electronic->ram)
-                <div>
-                    <p class="text-sm font-semibold text-gray-800">RAM:</p>
-                    <p class="text-gray-700">{{ $electronic->ram }}</p>
-                </div>
-                @endif
-                @if($electronic->accessories)
-                <div class="lg:col-span-3"> {{-- Span full width for accessories as it's a longer text field --}}
-                    <p class="text-sm font-semibold text-gray-800">Zubehör:</p>
-                    <p class="text-gray-700">{{ $electronic->accessories }}</p>
-                </div>
-                @endif
+                @endif --}}
             </div>
             </section>
         </article>
