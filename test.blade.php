@@ -6,10 +6,10 @@
         <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center px-4 py-2">
             <div>
                 <h1 class="text-4xl font-extrabold text-gray-900 leading-tight">
-                     Elektronik Anzeige
+                   Motorrad Anzeige
                 </h1>
                 <p class="mt-1 text-gray-600 max-w-xl">
-                 Elektronik Anzeige
+             Motorrad Anzeige
                 </p>
             </div>
             <div class="mt-3 sm:mt-0">
@@ -26,11 +26,11 @@
     </x-slot>
 
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 p-10"> 
-        {{-- Breadcrumbs --}}
-                <x-breadcrumbs :items="[
+          {{-- Breadcrumbs component --}}
+            <x-breadcrumbs :items="[
                 ['label' => 'Alle Anzeigen', 'url' => route('ads.index')],
-                ['label' => 'Haushaltsartikel Anzeigen', 'url' => route('categories.show', 'haushaltsartikel')], {{-- Assuming 'haushaltsartikel' is the slug for household items --}}
-                ['label' => $householdItem->title, 'url' => null],
+                ['label' => 'Motorrad Anzeigen', 'url' => route('categories.show', 'motorrad')],
+                ['label' => $motorradAd->title, 'url' => null],
             ]" />
         {{-- Action Buttons and Back link --}}
         <div class="flex flex-col sm:flex-row justify-between items-center mb-8 gap-4">
@@ -44,12 +44,12 @@
 
             <div class="flex items-center space-x-3 pt-10">
                 @auth
-                    @if (auth()->id() === $householdItem->user_id || (auth()->user() && auth()->user()->isAdmin()))
-                        <a href="{{ route('ads.household-items.edit', $householdItem->id) }}" 
+                    @if (auth()->id() === $motorradAd->user_id || (auth()->user() && auth()->user()->isAdmin()))
+                        <a href="{{ route('ads.household-items.edit', $motorradAd->id) }}" 
                             class="px-5 py-2 bg-gray-700 hover:bg-gray-800 text-white rounded-full shadow-lg transition transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2">
                             Anzeige bearbeiten
                         </a>
-                        <form action="{{ route('ads.household-items.destroy', $householdItem->id) }}" method="POST"
+                        <form action="{{ route('ads.household-items.destroy', $motorradAd->id) }}" method="POST"
                             onsubmit="return confirm('Sind Sie sicher, dass Sie diese Anzeige löschen möchten? Diese Aktion kann nicht rückgängig gemacht werden.')">
                             @csrf
                             @method('DELETE')
@@ -71,8 +71,8 @@
 
             {{-- Left Column: Images and Thumbnails --}}
             <section x-data="{
-                images: @js($householdItem->images->pluck('path')),
-                activeImage: '{{ $householdItem->images->first()->path ?? '' }}',
+                images: @js($motorradAd->images->pluck('path')),
+                activeImage: '{{ $motorradAd->images->first()->path ?? '' }}',
                 showModal: false,
                 scaleUp: false,
                 currentIndex: 0,
@@ -133,7 +133,7 @@
 
                 {{-- Thumbnails --}}
                 <div class="flex space-x-4 overflow-x-auto no-scrollbar w-full max-w-xl px-2">
-                    @foreach ($householdItem->images as $image)
+                    @foreach ($motorradAd->images as $image)
                         <img src="{{ Storage::url($image->path) }}" alt="Thumbnail"
                             @click="changeImage('{{ $image->path }}')" 
                             class="flex-shrink-0 w-20 h-20 rounded-xl object-cover cursor-pointer shadow-md transform transition duration-300 hover:scale-105 ring-2 focus:ring-4 focus:ring-gray-700 focus:outline-none"
@@ -207,13 +207,13 @@
                 {{-- Title and Pricing --}}
                 <div>
                     <h2 class="text-4xl font-extrabold text-gray-900 mb-4 leading-tight">
-                        {{ $electronic->title }}
+                        {{ $motorradAd->title }}
                     </h2>
 
                     <div class="flex items-baseline space-x-3 mb-6">
-                        @if ($electronic->price)
+                        @if ($motorradAd->price)
                             <p class="text-3xl text-gray-700 font-extrabold [&>span]:text-base [&>span]:font-normal [&>span]:ml-1">
-                                &euro;{{ number_format($electronic->price, 2, ',', '.') }}
+                                &euro;{{ number_format($motorradAd->price, 2, ',', '.') }}
                                 <span> / Einheit</span>
                             </p>
                         @else
@@ -222,8 +222,8 @@
                     </div>
 
                     <div class="prose prose-lg max-w-none text-gray-700">
-                        @if ($electronic->description)
-                            {!! nl2br(e($electronic->description)) !!}
+                        @if ($motorradAd->description)
+                            {!! nl2br(e($motorradAd->description)) !!}
                         @else
                             <p class="italic text-gray-400">Keine Beschreibung verfügbar.</p>
                         @endif
@@ -239,24 +239,24 @@
                    {{-- Seller / Anbieter Info --}}
                     <div class="border-t border-gray-300 pt-6">
                         <h3 class="text-xl font-semibold text-gray-700 mb-3">Anbieterinformationen</h3>
-                        @if ($electronic->user)
+                        @if ($motorradAd->user)
                             <dl class="space-y-2 text-gray-900">
                                 <div>
                                     <dt class="inline font-semibold">Name:</dt>
-                                    <dd class="inline">{{ $electronic->user->name }}</dd>
+                                    <dd class="inline">{{ $motorradAd->user->name }}</dd>
                                 </div>
                                 <div>
                                     <dt class="inline font-semibold">E-Mail:</dt>
-                                    <dd class="inline">{{ $electronic->user->email }}</dd>
+                                    <dd class="inline">{{ $motorradAd->user->email }}</dd>
                                 </div>
                                 @if($boat->user->city)
                                 <div>
                                     <dt class="inline font-semibold">Stadt:</dt>
-                                    <dd class="inline">{{ $electronic->user->city }}</dd>
+                                    <dd class="inline">{{ $motorradAd->user->city }}</dd>
                                 </div>
                                 @endif
                             </dl>
-                            <a href="{{ route('messages.create', $electronic->user->id) }}" 
+                            <a href="{{ route('messages.create', $motorradAd->user->id) }}" 
                                 class="mt-6 block w-full text-center bg-red-700 text-white font-semibold py-3 rounded-full shadow-lg hover:bg-gray-800 transition focus:ring-4 focus:ring-gray-500 focus:ring-opacity-75">
                                 Kontakt aufnehmen
                             </a>
@@ -278,55 +278,48 @@
                     {{-- Boat Details Grid --}}
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
 
-                         @if($householdItem->condition)
-                <div>
-                    <p class="text-sm font-semibold text-gray-800">Zustand:</p>
-                    <p class="text-gray-700">{{ $householdItem->condition }}</p>
-                </div>
-                @endif
-                @if($householdItem->category)
-                <div>
-                    <p class="text-sm font-semibold text-gray-800">Kategorie:</p>
-                    <p class="text-gray-700">{{ $householdItem->category }}</p>
-                </div>
-                @endif
-                @if($householdItem->brand)
+                         @if($motorradAd->motorcycleBrand)
                 <div>
                     <p class="text-sm font-semibold text-gray-800">Marke:</p>
-                    <p class="text-gray-700">{{ $householdItem->brand }}</p>
+                    <p class="text-gray-700">{{ $motorradAd->motorcycleBrand->name }}</p>
                 </div>
                 @endif
-                @if($householdItem->model_name)
+                @if($motorradAd->motorcycleModel)
                 <div>
                     <p class="text-sm font-semibold text-gray-800">Modell:</p>
-                    <p class="text-gray-700">{{ $householdItem->model_name }}</p>
+                    <p class="text-gray-700">{{ $motorradAd->motorcycleModel->name }}</p>
                 </div>
                 @endif
-                @if($householdItem->material)
+                @if($motorradAd->first_registration)
                 <div>
-                    <p class="text-sm font-semibold text-gray-800">Material:</p>
-                    <p class="text-gray-700">{{ $householdItem->material }}</p>
+                    <p class="text-sm font-semibold text-gray-800">Erstzulassung:</p>
+                    <p class="text-gray-700">{{ \Carbon\Carbon::parse($motorradAd->first_registration)->format('d.m.Y') }}</p>
                 </div>
                 @endif
-                @if($householdItem->color)
+                @if(isset($motorradAd->mileage))
+                <div>
+                    <p class="text-sm font-semibold text-gray-800">Kilometerstand:</p>
+                    <p class="text-gray-700">{{ number_format($motorradAd->mileage, 0, ',', '.') }} km</p>
+                </div>
+                @endif
+                @if($motorradAd->power)
+                <div>
+                    <p class="text-sm font-semibold text-gray-800">Leistung:</p>
+                    <p class="text-gray-700">{{ $motorradAd->power }} PS</p>
+                </div>
+                @endif
+                @if($motorradAd->color)
                 <div>
                     <p class="text-sm font-semibold text-gray-800">Farbe:</p>
-                    <p class="text-gray-700">{{ $householdItem->color }}</p>
+                    <p class="text-gray-700">{{ $motorradAd->color }}</p>
                 </div>
                 @endif
-                @if($householdItem->dimensions)
+                @if($motorradAd->condition)
                 <div>
-                    <p class="text-sm font-semibold text-gray-800">Abmessungen:</p>
-                    <p class="text-gray-700">{{ $householdItem->dimensions }}</p>
+                    <p class="text-sm font-semibold text-gray-800">Zustand:</p>
+                    <p class="text-gray-700">{{ $motorradAd->condition }}</p>
                 </div>
                 @endif
-                {{-- If you re-add 'age' to your model, uncomment this --}}
-                {{-- @if($householdItem->age)
-                <div>
-                    <p class="text-sm font-semibold text-gray-800">Alter:</p>
-                    <p class="text-gray-700">{{ $householdItem->age }}</p>
-                </div>
-                @endif --}}
             </div>
             </section>
         </article>
