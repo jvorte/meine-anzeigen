@@ -70,8 +70,117 @@
 
     <div class="max-w-6xl mx-auto p-6 bg-white rounded-lg shadow-xl my-6">
 
+   <div class="max-w-6xl mx-auto p-6 bg-white rounded-lg shadow-xl my-6">
+
         {{-- Main Title of the Ad --}}
         <h1 class="text-3xl font-bold text-gray-800 mb-8">{{ $car->title }}</h1>
+
+  <div x-data="{
+        images: @js($car->images->pluck('path')),
+        activeImage: '{{ $car->images->first()->image_path ?? '' }}',
+        showModal: false,
+        scaleUp: false,
+        currentIndex: 0,
+        init() {
+            this.currentIndex = this.images.indexOf(this.activeImage);
+        },
+        changeImage(path) {
+            this.scaleUp = false;
+            this.activeImage = path;
+            this.currentIndex = this.images.indexOf(path);
+            setTimeout(() => this.scaleUp = true, 50);
+        },
+        openModal() {
+            this.showModal = true;
+            document.body.classList.add('overflow-hidden');
+        },
+        closeModal() {
+            this.showModal = false;
+            document.body.classList.remove('overflow-hidden');
+        },
+        nextImage() {
+            if (this.currentIndex < this.images.length - 1) {
+                this.changeImage(this.images[++this.currentIndex]);
+            }
+        },
+        prevImage() {
+            if (this.currentIndex > 0) {
+                this.changeImage(this.images[--this.currentIndex]);
+            }
+        }
+    }" 
+    x-init="init"
+    @keydown.escape.window="closeModal"
+    class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12"
+>
+    {{-- Κεντρική Εικόνα --}}
+    <div class="flex flex-col items-center">
+        <div class="relative w-full h-96 overflow-hidden rounded-lg cursor-pointer" @click="openModal">
+            <template x-if="activeImage">
+                <img 
+                    :src="'{{ Storage::url('') }}' + activeImage" 
+                    class="absolute inset-0 w-full h-full object-cover rounded-lg shadow transition duration-500 ease-in-out transform"
+                    :class="{ 'scale-105 opacity-100': scaleUp, 'opacity-0': !scaleUp }"
+                    @load="scaleUp = true"
+                    alt="Selected"
+                >
+            </template>
+        </div>
+
+        {{-- Thumbnails --}}
+        <div class="flex mt-4 gap-3 overflow-x-auto">
+            @foreach ($car->images as $image)
+                <img 
+                    src="{{ Storage::url($image->image_path) }}" 
+                    @click="changeImage('{{ $image->path }}')" 
+                    class="w-24 h-24 object-cover rounded cursor-pointer border-2 transition" 
+                    :class="{ 'border-rose-500': activeImage === '{{ $image->path }}' }"
+                    alt="Thumb"
+                >
+            @endforeach
+        </div>
+    </div>
+
+    {{-- Πληροφορίες Πωλητή --}}
+    <div class="bg-gray-100 p-6 rounded-lg shadow-md">
+        <h3 class="text-lg font-semibold text-gray-800 mb-4">Anbieterinformationen</h3>
+
+        @if($car->user)
+   <p><strong>Πωλητής:</strong> {{ $car->user->name }}</p>
+<p><strong>Email:</strong> {{ $car->user->email }}</p>
+<p><strong>Πόλη:</strong> {{ $car->user->city }}</p>
+
+            <a href="{{ route('messages.create', $car->user->id) }}" class="mt-4 inline-block bg-rose-600 text-white px-4 py-2 rounded hover:bg-rose-700 transition">
+                Kontakt aufnehmen
+            </a>
+        @else
+            <p class="text-red-600 italic">Anbieterinformationen nicht verfügbar.</p>
+        @endif
+    </div>
+
+    {{-- Fullscreen Modal --}}
+    <div 
+        x-show="showModal" 
+        x-transition.opacity 
+        class="fixed inset-0 z-50 bg-black bg-opacity-90 flex items-center justify-center"
+        style="display: none;"
+    >
+        <button @click="closeModal" class="absolute top-6 right-6 text-white text-3xl font-bold">&times;</button>
+
+        <div class="relative max-w-4xl w-full px-4">
+            <button @click="prevImage" class="absolute left-0 top-1/2 transform -translate-y-1/2 text-white text-4xl px-4">&#10094;</button>
+            <img 
+                :src="'{{ Storage::url('') }}' + activeImage" 
+                class="mx-auto max-h-[90vh] object-contain transition duration-500 ease-in-out transform scale-100 opacity-100" 
+                alt="Fullscreen"
+            >
+            <button @click="nextImage" class="absolute right-0 top-1/2 transform -translate-y-1/2 text-white text-4xl px-4">&#10095;</button>
+        </div>
+    </div>
+</div>
+
+
+
     
 
         {{-- Prices Section --}}
