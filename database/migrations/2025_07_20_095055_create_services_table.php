@@ -19,10 +19,10 @@ return new class extends Migration
             $table->string('region')->nullable(); // Region / Ort
             $table->decimal('price', 10, 2)->nullable(); // Corresponds to 'preis' in frontend
             $table->string('verfugbarkeit')->nullable(); // Verfügbarkeit
-
+            $table->foreignId('user_id')->constrained()->cascadeOnDelete();
 
             // Images (from 'bilder[]' in frontend)
-         
+
 
             $table->timestamps();
         });

@@ -164,30 +164,6 @@
 
  
 
-        {{-- Contact Information Section --}}
-        <section class="bg-gray-50 p-6 rounded-lg shadow-inner mb-8">
-            <h4 class="text-xl font-semibold text-gray-700 mb-6">Kontaktinformationen</h4>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                @if($service->user)
-                <div>
-                    <p class="text-sm font-semibold text-gray-800">Name des Ansprechpartners:</p>
-                    <p class="text-gray-700">{{ $service->user->name }}</p>
-                </div>
-                {{-- Assuming user or service has a contact number or email --}}
-                {{-- @if($service->user->phone)
-                <div>
-                    <p class="text-sm font-semibold text-gray-800">Telefon:</p>
-                    <p class="text-gray-700">{{ $service->user->phone }}</p>
-                </div>
-                @endif --}}
-                @else
-                    <p class="text-gray-600 italic md:col-span-3">Kontaktdaten des Anbieters sind nicht verfügbar.</p>
-                @endif
-                <div>
-                    <p class="text-sm font-semibold text-gray-800">Anzeigedatum:</p>
-                    <p class="text-gray-700">{{ $service->created_at->format('d.m.Y H:i') ?? 'N/A' }}</p>
-                </div>
-            </div>
-        </section>
+      
     </div>
 </x-app-layout>
