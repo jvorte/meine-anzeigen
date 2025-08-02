@@ -45,11 +45,11 @@
             <div class="flex items-center space-x-3 pt-10">
                 @auth
                     @if (auth()->id() === $motorradAd->user_id || (auth()->user() && auth()->user()->isAdmin()))
-                        <a href="{{ route('ads.household-items.edit', $motorradAd->id) }}" 
+                        <a href="{{ route('ads.motorrad.edit', $motorradAd->id) }}" 
                             class="px-5 py-2 bg-gray-700 hover:bg-gray-800 text-white rounded-full shadow-lg transition transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2">
                             Anzeige bearbeiten
                         </a>
-                        <form action="{{ route('ads.household-items.destroy', $motorradAd->id) }}" method="POST"
+                        <form action="{{ route('ads.motorrad.destroy', $motorradAd->id) }}" method="POST"
                             onsubmit="return confirm('Sind Sie sicher, dass Sie diese Anzeige löschen möchten? Diese Aktion kann nicht rückgängig gemacht werden.')">
                             @csrf
                             @method('DELETE')
