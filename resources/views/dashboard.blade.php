@@ -29,7 +29,7 @@
                         'electronics' => asset('storage/images/tv.jpg'),
                         'household' => asset('storage/images/household_items.jpg'),
                         'real-estate' => asset('storage/images/real-estate.jpg'),
-                        'services' => asset('storage/images/services_banner.jpg'),
+                        'services' => asset('storage/images/worker.jpg'),
                         'others' => asset('storage/images/general_items.jpg'),
                         'motorcycles' => asset('storage/images/motorcycle.jpg'),
                         'commercial-vehicle' => asset('storage/images/trucks.jpg'),
@@ -43,7 +43,7 @@
                             $categoryName = $categories->firstWhere('slug', $categorySlug)->name ?? ucfirst($categorySlug);
                             $backgroundImage = $categoryBackgrounds[$categorySlug] ?? 'https://placehold.co/1200x200/F0F0F0/8C8C8C?text=Category+Banner';
                         @endphp
-                        <div class="mb-5 pb-2 last:border-b-0 last:pb-0 relative overflow-hidden rounded-lg shadow-md">
+                        <div class="mb-5 pb- last:border-b-0 last:pb-0 relative overflow-hidden rounded-lg shadow-md">
                             <div class="relative h-12 bg-cover bg-center flex items-center p-6 rounded-t-lg"
                                 style="background-image: url('{{ $backgroundImage }}');">
                                 <div class="absolute inset-0 bg-black opacity-30 rounded-t-lg"></div>
