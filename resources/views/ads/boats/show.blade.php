@@ -197,6 +197,11 @@
 
             </section>
 
+
+
+
+            
+
             {{-- Right Column: Details & Seller info --}}
             <section class="flex flex-col justify-between gap-10">
 
@@ -225,6 +230,42 @@
                         @endif
                     </div>
                 </div>
+
+
+
+
+                   {{-- Seller / Anbieter Info --}}
+                    <div class="border-t border-gray-300 pt-6">
+                        <h3 class="text-xl font-semibold text-gray-700 mb-3">Anbieterinformationen</h3>
+                        @if ($boat->user)
+                            <dl class="space-y-2 text-gray-900">
+                                <div>
+                                    <dt class="inline font-semibold">Name:</dt>
+                                    <dd class="inline">{{ $boat->user->name }}</dd>
+                                </div>
+                                <div>
+                                    <dt class="inline font-semibold">E-Mail:</dt>
+                                    <dd class="inline">{{ $boat->user->email }}</dd>
+                                </div>
+                                @if($boat->user->city)
+                                <div>
+                                    <dt class="inline font-semibold">Stadt:</dt>
+                                    <dd class="inline">{{ $boat->user->city }}</dd>
+                                </div>
+                                @endif
+                            </dl>
+                            <a href="{{ route('messages.create', $boat->user->id) }}" 
+                                class="mt-6 block w-full text-center bg-red-700 text-white font-semibold py-3 rounded-full shadow-lg hover:bg-gray-800 transition focus:ring-4 focus:ring-gray-500 focus:ring-opacity-75">
+                                Kontakt aufnehmen
+                            </a>
+                        @else
+                            <p class="italic text-red-600">Anbieterinformationen nicht verfügbar.</p>
+                        @endif
+                    </div>
+
+
+
+
 
                 <div class="bg-gray-100 shadow-md rounded-2xl p-6 space-y-6">
 
@@ -323,34 +364,7 @@
                         @endif
                     </div>
 
-                    {{-- Seller / Anbieter Info --}}
-                    <div class="border-t border-gray-300 pt-6">
-                        <h3 class="text-xl font-semibold text-gray-700 mb-3">Anbieterinformationen</h3>
-                        @if ($boat->user)
-                            <dl class="space-y-2 text-gray-900">
-                                <div>
-                                    <dt class="inline font-semibold">Name:</dt>
-                                    <dd class="inline">{{ $boat->user->name }}</dd>
-                                </div>
-                                <div>
-                                    <dt class="inline font-semibold">E-Mail:</dt>
-                                    <dd class="inline">{{ $boat->user->email }}</dd>
-                                </div>
-                                @if($boat->user->city)
-                                <div>
-                                    <dt class="inline font-semibold">Stadt:</dt>
-                                    <dd class="inline">{{ $boat->user->city }}</dd>
-                                </div>
-                                @endif
-                            </dl>
-                            <a href="{{ route('messages.create', $boat->user->id) }}" 
-                                class="mt-6 block w-full text-center bg-red-700 text-white font-semibold py-3 rounded-full shadow-lg hover:bg-gray-800 transition focus:ring-4 focus:ring-gray-500 focus:ring-opacity-75">
-                                Kontakt aufnehmen
-                            </a>
-                        @else
-                            <p class="italic text-red-600">Anbieterinformationen nicht verfügbar.</p>
-                        @endif
-                    </div>
+                 
                 </div>
             </section>
         </article>

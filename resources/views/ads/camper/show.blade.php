@@ -221,6 +221,9 @@
                         @endif
                     </div>
 
+
+                    
+
                     <div class="prose prose-lg max-w-none text-gray-700">
                         @if ($camper->description)
                             {!! nl2br(e($camper->description)) !!}
@@ -229,6 +232,37 @@
                         @endif
                     </div>
                 </div>
+
+
+
+                         {{-- Seller / Anbieter Info --}}
+                    <div class="border-t border-gray-300 pt-6">
+                        <h3 class="text-xl font-semibold text-gray-700 mb-3">Anbieterinformationen</h3>
+                        @if ($camper->user)
+                            <dl class="space-y-2 text-gray-900">
+                                <div>
+                                    <dt class="inline font-semibold">Name:</dt>
+                                    <dd class="inline">{{ $camper->user->name }}</dd>
+                                </div>
+                                <div>
+                                    <dt class="inline font-semibold">E-Mail:</dt>
+                                    <dd class="inline">{{ $camper->user->email }}</dd>
+                                </div>
+                                @if($camper->user->city)
+                                <div>
+                                    <dt class="inline font-semibold">Stadt:</dt>
+                                    <dd class="inline">{{ $camper->user->city }}</dd>
+                                </div>
+                                @endif
+                            </dl>
+                            <a href="{{ route('messages.create', $camper->user->id) }}"
+                                class="mt-6 block w-full text-center bg-red-700 text-white font-semibold py-3 rounded-full shadow-lg hover:bg-gray-800 transition focus:ring-4 focus:ring-gray-500 focus:ring-opacity-75">
+                                Kontakt aufnehmen
+                            </a>
+                        @else
+                            <p class="italic text-red-600">Anbieterinformationen nicht verfügbar.</p>
+                        @endif
+                    </div>
 
                 <div class="bg-gray-100 shadow-md rounded-2xl p-6 space-y-6">
 
@@ -355,34 +389,7 @@
                         @endif
                     </div>
 
-                    {{-- Seller / Anbieter Info --}}
-                    <div class="border-t border-gray-300 pt-6">
-                        <h3 class="text-xl font-semibold text-gray-700 mb-3">Anbieterinformationen</h3>
-                        @if ($camper->user)
-                            <dl class="space-y-2 text-gray-900">
-                                <div>
-                                    <dt class="inline font-semibold">Name:</dt>
-                                    <dd class="inline">{{ $camper->user->name }}</dd>
-                                </div>
-                                <div>
-                                    <dt class="inline font-semibold">E-Mail:</dt>
-                                    <dd class="inline">{{ $camper->user->email }}</dd>
-                                </div>
-                                @if($camper->user->city)
-                                <div>
-                                    <dt class="inline font-semibold">Stadt:</dt>
-                                    <dd class="inline">{{ $camper->user->city }}</dd>
-                                </div>
-                                @endif
-                            </dl>
-                            <a href="{{ route('messages.create', $camper->user->id) }}"
-                                class="mt-6 block w-full text-center bg-red-700 text-white font-semibold py-3 rounded-full shadow-lg hover:bg-gray-800 transition focus:ring-4 focus:ring-gray-500 focus:ring-opacity-75">
-                                Kontakt aufnehmen
-                            </a>
-                        @else
-                            <p class="italic text-red-600">Anbieterinformationen nicht verfügbar.</p>
-                        @endif
-                    </div>
+           
                 </div>
             </section>
         </article>

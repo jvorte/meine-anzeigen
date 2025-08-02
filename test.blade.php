@@ -1,4 +1,4 @@
-{{-- resources/views/ads/services/show.blade.php --}}
+{{-- resources/views/ads/boats/show.blade.php --}}
 
 <x-app-layout>
     <x-slot name="header">
@@ -6,10 +6,10 @@
         <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center px-4 py-2">
             <div>
                 <h1 class="text-4xl font-extrabold text-gray-900 leading-tight">
-                    Dienstleistung Anzeige
+                    Boots Anzeige
                 </h1>
                 <p class="mt-1 text-gray-600 max-w-xl">
-                    Detaillierte Ansicht Ihrer Dienstleistungsanzeige
+                    Umfangreiche Informationen zu Ihrer Boots-Anzeige
                 </p>
             </div>
             <div class="mt-3 sm:mt-0">
@@ -28,9 +28,9 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 p-10"> 
         {{-- Breadcrumbs --}}
         <x-breadcrumbs :items="[
-            ['label' => 'Alle Anzeigen', 'url' => route('ads.index')],
-            ['label' => 'Dienstleistungen', 'url' => route('categories.show', 'services')],
-            ['label' => $service->title, 'url' => null],
+            ['label' => 'Alle Boots-Anzeigen', 'url' => route('ads.index')],
+            ['label' => 'Boote', 'url' => route('categories.show', 'boats')],
+            ['label' => $boat->title, 'url' => null],
         ]" class="mb-8" />
 
         {{-- Action Buttons and Back link --}}
@@ -45,12 +45,12 @@
 
             <div class="flex items-center space-x-3 pt-10">
                 @auth
-                    @if (auth()->id() === $service->user_id || (auth()->user() && auth()->user()->isAdmin()))
-                        <a href="{{ route('ads.services.edit', $service->id) }}" 
+                    @if (auth()->id() === $boat->user_id || (auth()->user() && auth()->user()->isAdmin()))
+                        <a href="{{ route('ads.boats.edit', $boat->id) }}" 
                             class="px-5 py-2 bg-gray-700 hover:bg-gray-800 text-white rounded-full shadow-lg transition transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2">
                             Anzeige bearbeiten
                         </a>
-                        <form action="{{ route('ads.services.destroy', $service->id) }}" method="POST"
+                        <form action="{{ route('ads.boats.destroy', $boat->id) }}" method="POST"
                             onsubmit="return confirm('Sind Sie sicher, dass Sie diese Anzeige löschen möchten? Diese Aktion kann nicht rückgängig gemacht werden.')">
                             @csrf
                             @method('DELETE')
@@ -72,8 +72,8 @@
 
             {{-- Left Column: Images and Thumbnails --}}
             <section x-data="{
-                images: @js($service->images->pluck('path')),
-                activeImage: '{{ $service->images->first()->path ?? '' }}',
+                images: @js($boat->images->pluck('path')),
+                activeImage: '{{ $boat->images->first()->path ?? '' }}',
                 showModal: false,
                 scaleUp: false,
                 currentIndex: 0,
@@ -134,7 +134,7 @@
 
                 {{-- Thumbnails --}}
                 <div class="flex space-x-4 overflow-x-auto no-scrollbar w-full max-w-xl px-2">
-                    @foreach ($service->images as $image)
+                    @foreach ($boat->images as $image)
                         <img src="{{ Storage::url($image->path) }}" alt="Thumbnail"
                             @click="changeImage('{{ $image->path }}')" 
                             class="flex-shrink-0 w-20 h-20 rounded-xl object-cover cursor-pointer shadow-md transform transition duration-300 hover:scale-105 ring-2 focus:ring-4 focus:ring-gray-700 focus:outline-none"
@@ -197,19 +197,24 @@
 
             </section>
 
+
+
+
+            
+
             {{-- Right Column: Details & Seller info --}}
             <section class="flex flex-col justify-between gap-10">
 
                 {{-- Title and Pricing --}}
                 <div>
                     <h2 class="text-4xl font-extrabold text-gray-900 mb-4 leading-tight">
-                        {{ $service->title }}
+                        {{ $boat->title }}
                     </h2>
 
                     <div class="flex items-baseline space-x-3 mb-6">
-                        @if ($service->price)
+                        @if ($boat->price)
                             <p class="text-3xl text-gray-700 font-extrabold [&>span]:text-base [&>span]:font-normal [&>span]:ml-1">
-                                &euro;{{ number_format($service->price, 2, ',', '.') }}
+                                &euro;{{ number_format($boat->price, 2, ',', '.') }}
                                 <span> / Einheit</span>
                             </p>
                         @else
@@ -218,62 +223,38 @@
                     </div>
 
                     <div class="prose prose-lg max-w-none text-gray-700">
-                        @if ($service->description)
-                            {!! nl2br(e($service->description)) !!}
+                        @if ($boat->description)
+                            {!! nl2br(e($boat->description)) !!}
                         @else
                             <p class="italic text-gray-400">Keine Beschreibung verfügbar.</p>
                         @endif
                     </div>
                 </div>
 
-                <div class="bg-gray-100 shadow-md rounded-2xl p-6 space-y-6">
 
-                    {{-- Service Details Grid --}}
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
 
-                        @if ($service->service_type)
-                            <dl>
-                                <dt class="font-semibold text-gray-700 mb-1">Art der Dienstleistung</dt>
-                                <dd class="text-gray-900">{{ $service->service_type }}</dd>
-                            </dl>
-                        @endif
 
-                        @if ($service->availability)
-                            <dl>
-                                <dt class="font-semibold text-gray-700 mb-1">Verfügbarkeit</dt>
-                                <dd class="text-gray-900">{{ $service->availability }}</dd>
-                            </dl>
-                        @endif
-
-                        @if ($service->location)
-                            <dl>
-                                <dt class="font-semibold text-gray-700 mb-1">Standort / Region</dt>
-                                <dd class="text-gray-900">{{ $service->location }}</dd>
-                            </dl>
-                        @endif
-                    </div>
-
-                    {{-- Seller / Anbieter Info --}}
+                   {{-- Seller / Anbieter Info --}}
                     <div class="border-t border-gray-300 pt-6">
                         <h3 class="text-xl font-semibold text-gray-700 mb-3">Anbieterinformationen</h3>
-                        @if ($service->user)
+                        @if ($boat->user)
                             <dl class="space-y-2 text-gray-900">
                                 <div>
                                     <dt class="inline font-semibold">Name:</dt>
-                                    <dd class="inline">{{ $service->user->name }}</dd>
+                                    <dd class="inline">{{ $boat->user->name }}</dd>
                                 </div>
                                 <div>
                                     <dt class="inline font-semibold">E-Mail:</dt>
-                                    <dd class="inline">{{ $service->user->email }}</dd>
+                                    <dd class="inline">{{ $boat->user->email }}</dd>
                                 </div>
-                                @if($service->user->city)
+                                @if($boat->user->city)
                                 <div>
                                     <dt class="inline font-semibold">Stadt:</dt>
-                                    <dd class="inline">{{ $service->user->city }}</dd>
+                                    <dd class="inline">{{ $boat->user->city }}</dd>
                                 </div>
                                 @endif
                             </dl>
-                            <a href="{{ route('messages.create', $service->user->id) }}" 
+                            <a href="{{ route('messages.create', $boat->user->id) }}" 
                                 class="mt-6 block w-full text-center bg-red-700 text-white font-semibold py-3 rounded-full shadow-lg hover:bg-gray-800 transition focus:ring-4 focus:ring-gray-500 focus:ring-opacity-75">
                                 Kontakt aufnehmen
                             </a>
@@ -281,6 +262,109 @@
                             <p class="italic text-red-600">Anbieterinformationen nicht verfügbar.</p>
                         @endif
                     </div>
+
+
+
+
+
+                <div class="bg-gray-100 shadow-md rounded-2xl p-6 space-y-6">
+
+                    {{-- Boat Details Grid --}}
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+
+                        @if ($boat->brand)
+                            <dl>
+                                <dt class="font-semibold text-gray-700 mb-1">Marke</dt>
+                                <dd class="text-gray-900">{{ $boat->brand }}</dd>
+                            </dl>
+                        @endif
+
+                        @if ($boat->model)
+                            <dl>
+                                <dt class="font-semibold text-gray-700 mb-1">Modell</dt>
+                                <dd class="text-gray-900">{{ $boat->model }}</dd>
+                            </dl>
+                        @endif
+
+                        @if ($boat->year_of_construction)
+                            <dl>
+                                <dt class="font-semibold text-gray-700 mb-1">Baujahr</dt>
+                                <dd class="text-gray-900">{{ $boat->year_of_construction }}</dd>
+                            </dl>
+                        @endif
+
+                        @if ($boat->condition)
+                            <dl>
+                                <dt class="font-semibold text-gray-700 mb-1">Zustand</dt>
+                                <dd class="text-gray-900">{{ $boat->condition }}</dd>
+                            </dl>
+                        @endif
+
+                        @if ($boat->boat_type)
+                            <dl>
+                                <dt class="font-semibold text-gray-700 mb-1">Boots-Typ</dt>
+                                <dd class="text-gray-900">{{ $boat->boat_type }}</dd>
+                            </dl>
+                        @endif
+
+                        @if ($boat->material)
+                            <dl>
+                                <dt class="font-semibold text-gray-700 mb-1">Material</dt>
+                                <dd class="text-gray-900">{{ $boat->material }}</dd>
+                            </dl>
+                        @endif
+
+                        @if ($boat->total_length)
+                            <dl>
+                                <dt class="font-semibold text-gray-700 mb-1">Gesamtlänge</dt>
+                                <dd class="text-gray-900">{{ $boat->total_length }} m</dd>
+                            </dl>
+                        @endif
+
+                        @if ($boat->total_width)
+                            <dl>
+                                <dt class="font-semibold text-gray-700 mb-1">Gesamtbreite</dt>
+                                <dd class="text-gray-900">{{ $boat->total_width }} m</dd>
+                            </dl>
+                        @endif
+
+                        @if ($boat->berths)
+                            <dl>
+                                <dt class="font-semibold text-gray-700 mb-1">Kojen</dt>
+                                <dd class="text-gray-900">{{ $boat->berths }}</dd>
+                            </dl>
+                        @endif
+
+                        @if ($boat->engine_type)
+                            <dl>
+                                <dt class="font-semibold text-gray-700 mb-1">Motortyp</dt>
+                                <dd class="text-gray-900">{{ $boat->engine_type }}</dd>
+                            </dl>
+                        @endif
+
+                        @if ($boat->engine_power)
+                            <dl>
+                                <dt class="font-semibold text-gray-700 mb-1">Motorleistung</dt>
+                                <dd class="text-gray-900">{{ $boat->engine_power }} PS</dd>
+                            </dl>
+                        @endif
+
+                        @if ($boat->operating_hours)
+                            <dl>
+                                <dt class="font-semibold text-gray-700 mb-1">Betriebsstunden</dt>
+                                <dd class="text-gray-900">{{ number_format($boat->operating_hours, 0, ',', '.') }} Std.</dd>
+                            </dl>
+                        @endif
+
+                        @if ($boat->last_service)
+                            <dl>
+                                <dt class="font-semibold text-gray-700 mb-1">Letzter Service</dt>
+                                <dd class="text-gray-900">{{ \Carbon\Carbon::parse($boat->last_service)->format('d.m.Y') }}</dd>
+                            </dl>
+                        @endif
+                    </div>
+
+                 
                 </div>
             </section>
         </article>
@@ -297,3 +381,4 @@
         }
     </style>
 </x-app-layout>
+
