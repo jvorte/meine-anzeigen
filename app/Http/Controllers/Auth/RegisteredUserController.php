@@ -31,14 +31,26 @@ class RegisteredUserController extends Controller
     {
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
+            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:' . User::class],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
+            'country' => ['nullable', 'string', 'max:255'], // New field validation
+            'city' => ['nullable', 'string', 'max:255'], // New field validation
+            'postal_code' => ['nullable', 'string', 'max:255'], // New field validation
+            'street_address' => ['nullable', 'string', 'max:255'], // New field validation
+            'mobile_phone' => ['nullable', 'string', 'max:255'], // New field validation
+            'phone' => ['nullable', 'string', 'max:255'], // New field validation
         ]);
 
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
+            'country' => $request->country, // New field to be saved
+            'city' => $request->city, // New field to be saved
+            'postal_code' => $request->postal_code, // New field to be saved
+            'street_address' => $request->street_address, // New field to be saved
+            'mobile_phone' => $request->mobile_phone, // New field to be saved
+            'phone' => $request->phone, // New field to be saved
         ]);
 
         event(new Registered($user));

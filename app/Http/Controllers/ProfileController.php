@@ -32,6 +32,9 @@ class ProfileController extends Controller
             $request->user()->email_verified_at = null;
         }
 
+        // Fills the user model with the validated data, including the new fields.
+        // It's not necessary to call fill again for the new fields, as $request->validated() already includes them
+        // based on the rules defined in ProfileUpdateRequest.
         $request->user()->save();
 
         return Redirect::route('profile.edit')->with('status', 'profile-updated');

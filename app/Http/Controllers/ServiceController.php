@@ -39,13 +39,13 @@ class ServiceController extends Controller
         // 1. Validation
         $validatedData = $request->validate([
             'category_slug' => ['required', 'string', 'max:255', Rule::in(['dienstleistungen'])],
-            'dienstleistung_kategorie' => ['required', 'string', 'max:255', Rule::in(['reinigung', 'handwerk', 'it', 'beratung', 'transport', 'sonstiges'])],
-            'titel' => ['required', 'string', 'max:255'], // Titel der Dienstleistung
-            'beschreibung' => ['required', 'string'], // Beschreibung
+            'service_type' => ['required', 'string', 'max:255', Rule::in(['reinigung', 'handwerk', 'it', 'beratung', 'transport', 'sonstiges'])],
+            'title' => ['required', 'string', 'max:255'], // Titel der Dienstleistung
+            'description' => ['required', 'string'], // Beschreibung
             'images.*' => ['nullable', 'image', 'max:2048'], // 'images[]' validates each file in the array (max 2MB per image)
-            'region' => ['required', 'string', 'max:255'], // Region / Ort
-            'preis' => ['nullable', 'numeric', 'min:0'], // Preis
-            'verfugbarkeit' => ['nullable', 'string', Rule::in(['sofort', 'nach_vereinbarung', 'während_wochentagen', 'wochenende'])], // Verfügbarkeit
+            'location' => ['required', 'string', 'max:255'], // Region / Ort
+            'price' => ['nullable', 'numeric', 'min:0'], // Preis
+            'availability' => ['nullable', 'string', Rule::in(['sofort', 'nach_vereinbarung', 'während_wochentagen', 'wochenende'])], // Verfügbarkeit
 
         ]);
 // dd($validatedData);
@@ -58,11 +58,11 @@ class ServiceController extends Controller
         $service = Service::create(array_merge($dataToCreateService, [
             'user_id' => Auth::id(), // Assign the authenticated user's ID
             // Map 'titel' from form to 'title' in DB
-            'title' => $validatedData['titel'],
+            'title' => $validatedData['title'],
             // Map 'beschreibung' from form to 'description' in DB
-            'description' => $validatedData['beschreibung'],
+            'description' => $validatedData['description'],
             // Map 'preis' from form to 'price' in DB
-            'price' => $validatedData['preis'],
+            'price' => $validatedData['price'],
             // Map 'kontakt_name' from form to 'contact_name' in DB
    
         ]));
@@ -106,29 +106,30 @@ class ServiceController extends Controller
  */
 public function update(Request $request, Service $ad) // Using route model binding
     {
-        
+       
 
         $validated = $request->validate([
-            'dienstleistung_kategorie' => ['required', 'string', Rule::in(['reinigung', 'handwerk', 'it', 'beratung', 'transport', 'sonstiges'])],
-            'titel' => ['required', 'string', 'max:255'],
-            'region' => ['required', 'string', 'max:255'],
-            'preis' => ['nullable', 'numeric', 'min:0'],
-            'verfugbarkeit' => ['nullable', 'string', Rule::in(['sofort', 'nach_vereinbarung', 'während_wochentagen', 'wochenende'])],
-            'beschreibung' => ['required', 'string'],
+            'service_type' => ['required', 'string', Rule::in(['reinigung', 'handwerk', 'it', 'beratung', 'transport', 'sonstiges'])],
+            'title' => ['required', 'string', 'max:255'],
+            'location' => ['required', 'string', 'max:255'],
+            'price' => ['nullable', 'numeric', 'min:0'],
+            'availability' => ['nullable', 'string', Rule::in(['sofort', 'nach_vereinbarung', 'während_wochentagen', 'wochenende'])],
+            'description' => ['required', 'string'],
             'images.*' => ['nullable', 'image', 'max:2048'], // Max 2MB per image
             'images_to_delete' => ['nullable', 'array'],
             'images_to_delete.*' => ['integer', 'exists:service_images,id'], 
         ]);
-
+  
         // Update the basic ad details
         $ad->update([
-            'dienstleistung_kategorie' => $validated['dienstleistung_kategorie'],
-            'title' => $validated['titel'], // Use 'title' if that's your DB column
-            'region' => $validated['region'],
-            'price' => $validated['preis'], // Use 'price' if that's your DB column
-            'verfugbarkeit' => $validated['verfugbarkeit'],
-            'description' => $validated['beschreibung'], // Use 'description' if that's your DB column
+            'service_type' => $validated['service_type'],
+            'title' => $validated['title'], // Use 'title' if that's your DB column
+            'location' => $validated['location'],
+            'price' => $validated['price'], // Use 'price' if that's your DB column
+            'availability' => $validated['availability'],
+            'description' => $validated['description'], // Use 'description' if that's your DB column
         ]);
+     
 
         // Handle image deletions
         if (isset($validated['images_to_delete'])) {

@@ -19,24 +19,59 @@
         <!-- Password -->
         <div class="mt-4">
             <x-input-label for="password" :value="__('Password')" />
-
             <x-text-input id="password" class="block mt-1 w-full"
-                            type="password"
-                            name="password"
-                            required autocomplete="new-password" />
-
+                          type="password"
+                          name="password"
+                          required autocomplete="new-password" />
             <x-input-error :messages="$errors->get('password')" class="mt-2" />
         </div>
 
         <!-- Confirm Password -->
         <div class="mt-4">
             <x-input-label for="password_confirmation" :value="__('Confirm Password')" />
-
             <x-text-input id="password_confirmation" class="block mt-1 w-full"
-                            type="password"
-                            name="password_confirmation" required autocomplete="new-password" />
-
+                          type="password"
+                          name="password_confirmation" required autocomplete="new-password" />
             <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
+        </div>
+
+        <!-- Address Fields -->
+        <div class="mt-4">
+            <x-input-label for="country" :value="__('Country')" />
+            <x-text-input id="country" class="block mt-1 w-full" type="text" name="country" :value="old('country')" autocomplete="country-name" />
+            <x-input-error :messages="$errors->get('country')" class="mt-2" />
+        </div>
+
+        <div class="mt-4">
+            <x-input-label for="city" :value="__('City')" />
+            <x-text-input id="city" class="block mt-1 w-full" type="text" name="city" :value="old('city')" autocomplete="address-level2" />
+            <x-input-error :messages="$errors->get('city')" class="mt-2" />
+        </div>
+
+        <div class="mt-4">
+            <x-input-label for="postal_code" :value="__('Postal Code')" />
+            <x-text-input id="postal_code" class="block mt-1 w-full" type="text" name="postal_code" :value="old('postal_code')" autocomplete="postal-code" />
+            <x-input-error :messages="$errors->get('postal_code')" class="mt-2" />
+        </div>
+
+        <div class="mt-4">
+            <x-input-label for="street_address" :value="__('Street Address')" />
+            <x-text-input id="street_address" class="block mt-1 w-full" type="text" name="street_address" :value="old('street_address')" autocomplete="street-address" />
+            <x-input-error :messages="$errors->get('street_address')" class="mt-2" />
+        </div>
+
+        <!-- Mobile Phone -->
+        <div class="mt-4">
+            <x-input-label for="mobile_phone" :value="__('Mobile Phone')" />
+            <x-text-input id="mobile_phone" class="block mt-1 w-full" type="text" name="mobile_phone" :value="old('mobile_phone')" autocomplete="tel-national" />
+            <x-input-error :messages="$errors->get('mobile_phone')" class="mt-2" />
+        </div>
+        
+        <!-- Phone -->
+        <div class="mt-4">
+            <x-input-label for="phone" :value="__('Phone')" />
+            <x-text-input id="phone" class="block mt-1 w-full" type="text" name="phone" :value="old('phone')" autocomplete="tel" />
+            <x-input-error :messages="$errors->get('phone')" class="mt-2" />
         </div>
 
         <div class="flex items-center justify-end mt-4">

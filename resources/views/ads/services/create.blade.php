@@ -39,60 +39,60 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     {{-- Dienstleistung Kategorie --}}
                     <div>
-                        <label for="dienstleistung_kategorie" class="block text-sm font-medium text-gray-700 mb-2">Kategorie</label>
-                        <select name="dienstleistung_kategorie" id="dienstleistung_kategorie"
+                        <label for="service_type" class="block text-sm font-medium text-gray-700 mb-2">Kategorie</label>
+                        <select name="service_type" id="service_type"
                                 class="form-select w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
                             <option value="">Bitte wählen</option>
                             @foreach(['reinigung', 'handwerk', 'it', 'beratung', 'transport', 'sonstiges'] as $category)
-                                <option value="{{ $category }}" {{ old('dienstleistung_kategorie') == $category ? 'selected' : '' }}>{{ ucfirst($category) }}</option>
+                                <option value="{{ $category }}" {{ old('service_type') == $category ? 'selected' : '' }}>{{ ucfirst($category) }}</option>
                             @endforeach
                         </select>
-                        @error('dienstleistung_kategorie')
+                        @error('service_type')
                             <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                         @enderror
                     </div>
 
                     {{-- Titel der Dienstleistung --}}
                     <div class="md:col-span-2">
-                        <label for="titel" class="block text-sm font-medium text-gray-700 mb-2">Titel der Dienstleistung</label>
-                        <input type="text" name="titel" id="titel" value="{{ old('titel') }}" placeholder="z.B. Professionelle Fensterreinigung"
+                        <label for="title" class="block text-sm font-medium text-gray-700 mb-2">Titel der Dienstleistung</label>
+                        <input type="text" name="title" id="title" value="{{ old('title') }}" placeholder="z.B. Professionelle Fensterreinigung"
                                class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
-                        @error('titel')
+                        @error('title')
                             <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                         @enderror
                     </div>
 
                     {{-- Region / Ort --}}
                     <div>
-                        <label for="region" class="block text-sm font-medium text-gray-700 mb-2">Region / Ort</label>
-                        <input type="text" name="region" id="region" value="{{ old('region') }}" placeholder="z.B. Wien, Niederösterreich"
+                        <label for="location" class="block text-sm font-medium text-gray-700 mb-2">Region / Ort</label>
+                        <input type="text" name="location" id="location" value="{{ old('location') }}" placeholder="z.B. Wien, Niederösterreich"
                                class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
-                        @error('region')
+                        @error('location')
                             <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                         @enderror
                     </div>
 
                     {{-- Preis (optional) --}}
                     <div>
-                        <label for="preis" class="block text-sm font-medium text-gray-700 mb-2">Preis (in €/Stunde/Pauschale, optional)</label>
-                        <input type="number" step="0.01" name="preis" id="preis" value="{{ old('preis') }}" placeholder="z.B. 50.00"
+                        <label for="price" class="block text-sm font-medium text-gray-700 mb-2">Preis (in €/Stunde/Pauschale, optional)</label>
+                        <input type="number" step="0.01" name="price" id="price" value="{{ old('price') }}" placeholder="z.B. 50.00"
                                class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
-                        @error('preis')
+                        @error('price')
                             <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                         @enderror
                     </div>
 
                     {{-- Verfügbarkeit --}}
                     <div>
-                        <label for="verfugbarkeit" class="block text-sm font-medium text-gray-700 mb-2">Verfügbarkeit (optional)</label>
-                        <select name="verfugbarkeit" id="verfugbarkeit"
+                        <label for="availability" class="block text-sm font-medium text-gray-700 mb-2">Verfügbarkeit (optional)</label>
+                        <select name="availability" id="availability"
                                 class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
                             <option value="">Bitte wählen</option>
                             @foreach(['sofort', 'nach_vereinbarung', 'während_wochentagen', 'wochenende'] as $avail)
-                                <option value="{{ $avail }}" {{ old('verfugbarkeit') == $avail ? 'selected' : '' }}>{{ ucfirst(str_replace('_', ' ', $avail)) }}</option>
+                                <option value="{{ $avail }}" {{ old('availability') == $avail ? 'selected' : '' }}>{{ ucfirst(str_replace('_', ' ', $avail)) }}</option>
                             @endforeach
                         </select>
-                        @error('verfugbarkeit')
+                        @error('availability')
                             <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                         @enderror
                     </div>
@@ -100,11 +100,11 @@
 
                 {{-- Beschreibung --}}
                 <div class="mt-6">
-                    <label for="beschreibung" class="block text-sm font-medium text-gray-700 mb-2">Beschreibung der Dienstleistung</label>
-                    <textarea name="beschreibung" id="beschreibung" rows="7"
+                    <label for="description" class="block text-sm font-medium text-gray-700 mb-2">Beschreibung der Dienstleistung</label>
+                    <textarea name="description" id="description" rows="7"
                               placeholder="Beschreibe hier deine Dienstleistung detailliert. Was bietest du an? Welche Erfahrungen hast du?"
-                              class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">{{ old('beschreibung') }}</textarea>
-                    @error('beschreibung')
+                              class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">{{ old('description') }}</textarea>
+                    @error('description')
                         <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                     @enderror
                 </div>

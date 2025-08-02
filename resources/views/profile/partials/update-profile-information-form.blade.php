@@ -47,6 +47,44 @@
             @endif
         </div>
 
+        <!-- New Profile Information Fields -->
+        <div>
+            <x-input-label for="country" :value="__('Country')" />
+            <x-text-input id="country" name="country" type="text" class="mt-1 block w-full" :value="old('country', $user->country)" autocomplete="country-name" />
+            <x-input-error class="mt-2" :messages="$errors->get('country')" />
+        </div>
+
+        <div>
+            <x-input-label for="city" :value="__('City')" />
+            <x-text-input id="city" name="city" type="text" class="mt-1 block w-full" :value="old('city', $user->city)" autocomplete="address-level2" />
+            <x-input-error class="mt-2" :messages="$errors->get('city')" />
+        </div>
+
+        <div>
+            <x-input-label for="postal_code" :value="__('Postal Code')" />
+            <x-text-input id="postal_code" name="postal_code" type="text" class="mt-1 block w-full" :value="old('postal_code', $user->postal_code)" autocomplete="postal-code" />
+            <x-input-error class="mt-2" :messages="$errors->get('postal_code')" />
+        </div>
+
+        <div>
+            <x-input-label for="street_address" :value="__('Street Address')" />
+            <x-text-input id="street_address" name="street_address" type="text" class="mt-1 block w-full" :value="old('street_address', $user->street_address)" autocomplete="street-address" />
+            <x-input-error class="mt-2" :messages="$errors->get('street_address')" />
+        </div>
+
+        <div>
+            <x-input-label for="mobile_phone" :value="__('Mobile Phone')" />
+            <x-text-input id="mobile_phone" name="mobile_phone" type="text" class="mt-1 block w-full" :value="old('mobile_phone', $user->mobile_phone)" autocomplete="tel-national" />
+            <x-input-error class="mt-2" :messages="$errors->get('mobile_phone')" />
+        </div>
+
+        <div>
+            <x-input-label for="phone" :value="__('Phone')" />
+            <x-text-input id="phone" name="phone" type="text" class="mt-1 block w-full" :value="old('phone', $user->phone)" autocomplete="tel" />
+            <x-input-error class="mt-2" :messages="$errors->get('phone')" />
+        </div>
+        <!-- End of New Fields -->
+
         <div class="flex items-center gap-4">
             <x-primary-button>{{ __('Save') }}</x-primary-button>
 

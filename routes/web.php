@@ -214,6 +214,11 @@ Route::get('/api/camper-brands/{brandId}/models', [CamperController::class, 'get
     // --- Remaining PartController routes ---
     Route::post('/parts', [PartController::class, 'store'])->name('parts.store');
     Route::get('/ads/parts/create', [PartController::class, 'create'])->name('ads.parts.create');
+
+    Route::middleware('auth')->group(function () {
+    Route::get('/messages', [App\Http\Controllers\MessageController::class, 'index'])->name('messages.index');
+});
+
 });
 
 

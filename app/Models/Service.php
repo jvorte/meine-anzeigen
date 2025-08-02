@@ -12,12 +12,12 @@ class Service extends Model
    protected $fillable = [
         'user_id', 
         'category_slug',
-        'dienstleistung_kategorie',
+        'service_type',
         'title',
         'description',
-        'region',
+        'location',
         'price',
-        'verfugbarkeit',
+        'availability',
     ];
 
 
@@ -29,4 +29,10 @@ class Service extends Model
     {
         return $this->hasMany(ServiceImage::class);
     }
+
+    public function user()
+{
+    return $this->belongsTo(User::class);
+}
+
 }
