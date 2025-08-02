@@ -53,5 +53,9 @@ class User extends Authenticatable
 {
     return $this->hasMany(Service::class);
 }
+public function campers()
+{
+    return $this->hasMany(Camper::class);
+}
 
 }
