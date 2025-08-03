@@ -18,27 +18,25 @@ class UsedVehiclePart extends Model
         'manufacturer_part_number',
         'condition',
         'price',
-        'compatible_brand_id',
-        'compatible_car_model_id',
+
         'compatible_year_from',
         'compatible_year_to',
+        // ADD THESE NEW FIELDS
+        'compatible_brand', 
+        'compatible_model',
+        'vehicle_type',
     ];
 
-    /**
-     * Get the brand this part is compatible with.
-     */
-    public function compatibleBrand()
-    {
-        return $this->belongsTo(Brand::class, 'compatible_brand_id');
-    }
+    // REMOVE these relationships as they are no longer based on foreign keys
+    // public function compatibleBrand()
+    // {
+    //     return $this->belongsTo(Brand::class, 'compatible_brand_id');
+    // }
 
-    /**
-     * Get the car model this part is compatible with.
-     */
-    public function compatibleCarModel()
-    {
-        return $this->belongsTo(CarModel::class, 'compatible_car_model_id');
-    }
+    // public function compatibleCarModel()
+    // {
+    //     return $this->belongsTo(CarModel::class, 'compatible_car_model_id');
+    // }
 
     /**
      * Get the images for the used vehicle part.

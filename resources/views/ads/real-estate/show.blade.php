@@ -249,9 +249,46 @@
                     @endif
                 </div>
 
-                {{-- Basic Data Section (previously outside the main grid, now moved here) --}}
-                <div class="bg-gray-100 shadow-md rounded-2xl p-6 space-y-6">
-                    <h4 class="text-xl font-semibold text-gray-700 mb-6">Basisdaten</h4>
+              
+
+            </section> {{-- End of Right Column --}}
+        </div> {{-- End of grid wrapper div --}}
+
+        {{-- These sections were previously outside the main article, now correctly placed inside it --}}
+
+        {{-- Description Section --}}
+        <section class="bg-gray-50 p-6 rounded-lg shadow-inner mt-8"> {{-- Added mt-8 for spacing --}}
+            <h4 class="text-xl font-semibold text-gray-700 mb-6">Beschreibung</h4>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <p class="text-sm font-semibold text-gray-800">Hauptbeschreibung:</p>
+                    <p class="text-gray-700 leading-relaxed">{{ $realEstate->description }}</p>
+                </div>
+                @if ($realEstate->objektbeschreibung)
+                    <div>
+                        <p class="text-sm font-semibold text-gray-800">Objektbeschreibung:</p>
+                        <p class="text-gray-700 leading-relaxed">{{ $realEstate->objektbeschreibung }}</p>
+                    </div>
+                @endif
+                @if ($realEstate->lage)
+                    <div>
+                        <p class="text-sm font-semibold text-gray-800">Lagebeschreibung:</p>
+                        <p class="text-gray-700 leading-relaxed">{{ $realEstate->lage }}</p>
+                    </div>
+                @endif
+                @if ($realEstate->sonstiges)
+                    <div>
+                        <p class="text-sm font-semibold text-gray-800">Sonstiges:</p>
+                        <p class="text-gray-700 leading-relaxed">{{ $realEstate->sonstiges }}</p>
+                    </div>
+                @endif
+                @if ($realEstate->zusatzinformation)
+                    <div>
+                        <p class="text-sm font-semibold text-gray-800">Zusatzinformation:</p>
+                        <p class="text-gray-700 leading-relaxed">{{ $realEstate->zusatzinformation }}</p>
+                    </div>
+                @endif
+                 <h4 class="text-xl font-semibold text-gray-700 mb-6">Basisdaten</h4>
                     <div>
                         <p class="text-sm font-semibold text-gray-800">Immobilientyp:</p>
                         <p class="text-gray-700">{{ $realEstate->immobilientyp }}</p>
@@ -298,50 +335,13 @@
                             <p class="text-gray-700">{{ \Carbon\Carbon::parse($realEstate->befristung_ende)->format('d.m.Y') }}</p>
                         </div>
                     @endif
-                </div>
-
-            </section> {{-- End of Right Column --}}
-        </div> {{-- End of grid wrapper div --}}
-
-        {{-- These sections were previously outside the main article, now correctly placed inside it --}}
-
-        {{-- Description Section --}}
-        <section class="bg-gray-50 p-6 rounded-lg shadow-inner mt-8"> {{-- Added mt-8 for spacing --}}
-            <h4 class="text-xl font-semibold text-gray-700 mb-6">Beschreibung</h4>
-            <div class="space-y-6">
-                <div>
-                    <p class="text-sm font-semibold text-gray-800">Hauptbeschreibung:</p>
-                    <p class="text-gray-700 leading-relaxed">{{ $realEstate->description }}</p>
-                </div>
-                @if ($realEstate->objektbeschreibung)
-                    <div>
-                        <p class="text-sm font-semibold text-gray-800">Objektbeschreibung:</p>
-                        <p class="text-gray-700 leading-relaxed">{{ $realEstate->objektbeschreibung }}</p>
-                    </div>
-                @endif
-                @if ($realEstate->lage)
-                    <div>
-                        <p class="text-sm font-semibold text-gray-800">Lagebeschreibung:</p>
-                        <p class="text-gray-700 leading-relaxed">{{ $realEstate->lage }}</p>
-                    </div>
-                @endif
-                @if ($realEstate->sonstiges)
-                    <div>
-                        <p class="text-sm font-semibold text-gray-800">Sonstiges:</p>
-                        <p class="text-gray-700 leading-relaxed">{{ $realEstate->sonstiges }}</p>
-                    </div>
-                @endif
-                @if ($realEstate->zusatzinformation)
-                    <div>
-                        <p class="text-sm font-semibold text-gray-800">Zusatzinformation:</p>
-                        <p class="text-gray-700 leading-relaxed">{{ $realEstate->zusatzinformation }}</p>
-                    </div>
-                @endif
             </div>
+
+
         </section>
 
         {{-- Location Section --}}
-        <section class="bg-gray-50 p-6 rounded-lg shadow-inner mt-8"> {{-- Added mt-8 for spacing --}}
+        <section class="bg-gray-50 p-6 rounded-lg shadow-inner mt-8"> 
             <h4 class="text-xl font-semibold text-gray-700 mb-6">Standort</h4>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>

@@ -14,8 +14,9 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             {{-- Breadcrumbs component --}}
             <x-breadcrumbs :items="[
-                ['label' => 'Cars Anzeigen', 'url' => route('categories.show', 'cars')],
-                ['label' => 'Neue Auto Anzeige', 'url' => null],
+                ['label' => 'Alle Anzeigen', 'url' => route('ads.index')],
+                ['label' => 'Gebrauchte Fahrzeugteile', 'url' => route('categories.show', 'used-vehicle-parts')],
+                ['label' => 'Neue Anzeige erstellen', 'url' => null],
             ]" />
         </div>
     </div>
@@ -70,10 +71,11 @@
                         <select name="condition" id="condition"
                                 class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
                             <option value="">Bitte wählen</option>
-                            <option value="neu" {{ old('condition') == 'neu' ? 'selected' : '' }}>Neu</option>
-                            <option value="gebraucht" {{ old('condition') == 'gebraucht' ? 'selected' : '' }}>Gebraucht</option>
-                            <option value="überholt" {{ old('condition') == 'überholt' ? 'selected' : '' }}>Überholt</option>
-                            <option value="defekt" {{ old('condition') == 'defekt' ? 'selected' : '' }}>Defekt (als Ersatzteilspender)</option>
+                            @foreach($conditions as $conditionOption)
+                                <option value="{{ $conditionOption }}" {{ old('condition') == $conditionOption ? 'selected' : '' }}>
+                                    {{ ucfirst($conditionOption) }}
+                                </option>
+                            @endforeach
                         </select>
                         @error('condition')
                             <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
@@ -92,41 +94,41 @@
                 </div>
             </section>
 
-            {{-- Compatibility Section --}}
-            <section class="bg-gray-50 p-6 rounded-lg shadow-inner"> {{-- Added section for consistency --}}
+            {{-- Compatibility Section (Generic Vehicle Details) --}}
+            <section class="bg-gray-50 p-6 rounded-lg shadow-inner">
                 <h4 class="text-xl font-semibold text-gray-700 mb-6">Kompatibilität (Fahrzeugdetails für das Teil)</h4>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6"
-                    x-data="carAdForm(
-                        @json(old('car_brand_id')),
-                        @json(old('car_model_id')),
-                        @json($initialModels ?? [])
-                    )">
-                    {{-- Marke --}}
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    {{-- Vehicle Type --}}
                     <div>
-                        <label for="car_brand_id" class="block text-sm font-medium text-gray-700 mb-2">Marke</label>
-                        <select name="car_brand_id" id="car_brand_id" x-model="selectedCarBrandId"
+                        <label for="vehicle_type" class="block text-sm font-medium text-gray-700 mb-2">Fahrzeugtyp</label>
+                        <select name="vehicle_type" id="vehicle_type"
                                 class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
                             <option value="">Bitte wählen</option>
-                            @foreach($brands as $id => $name)
-                                <option value="{{ $id }}">{{ $name }}</option>
+                            @foreach($vehicleTypes as $type)
+                                <option value="{{ $type }}" {{ old('vehicle_type') == $type ? 'selected' : '' }}>{{ $type }}</option>
                             @endforeach
                         </select>
-                        @error('car_brand_id')
+                        @error('vehicle_type')
                             <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                         @enderror
                     </div>
 
-                    {{-- Modell (Dynamic with Alpine.js) --}}
-                    <div x-show="Object.keys(carModels).length > 0" x-transition x-cloak>
-                        <label for="car_model_id" class="block text-sm font-medium text-gray-700 mb-2">Modell</label>
-                        <select name="car_model_id" id="car_model_id" x-model="selectedCarModelId"
-                                class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
-                            <option value="">Bitte wählen</option>
-                            <template x-for="(name, id) in carModels" :key="id">
-                                <option :value="id" x-text="name"></option>
-                            </template>
-                        </select>
-                        @error('car_model_id')
+                    {{-- Compatible Brand (Text Input) --}}
+                    <div>
+                        <label for="compatible_brand" class="block text-sm font-medium text-gray-700 mb-2">Kompatible Marke</label>
+                        <input type="text" name="compatible_brand" id="compatible_brand" value="{{ old('compatible_brand') }}" placeholder="z.B. Mercedes-Benz, BMW, Yamaha"
+                               class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
+                        @error('compatible_brand')
+                            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    {{-- Compatible Model (Text Input) --}}
+                    <div>
+                        <label for="compatible_model" class="block text-sm font-medium text-gray-700 mb-2">Kompatibles Modell</label>
+                        <input type="text" name="compatible_model" id="compatible_model" value="{{ old('compatible_model') }}" placeholder="z.B. E-Klasse, R 1250 GS, Actros"
+                               class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
+                        @error('compatible_model')
                             <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                         @enderror
                     </div>
@@ -202,7 +204,7 @@
                     </div>
                 </div>
 
-                {{-- Alpine.js Script for Image Previews and Main Form Logic --}}
+                {{-- Alpine.js Script for Image Previews --}}
                 <script>
                     function multiImageUploader() {
                         return {
@@ -237,66 +239,6 @@
                             }
                         };
                     }
-
-                    // Define the Alpine.js component for the car form
-                    document.addEventListener('alpine:init', () => {
-                        Alpine.data('carAdForm', (initialBrandId, initialModelId, initialModels) => ({
-                            selectedCarBrandId: initialBrandId || '',
-                            selectedCarModelId: initialModelId || '',
-                            carModels: initialModels || {},
-
-                            async fetchCarModels() {
-                                if (this.selectedCarBrandId) {
-                                    const fetchUrl = `/car-models/${this.selectedCarBrandId}`;
-                                    try {
-                                        const response = await fetch(fetchUrl);
-                                        if (!response.ok) {
-                                            console.error('HTTP error! Status:', response.status, 'Response text:', await response.text());
-                                            throw new Error(`HTTP error! status: ${response.status}`);
-                                        }
-                                        const data = await response.json();
-                                        this.carModels = data;
-
-                                        // If the previously selected model is not in the new list, clear it
-                                        if (this.selectedCarModelId && !Object.keys(this.carModels).includes(String(this.selectedCarModelId))) {
-                                            this.selectedCarModelId = '';
-                                        }
-                                    } catch (error) {
-                                        console.error('Error fetching car models:', error);
-                                        this.carModels = {}; // Clear models on error
-                                        this.selectedCarModelId = ''; // Clear selected model on error
-                                    }
-                                } else {
-                                    this.carModels = {};
-                                    this.selectedCarModelId = '';
-                                }
-                            },
-
-                            init() {
-                                this.$nextTick(async () => {
-                                    // Only fetch models on init if a brand was previously selected (e.g., after validation error)
-                                    if (this.selectedCarBrandId) {
-                                        await this.fetchCarModels();
-                                        // After models are fetched and rendered, try to set the old model ID
-                                        if (initialModelId && Object.keys(this.carModels).includes(String(initialModelId))) {
-                                            this.selectedCarModelId = initialModelId;
-                                        } else if (initialModelId) {
-                                            this.selectedCarModelId = ''; // Clear if old model isn't valid for the brand
-                                        }
-                                    } else {
-                                        // If no brand is selected initially, ensure models are empty and hidden
-                                        this.carModels = {};
-                                        this.selectedCarModelId = '';
-                                    }
-                                });
-
-                                this.$watch('selectedCarBrandId', (value) => {
-                                    this.selectedCarModelId = ''; // Always clear model when brand changes
-                                    this.fetchCarModels();
-                                });
-                            },
-                        }));
-                    });
                 </script>
             </section>
 
