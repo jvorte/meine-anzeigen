@@ -12,11 +12,11 @@
                     Detaillierte Ansicht Ihrer Gebrauchtfahrzeugteile-Anzeige.
                 </p>
             </div>
-            {{-- "Neu Anzeige" button --}}
-            <div class="mt-4 sm:mt-0">
-                <a href="{{ route('ads.create') }}"
-                    class="inline-flex items-center px-6 py-3 border border-transparent text-base font-semibold rounded-full shadow-lg text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-all duration-300 transform hover:scale-105">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
+
+           <div class="mt-3 sm:mt-0">
+                <a href="{{ route('ads.create') }}" 
+                    class="inline-flex items-center px-6 py-3 bg-red-700 text-white rounded-full shadow-lg hover:bg-gray-800 focus:ring-4 focus:ring-gray-400 focus:ring-opacity-50 transition transform hover:scale-105">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5"
                         stroke="currentColor" class="w-5 h-5 mr-2">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
                     </svg>
@@ -34,67 +34,49 @@
                 ['label' => 'Gebrauchtfahrzeugteile', 'url' => route('categories.show', 'used-vehicle-parts')],
                 ['label' => $usedVehiclePart->title, 'url' => null],
             ]" />
-        </div>
-    </div>
 
-    {{-- Action Buttons --}}
-    <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 my-5 flex flex-wrap justify-end gap-3">
-        {{-- Back to Dashboard Button --}}
-        <a href="{{ route('dashboard') }}"
-            class="inline-flex items-center px-4 py-2 bg-slate-600 border border-slate-300 rounded-md font-semibold text-xs text-gray-100 uppercase tracking-widest hover:bg-gray-300 focus:outline-none focus:border-gray-900 focus:ring ring-gray-300 disabled:opacity-25 transition ease-in-out duration-150">
-            Zurück zum Dashboard
-        </a>
 
-        {{-- Contact Seller Button --}}
-        @if ($usedVehiclePart->user)
-            <a href="{{ route('messages.create', $usedVehiclePart->user->id) }}"
-                class="inline-flex items-center px-4 py-2 bg-blue-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-700 active:bg-blue-900 focus:outline-none focus:border-blue-900 focus:ring ring-blue-300 disabled:opacity-25 transition ease-in-out duration-150">
-                Kontakt aufnehmen
-            </a>
-        @else
-            <p class="text-red-800 dark:text-red-700 italic flex items-center">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-red-500" viewBox="0 0 20 20"
-                    fill="currentColor">
-                    <path fill-rule="evenodd"
-                        d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
-                        clip-rule="evenodd" />
-                </svg>
-                Informationen zum Anbieter nicht verfügbar.
-            </p>
-        @endif
+       {{-- Action Buttons and Back link --}}
+      {{-- Action Buttons and Back link --}}
+<div class="flex flex-col sm:flex-row justify-between items-center mb-8 gap-4">
+    <a href="{{ url()->previous() }}"
+        class="inline-flex items-center text-gray-700 hover:text-gray-900 transition duration-300 font-medium space-x-1">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"
+            stroke-linecap="round" stroke-linejoin="round">
+            <path d="M15 19l-7-7 7-7"></path>
+        </svg>
+        <span>Zurück</span>
+    </a>
 
-        {{-- Edit/Delete Buttons (Visible to owner or admin) --}}
+    {{-- Change pt-10 to sm:pt-0 to remove padding on small screens --}}
+    {{-- Also, add `w-full` and `justify-center` for better stacking on small screens --}}
+    <div class="flex items-center space-x-3 w-full sm:w-auto justify-center sm:justify-start pt-4 sm:pt-0">
         @auth
             @if (auth()->id() === $usedVehiclePart->user_id || (auth()->user() && auth()->user()->isAdmin()))
                 <a href="{{ route('ads.used-vehicle-parts.edit', $usedVehiclePart->id) }}"
-                    class="inline-flex items-center justify-center px-4 py-2 border border-blue-600 text-sm font-medium rounded-md text-blue-600 bg-transparent
-                                 hover:bg-blue-50 hover:text-blue-700
-                                 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500
-                                 transition ease-in-out duration-150">
+                    class="px-5 py-2 bg-gray-700 hover:bg-gray-800 text-white rounded-full shadow-lg transition transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2">
                     Anzeige bearbeiten
                 </a>
                 <form action="{{ route('ads.used-vehicle-parts.destroy', $usedVehiclePart->id) }}" method="POST"
-                    onsubmit="return confirm('Sind Sie sicher, dass Sie diese Anzeige löschen möchten? Diese Aktion kann nicht rückgängig gemacht werden.');">
+                    onsubmit="return confirm('Sind Sie sicher, dass Sie diese Anzeige löschen möchten? Diese Aktion kann nicht rückgängig gemacht werden.')">
                     @csrf
                     @method('DELETE')
                     <button type="submit"
-                        class="inline-flex items-center justify-center px-4 py-2 border border-red-600 text-sm font-medium rounded-md text-red-600 bg-transparent
-                                         hover:bg-red-50 hover:text-red-700
-                                         focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500
-                                         transition ease-in-out duration-150">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1.5" viewBox="0 0 20 20"
-                            fill="currentColor">
+                        class="px-5 py-2 bg-red-600 hover:bg-gray-700 text-white rounded-full shadow-lg transition transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 flex items-center space-x-1">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20" class="w-5 h-5">
                             <path d="M6 8a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1z" />
                             <path fill-rule="evenodd"
                                 d="M4 5a2 2 0 012-2h8a2 2 0 012 2v10a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm2 0v10h8V5H6z"
                                 clip-rule="evenodd" />
                         </svg>
-                        Anzeige löschen
+                        <span>Anzeige löschen</span>
                     </button>
                 </form>
             @endif
         @endauth
     </div>
+</div>
+
 
     <style>
         /* Hide scrollbar for Chrome, Safari and Opera */
