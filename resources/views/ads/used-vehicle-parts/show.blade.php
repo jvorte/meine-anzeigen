@@ -37,45 +37,39 @@
 
 
        {{-- Action Buttons and Back link --}}
-      {{-- Action Buttons and Back link --}}
-<div class="flex flex-col sm:flex-row justify-between items-center mb-8 gap-4">
-    <a href="{{ url()->previous() }}"
-        class="inline-flex items-center text-gray-700 hover:text-gray-900 transition duration-300 font-medium space-x-1">
-        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"
-            stroke-linecap="round" stroke-linejoin="round">
-            <path d="M15 19l-7-7 7-7"></path>
-        </svg>
-        <span>Zurück</span>
-    </a>
+        <div class="flex flex-col sm:flex-row justify-between items-center mb-8 gap-4">
+            <a href="{{ url()->previous() }}" 
+                class="inline-flex items-center text-gray-700 hover:text-gray-900 transition duration-300 font-medium space-x-1">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M15 19l-7-7 7-7"></path>
+                </svg>
+                <span>Zurück</span>
+            </a>
 
-    {{-- Change pt-10 to sm:pt-0 to remove padding on small screens --}}
-    {{-- Also, add `w-full` and `justify-center` for better stacking on small screens --}}
-    <div class="flex items-center space-x-3 w-full sm:w-auto justify-center sm:justify-start pt-4 sm:pt-0">
-        @auth
-            @if (auth()->id() === $usedVehiclePart->user_id || (auth()->user() && auth()->user()->isAdmin()))
-                <a href="{{ route('ads.used-vehicle-parts.edit', $usedVehiclePart->id) }}"
-                    class="px-5 py-2 bg-gray-700 hover:bg-gray-800 text-white rounded-full shadow-lg transition transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2">
-                    Anzeige bearbeiten
-                </a>
-                <form action="{{ route('ads.used-vehicle-parts.destroy', $usedVehiclePart->id) }}" method="POST"
-                    onsubmit="return confirm('Sind Sie sicher, dass Sie diese Anzeige löschen möchten? Diese Aktion kann nicht rückgängig gemacht werden.')">
-                    @csrf
-                    @method('DELETE')
-                    <button type="submit"
-                        class="px-5 py-2 bg-red-600 hover:bg-gray-700 text-white rounded-full shadow-lg transition transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 flex items-center space-x-1">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20" class="w-5 h-5">
-                            <path d="M6 8a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1z" />
-                            <path fill-rule="evenodd"
-                                d="M4 5a2 2 0 012-2h8a2 2 0 012 2v10a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm2 0v10h8V5H6z"
-                                clip-rule="evenodd" />
-                        </svg>
-                        <span>Anzeige löschen</span>
-                    </button>
-                </form>
-            @endif
-        @endauth
-    </div>
-</div>
+            <div class="flex items-center space-x-3 pt-10">
+                @auth
+                    @if (auth()->id() === $usedVehiclePart->user_id || (auth()->user() && auth()->user()->isAdmin()))
+                        <a href="{{ route('ads.used-vehicle-parts.edit', $usedVehiclePart->id) }}" 
+                            class="px-5 py-2 bg-gray-700 hover:bg-gray-800 text-white rounded-full shadow-lg transition transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2">
+                            Anzeige bearbeiten
+                        </a>
+                        <form action="{{ route('ads.used-vehicle-parts.destroy', $usedVehiclePart->id) }}" method="POST"
+                            onsubmit="return confirm('Sind Sie sicher, dass Sie diese Anzeige löschen möchten? Diese Aktion kann nicht rückgängig gemacht werden.')">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" 
+                                class="px-5 py-2 bg-red-600 hover:bg-gray-700 text-white rounded-full shadow-lg transition transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 flex items-center space-x-1">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20" class="w-5 h-5">
+                                    <path d="M6 8a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1z" />
+                                    <path fill-rule="evenodd" d="M4 5a2 2 0 012-2h8a2 2 0 012 2v10a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm2 0v10h8V5H6z" clip-rule="evenodd" />
+                                </svg>
+                                <span>Anzeige löschen</span>
+                            </button>
+                        </form>
+                    @endif
+                @endauth
+            </div>
+        </div>
 
 
     <style>
