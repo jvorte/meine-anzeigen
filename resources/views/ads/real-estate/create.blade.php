@@ -17,11 +17,8 @@
    <div class="py-2">
     <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
         {{-- Breadcrumbs component --}}
-        <x-breadcrumbs :items="[
-            {{-- Link to the general Cars category listing --}}
+        <x-breadcrumbs :items="[          
             ['label' => 'Cars Anzeigen', 'url' => route('categories.show', 'cars')],
-
-            {{-- The current page (New Car Ad creation) - set URL to null --}}
             ['label' => 'Neue Auto Anzeige', 'url' => null],
         ]" />
     </div>
@@ -29,7 +26,7 @@
 {{-- --------------------------------------------------------------------------------- --}}
     <div class="max-w-6xl mx-auto p-6 bg-white rounded-lg shadow-xl mt-6">
 
-        <form method="POST" action="{{ route('ads.realestate.store') }}" enctype="multipart/form-data" class="space-y-8">
+        <form method="POST" action="{{ route('ads.real-estate.store') }}" enctype="multipart/form-data" class="space-y-8">
             @csrf
 
             {{-- Hidden field for category_slug --}}

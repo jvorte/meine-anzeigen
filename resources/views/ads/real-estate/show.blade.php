@@ -1,114 +1,109 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="text-3xl font-extrabold text-gray-900 leading-tight mb-2">
-            Anzeige: {{ $realEstate->title }}
+            Listing: {{ $realEstate->title }}
         </h2>
         <p class="text-md text-gray-700 dark:text-gray-500">
-            Detaillierte Ansicht Ihrer Immobilienanzeige.
+            Detailed view of your real estate listing.
         </p>
     </x-slot>
 
     <div class="py-2">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <x-breadcrumbs :items="[
-                ['label' => 'Immobilien Anzeigen', 'url' => route('categories.show', 'immobilien')],
+                ['label' => 'Real Estate Listings', 'url' => route('categories.show', 'real-estate')],
                 ['label' => $realEstate->title, 'url' => null],
             ]" />
         </div>
     </div>
-            {{-- Action Buttons --}}
-<div class="max-w-6xl mx-auto my-5 flex justify-between items-center">
-    <!-- Αριστερό κουμπί -->
-    <div>
-        <a href="{{ route('dashboard') }}"
-            class="inline-flex items-center px-4 py-2 ml-0 bg-slate-600 border border-slate-300 rounded-md font-semibold text-xs text-gray-100 uppercase tracking-widest hover:bg-gray-300 focus:outline-none focus:border-gray-900 focus:ring ring-gray-300 disabled:opacity-25 transition ease-in-out duration-150">
-            Zurück zum Dashboard
-        </a>
+
+    {{-- Action Buttons --}}
+    <div class="max-w-6xl mx-auto my-5 flex justify-between items-center">
+        <!-- Left button -->
+        <div>
+            <a href="{{ route('dashboard') }}"
+                class="inline-flex items-center px-4 py-2 ml-0 bg-slate-600 border border-slate-300 rounded-md font-semibold text-xs text-gray-100 uppercase tracking-widest hover:bg-gray-300 focus:outline-none focus:border-gray-900 focus:ring ring-gray-300 disabled:opacity-25 transition ease-in-out duration-150">
+                Back to Dashboard
+            </a>
+        </div>
+
+        <!-- Right buttons -->
+        <div class="flex space-x-4">
+            <a href="{{ route('ads.real-estate.edit', $realEstate) }}"
+                class="inline-flex items-center px-4 py-2 bg-slate-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-slate-700 active:bg-blue-900 focus:outline-none focus:border-blue-900 focus:ring ring-blue-300 disabled:opacity-25 transition ease-in-out duration-150">
+                Contact
+            </a>
+
+            <a href="{{ route('ads.real-estate.edit', $realEstate) }}"
+                class="inline-flex items-center px-4 py-2 bg-blue-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-700 active:bg-blue-900 focus:outline-none focus:border-blue-900 focus:ring ring-blue-300 disabled:opacity-25 transition ease-in-out duration-150">
+                Edit Listing
+            </a>
+
+            <form action="{{ route('ads.real-estate.destroy', $realEstate) }}" method="POST"
+                onsubmit="return confirm('Are you sure you want to delete this listing? This action cannot be undone.');">
+                @csrf
+                @method('DELETE')
+                <button type="submit"
+                    class="inline-flex items-center px-4 py-2 bg-red-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-red-700 active:bg-red-900 focus:outline-none focus:border-red-900 focus:ring ring-red-300 disabled:opacity-25 transition ease-in-out duration-150">
+                    Delete Listing
+                </button>
+            </form>
+        </div>
     </div>
-
-    <!-- Δεξιά κουμπιά -->
-    <div class="flex space-x-4">
-        <a href="{{ route('ads.real-estate.edit', $realEstate) }}"
-            class="inline-flex items-center px-4 py-2 bg-slate-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-slate-700 active:bg-blue-900 focus:outline-none focus:border-blue-900 focus:ring ring-blue-300 disabled:opacity-25 transition ease-in-out duration-150">
-            Contact
-        </a>
-
-        <a href="{{ route('ads.real-estate.edit', $realEstate) }}"
-            class="inline-flex items-center px-4 py-2 bg-blue-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-700 active:bg-blue-900 focus:outline-none focus:border-blue-900 focus:ring ring-blue-300 disabled:opacity-25 transition ease-in-out duration-150">
-            Anzeige bearbeiten
-        </a>
-
-        <form action="{{ route('ads.real-estate.destroy', $realEstate) }}" method="POST"
-            onsubmit="return confirm('Sind Sie sicher, dass Sie diese Anzeige löschen möchten? Diese Aktion kann nicht rückgängig gemacht werden.');">
-            @csrf
-            @method('DELETE')
-            <button type="submit"
-                class="inline-flex items-center px-4 py-2 bg-red-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-red-700 active:bg-red-900 focus:outline-none focus:border-red-900 focus:ring ring-red-300 disabled:opacity-25 transition ease-in-out duration-150">
-                Anzeige löschen
-            </button>
-        </form>
-    </div>
-</div>
-
 
     <div class="max-w-6xl mx-auto p-6 bg-white rounded-lg shadow-xl my-6">
 
         {{-- Main Title --}}
-
-        
         <h1 class="text-3xl font-bold text-gray-800 mb-8">{{ $realEstate->title }}</h1>
-
-        
-
 
         {{-- Basic Data Section --}}
         <section class="bg-gray-50 p-6 rounded-lg shadow-inner mb-8">
-            <h4 class="text-xl font-semibold text-gray-700 mb-6">Basisdaten</h4>
+            <h4 class="text-xl font-semibold text-gray-700 mb-6">Basic Data</h4>
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 <div>
-                    <p class="text-sm font-semibold text-gray-800">Immobilientyp:</p>
-                    <p class="text-gray-700">{{ $realEstate->immobilientyp }}</p>
+                    <p class="text-sm font-semibold text-gray-800">Property Type:</p>
+                    <p class="text-gray-700">{{ $realEstate->property_type }}</p>
                 </div>
-                @if($realEstate->objekttyp)
+                @if($realEstate->object_type)
                 <div>
-                    <p class="text-sm font-semibold text-gray-800">Objekttyp:</p>
-                    <p class="text-gray-700">{{ $realEstate->objekttyp }}</p>
-                </div>
-                @endif
-                @if($realEstate->zustand)
-                <div>
-                    <p class="text-sm font-semibold text-gray-800">Zustand:</p>
-                    <p class="text-gray-700">{{ $realEstate->zustand }}</p>
+                    <p class="text-sm font-semibold text-gray-800">Object Type:</p>
+                    <p class="text-gray-700">{{ $realEstate->object_type }}</p>
                 </div>
                 @endif
-                @if($realEstate->anzahl_zimmer)
+                @if($realEstate->condition)
                 <div>
-                    <p class="text-sm font-semibold text-gray-800">Anzahl Zimmer:</p>
-                    <p class="text-gray-700">{{ $realEstate->anzahl_zimmer }}</p>
+                    <p class="text-sm font-semibold text-gray-800">Condition:</p>
+                    <p class="text-gray-700">{{ $realEstate->condition }}</p>
                 </div>
                 @endif
-                @if($realEstate->bautyp)
+                @if($realEstate->room_count)
                 <div>
-                    <p class="text-sm font-semibold text-gray-800">Bautyp:</p>
-                    <p class="text-gray-700">{{ $realEstate->bautyp }}</p>
+                    <p class="text-sm font-semibold text-gray-800">Number of Rooms:</p>
+                    <p class="text-gray-700">{{ $realEstate->room_count }}</p>
                 </div>
                 @endif
-                @if($realEstate->verfugbarkeit)
+                @if($realEstate->building_type)
                 <div>
-                    <p class="text-sm font-semibold text-gray-800">Verfügbarkeit:</p>
-                    <p class="text-gray-700">{{ $realEstate->verfugbarkeit }}</p>
+                    <p class="text-sm font-semibold text-gray-800">Building Type:</p>
+                    <p class="text-gray-700">{{ $realEstate->building_type }}</p>
                 </div>
                 @endif
-                @if($realEstate->befristung)
+                @if($realEstate->availability)
                 <div>
-                    <p class="text-sm font-semibold text-gray-800">Befristung:</p>
-                    <p class="text-gray-700">{{ $realEstate->befristung }}</p>
+                    <p class="text-sm font-semibold text-gray-800">Availability:</p>
+                    <p class="text-gray-700">{{ $realEstate->availability }}</p>
                 </div>
                 @endif
-                @if($realEstate->befristung_ende)
+                @if($realEstate->fixed_term)
                 <div>
-                    <p class="text-sm font-semibold text-gray-800">Befristung Ende:</p>
-                    <p class="text-gray-700">{{ \Carbon\Carbon::parse($realEstate->befristung_ende)->format('d.m.Y') }}</p>
+                    <p class="text-sm font-semibold text-gray-800">Fixed Term:</p>
+                    <p class="text-gray-700">{{ $realEstate->fixed_term }}</p>
+                </div>
+                @endif
+                @if($realEstate->fixed_term_end)
+                <div>
+                    <p class="text-sm font-semibold text-gray-800">Fixed Term End:</p>
+                    <p class="text-gray-700">{{ \Carbon\Carbon::parse($realEstate->fixed_term_end)->format('d.m.Y') }}</p>
                 </div>
                 @endif
             </div>
@@ -116,34 +111,34 @@
 
         {{-- Description Section --}}
         <section class="bg-gray-50 p-6 rounded-lg shadow-inner mb-8">
-            <h4 class="text-xl font-semibold text-gray-700 mb-6">Beschreibung</h4>
+            <h4 class="text-xl font-semibold text-gray-700 mb-6">Description</h4>
             <div class="space-y-6">
                 <div>
-                    <p class="text-sm font-semibold text-gray-800">Hauptbeschreibung:</p>
+                    <p class="text-sm font-semibold text-gray-800">Main Description:</p>
                     <p class="text-gray-700 leading-relaxed">{{ $realEstate->description }}</p>
                 </div>
-                @if($realEstate->objektbeschreibung)
+                @if($realEstate->property_description)
                 <div>
-                    <p class="text-sm font-semibold text-gray-800">Objektbeschreibung:</p>
-                    <p class="text-gray-700 leading-relaxed">{{ $realEstate->objektbeschreibung }}</p>
+                    <p class="text-sm font-semibold text-gray-800">Property Description:</p>
+                    <p class="text-gray-700 leading-relaxed">{{ $realEstate->property_description }}</p>
                 </div>
                 @endif
-                @if($realEstate->lage)
+                @if($realEstate->location)
                 <div>
-                    <p class="text-sm font-semibold text-gray-800">Lagebeschreibung:</p>
-                    <p class="text-gray-700 leading-relaxed">{{ $realEstate->lage }}</p>
+                    <p class="text-sm font-semibold text-gray-800">Location Description:</p>
+                    <p class="text-gray-700 leading-relaxed">{{ $realEstate->location }}</p>
                 </div>
                 @endif
-                @if($realEstate->sonstiges)
+                @if($realEstate->other)
                 <div>
-                    <p class="text-sm font-semibold text-gray-800">Sonstiges:</p>
-                    <p class="text-gray-700 leading-relaxed">{{ $realEstate->sonstiges }}</p>
+                    <p class="text-sm font-semibold text-gray-800">Other:</p>
+                    <p class="text-gray-700 leading-relaxed">{{ $realEstate->other }}</p>
                 </div>
                 @endif
-                @if($realEstate->zusatzinformation)
+                @if($realEstate->additional_information)
                 <div>
-                    <p class="text-sm font-semibold text-gray-800">Zusatzinformation:</p>
-                    <p class="text-gray-700 leading-relaxed">{{ $realEstate->zusatzinformation }}</p>
+                    <p class="text-sm font-semibold text-gray-800">Additional Information:</p>
+                    <p class="text-gray-700 leading-relaxed">{{ $realEstate->additional_information }}</p>
                 </div>
                 @endif
             </div>
@@ -151,24 +146,24 @@
 
         {{-- Location Section --}}
         <section class="bg-gray-50 p-6 rounded-lg shadow-inner mb-8">
-            <h4 class="text-xl font-semibold text-gray-700 mb-6">Standort</h4>
+            <h4 class="text-xl font-semibold text-gray-700 mb-6">Location</h4>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                    <p class="text-sm font-semibold text-gray-800">Land:</p>
-                    <p class="text-gray-700">{{ $realEstate->land }}</p>
+                    <p class="text-sm font-semibold text-gray-800">Country:</p>
+                    <p class="text-gray-700">{{ $realEstate->country }}</p>
                 </div>
                 <div>
-                    <p class="text-sm font-semibold text-gray-800">Postleitzahl:</p>
-                    <p class="text-gray-700">{{ $realEstate->plz }}</p>
+                    <p class="text-sm font-semibold text-gray-800">Postal Code:</p>
+                    <p class="text-gray-700">{{ $realEstate->postal_code }}</p>
                 </div>
                 <div>
-                    <p class="text-sm font-semibold text-gray-800">Ort:</p>
-                    <p class="text-gray-700">{{ $realEstate->ort }}</p>
+                    <p class="text-sm font-semibold text-gray-800">City:</p>
+                    <p class="text-gray-700">{{ $realEstate->city }}</p>
                 </div>
-                @if($realEstate->strasse)
+                @if($realEstate->street)
                 <div>
-                    <p class="text-sm font-semibold text-gray-800">Straße:</p>
-                    <p class="text-gray-700">{{ $realEstate->strasse }}</p>
+                    <p class="text-sm font-semibold text-gray-800">Street:</p>
+                    <p class="text-gray-700">{{ $realEstate->street }}</p>
                 </div>
                 @endif
             </div>
@@ -176,63 +171,63 @@
 
         {{-- Prices & Areas Section --}}
         <section class="bg-gray-50 p-6 rounded-lg shadow-inner mb-8">
-            <h4 class="text-xl font-semibold text-gray-700 mb-6">Preise & Flächen</h4>
+            <h4 class="text-xl font-semibold text-gray-700 mb-6">Prices & Areas</h4>
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                @if($realEstate->gesamtmiete)
+                @if($realEstate->total_rent)
                 <div>
-                    <p class="text-sm font-semibold text-gray-800">Gesamtmiete:</p>
-                    <p class="text-gray-700">&euro;{{ number_format($realEstate->gesamtmiete, 2, ',', '.') }}</p>
+                    <p class="text-sm font-semibold text-gray-800">Total Rent:</p>
+                    <p class="text-gray-700">&euro;{{ number_format($realEstate->total_rent, 2, ',', '.') }}</p>
                 </div>
                 @endif
-                @if($realEstate->wohnflaeche)
+                @if($realEstate->living_area)
                 <div>
-                    <p class="text-sm font-semibold text-gray-800">Wohnfläche:</p>
-                    <p class="text-gray-700">{{ number_format($realEstate->wohnflaeche, 2, ',', '.') }} m&sup2;</p>
+                    <p class="text-sm font-semibold text-gray-800">Living Area:</p>
+                    <p class="text-gray-700">{{ number_format($realEstate->living_area, 2, ',', '.') }} m&sup2;</p>
                 </div>
                 @endif
-                @if($realEstate->grundflaeche)
+                @if($realEstate->plot_area)
                 <div>
-                    <p class="text-sm font-semibold text-gray-800">Grundfläche:</p>
-                    <p class="text-gray-700">{{ number_format($realEstate->grundflaeche, 2, ',', '.') }} m&sup2;</p>
+                    <p class="text-sm font-semibold text-gray-800">Plot Area:</p>
+                    <p class="text-gray-700">{{ number_format($realEstate->plot_area, 2, ',', '.') }} m&sup2;</p>
                 </div>
                 @endif
-                @if($realEstate->kaution)
+                @if($realEstate->deposit)
                 <div>
-                    <p class="text-sm font-semibold text-gray-800">Kaution:</p>
-                    <p class="text-gray-700">&euro;{{ number_format($realEstate->kaution, 2, ',', '.') }}</p>
+                    <p class="text-sm font-semibold text-gray-800">Deposit:</p>
+                    <p class="text-gray-700">&euro;{{ number_format($realEstate->deposit, 2, ',', '.') }}</p>
                 </div>
                 @endif
-                @if($realEstate->maklerprovision)
+                @if($realEstate->broker_fee)
                 <div>
-                    <p class="text-sm font-semibold text-gray-800">Maklerprovision:</p>
-                    <p class="text-gray-700">&euro;{{ number_format($realEstate->maklerprovision, 2, ',', '.') }}</p>
+                    <p class="text-sm font-semibold text-gray-800">Broker Fee:</p>
+                    <p class="text-gray-700">&euro;{{ number_format($realEstate->broker_fee, 2, ',', '.') }}</p>
                 </div>
                 @endif
-                @if($realEstate->abloese)
+                @if($realEstate->buyout_price)
                 <div>
-                    <p class="text-sm font-semibold text-gray-800">Ablöse:</p>
-                    <p class="text-gray-700">&euro;{{ number_format($realEstate->abloese, 2, ',', '.') }}</p>
+                    <p class="text-sm font-semibold text-gray-800">Buyout Price:</p>
+                    <p class="text-gray-700">&euro;{{ number_format($realEstate->buyout_price, 2, ',', '.') }}</p>
                 </div>
                 @endif
             </div>
         </section>
 
-        {{-- Ausstattung & Heating Section --}}
+        {{-- Equipment & Heating Section --}}
         <section class="bg-gray-50 p-6 rounded-lg shadow-inner mb-8">
-            <h4 class="text-xl font-semibold text-gray-700 mb-6">Ausstattung & Heizung</h4>
+            <h4 class="text-xl font-semibold text-gray-700 mb-6">Equipment & Heating</h4>
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                @if($realEstate->heizung)
+                @if($realEstate->heating)
                 <div>
-                    <p class="text-sm font-semibold text-gray-800">Heizung:</p>
-                    <p class="text-gray-700">{{ $realEstate->heizung }}</p>
+                    <p class="text-sm font-semibold text-gray-800">Heating:</p>
+                    <p class="text-gray-700">{{ $realEstate->heating }}</p>
                 </div>
                 @endif
 
-                @if($realEstate->ausstattung && count($realEstate->ausstattung) > 0)
+                @if($realEstate->equipment && count($realEstate->equipment) > 0)
                 <div class="md:col-span-2 lg:col-span-3">
-                    <p class="text-sm font-semibold text-gray-800 mb-2">Ausstattung:</p>
+                    <p class="text-sm font-semibold text-gray-800 mb-2">Equipment:</p>
                     <ul class="list-disc list-inside text-gray-700 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-1">
-                        @foreach($realEstate->ausstattung as $item)
+                        @foreach($realEstate->equipment as $item)
                             <li>{{ $item }}</li>
                         @endforeach
                     </ul>
@@ -243,60 +238,60 @@
 
         {{-- Photos & Documents Section --}}
         <section class="bg-gray-50 p-6 rounded-lg shadow-inner mb-8">
-            <h4 class="text-xl font-semibold text-gray-700 mb-6">Fotos & Dokumente</h4>
+            <h4 class="text-xl font-semibold text-gray-700 mb-6">Photos & Documents</h4>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 @if($realEstate->images->count() > 0)
                 <div class="md:col-span-2">
-                    <p class="text-sm font-semibold text-gray-800 mb-2">Bilder:</p>
+                    <p class="text-sm font-semibold text-gray-800 mb-2">Images:</p>
                     <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                         @foreach($realEstate->images as $image)
                             <a href="{{ Storage::url($image->path) }}" target="_blank" class="block">
-                                <img src="{{ Storage::url($image->path) }}" alt="Immobilienbild" class="w-full h-32 object-cover rounded-md shadow-sm">
+                                <img src="{{ Storage::url($image->path) }}" alt="Real Estate Image" class="w-full h-32 object-cover rounded-md shadow-sm">
                             </a>
                         @endforeach
                     </div>
                 </div>
                 @endif
 
-                @if($realEstate->grundriss_path)
+                @if($realEstate->floor_plan_path)
                 <div>
-                    <p class="text-sm font-semibold text-gray-800">Grundriss:</p>
-                    <a href="{{ Storage::url($realEstate->grundriss_path) }}" target="_blank" class="text-blue-600 hover:underline">Ansehen (PDF/Bild)</a>
+                    <p class="text-sm font-semibold text-gray-800">Floor Plan:</p>
+                    <a href="{{ Storage::url($realEstate->floor_plan_path) }}" target="_blank" class="text-blue-600 hover:underline">View (PDF/Image)</a>
                 </div>
                 @endif
 
-                @if($realEstate->energieausweis_path)
+                @if($realEstate->energy_certificate_path)
                 <div>
-                    <p class="text-sm font-semibold text-gray-800">Energieausweis:</p>
-                    <a href="{{ Storage::url($realEstate->energieausweis_path) }}" target="_blank" class="text-blue-600 hover:underline">Ansehen (PDF/Bild)</a>
+                    <p class="text-sm font-semibold text-gray-800">Energy Certificate:</p>
+                    <a href="{{ Storage::url($realEstate->energy_certificate_path) }}" target="_blank" class="text-blue-600 hover:underline">View (PDF/Image)</a>
                 </div>
                 @endif
 
-                @if($realEstate->rundgang_link)
+                @if($realEstate->virtual_tour_link)
                 <div>
-                    <p class="text-sm font-semibold text-gray-800">360° Rundgang Link:</p>
-                    <a href="{{ $realEstate->rundgang_link }}" target="_blank" class="text-blue-600 hover:underline">{{ $realEstate->rundgang_link }}</a>
+                    <p class="text-sm font-semibold text-gray-800">360° Virtual Tour Link:</p>
+                    <a href="{{ $realEstate->virtual_tour_link }}" target="_blank" class="text-blue-600 hover:underline">{{ $realEstate->virtual_tour_link }}</a>
                 </div>
                 @endif
 
-                @if($realEstate->objektinformationen_link)
+                @if($realEstate->property_info_link)
                 <div>
-                    <p class="text-sm font-semibold text-gray-800">Objektinformationen Link:</p>
-                    <a href="{{ $realEstate->objektinformationen_link }}" target="_blank" class="text-blue-600 hover:underline">{{ $realEstate->objektinformationen_link }}</a>
+                    <p class="text-sm font-semibold text-gray-800">Property Information Link:</p>
+                    <a href="{{ $realEstate->property_info_link }}" target="_blank" class="text-blue-600 hover:underline">{{ $realEstate->property_info_link }}</a>
                 </div>
                 @endif
 
-                @if($realEstate->zustandsbericht_link)
+                @if($realEstate->condition_report_link)
                 <div>
-                    <p class="text-sm font-semibold text-gray-800">Zustandsbericht Link:</p>
-                    <a href="{{ $realEstate->zustandsbericht_link }}" target="_blank" class="text-blue-600 hover:underline">{{ $realEstate->zustandsbericht_link }}</a>
+                    <p class="text-sm font-semibold text-gray-800">Condition Report Link:</p>
+                    <a href="{{ $realEstate->condition_report_link }}" target="_blank" class="text-blue-600 hover:underline">{{ $realEstate->condition_report_link }}</a>
                 </div>
                 @endif
 
-                @if($realEstate->verkaufsbericht_link)
+                @if($realEstate->sales_report_link)
                 <div>
-                    <p class="text-sm font-semibold text-gray-800">Verkaufsbericht Link:</p>
-                    <a href="{{ $realEstate->verkaufsbericht_link }}" target="_blank" class="text-blue-600 hover:underline">{{ $realEstate->verkaufsbericht_link }}</a>
+                    <p class="text-sm font-semibold text-gray-800">Sales Report Link:</p>
+                    <a href="{{ $realEstate->sales_report_link }}" target="_blank" class="text-blue-600 hover:underline">{{ $realEstate->sales_report_link }}</a>
                 </div>
                 @endif
             </div>
@@ -304,10 +299,10 @@
 
         {{-- Contact Section --}}
         <section class="bg-gray-50 p-6 rounded-lg shadow-inner mb-8">
-            <h4 class="text-xl font-semibold text-gray-700 mb-6">Kontaktinformationen</h4>
+            <h4 class="text-xl font-semibold text-gray-700 mb-6">Contact Information</h4>
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 <div>
-                    <p class="text-sm font-semibold text-gray-800">Name des Ansprechpartners:</p>
+                    <p class="text-sm font-semibold text-gray-800">Contact Name:</p>
                     <p class="text-gray-700">{{ $realEstate->contact_name }}</p>
                 </div>
                 @if($realEstate->homepage)
@@ -318,7 +313,6 @@
                 @endif
             </div>
         </section>
-
 
     </div>
 </x-app-layout>
