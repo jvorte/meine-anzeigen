@@ -36,6 +36,7 @@
                     <x-dropdown align="right" width="48">
                         <x-slot name="trigger">
                             <button class="inline-flex items-center px-3 py-2 border border-transparent text-sm font-medium rounded-md text-gray-500 dark:text-gray-400 bg-white  hover:text-gray-700 dark:hover:text-gray-300 focus:outline-none transition ease-in-out duration-150">
+                      <img src="{{ Auth::user()->profile_photo_url }}" alt="Profile Photo" class="w-10 h-10 mr-2 rounded-full object-cover">
                                 <div>Willkommen, {{ Auth::user()->name }}</div>
                                 <div class="ms-1">
                                     <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">

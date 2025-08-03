@@ -13,9 +13,51 @@
         @csrf
     </form>
 
-    <form method="post" action="{{ route('profile.update') }}" class="mt-6 space-y-6">
+    {{-- !!! IMPORTANT: Add enctype="multipart/form-data" here !!! --}}
+    <form method="post" action="{{ route('profile.update') }}" class="mt-6 space-y-6" enctype="multipart/form-data">
         @csrf
         @method('patch')
+
+        {{-- Profile Photo Section --}}
+        {{-- You'll likely want to display the current photo and allow a new upload --}}
+        <div>
+            <x-input-label for="profile_photo" :value="__('Profile Photo')" />
+
+            
+
+            @if ($user->profile_photo_path)
+                <div class="mt-2">
+                    <img src="{{ $user->profile_photo_url }}" alt="{{ $user->name }}'s profile photo"
+                         class="rounded-full h-20 w-20 object-cover">
+                </div>
+            @else
+                <div class="mt-2 text-gray-500 text-sm">
+                    {{ __('No profile photo uploaded.') }}
+                </div>
+            @endif
+
+            <input id="profile_photo"
+                   name="profile_photo"
+                   type="file"
+                   class="mt-1 block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
+                   accept="image/*" />
+            <x-input-error :messages="$errors->get('profile_photo')" class="mt-2" />
+            <p class="mt-1 text-xs text-gray-600 dark:text-gray-400">
+                {{ __('Accepted formats: JPG, PNG, GIF. Max size: 2MB.') }}
+            </p>
+
+            {{-- Optional: Add a button to remove the current photo if needed --}}
+            @if ($user->profile_photo_path)
+                <button type="button"
+                        x-data="{}"
+                        x-on:click.prevent="$dispatch('open-modal', 'confirm-photo-deletion')"
+                        class="mt-2 text-sm text-red-600 hover:text-red-900 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2">
+                    {{ __('Remove Photo') }}
+                </button>
+            @endif
+        </div>
+        {{-- End Profile Photo Section --}}
+
 
         <div>
             <x-input-label for="name" :value="__('Name')" />
@@ -47,7 +89,6 @@
             @endif
         </div>
 
-        <!-- New Profile Information Fields -->
         <div>
             <x-input-label for="country" :value="__('Country')" />
             <x-text-input id="country" name="country" type="text" class="mt-1 block w-full" :value="old('country', $user->country)" autocomplete="country-name" />
@@ -83,8 +124,6 @@
             <x-text-input id="phone" name="phone" type="text" class="mt-1 block w-full" :value="old('phone', $user->phone)" autocomplete="tel" />
             <x-input-error class="mt-2" :messages="$errors->get('phone')" />
         </div>
-        <!-- End of New Fields -->
-
         <div class="flex items-center gap-4">
             <x-primary-button>{{ __('Save') }}</x-primary-button>
 
@@ -100,3 +139,29 @@
         </div>
     </form>
 </section>
+
+{{-- Modal for photo deletion confirmation --}}
+<x-modal name="confirm-photo-deletion" :show="$errors->userDeletion->isNotEmpty()" focusable>
+    <form method="post" action="{{ route('profile.destroy-profile-photo') }}" class="p-6">
+        @csrf
+        @method('delete')
+
+        <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">
+            {{ __('Are you sure you want to delete your profile photo?') }}
+        </h2>
+
+        <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
+            {{ __('Once your profile photo is deleted, you will not be able to recover it. A default image will be used instead.') }}
+        </p>
+
+        <div class="mt-6 flex justify-end">
+            <x-secondary-button x-on:click="$dispatch('close')">
+                {{ __('Cancel') }}
+            </x-secondary-button>
+
+            <x-danger-button class="ms-3">
+                {{ __('Delete Photo') }}
+            </x-danger-button>
+        </div>
+    </form>
+</x-modal>

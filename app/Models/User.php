@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Support\Facades\Storage;
 
 class User extends Authenticatable
 {
@@ -27,6 +28,7 @@ class User extends Authenticatable
         'street_address', // New field
         'mobile_phone', // New field
         'phone', // New field
+        'profile_photo_path',
     ];
 
     /**
@@ -50,12 +52,19 @@ class User extends Authenticatable
     ];
 
     public function services()
-{
-    return $this->hasMany(Service::class);
-}
-public function campers()
-{
-    return $this->hasMany(Camper::class);
-}
+    {
+        return $this->hasMany(Service::class);
+    }
+    public function campers()
+    {
+        return $this->hasMany(Camper::class);
+    }
 
+    public function getProfilePhotoUrlAttribute()
+    {
+        // IMPORTANT: Adjust 'images/default_avatar.png' to your actual default image path
+        return $this->profile_photo_path
+            ? Storage::url($this->profile_photo_path)
+            : asset('images/default_avatar.png'); // Path to your default placeholder image
+    }
 }

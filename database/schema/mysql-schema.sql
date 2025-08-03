@@ -803,18 +803,15 @@ CREATE TABLE `used_vehicle_parts` (
   `manufacturer_part_number` varchar(255) DEFAULT NULL,
   `condition` varchar(255) NOT NULL,
   `price` decimal(10,2) DEFAULT NULL,
-  `compatible_brand_id` bigint(20) unsigned DEFAULT NULL,
-  `compatible_car_model_id` bigint(20) unsigned DEFAULT NULL,
+  `compatible_brand` varchar(255) DEFAULT NULL,
+  `compatible_model` varchar(255) DEFAULT NULL,
+  `vehicle_type` varchar(50) DEFAULT NULL,
   `compatible_year_from` year(4) DEFAULT NULL,
   `compatible_year_to` year(4) DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `used_vehicle_parts_user_id_foreign` (`user_id`),
-  KEY `used_vehicle_parts_compatible_brand_id_foreign` (`compatible_brand_id`),
-  KEY `used_vehicle_parts_compatible_car_model_id_foreign` (`compatible_car_model_id`),
-  CONSTRAINT `used_vehicle_parts_compatible_brand_id_foreign` FOREIGN KEY (`compatible_brand_id`) REFERENCES `brands` (`id`) ON DELETE SET NULL,
-  CONSTRAINT `used_vehicle_parts_compatible_car_model_id_foreign` FOREIGN KEY (`compatible_car_model_id`) REFERENCES `car_models` (`id`) ON DELETE SET NULL,
   CONSTRAINT `used_vehicle_parts_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -894,3 +891,4 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (43,'2025_08_01_053
 INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (44,'2025_08_01_061816_rename_brand_and_model_columns_in_commercial_vehicles_table',1);
 INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (45,'2025_08_02_065554_add_profile_fields_to_users_table',2);
 INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (46,'2025_08_02_070831_create_personal_access_tokens_table',3);
+INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (47,'2025_08_03_073917_alter_used_vehicle_parts_compatibility_columns',4);

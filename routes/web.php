@@ -222,6 +222,11 @@ Route::get('/api/camper-brands/{brandId}/models', [CamperController::class, 'get
 });
 
 
+Route::middleware(['auth'])->group(function () {
+    // ... existing profile routes
+    Route::delete('/profile/photo', [ProfileController::class, 'destroyProfilePhoto'])->name('profile.destroy-profile-photo');
+});
+
 Route::get('/messages/create/{userId}', function ($userId) {
     // This is a placeholder. You would typically return a view with a form
     // for sending a message to the user with $userId.
