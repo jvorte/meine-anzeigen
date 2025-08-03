@@ -257,13 +257,19 @@
         {{-- These sections were previously outside the main article, now correctly placed inside it --}}
 
         {{-- Description Section --}}
-        <section class="bg-gray-50 p-6 rounded-lg shadow-inner mt-8"> {{-- Added mt-8 for spacing --}}
-            <h4 class="text-xl font-semibold text-gray-700 mb-6">Beschreibung</h4>
-              <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+        <section class="bg-gray-50 p-6 rounded-lg shadow-inner mt-8"> 
                 <div>
-                    <p class="text-sm font-semibold text-gray-800">Hauptbeschreibung:</p>
+                
+                 
+                         <h4 class="text-xl font-semibold text-gray-700 mb-6">Hauptbeschreibung</h4>
                     <p class="text-gray-700 leading-relaxed">{{ $realEstate->description }}</p>
                 </div>
+        </section>
+        <section class="bg-gray-50 p-6 rounded-lg shadow-inner mt-8"> 
+            <h4 class="text-xl font-semibold text-gray-700 mb-6">Beschreibung</h4>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            
                 @if ($realEstate->objektbeschreibung)
                     <div>
                         <p class="text-sm font-semibold text-gray-800">Objektbeschreibung:</p>
@@ -369,10 +375,10 @@
         <section class="bg-gray-50 p-6 rounded-lg shadow-inner mt-8"> {{-- Added mt-8 for spacing --}}
             <h4 class="text-xl font-semibold text-gray-700 mb-6">Preise & Flächen</h4>
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                @if ($realEstate->gesamtmiete)
+                @if ($realEstate->price)
                     <div>
                         <p class="text-sm font-semibold text-gray-800">Gesamtmiete:</p>
-                        <p class="text-gray-700">&euro;{{ number_format($realEstate->gesamtmiete, 2, ',', '.') }}</p>
+                        <p class="text-gray-700">&euro;{{ number_format($realEstate->price, 2, ',', '.') }}</p>
                     </div>
                 @endif
                 @if ($realEstate->wohnflaeche)

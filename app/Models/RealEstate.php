@@ -13,6 +13,8 @@ class RealEstate extends Model
         'user_id',
         'category_slug',
         'immobilientyp',
+       
+   
         'title',
         'objekttyp',
         'zustand',
@@ -30,7 +32,7 @@ class RealEstate extends Model
         'plz',
         'ort',
         'strasse',
-        'gesamtmiete',
+        'price',
         'wohnflaeche',
         'grundflaeche',
         'kaution',

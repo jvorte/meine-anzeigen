@@ -703,7 +703,7 @@ CREATE TABLE `real_estates` (
   `plz` varchar(255) NOT NULL,
   `ort` varchar(255) NOT NULL,
   `strasse` varchar(255) DEFAULT NULL,
-  `gesamtmiete` decimal(10,2) DEFAULT NULL,
+  `price` decimal(10,2) DEFAULT NULL,
   `wohnflaeche` decimal(10,2) DEFAULT NULL,
   `grundflaeche` decimal(10,2) DEFAULT NULL,
   `kaution` decimal(10,2) DEFAULT NULL,
@@ -822,6 +822,7 @@ CREATE TABLE `users` (
   `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(255) NOT NULL,
   `email` varchar(255) NOT NULL,
+  `profile_photo_path` varchar(2048) DEFAULT NULL,
   `country` varchar(255) DEFAULT NULL,
   `city` varchar(255) DEFAULT NULL,
   `postal_code` varchar(255) DEFAULT NULL,
@@ -892,3 +893,5 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (44,'2025_08_01_061
 INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (45,'2025_08_02_065554_add_profile_fields_to_users_table',2);
 INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (46,'2025_08_02_070831_create_personal_access_tokens_table',3);
 INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (47,'2025_08_03_073917_alter_used_vehicle_parts_compatibility_columns',4);
+INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (48,'2025_08_03_085330_add_profile_image_to_users_table',5);
+INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (49,'2025_08_03_103456_rename_gesamtmiete_to_price_in_real_estate_table',6);

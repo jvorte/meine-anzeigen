@@ -52,38 +52,39 @@
                         </div>
                     @else
                         {{-- Helper for section titles --}}
-                        @php
-                            $sectionTitles = [
-                                'vehicles' => 'Fahrzeuge (Autos etc.)',
-                                'motorrad_ads' => 'Motorräder',
-                                'boats' => 'Boote',
-                                'campers' => 'Wohnmobile',
-                                'commercial_vehicles' => 'Nutzfahrzeuge',
-                                'electronics' => 'Elektronik',
-                                'household_items' => 'Haushaltsartikel',
-                                'real_estates' => 'Immobilien',
-                                'services' => 'Dienstleistungen',
-                                'used_vehicle_parts' => 'Gebrauchte Fahrzeugteile',
-                                'others' => 'Sonstiges',
-                                'categories' => 'Kategorien',
-                                'users' => 'Benutzer',
-                            ];
+                    @php
+                                $sectionTitles = [
+                                    'cars' => 'Fahrzeuge (Autos etc.)',
+                                    'motorcycles' => 'Motorräder', // Adjusted key to 'motorcycles' based on slug
+                                    'boats' => 'Boote',
+                                    'campers' => 'Wohnmobile',
+                                    'commercial-vehicle' => 'Nutzfahrzeuge', // Adjusted key to 'commercial-vehicle' based on slug
+                                    'electronics' => 'Elektronik',
+                                    'household' => 'Haushaltsartikel', // Adjusted key to 'household' based on slug
+                                    'real-estate' => 'Immobilien', // Adjusted key to 'real-estate' based on slug
+                                    'services' => 'Dienstleistungen',
+                                    'vehicles-parts' => 'Gebrauchte Fahrzeugteile',
+                                    'others' => 'Sonstiges',
+                                    'categories' => 'Kategorien',
+                                    'users' => 'Benutzer',
+                                ];
 
-                            $itemShowRoutes = [
-                                'vehicles' => 'categories.fahrzeuge.show',
-                                'motorrad_ads' => 'categories.motorrad.show',
-                                'boats' => 'categories.boote.show',
-                                'campers' => 'categories.wohnmobile.show',
-                                'commercial_vehicles' => 'categories.nutzfahrzeuge.show',
-                                'electronics' => 'categories.elektronik.show',
-                                'household_items' => 'categories.haushalt.show',
-                                'real_estates' => 'categories.immobilien.show',
-                                'services' => 'categories.dienstleistungen.show',
-                                'used_vehicle_parts' => 'categories.fahrzeugeteile.show',
-                                'others' => 'categories.sonstiges.show',
-                                'categories' => 'categories.show',
-                                'users' => 'profile.edit',
-                            ];
+                                $itemShowRoutes = [
+                                    'cars' => 'categories.cars.show',
+                                    'motorcycles' => 'categories.motorcycles.show', // Likely change
+                                    'boats' => 'categories.boats.show', // Likely change
+                                    'campers' => 'categories.campers.show', // Likely change
+                                    'commercial-vehicle' => 'categories.commercial-vehicle.show', // Likely change
+                                    'electronics' => 'categories.electronics.show', // Likely change
+                                    'household' => 'categories.household.show', // Likely change
+                                    'real-estate' => 'categories.real-estate.show', // Already correct
+                                    'services' => 'categories.services.show', // Likely change
+                                    'vehicles-parts' => 'categories.vehicles-parts.show', // Already correct
+                                    'others' => 'categories.others.show', // Likely change
+                                    'categories' => 'categories.show', // Looks correct if you have a general category show route
+                                    'users' => 'profile.edit', // Looks correct for user profile
+                                ];
+
                         @endphp
 
                         {{-- Loop through each type of result --}}
@@ -95,35 +96,45 @@
                                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-8"> {{-- Adjusted grid for more columns on larger screens --}}
                                     @foreach ($collection as $item)
                                         @php
-                                            $paramName = match($type) {
-                                                'vehicles' => 'vehicle',
-                                                'boats' => 'boat',
-                                                'used_vehicle_parts' => 'usedVehiclePart',
-                                                'electronics' => 'electronic',
-                                                'household_items' => 'householdItem',
-                                                'real_estates' => 'realEstate',
-                                                'services' => 'service',
-                                                'others' => 'other',
-                                                'motorrad_ads' => 'motorradAd',
-                                                'commercial_vehicles' => 'commercialVehicle',
-                                                'campers' => 'camper',
-                                                'categories' => 'slug',
-                                                'users' => 'user',
-                                                default => 'id',
-                                            };
-                                            $routeParam = ($paramName === 'slug' && isset($item->slug)) ? $item->slug : $item->id;
+                                      $paramName = match($type) {
+                                            'cars' => 'car', // Assuming parameter is 'car' for cars category
+                                            'motorcycles' => 'motorcycle', // Assuming parameter is 'motorcycle' for motorcycles
+                                            'boats' => 'boat',
+                                            'campers' => 'camper',
+                                            'commercial-vehicle' => 'commercialVehicle', // Adjust if parameter is 'commercial_vehicle' etc.
+                                            'electronics' => 'electronic',
+                                            'household' => 'household', // Adjust if parameter is 'householdItem' etc.
+                                            'real-estate' => 'realEstate', // This is likely correct
+                                            'services' => 'service',
+                                            'vehicles-parts' => 'usedVehiclePart', // This is likely correct
+                                            'others' => 'other',
+                                            'categories' => 'category', // Adjust if category route expects 'category' parameter instead of 'slug'
+                                            'users' => 'user',
+                                            default => 'id',
+                                        };
+                                            $routeParam = ($paramName === 'category' || $paramName === 'slug' && isset($item->slug)) ? $item->slug : $item->id;
                                             $itemLink = isset($itemShowRoutes[$type]) ? route($itemShowRoutes[$type], [$paramName => $routeParam]) : null;
 
                                             // Determine image source if available
-                                            $imageUrl = null;
-                                            if (isset($item->image_path) && !empty($item->image_path)) {
-                                                // Assuming image_path is a full URL or relative path from public
-                                                $imageUrl = asset('storage/' . $item->image_path); // Adjust if your image paths are different
-                                            } elseif (isset($item->images) && is_array($item->images) && count($item->images) > 0) {
-                                                $imageUrl = asset('storage/' . $item->images[0]); // For multiple images, take the first
-                                            } elseif (isset($item->profile_photo_path)) { // For users
-                                                $imageUrl = $item->profile_photo_url; // Assuming Fortify/Jetstream user profile photos
-                                            }
+                                           $imageUrl = null;
+                                    if ($type === 'users' && isset($item->profile_photo_path)) {
+                                        // Specific logic for users as they have profile_photo_url accessor
+                                        $imageUrl = $item->profile_photo_url;
+                                    } elseif (isset($item->images) && $item->images->isNotEmpty()) {
+                                        // Prioritize thumbnail, then first image from the collection
+                                        $thumbnailImage = $item->images->firstWhere('is_thumbnail', true);
+
+                                        if ($thumbnailImage && $thumbnailImage->image_path) {
+                                            $imageUrl = asset('storage/' . $thumbnailImage->image_path);
+                                        } else if ($item->images->first() && $item->images->first()->image_path) {
+                                            $imageUrl = asset('storage/' . $item->images->first()->image_path);
+                                        }
+                                    } elseif (isset($item->image_path) && !empty($item->image_path)) {
+                                        // Fallback for models that might just have a single image_path directly
+                                        $imageUrl = asset('storage/' . $item->image_path);
+                                    }
+                                         
+                                            
                                         @endphp
 
                                         <div class="relative group bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg shadow-md hover:shadow-lg transform hover:-translate-y-1 transition duration-200 ease-in-out">
@@ -197,7 +208,7 @@
                 @endif {{-- End if empty($query) --}}
 
                 <div class="mt-8 text-center"> {{-- Centered back button --}}
-                    <a href="{{ url()->previous() }}" class="inline-flex items-center px-6 py-3 border border-gray-300 dark:border-gray-600 text-base font-medium rounded-md shadow-sm text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition ease-in-out duration-150">
+                    <a href="{{ url()->previous() }}" class="inline-flex items-center px-6 py-3 border border-gray-300 dark:border-gray-00 text-base font-medium rounded-md shadow-sm text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition ease-in-out duration-150">
                         <svg class="-ml-1 mr-2 h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
                             <path fill-rule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 001.414 1.414L5.414 9H17a1 1 0 110 2H5.414l3.293 3.293a1 1 0 010 1.414z" clip-rule="evenodd" />
                         </svg>

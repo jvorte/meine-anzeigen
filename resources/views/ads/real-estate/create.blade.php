@@ -268,16 +268,15 @@
                 </div>
             </section>
 
-            {{-- Preise & Flächen Section --}}
-            <section class="bg-gray-50 p-6 rounded-lg shadow-inner">
-                <h4 class="text-xl font-semibold text-gray-700 mb-6">Preise & Flächen</h4>
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+     
                     {{-- Gesamtmiete --}}
+
+  
                     <div>
-                        <label for="gesamtmiete" class="block text-sm font-medium text-gray-700 mb-2">Gesamtmiete (in €)</label>
-                        <input type="number" step="0.01" name="gesamtmiete" id="gesamtmiete" value="{{ old('gesamtmiete') }}" placeholder="z.B. 1200.00"
+                        <label for="price" class="block text-sm font-medium text-gray-700 mb-2">Price (in €)</label>
+                        <input type="number" step="0.01" name="price" id="price" value="{{ old('price') }}" placeholder="z.B. 1200.00"
                                class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
-                        @error('gesamtmiete')
+                        @error('price')
                             <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                         @enderror
                     </div>

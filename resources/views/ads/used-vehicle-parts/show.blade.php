@@ -188,68 +188,68 @@
                 @endif
             </section>
 
-            {{-- Right Column: Basic Details & Seller Info --}}
-            <section class="space-y-6">
-                {{-- Ad Title --}}
-                <h1 class="text-4xl font-extrabold text-gray-800">{{ $usedVehiclePart->title }}</h1>
+           {{-- Right Column: Details & Seller info and other sections --}}
+            <section class="flex flex-col justify-between gap-10">
 
-                {{-- Prices Section --}}
-                <div class="bg-gray-50 p-6 rounded-lg shadow-inner">
-                    <h4 class="text-xl font-semibold text-gray-700 mb-4">Preise</h4>
-                    <dl class="grid grid-cols-1 gap-x-4 gap-y-2">
-                        <div class="col-span-1">
-                            <dt class="text-sm font-semibold text-gray-800">Preis:</dt>
-                            <dd class="text-gray-700">
-                                @if ($usedVehiclePart->price)
-                                    &euro;{{ number_format($usedVehiclePart->price, 2, ',', '.') }}
-                                @else
-                                    Preis auf Anfrage
-                                @endif
-                            </dd>
-                        </div>
-                    </dl>
+                {{-- Title and Pricing --}}
+                <div>
+                    <h2 class="text-4xl font-extrabold text-gray-900 mb-4 leading-tight">
+                        {{ $usedVehiclePart->title }}
+                    </h2>
+
+                    <div class="flex items-baseline space-x-3 mb-6">
+                        @if ($usedVehiclePart->price)
+                            <p
+                                class="text-3xl text-gray-700 font-extrabold [&>span]:text-base [&>span]:font-normal [&>span]:ml-1">
+                                &euro;{{ number_format($usedVehiclePart->price, 2, ',', '.') }}
+                                <span> / Einheit</span>
+                            </p>
+                        @else
+                            <p class="text-xl italic text-gray-500">Preis auf Anfrage</p>
+                        @endif
+                    </div>
+
+                    <div class="prose prose-lg max-w-none text-gray-700">
+                        @if ($usedVehiclePart->description)
+                            {!! nl2br(e($usedVehiclePart->description)) !!}
+                        @else
+                            <p class="italic text-gray-400">Keine Beschreibung verfügbar.</p>
+                        @endif
+                    </div>
                 </div>
 
-                {{-- Seller Information Section --}}
-                <div class="bg-gray-50 p-6 rounded-lg shadow-inner">
-                    <h4 class="text-xl font-semibold text-gray-700 mb-4">Anbieterinformationen</h4>
+                {{-- Seller / Anbieter Info --}}
+                <div class="border-t border-gray-300 pt-6">
+                    <h3 class="text-xl font-semibold text-gray-700 mb-3">Anbieterinformationen</h3>
                     @if ($usedVehiclePart->user)
-                        <dl class="grid grid-cols-1 gap-x-4 gap-y-2">
-                            <div class="col-span-1">
-                                <dt class="text-sm font-semibold text-gray-800">Anbieter:</dt>
-                                <dd class="text-gray-700">{{ $usedVehiclePart->user->name }}</dd>
+                        <dl class="space-y-2 text-gray-900">
+                            <div>
+                                <dt class="inline font-semibold">Name:</dt>
+                                <dd class="inline">{{ $usedVehiclePart->user->name }}</dd>
                             </div>
-                            <div class="col-span-1">
-                                <dt class="text-sm font-semibold text-gray-800">Ort:</dt>
-                                <dd class="text-gray-700">
-                                    {{ $usedVehiclePart->user->city ?? 'Nicht angegeben' }}
-                                    @if ($usedVehiclePart->user->zip_code)
-                                        ({{ $usedVehiclePart->user->zip_code }})
-                                    @endif
-                                </dd>
+                            <div>
+                                <dt class="inline font-semibold">E-Mail:</dt>
+                                <dd class="inline">{{ $usedVehiclePart->user->email }}</dd>
                             </div>
-                            <div class="col-span-1">
-                                <dt class="text-sm font-semibold text-gray-800">E-Mail:</dt>
-                                <dd class="text-gray-700">
-                                    <a href="mailto:{{ $usedVehiclePart->user->email }}"
-                                        class="text-blue-600 hover:underline">{{ $usedVehiclePart->user->email }}</a>
-                                </dd>
-                            </div>
-                            @if ($usedVehiclePart->user->phone_number)
-                                <div class="col-span-1">
-                                    <dt class="text-sm font-semibold text-gray-800">Telefon:</dt>
-                                    <dd class="text-gray-700">
-                                        <a href="tel:{{ $usedVehiclePart->user->phone_number }}"
-                                            class="text-blue-600 hover:underline">{{ $usedVehiclePart->user->phone_number }}</a>
-                                    </dd>
+                            @if ($usedVehiclePart->user->city)
+                                <div>
+                                    <dt class="inline font-semibold">Stadt:</dt>
+                                    <dd class="inline">{{ $usedVehiclePart->user->city }}</dd>
                                 </div>
                             @endif
                         </dl>
+                        <a href="{{ route('messages.create', $usedVehiclePart->user->id) }}"
+                            class="mt-6 block w-full text-center bg-red-700 text-white font-semibold py-3 rounded-full shadow-lg hover:bg-gray-800 transition focus:ring-4 focus:ring-gray-500 focus:ring-opacity-75">
+                            Kontakt aufnehmen
+                        </a>
                     @else
-                        <p class="text-gray-600 italic">Informationen zum Anbieter sind nicht verfügbar.</p>
+                        <p class="italic text-red-600">Anbieterinformationen nicht verfügbar.</p>
                     @endif
                 </div>
-            </section>
+
+              
+
+            </section> {{-- End of Right Column --}}
         </article>
 
         <hr class="my-8 border-gray-200" />

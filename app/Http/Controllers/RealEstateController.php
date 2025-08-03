@@ -58,6 +58,7 @@ class RealEstateController extends Controller
             // Basic Data
             'immobilientyp' => ['required', 'string', Rule::in(['Wohnung', 'Haus', 'Grundstück', 'Gewerbeobjekt', 'Garage/Stellplatz', 'Andere'])],
             'title' => ['required', 'string', 'max:255'],
+          
             'objekttyp' => ['nullable', 'string', Rule::in(['Kauf', 'Miete'])],
             'zustand' => ['nullable', 'string', Rule::in(['Neubau / Erstbezug', 'Saniert', 'Renovierungsbedürftig', 'Altbau', 'Rohbau'])],
             'anzahl_zimmer' => ['nullable', 'numeric', 'min:0.5'],
@@ -79,7 +80,7 @@ class RealEstateController extends Controller
             'strasse' => ['nullable', 'string', 'max:255'],
 
             // Prices & Areas
-            'gesamtmiete' => ['nullable', 'numeric', 'min:0'],
+            'price' => 'required|numeric|min:0|max:9999999999999.99', 
             'wohnflaeche' => ['nullable', 'numeric', 'min:0'],
             'grundflaeche' => ['nullable', 'numeric', 'min:0'],
             'kaution' => ['nullable', 'numeric', 'min:0'],
@@ -254,7 +255,7 @@ class RealEstateController extends Controller
             'strasse' => ['nullable', 'string', 'max:255'],
 
             // Prices & Areas
-            'gesamtmiete' => ['nullable', 'numeric', 'min:0'],
+            'price' => ['nullable', 'numeric', 'min:0'],
             'wohnflaeche' => ['nullable', 'numeric', 'min:0'],
             'grundflaeche' => ['nullable', 'numeric', 'min:0'],
             'kaution' => ['nullable', 'numeric', 'min:0'],
