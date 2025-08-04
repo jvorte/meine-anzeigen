@@ -136,7 +136,7 @@
 
 {{-- new part second navbar --}}
 
-        <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+        <div class="max-w-7xl mx-auto py-2 px-4 sm:px-6 lg:px-8">
       {{-- Updated Header Section with Gradient and Prominent CTA --}}
         <div class="relative flex flex-col md:flex-row items-center justify-between space-y-4 md:space-y-0 md:space-x-4 p-6 bg-cover bg-center shadow-lg rounded-lg"
             style="background-image: url('/storage/images/real-estate.jpg');"> {{-- Replaced with a stable placeholder image --}}
@@ -171,9 +171,10 @@
         </div>
 
         {{-- Category Navigation Links --}}
-        <nav
-            class="p-4 flex flex-wrap justify-center md:justify-start gap-x-4 gap-y-2 mt-4 pb-2 border-b border-gray-200 dark:border-gray-700">
-            @foreach ($categories as $cat)
+      <nav
+    class="p-4 mt-4 pb-2 border-b border-gray-200 dark:border-gray-700
+           grid grid-cols-2 gap-x-4 gap-y-3 justify-center md:flex md:flex-wrap md:justify-start">
+    @foreach ($categories as $cat)
                 {{-- Check if it's the "Fahrzeuge" category --}}
                 @if ($cat->slug == 'cars')
                     {{-- Alpine.js for modal --}}

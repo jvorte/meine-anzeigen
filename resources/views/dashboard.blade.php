@@ -15,7 +15,7 @@
 
 
 
-    <div class="py-5 bg-gray-50 dark:bg-gray-50 min-h-screen">
+    <div class="py-1 bg-gray-50 dark:bg-gray-50 min-h-screen">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-lg sm:rounded-lg p-6">
                 <h2 class="text-3xl font-bold mb-4 text-gray-900 dark:text-gray-700">Neueste Anzeigen nach Kategorie
