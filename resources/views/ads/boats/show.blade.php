@@ -33,17 +33,17 @@
             ['label' => $boat->title, 'url' => null],
         ]" class="mb-8" />
 
-        {{-- Action Buttons and Back link --}}
-        <div class="flex flex-col sm:flex-row justify-between items-center mb-8 gap-4">
-            <a href="{{ url()->previous() }}" 
-                class="inline-flex items-center text-gray-700 hover:text-gray-900 transition duration-300 font-medium space-x-1">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M15 19l-7-7 7-7"></path>
-                </svg>
-                <span>Zurück</span>
-            </a>
+           {{-- Action Buttons and Back link --}}
+   <div class="flex flex-col sm:flex-row justify-between my-4 gap-4">
+    <a href="javascript:history.back()" 
+        class="inline-flex items-center text-gray-700 hover:text-gray-900 transition duration-300 font-medium space-x-1">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M15 19l-7-7 7-7"></path>
+        </svg>
+        <span>Zurück</span>
+    </a>
 
-            <div class="flex items-center space-x-3 pt-10">
+    <div class="flex flex-wrap justify-center sm:justify-start items-center space-x-0 sm:space-x-3 pt-4 sm:pt-0">
                 @auth
                     @if (auth()->id() === $boat->user_id || (auth()->user() && auth()->user()->isAdmin()))
                         <a href="{{ route('ads.boats.edit', $boat->id) }}" 
