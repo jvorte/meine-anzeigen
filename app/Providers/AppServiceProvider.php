@@ -27,21 +27,22 @@ class AppServiceProvider extends ServiceProvider
 
 public function boot()
 {
-    // Περίπτωση categories
     View::composer('layouts.navigation', function ($view) {
+        $userId = Auth::id();
+
         $categories = Category::all();
 
-        // Έλεγχος αν ο χρήστης είναι συνδεδεμένος
         $unreadMessagesCount = 0;
-        if (Auth::check()) {
-            // Υπολογίζουμε τα μη αναγνωσμένα μηνύματα για τον logged in χρήστη
-            $unreadMessagesCount = Message::where('user_id', Auth::id())
-                                        ->where('read_at', false) // ή όποιο πεδίο δηλώνει μη αναγνωσμένο
-                                        ->count();
+        if ($userId) {
+            $unreadMessagesCount = Message::whereNull('read_at')
+                ->where('user_id', '!=', $userId)
+                ->whereHas('conversation', function ($query) use ($userId) {
+                    $query->where('sender_id', $userId)
+                          ->orWhere('receiver_id', $userId);
+                })->count();
         }
 
-        $view->with('categories', $categories)
-             ->with('unreadMessagesCount', $unreadMessagesCount);
+        $view->with(compact('categories', 'unreadMessagesCount'));
     });
 }
 }

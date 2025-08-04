@@ -65,7 +65,7 @@ class User extends Authenticatable
         // IMPORTANT: Adjust 'images/default_avatar.png' to your actual default image path
         return $this->profile_photo_path
             ? Storage::url($this->profile_photo_path)
-            : asset('storage/app/public/images/default_avatar.png'); // Path to your default placeholder image
+            : asset('storage/images/user.png'); // Path to your default placeholder image
     }
 
 

@@ -22,20 +22,22 @@
             {{ __('My Profile') }}
         </x-nav-link>
 
-   <x-nav-link :href="route('messages.index')" :active="request()->routeIs('messages.index')" class="relative">
+<x-nav-link :href="route('messages.index')" :active="request()->routeIs('messages.index')" class="relative flex items-center space-x-1">
     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 28 26" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-message-square-text-icon lucide-message-square-text">
         <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
         <path d="M13 8H7"/>
         <path d="M17 12H7"/>
     </svg>
-    {{ __('Nachrichten') }}
+
+    <span>{{ __('Nachrichten') }}</span>
 
     @if ($unreadMessagesCount > 0)
-        <span class="absolute top-0 right-0 inline-flex items-center justify-center w-5 h-5 text-xs font-bold text-white bg-red-600 rounded-full">
+        <span class="inline-flex items-center justify-center w-5 h-5 text-xs font-bold text-white bg-red-600 rounded-full">
             {{ $unreadMessagesCount }}
         </span>
     @endif
 </x-nav-link>
+
 
     @endauth
                 </div>
@@ -47,7 +49,7 @@
                     <x-dropdown align="right" width="48">
                         <x-slot name="trigger">
                             <button class="inline-flex items-center px-3 py-2 border border-transparent text-sm font-medium rounded-md text-gray-500 dark:text-gray-400 bg-white  hover:text-gray-700 dark:hover:text-gray-300 focus:outline-none transition ease-in-out duration-150">
-                      <img src="{{ Auth::user()->profile_photo_url }}" alt="Profile Photo" class="w-10 h-10 mr-2 rounded-full object-cover">
+                      <img src="{{ Auth::user()->profile_photo_url }}" alt="Profile Photo" class="w-8 h-8 mr-2 rounded-full object-cover">
                                 <div>Willkommen, {{ Auth::user()->name }}</div>
                                 <div class="ms-1">
                                     <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
