@@ -17,12 +17,17 @@
                     @endphp
                     <li class="border-b py-2">
                         <a href="{{ route('messages.show', $conversation) }}" class="flex justify-between items-center">
-                            <div>
-                                <strong>{{ $otherUser->name }}</strong><br>
-                                <small class="text-gray-600">
-                                    {{ $lastMessage ? \Illuminate\Support\Str::limit($lastMessage->body, 50) : 'Χωρίς μηνύματα' }}
-                                </small>
+                            <div class="flex items-center space-x-3">
+                                <img src="{{ $otherUser->profile_photo_url ?? '/default-avatar.png' }}" alt="Profile Photo"
+                                    class="w-10 h-10 rounded-full object-cover">
+                                <div>
+                                    <strong>{{ $otherUser->name }}</strong><br>
+                                    <small class="text-gray-600">
+                                        {{ $lastMessage ? \Illuminate\Support\Str::limit($lastMessage->body, 50) : 'Χωρίς μηνύματα' }}
+                                    </small>
+                                </div>
                             </div>
+
                             <div class="text-gray-500 text-sm">
                                 {{ $conversation->updated_at->diffForHumans() }}
                             </div>
