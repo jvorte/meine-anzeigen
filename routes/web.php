@@ -17,7 +17,7 @@ use App\Http\Controllers\CamperController;
 use App\Http\Controllers\UsedVehiclePartController;
 use App\Http\Controllers\HouseholdItemController;
 use App\Http\Controllers\CarController; // Keeping CarController as the dedicated controller for cars
-use App\Models\CarBrand;
+use App\Http\Controllers\MessageController;
 use Illuminate\Http\Request;
 use App\Models\CarModel;
 /*
@@ -218,6 +218,15 @@ Route::get('/api/camper-brands/{brandId}/models', [CamperController::class, 'get
     Route::middleware('auth')->group(function () {
     Route::get('/messages', [App\Http\Controllers\MessageController::class, 'index'])->name('messages.index');
 });
+
+});
+
+Route::middleware('auth')->group(function () {
+    Route::get('/messages', [MessageController::class, 'index'])->name('messages.index');
+    Route::get('/messages/{conversation}', [MessageController::class, 'show'])->name('messages.show');
+    Route::post('/messages/{conversation}', [MessageController::class, 'store'])->name('messages.store');
+    Route::post('/messages/start', [MessageController::class, 'start'])->name('messages.start');
+    Route::middleware('auth')->get('/messages/start/{ad}/{receiver}', [MessageController::class, 'startAndRedirect'])->name('messages.start.redirect');
 
 });
 

@@ -1,4 +1,5 @@
 <x-app-layout>
+    
     <x-slot name="header">
         <div class="px-4 py-1 md:py-1 flex justify-end items-center">
             <a href="{{ route('ads.create') }}"
@@ -11,6 +12,8 @@
             </a>
         </div>
     </x-slot>
+
+
 
     <div class="py-5 bg-gray-50 dark:bg-gray-50 min-h-screen">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">

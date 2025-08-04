@@ -65,6 +65,50 @@ class User extends Authenticatable
         // IMPORTANT: Adjust 'images/default_avatar.png' to your actual default image path
         return $this->profile_photo_path
             ? Storage::url($this->profile_photo_path)
-            : asset('images/default_avatar.png'); // Path to your default placeholder image
+            : asset('storage/app/public/images/default_avatar.png'); // Path to your default placeholder image
     }
+
+
+
+    // chat
+
+    public function sentConversations()
+{
+    return $this->hasMany(Conversation::class, 'sender_id');
+}
+
+public function receivedConversations()
+{
+    return $this->hasMany(Conversation::class, 'receiver_id');
+}
+
+public function messages()
+{
+    return $this->hasMany(Message::class);
+}
+
+public function isAdmin()
+{
+    // Παράδειγμα απλού ελέγχου, πχ αν υπάρχει πεδίο `role` και το admin είναι 'admin'
+    return $this->role === 'admin';
+}
+
+//  όλα τα μη αναγνωσμένα μηνύματα σε συνομιλίες που συμμετέχει ο χρήστης
+public function unreadMessagesCount()
+{
+    return Message::whereNull('read_at')
+        ->whereHas('conversation', function ($q) {
+            $q->where('sender_id', $this->id)
+              ->orWhere('receiver_id', $this->id);
+        })
+        ->where('user_id', '!=', $this->id)  // Τα μηνύματα δεν είναι δικά του
+        ->count();
+}
+
+
+public function receivedMessages()
+{
+    return $this->hasMany(Message::class, 'receiver_id');
+}
+
 }

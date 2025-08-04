@@ -256,10 +256,11 @@
                                 </div>
                                 @endif
                             </dl>
-                            <a href="{{ route('messages.create', $householdItem->user->id) }}" 
-                                class="mt-6 block w-full text-center bg-red-700 text-white font-semibold py-3 rounded-full shadow-lg hover:bg-gray-800 transition focus:ring-4 focus:ring-gray-500 focus:ring-opacity-75">
-                                Kontakt aufnehmen
-                            </a>
+                           <a href="{{ route('messages.start.redirect', ['ad' => $householdItem->id, 'receiver' => $householdItem->user->id]) }}"
+    class="mt-6 block w-full text-center bg-red-700 text-white font-semibold py-3 rounded-full shadow-lg hover:bg-gray-800 transition focus:ring-4 focus:ring-gray-500 focus:ring-opacity-75">
+    Kontakt aufnehmen
+</a>
+
                         @else
                             <p class="italic text-red-600">Anbieterinformationen nicht verfügbar.</p>
                         @endif
