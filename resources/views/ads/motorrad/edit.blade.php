@@ -212,7 +212,6 @@
                 </div>
             </section>
 
-            ---
 
             <section class="bg-gray-50 p-6 rounded-lg shadow-inner">
                 <h4 class="text-xl font-semibold text-gray-700 mb-6">Fotos verwalten und hinzufügen</h4>
@@ -317,7 +316,7 @@
                 </script>
             </section>
 
-            ---
+  
 
             {{-- Submit Button --}}
             <div class="pt-6 border-t border-gray-200 flex justify-end">

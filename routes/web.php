@@ -154,6 +154,7 @@ Route::get('/api/camper-brands/{brandId}/models', [CamperController::class, 'get
 
 
     // Electronics (ADDITIONS START HERE)
+    
     Route::get('/ads/electronics/create', [ElectronicController::class, 'create'])->name('ads.electronics.create');
     Route::post('/ads/electronics', [ElectronicController::class, 'store'])->name('ads.electronics.store');
     // ADDED: Edit route for Electronics

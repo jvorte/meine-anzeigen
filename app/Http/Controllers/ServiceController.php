@@ -106,7 +106,8 @@ class ServiceController extends Controller
  */
 public function update(Request $request, Service $ad) // Using route model binding
     {
-       
+    //    dd($request->all(), $request->file('images'));
+
 
         $validated = $request->validate([
             'service_type' => ['required', 'string', Rule::in(['reinigung', 'handwerk', 'it', 'beratung', 'transport', 'sonstiges'])],
@@ -130,7 +131,7 @@ public function update(Request $request, Service $ad) // Using route model bindi
             'description' => $validated['description'], // Use 'description' if that's your DB column
         ]);
      
-
+// dd($validated);
         // Handle image deletions
         if (isset($validated['images_to_delete'])) {
             foreach ($validated['images_to_delete'] as $imageId) {
