@@ -71,10 +71,33 @@
                             </form>
                         </x-slot>
                     </x-dropdown>
-                @else
-                    <a href="{{ route('login') }}" class="text-sm text-gray-600 dark:text-gray-300 hover:text-blue-600 mx-2">Login</a>
-                    <a href="{{ route('register') }}" class="text-sm text-gray-600 dark:text-gray-300 hover:text-blue-600 mx-2">Registrieren</a>
-                @endauth
+           @else
+    <div class="flex items-center space-x-4 mt-2">
+        <a href="{{ route('login') }}"
+           class="flex items-center text-sm text-gray-600 hover:text-blue-600 transition">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 mr-1" fill="none" viewBox="0 0 24 24"
+                 stroke="currentColor" stroke-width="2">
+                <path d="M12 12H5a2 2 0 0 0-2 2v5"/>
+                <circle cx="13" cy="19" r="2"/>
+                <circle cx="5" cy="19" r="2"/>
+                <path d="M8 19h3m5-17v17h6M6 12V7c0-1.1.9-2 2-2h3l5 5"/>
+            </svg>
+            Login
+        </a>
+
+        <a href="{{ route('register') }}"
+           class="flex items-center text-sm text-gray-600 hover:text-blue-600 transition">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 mr-1" fill="none" viewBox="0 0 24 24"
+                 stroke="currentColor" stroke-width="2">
+                <path d="M2 21a8 8 0 0 1 10.821-7.487"/>
+                <path d="M21.378 16.626a1 1 0 0 0-3.004-3.004l-4.01 4.012a2 2 0 0 0-.506.854l-.837 2.87a.5.5 0 0 0 .62.62l2.87-.837a2 2 0 0 0 .854-.506z"/>
+                <circle cx="10" cy="8" r="5"/>
+            </svg>
+            Registrieren
+        </a>
+    </div>
+@endauth
+
             </div>
 
             <!-- Mobile Hamburger -->

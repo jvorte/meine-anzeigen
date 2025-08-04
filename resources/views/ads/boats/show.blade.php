@@ -12,16 +12,17 @@
                     Umfangreiche Informationen zu Ihrer Boots-Anzeige
                 </p>
             </div>
-            <div class="mt-3 sm:mt-0">
-                <a href="{{ route('ads.create') }}" 
-                    class="inline-flex items-center px-6 py-3 bg-red-700 text-white rounded-full shadow-lg hover:bg-gray-800 focus:ring-4 focus:ring-gray-400 focus:ring-opacity-50 transition transform hover:scale-105">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5"
-                        stroke="currentColor" class="w-5 h-5 mr-2">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
-                    </svg>
-                    Neu Anzeige
-                </a>
-            </div>
+         <div class="px-4 py-1 md:py-1 flex justify-end items-center">
+        <a href="{{ route('ads.create') }}" class="c-button">
+            <span class="c-main">
+                <span class="c-ico">
+                    <span class="c-blur"></span>
+                    <span class="ico-text">+</span>
+                </span>
+                New Add
+            </span>
+        </a>
+    </div>
         </div>
     </x-slot>
 
@@ -43,29 +44,9 @@
         <span>Zurück</span>
     </a>
 
-    <div class="flex flex-wrap justify-center sm:justify-start items-center space-x-0 sm:space-x-3 pt-4 sm:pt-0">
-                @auth
-                    @if (auth()->id() === $boat->user_id || (auth()->user() && auth()->user()->isAdmin()))
-                        <a href="{{ route('ads.boats.edit', $boat->id) }}" 
-                            class="px-5 py-2 bg-gray-700 hover:bg-gray-800 text-white rounded-full shadow-lg transition transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2">
-                            Anzeige bearbeiten
-                        </a>
-                        <form action="{{ route('ads.boats.destroy', $boat->id) }}" method="POST"
-                            onsubmit="return confirm('Sind Sie sicher, dass Sie diese Anzeige löschen möchten? Diese Aktion kann nicht rückgängig gemacht werden.')">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" 
-                                class="px-5 py-2 bg-red-600 hover:bg-gray-700 text-white rounded-full shadow-lg transition transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 flex items-center space-x-1">
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20" class="w-5 h-5">
-                                    <path d="M6 8a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1z" />
-                                    <path fill-rule="evenodd" d="M4 5a2 2 0 012-2h8a2 2 0 012 2v10a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm2 0v10h8V5H6z" clip-rule="evenodd" />
-                                </svg>
-                                <span>Anzeige löschen</span>
-                            </button>
-                        </form>
-                    @endif
-                @endauth
-            </div>
+
+       
+       
         </div>
 
         <article class="bg-white rounded-2xl shadow-2xl p-8 lg:p-14 grid grid-cols-1 md:grid-cols-2 gap-12">
@@ -254,14 +235,47 @@
                                 </div>
                                 @endif
                             </dl>
-                            <a href="{{ route('messages.create', $boat->user->id) }}" 
-                                class="mt-6 block w-full text-center bg-red-700 text-white font-semibold py-3 rounded-full shadow-lg hover:bg-gray-800 transition focus:ring-4 focus:ring-gray-500 focus:ring-opacity-75">
-                                Kontakt aufnehmen
-                            </a>
-                        @else
-                            <p class="italic text-red-600">Anbieterinformationen nicht verfügbar.</p>
-                        @endif
-                    </div>
+
+      <div class="flex flex-wrap justify-center sm:justify-start items-center space-x-0 sm:space-x-3 pt-4 mt-3 sm:pt-0">
+    @auth
+        @if (auth()->id() === $boat->user_id || (auth()->user() && auth()->user()->isAdmin()))
+            <a href="{{ route('ads.boats.edit', $boat->id) }}" 
+                class="px-5 py-2 bg-gray-700 hover:bg-gray-800 text-white rounded-full shadow-lg transition transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2">
+                Anzeige bearbeiten
+            </a>
+            <form action="{{ route('ads.boats.destroy', $boat->id) }}" method="POST"
+                onsubmit="return confirm('Sind Sie sicher, dass Sie diese Anzeige löschen möchten? Diese Aktion kann nicht rückgängig gemacht werden.')">
+                @csrf
+                @method('DELETE')
+                <button type="submit" 
+                    class="px-5 py-2 bg-red-600 hover:bg-gray-700 text-white rounded-full shadow-lg transition transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 flex items-center space-x-1">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20" class="w-5 h-5">
+                        <path d="M6 8a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1z" />
+                        <path fill-rule="evenodd" d="M4 5a2 2 0 012-2h8a2 2 0 012 2v10a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm2 0v10h8V5H6z" clip-rule="evenodd" />
+                    </svg>
+                    <span>Anzeige löschen</span>
+                </button>
+            </form>
+        @else
+                                    <a href="{{ route('messages.start.redirect', ['ad' => $boat->id, 'receiver' => $boat->user->id]) }}" 
+   class="mt-6 block w-full text-center bg-red-700 text-white font-semibold py-3 rounded-full shadow-lg hover:bg-gray-800 transition focus:ring-4 focus:ring-gray-500 focus:ring-opacity-75">
+    Kontakt aufnehmen
+</a>
+        @endif
+    @else
+        {{-- Αν δεν είναι logged in, εμφάνισε επίσης το κουμπί επικοινωνίας --}}
+                               <a href="{{ route('messages.start.redirect', ['ad' => $boat->id, 'receiver' => $boat->user->id]) }}" 
+   class="mt-6 block w-full text-center bg-red-700 text-white font-semibold py-3 rounded-full shadow-lg hover:bg-gray-800 transition focus:ring-4 focus:ring-gray-500 focus:ring-opacity-75">
+    Kontakt aufnehmen
+</a>
+    @endauth
+</div>
+
+                @else
+                    {{-- Display message if no seller user data --}}
+                    <p class="italic text-red-600">Anbieterinformationen nicht verfügbar.</p>
+                @endif
+            </div>
 
 
 
