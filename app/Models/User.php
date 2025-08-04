@@ -111,4 +111,5 @@ public function receivedMessages()
     return $this->hasMany(Message::class, 'receiver_id');
 }
 
+
 }

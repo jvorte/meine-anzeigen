@@ -18,8 +18,9 @@ use App\Http\Controllers\UsedVehiclePartController;
 use App\Http\Controllers\HouseholdItemController;
 use App\Http\Controllers\CarController; // Keeping CarController as the dedicated controller for cars
 use App\Http\Controllers\MessageController;
-use Illuminate\Http\Request;
-use App\Models\CarModel;
+use App\Http\Controllers\MyAdsController;
+
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -229,6 +230,8 @@ Route::middleware('auth')->group(function () {
     Route::middleware('auth')->get('/messages/start/{ad}/{receiver}', [MessageController::class, 'startAndRedirect'])->name('messages.start.redirect');
 
 });
+
+Route::get('/meine-anzeigen', [MyAdsController::class, 'index'])->name('my-ads.index');
 
 
 Route::middleware(['auth'])->group(function () {
