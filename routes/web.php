@@ -240,8 +240,9 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('/profile/photo', [ProfileController::class, 'destroyProfilePhoto'])->name('profile.destroy-profile-photo');
 });
 
-Route::get('/messages/start/{ad}/{receiver}', [MessageController::class, 'startAndRedirect'])
+Route::get('/messages/start/{ad}/{receiver}/{category}', [MessageController::class, 'startAndRedirect'])
     ->name('messages.start.redirect');
+
 
 
 Route::get('/messages/create/{userId}', function ($userId) {

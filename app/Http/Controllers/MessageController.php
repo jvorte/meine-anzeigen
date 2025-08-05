@@ -6,7 +6,9 @@ use App\Models\Conversation;
 use App\Models\Message;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Log;
+
+use App\Models\Service;
+use App\Models\Car;
 
 class MessageController extends Controller
 {
@@ -17,55 +19,69 @@ class MessageController extends Controller
 
         $conversations = Conversation::where('sender_id', $userId)
             ->orWhere('receiver_id', $userId)
-            ->with(['sender', 'receiver', 'ad', 'messages' => function ($q) {
+            ->with(['sender', 'receiver', 'messages' => function ($q) {
                 $q->latest()->limit(1);
             }])
             ->latest('updated_at')
             ->get();
 
-
         return view('messages.index', compact('conversations'));
     }
 
-
-    public function startAndRedirect($adId, $receiverId)
+    // Ξεκινάει συνομιλία ή επιστρέφει σε υπάρχουσα και κάνει redirect
+    public function startAndRedirect($adId, $receiverId, $adCategory)
     {
-
-       
         $userId = auth()->id();
- Log::info("startAndRedirect params", ['adId' => $adId, 'receiverId' => $receiverId, 'userId' => $userId]);
 
         if ($userId == $receiverId) {
             return redirect()->back()->withErrors('Δεν μπορείς να στείλεις μήνυμα στον εαυτό σου.');
         }
 
-        // Ψάχνουμε συνομιλία με αυτούς τους δύο και το ad
-        $conversation = Conversation::betweenUsersForAd($userId, $receiverId, $adId)->first();
+        // Φόρτωσε την αγγελία ανά κατηγορία (προσάρμοσε το πεδίο τίτλου αν χρειάζεται)
+        switch ($adCategory) {
+            case 'services':
+                $ad = Service::find($adId);
+                break;
+            case 'cars':
+                $ad = Car::find($adId);
+                break;
+            // άλλες κατηγορίες...
+            default:
+                return redirect()->back()->withErrors('Άγνωστη κατηγορία αγγελίας.');
+        }
 
+        if (!$ad) {
+            return redirect()->back()->withErrors('Η αγγελία δεν βρέθηκε.');
+        }
+
+        // Αν το μοντέλο έχει άλλο πεδίο τίτλου, π.χ. 'name', άλλαξε το εδώ
+        $adTitle = $ad->title ?? $ad->name ?? 'Άγνωστος τίτλος';
+
+        // Βρες αν υπάρχει ήδη συνομιλία με sender, receiver, ad_id και ad_category
+        $conversation = Conversation::betweenUsersForAd($userId, $receiverId, $adId, $adCategory)->first();
 
         if (!$conversation) {
             $conversation = Conversation::create([
                 'ad_id' => $adId,
                 'sender_id' => $userId,
                 'receiver_id' => $receiverId,
+                'ad_title' => $adTitle,
+                'ad_category' => $adCategory,
             ]);
         }
 
         return redirect()->route('messages.show', $conversation);
     }
 
-
-    // Εμφάνιση μηνυμάτων σε συνομιλία
+    // Εμφάνιση μηνυμάτων συνομιλίας
     public function show(Conversation $conversation)
     {
         $userId = Auth::id();
 
-        // Ασφάλεια
         if (!in_array($userId, [$conversation->sender_id, $conversation->receiver_id])) {
             abort(403, 'Unauthorized');
         }
 
-        // Σήμανση ΟΛΩΝ των μηνυμάτων της συνομιλίας που δεν έχει διαβάσει ο χρήστης ως διαβασμένα
         $conversation->messages()
             ->whereNull('read_at')
             ->where('user_id', '!=', $userId)
@@ -95,47 +111,59 @@ class MessageController extends Controller
             'body' => $request->body,
         ]);
 
-        // Ενημέρωση updated_at για να ταξινομούνται σωστά οι συνομιλίες
         $conversation->touch();
 
         return redirect()->route('messages.show', $conversation)->with('success', 'Μήνυμα στάλθηκε!');
     }
 
-    // Δημιουργία νέας συνομιλίας (αν δεν υπάρχει) και μετά αποστολή πρώτου μηνύματος
+    // Δημιουργία συνομιλίας + πρώτο μήνυμα (μέσω POST)
     public function start(Request $request)
     {
         $userId = Auth::id();
 
         $request->validate([
             'ad_id' => 'required|integer',
+            'ad_category' => 'required|string',
             'receiver_id' => 'required|integer|exists:users,id',
             'body' => 'required|string|max:2000',
         ]);
 
-        // Αποφυγή να στείλει ο χρήστης μήνυμα στον εαυτό του
         if ($userId == $request->receiver_id) {
             return redirect()->back()->withErrors('Δεν μπορείς να στείλεις μήνυμα στον εαυτό σου.');
         }
 
-        // Βρες αν υπάρχει ήδη συνομιλία με τον ίδιο ad_id, sender και receiver (σε οποιαδήποτε σειρά)
-        $conversation = Conversation::where('ad_id', $request->ad_id)
-            ->where(function ($query) use ($userId, $request) {
-                $query->where('sender_id', $userId)
-                    ->where('receiver_id', $request->receiver_id);
-            })->orWhere(function ($query) use ($userId, $request) {
-                $query->where('sender_id', $request->receiver_id)
-                    ->where('receiver_id', $userId);
-            })->first();
+        // Φόρτωσε την αγγελία ανά κατηγορία
+        switch ($request->ad_category) {
+            case 'services':
+                $ad = Service::find($request->ad_id);
+                break;
+            case 'cars':
+                $ad = Car::find($request->ad_id);
+                break;
+            // άλλες κατηγορίες...
+            default:
+                return redirect()->back()->withErrors('Άγνωστη κατηγορία αγγελίας.');
+        }
+
+        if (!$ad) {
+            return redirect()->back()->withErrors('Η αγγελία δεν βρέθηκε.');
+        }
+
+        $adTitle = $ad->title ?? $ad->name ?? 'Άγνωστος τίτλος';
+
+        // Έλεγξε αν υπάρχει ήδη συνομιλία
+        $conversation = Conversation::betweenUsersForAd($userId, $request->receiver_id, $request->ad_id, $request->ad_category)->first();
 
         if (!$conversation) {
             $conversation = Conversation::create([
                 'ad_id' => $request->ad_id,
                 'sender_id' => $userId,
                 'receiver_id' => $request->receiver_id,
+                'ad_title' => $adTitle,
+                'ad_category' => $request->ad_category,
             ]);
         }
 
-        // Δημιουργία πρώτου μηνύματος
         Message::create([
             'conversation_id' => $conversation->id,
             'user_id' => $userId,
