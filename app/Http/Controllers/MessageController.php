@@ -25,6 +25,15 @@ class MessageController extends Controller
             ->latest('updated_at')
             ->get();
 
+        $conversations = Conversation::where(function ($query) use ($userId) {
+            $query->where('sender_id', $userId)
+                ->orWhere('receiver_id', $userId);
+        })->where(function ($query) use ($userId) {
+            $query->whereNull('deleted_by')
+                ->orWhere('deleted_by', '!=', $userId);
+        })->get();
+
+
         return view('messages.index', compact('conversations'));
     }
 
@@ -93,28 +102,35 @@ class MessageController extends Controller
     }
 
     // Αποστολή νέου μηνύματος
-    public function store(Request $request, Conversation $conversation)
-    {
-        $userId = Auth::id();
+   public function store(Request $request, Conversation $conversation)
+{
+    $userId = Auth::id();
 
-        if (!in_array($userId, [$conversation->sender_id, $conversation->receiver_id])) {
-            abort(403, 'Unauthorized');
-        }
-
-        $request->validate([
-            'body' => 'required|string|max:2000',
-        ]);
-
-        Message::create([
-            'conversation_id' => $conversation->id,
-            'user_id' => $userId,
-            'body' => $request->body,
-        ]);
-
-        $conversation->touch();
-
-        return redirect()->route('messages.show', $conversation)->with('success', 'Μήνυμα στάλθηκε!');
+    if (!in_array($userId, [$conversation->sender_id, $conversation->receiver_id])) {
+        abort(403, 'Unauthorized');
     }
+
+    $request->validate([
+        'body' => 'required|string|max:2000',
+    ]);
+
+    // Αν ο χρήστης είχε διαγράψει τη συνομιλία, "ξεδιαγράφεται"
+    if ($conversation->deleted_by === $userId) {
+        $conversation->deleted_by = null;
+        $conversation->save();
+    }
+
+    Message::create([
+        'conversation_id' => $conversation->id,
+        'user_id' => $userId,
+        'body' => $request->body,
+    ]);
+
+    $conversation->touch(); // Ενημερώνει το updated_at
+
+    return redirect()->route('messages.show', $conversation)->with('success', 'Μήνυμα στάλθηκε!');
+}
+
 
     // Δημιουργία συνομιλίας + πρώτο μήνυμα (μέσω POST)
     public function start(Request $request)
@@ -171,5 +187,20 @@ class MessageController extends Controller
         ]);
 
         return redirect()->route('messages.show', $conversation)->with('success', 'Η συνομιλία ξεκίνησε!');
+    }
+
+    public function delete($id)
+    {
+        $conversation = Conversation::findOrFail($id);
+
+        // Αν έχει ήδη διαγραφεί από τον άλλο χρήστη, διαγράφεται τελείως
+        if ($conversation->deleted_by && $conversation->deleted_by !== auth()->id()) {
+            $conversation->delete();
+        } else {
+            $conversation->deleted_by = auth()->id();
+            $conversation->save();
+        }
+
+        return redirect()->route('messages.index');
     }
 }

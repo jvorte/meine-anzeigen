@@ -57,4 +57,10 @@ class Conversation extends Model
                 });
             });
     }
+
+    public function isDeletedForUser($userId)
+{
+    return $this->deleted_by === $userId;
+}
+
 }

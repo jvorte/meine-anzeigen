@@ -29,6 +29,12 @@
                     <span class="font-semibold">{{ $conversation->ad_title ?? 'Χωρίς τίτλο' }}</span>
                     <span class="ml-2 px-2 py-0.5 bg-gray-200 rounded text-xs uppercase">{{ $conversation->ad_category ?? '' }}</span>
                 </div>
+
+                <form action="{{ route('conversations.delete', $conversation->id) }}" method="POST">
+    @csrf
+    @method('DELETE')
+    <button type="submit">Διαγραφή</button>
+</form>
             </div>
         </div>
 
