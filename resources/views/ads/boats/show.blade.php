@@ -264,10 +264,10 @@
         @endif
     @else
         {{-- Αν δεν είναι logged in, εμφάνισε επίσης το κουμπί επικοινωνίας --}}
-                               <a href="{{ route('messages.start.redirect', ['ad' => $boat->id, 'receiver' => $boat->user->id]) }}" 
-   class="mt-6 block w-full text-center bg-red-700 text-white font-semibold py-3 rounded-full shadow-lg hover:bg-gray-800 transition focus:ring-4 focus:ring-gray-500 focus:ring-opacity-75">
-    Kontakt aufnehmen
-</a>
+       <a href="{{ route('login') }}" 
+       class="mt-6 block w-full text-center bg-blue-600 text-white font-semibold py-3 rounded-full shadow-lg hover:bg-blue-800 transition focus:ring-4 focus:ring-blue-500 focus:ring-opacity-75">
+       contact with seller
+    </a>
     @endauth
 </div>
 
