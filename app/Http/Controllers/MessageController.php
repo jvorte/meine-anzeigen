@@ -6,6 +6,7 @@ use App\Models\Conversation;
 use App\Models\Message;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class MessageController extends Controller
 {
@@ -16,64 +17,64 @@ class MessageController extends Controller
 
         $conversations = Conversation::where('sender_id', $userId)
             ->orWhere('receiver_id', $userId)
-            ->with(['sender', 'receiver', 'messages' => function($q){
+            ->with(['sender', 'receiver', 'ad', 'messages' => function ($q) {
                 $q->latest()->limit(1);
             }])
             ->latest('updated_at')
             ->get();
+
 
         return view('messages.index', compact('conversations'));
     }
 
 
     public function startAndRedirect($adId, $receiverId)
-{
-    $userId = auth()->id();
+    {
 
-    if ($userId == $receiverId) {
-        return redirect()->back()->withErrors('Δεν μπορείς να στείλεις μήνυμα στον εαυτό σου.');
+       
+        $userId = auth()->id();
+ Log::info("startAndRedirect params", ['adId' => $adId, 'receiverId' => $receiverId, 'userId' => $userId]);
+
+        if ($userId == $receiverId) {
+            return redirect()->back()->withErrors('Δεν μπορείς να στείλεις μήνυμα στον εαυτό σου.');
+        }
+
+        // Ψάχνουμε συνομιλία με αυτούς τους δύο και το ad
+        $conversation = Conversation::betweenUsersForAd($userId, $receiverId, $adId)->first();
+
+
+        if (!$conversation) {
+            $conversation = Conversation::create([
+                'ad_id' => $adId,
+                'sender_id' => $userId,
+                'receiver_id' => $receiverId,
+            ]);
+        }
+
+        return redirect()->route('messages.show', $conversation);
     }
-
-    // Ψάχνουμε συνομιλία με αυτούς τους δύο και το ad
-    $conversation = Conversation::where('ad_id', $adId)
-        ->where(function ($query) use ($userId, $receiverId) {
-            $query->where('sender_id', $userId)->where('receiver_id', $receiverId);
-        })->orWhere(function ($query) use ($userId, $receiverId) {
-            $query->where('sender_id', $receiverId)->where('receiver_id', $userId);
-        })->first();
-
-    if (!$conversation) {
-        $conversation = Conversation::create([
-            'ad_id' => $adId,
-            'sender_id' => $userId,
-            'receiver_id' => $receiverId,
-        ]);
-    }
-
-    return redirect()->route('messages.show', $conversation);
-}
 
 
     // Εμφάνιση μηνυμάτων σε συνομιλία
-public function show(Conversation $conversation)
-{
-    $userId = Auth::id();
+    public function show(Conversation $conversation)
+    {
+        $userId = Auth::id();
 
-    // Ασφάλεια
-    if (!in_array($userId, [$conversation->sender_id, $conversation->receiver_id])) {
-        abort(403, 'Unauthorized');
+        // Ασφάλεια
+        if (!in_array($userId, [$conversation->sender_id, $conversation->receiver_id])) {
+            abort(403, 'Unauthorized');
+        }
+
+        // Σήμανση ΟΛΩΝ των μηνυμάτων της συνομιλίας που δεν έχει διαβάσει ο χρήστης ως διαβασμένα
+        $conversation->messages()
+            ->whereNull('read_at')
+            ->where('user_id', '!=', $userId)
+            ->update(['read_at' => now()]);
+
+        $messages = $conversation->messages()->with('user')->orderBy('created_at')->get();
+
+        return view('messages.show', compact('conversation', 'messages'));
     }
-
-    // Σήμανση ΟΛΩΝ των μηνυμάτων της συνομιλίας που δεν έχει διαβάσει ο χρήστης ως διαβασμένα
-    $conversation->messages()
-        ->whereNull('read_at')
-        ->where('user_id', '!=', $userId)
-        ->update(['read_at' => now()]);
-
-    $messages = $conversation->messages()->with('user')->orderBy('created_at')->get();
-
-    return view('messages.show', compact('conversation', 'messages'));
-}
 
     // Αποστολή νέου μηνύματος
     public function store(Request $request, Conversation $conversation)
@@ -118,12 +119,12 @@ public function show(Conversation $conversation)
 
         // Βρες αν υπάρχει ήδη συνομιλία με τον ίδιο ad_id, sender και receiver (σε οποιαδήποτε σειρά)
         $conversation = Conversation::where('ad_id', $request->ad_id)
-            ->where(function($query) use ($userId, $request) {
+            ->where(function ($query) use ($userId, $request) {
                 $query->where('sender_id', $userId)
-                      ->where('receiver_id', $request->receiver_id);
-            })->orWhere(function($query) use ($userId, $request) {
+                    ->where('receiver_id', $request->receiver_id);
+            })->orWhere(function ($query) use ($userId, $request) {
                 $query->where('sender_id', $request->receiver_id)
-                      ->where('receiver_id', $userId);
+                    ->where('receiver_id', $userId);
             })->first();
 
         if (!$conversation) {

@@ -240,6 +240,10 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('/profile/photo', [ProfileController::class, 'destroyProfilePhoto'])->name('profile.destroy-profile-photo');
 });
 
+Route::get('/messages/start/{ad}/{receiver}', [MessageController::class, 'startAndRedirect'])
+    ->name('messages.start.redirect');
+
+
 Route::get('/messages/create/{userId}', function ($userId) {
     // This is a placeholder. You would typically return a view with a form
     // for sending a message to the user with $userId.

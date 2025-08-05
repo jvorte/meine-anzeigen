@@ -10,12 +10,10 @@ class Conversation extends Model
     use HasFactory;
 
     protected $fillable = ['ad_id', 'sender_id', 'receiver_id'];
-
-    public function ad()
-    {
-        // Αν έχεις μοντέλο Ad, αλλιώς αφαίρεσε
-        return $this->belongsTo(Ad::class);
-    }
+public function ad()
+{
+    return $this->morphTo(); // ✅ Αυτό καταλαβαίνει ότι το ad μπορεί να είναι Car, Boat, Service, κλπ.
+}
 
     public function sender()
     {
@@ -31,4 +29,17 @@ class Conversation extends Model
     {
         return $this->hasMany(Message::class);
     }
+
+// App\Models\Conversation.php
+public function scopeBetweenUsersForAd($query, $senderId, $receiverId, $adId)
+{
+    return $query->where('ad_id', $adId)
+        ->where('sender_id', $senderId)
+        ->where('receiver_id', $receiverId);
+}
+
+
+
+
+
 }
