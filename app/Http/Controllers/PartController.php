@@ -11,7 +11,11 @@ use Illuminate\Validation\Rule; // Import Rule for conditional validation
 
 class PartController extends Controller
 {
-    /**
+
+    
+    /*
+    
+    *
      * Store a newly created vehicle part ad in storage.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -19,6 +23,8 @@ class PartController extends Controller
      */
     public function store(Request $request)
     {
+
+        
         // 1. Validation
         $validatedData = $request->validate([
             'category_slug' => ['required', 'string', 'max:255'], // Ensure this matches the hidden input name

@@ -12,6 +12,29 @@ use Illuminate\Validation\Rule;
 
 class RealEstateController extends Controller
 {
+
+    
+
+    public function index(Request $request)
+    {
+        $query = RealEstate::with('images')->orderBy('created_at', 'desc');
+
+        // Add filters specific to real estate
+        if ($request->filled('bedrooms')) {
+            $query->where('bedrooms', $request->input('bedrooms'));
+        }
+
+        if ($request->filled('location')) {
+            $query->where('location', 'like', '%' . $request->input('location') . '%');
+        }
+
+        $realEstates = $query->paginate(12);
+
+        return view('ads.real-estate.index', [
+            'ads' => $realEstates,
+            'category' => (object)['name' => 'Immobilien', 'slug' => 'real-estate']
+        ]);
+    }
     /**
      * Display a form to create a new real estate listing.
      * This method prepares the data needed for the form.

@@ -14,6 +14,30 @@ use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 class HouseholdItemController extends Controller
 {
 
+    
+      public function index(Request $request)
+    {
+        $query = HouseholdItem::with('images')->orderBy('created_at', 'desc');
+
+        // Example filter logic: filter by a specific 'make'
+        if ($request->filled('make')) {
+            $query->where('make', $request->input('make'));
+        }
+
+        // Example filter logic: filter by 'year'
+        if ($request->filled('year')) {
+            $query->where('year', $request->input('year'));
+        }
+        
+        $household = $query->paginate(12);
+
+        // This returns the new, dedicated cars index blade file
+        return view('ads.household.index', [
+            'ads' => $household,
+            'category' => (object)['name' => 'Autos', 'slug' => 'cars'] // Pass a mock category for the header
+        ]);
+    }
+
     use AuthorizesRequests;
     /**
      * Show the form for creating a new household item ad.

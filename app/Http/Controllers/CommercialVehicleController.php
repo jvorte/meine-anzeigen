@@ -13,6 +13,30 @@ use Illuminate\Support\Facades\Auth;
 
 class CommercialVehicleController extends Controller
 {
+
+    
+      public function index(Request $request)
+    {
+        $query = CommercialVehicle::with('images')->orderBy('created_at', 'desc');
+
+        // Example filter logic: filter by a specific 'make'
+        if ($request->filled('make')) {
+            $query->where('make', $request->input('make'));
+        }
+
+        // Example filter logic: filter by 'year'
+        if ($request->filled('year')) {
+            $query->where('year', $request->input('year'));
+        }
+        
+        $commercial_vehicle = $query->paginate(12);
+
+        // This returns the new, dedicated cars index blade file
+        return view('ads.commercial-vehicles.index', [
+            'ads' => $commercial_vehicle,
+            'category' => (object)['name' => 'Autos', 'slug' => 'cars'] // Pass a mock category for the header
+        ]);
+    }
     /**
      * Show the form for creating a new commercial vehicle ad.
      */

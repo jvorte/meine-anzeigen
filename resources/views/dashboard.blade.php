@@ -1,22 +1,20 @@
 <x-app-layout>
-    
-<x-slot name="header">
-    <div class="px-4 py-1 md:py-1 flex justify-end items-center">
-        <a href="{{ route('ads.create') }}" class="c-button">
-            <span class="c-main">
-                <span class="c-ico">
-                    <span class="c-blur"></span>
-                    <span class="ico-text">+</span>
+
+    <x-slot name="header">
+        <div class="px-4 py-1 md:py-1 flex justify-end items-center">
+            <a href="{{ route('ads.create') }}" class="c-button">
+                <span class="c-main">
+                    <span class="c-ico">
+                        <span class="c-blur"></span>
+                        <span class="ico-text">+</span>
+                    </span>
+                    New Add
                 </span>
-                New Add
-            </span>
-        </a>
-    </div>
-</x-slot>
+            </a>
+        </div>
+    </x-slot>
 
 
-
-    
     <div class="py-1 bg-gray-50 dark:bg-gray-50 min-h-screen">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-lg sm:rounded-lg p-6">
@@ -54,7 +52,8 @@
                                 <div class="absolute inset-0 bg-black opacity-30 rounded-t-lg"></div>
                                 <h4 class="relative z-10 text-2xl font-bold text-white capitalize flex items-center w-full">
                                     {{ $categoryName }}
-                                    <a href="{{ route('categories.show', $categorySlug) }}"
+                                    {{-- THIS IS THE LINE THAT WAS FIXED --}}
+                                    <a href="{{ route('categories.' . $categorySlug . '.index') }}"
                                         class="ml-auto text-white hover:text-blue-200 text-base font-semibold transition-colors duration-200 flex items-center gap-1">
                                         Alle anzeigen
                                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4">

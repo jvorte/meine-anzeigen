@@ -2,14 +2,12 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between h-16">
             <div class="flex">
-                <!-- Logo -->
                 <div class="shrink-0 flex items-center">
                     <a href="{{ route('dashboard') }}">
                         <x-application-logo class="block w-32 h-auto fill-current" />
                     </a>
                 </div>
 
-                <!-- Navigation Links -->
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex text-gray-500">
                     <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 28 26" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-house-icon lucide-house"><path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"/><path d="M3 10a2 2 0 0 1 .709-1.528l7-5.999a2 2 0 0 1 2.582 0l7 5.999A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
@@ -22,7 +20,7 @@
             {{ __('My Profile') }}
         </x-nav-link>
 
-             <x-nav-link :href="route('my-ads.index')" :active="request()->routeIs('my.ads')" >
+             <x-nav-link :href="route('my-ads.index')" :active="request()->routeIs('my-ads.index')" >
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-file-spreadsheet-icon lucide-file-spreadsheet"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M8 13h2"/><path d="M14 13h2"/><path d="M8 17h2"/><path d="M14 17h2"/></svg> {{ __('My Ads') }}
         </x-nav-link>
 
@@ -35,19 +33,17 @@
 
     <span>{{ __('Nachrichten') }}</span>
 
-    @if ($unreadMessagesCount > 0)
+    @if (isset($unreadMessagesCount) && $unreadMessagesCount > 0)
         <span class="inline-flex items-center justify-center w-5 h-5 text-xs font-bold text-white bg-red-600 rounded-full">
             {{ $unreadMessagesCount }}
         </span>
     @endif
 </x-nav-link>
 
-
     @endauth
                 </div>
             </div>
 
-            <!-- Right Side: Auth -->
             <div class="hidden sm:flex sm:items-center sm:ms-6">
                 @auth
                     <x-dropdown align="right" width="48">
@@ -104,7 +100,6 @@
 
             </div>
 
-            <!-- Mobile Hamburger -->
             <div class="-me-2 flex items-center sm:hidden">
                 <button @click="open = ! open" class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 dark:text-gray-500 hover:text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-900 transition duration-150 ease-in-out">
                     <svg class="h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
@@ -116,7 +111,6 @@
         </div>
     </div>
 
-    <!-- Responsive Navigation -->
     <div :class="{ 'block': open, 'hidden': !open }" class="sm:hidden">
         <div class="pt-2 pb-3 space-y-1">
             <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
@@ -237,7 +231,7 @@
 
                                 <div class="grid grid-cols-2 gap-4">
                                             {{-- Link to generic Fahrzeuge page, if you still want one for "all vehicles" --}}
-                                    <a href="{{ route('categories.show', 'cars') }}"
+                                    <a href="{{ route('categories.cars.index') }}"
                                         class="flex flex-col items-center p-4 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200 text-gray-700 dark:text-gray-200">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-square-parking mb-2"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M9 17V7H7.8C7.1 7 6.5 7.5 6.5 8.2V10c0 .7.6 1.2 1.3 1.2H10V17"/><path d="M13 17V7h4"/></svg>
                                         <span>Autos</span> 
@@ -245,7 +239,7 @@
                                     {{-- Sub-category links for Fahrzeuge. Only include the actual sub-categories for vehicles. --}}
                                     {{-- Make sure your $categories collection passed from the controller includes these slugs --}}
                                     @foreach ($categories->whereIn('slug', ['motorcycles', 'commercial-vehicle', 'campers']) as $subCat)
-                                        <a href="{{ route('categories.show', $subCat->slug) }}"
+                                        <a href="{{ route('categories.' . $subCat->slug . '.index') }}"
                                             class="flex flex-col items-center p-4 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200 text-gray-700 dark:text-gray-200">
                                             @if ($subCat->slug == 'motorcycles')
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-motorbike mb-2"><path d="M5 16m-3 0a3 3 0 1 0 6 0a3 3 0 1 0 -6 0"/><path d="M17 16m-3 0a3 3 0 1 0 6 0a3 3 0 1 0 -6 0"/><path d="M7.5 14h9l4 -2l-1.5 -4.5h-11.5l-4 2z"/><path d="M18 5l-1.5 4.5"/><path d="M9 6l-2 4"/><path d="M12 7v4"/></svg>
@@ -258,7 +252,6 @@
                                         </a>
                                     @endforeach
 
-                            
                                 </div>
 
                                 {{-- Close button --}}
@@ -271,7 +264,7 @@
                     </div>
                 @elseif (!in_array($cat->slug, ['motorcycles', 'commercial-vehicle', 'campers']))
                     {{-- All other categories (excluding vehicle sub-categories that are now in the modal) remain as direct links --}}
-                    <a href="{{ route('categories.show', $cat->slug) }}"
+                    <a href="{{ route('categories.' . $cat->slug . '.index') }}"
                         class="flex items-center space-x-1 text-gray-700 hover:text-indigo-600 transition-colors duration-200 px-3 py-1 rounded-full dark:hover:bg-gray-400 dark:text-gray-700 dark:hover:text-white">
                         {{-- Original SVG Icon Logic here for other categories --}}
                         @if ($cat->slug == 'vehicles-parts')
@@ -287,7 +280,8 @@
                         @elseif ($cat->slug == 'services')
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-hand-platter"><path d="M12 3V2"/><path d="m15.4 17.4 3.2-2.8a2 2 0 1 1 2.8 2.9l-3.6 3.3c-.7.8-1.7 1.2-2.8 1.2h-4c-1.1 0-2.1-.4-2.8-1.2l-1.302-1.464A1 1 0 0 0 6.151 19H5"/><path d="M2 14h12a2 2 0 0 1 0 4h-2"/><path d="M4 10h16"/><path d="M5 10a7 7 0 0 1 14 0"/><path d="M5 14v6a1 1 0 0 1-1 1H2"/></svg>
                         @elseif ($cat->slug == 'others')
-                          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-package-open-icon lucide-package-open"><path d="M12 22v-9"/><path d="M15.17 2.21a1.67 1.67 0 0 1 1.63 0L21 4.57a1.93 1.93 0 0 1 0 3.36L8.82 14.79a1.655 1.655 0 0 1-1.64 0L3 12.43a1.93 1.93 0 0 1 0-3.36z"/><path d="M20 13v3.87a2.06 2.06 0 0 1-1.11 1.83l-6 3.08a1.93 1.93 0 0 1-1.78 0l-6-3.08A2.06 2.06 0 0 1 4 16.87V13"/><path d="M21 12.43a1.93 1.93 0 0 0 0-3.36L8.83 2.2a1.64 1.64 0 0 0-1.63 0L3 4.57a1.93 1.93 0 0 0 0 3.36l12.18 6.86a1.636 1.636 0 0 0 1.63 0z"/></svg>    @else
+                          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-package-open-icon lucide-package-open"><path d="M12 22v-9"/><path d="M15.17 2.21a1.67 1.67 0 0 1 1.63 0L21 4.57a1.93 1.93 0 0 1 0 3.36L8.82 14.79a1.655 1.655 0 0 1-1.64 0L3 12.43a1.93 1.93 0 0 1 0-3.36z"/><path d="M20 13v3.87a2.06 2.06 0 0 1-1.11 1.83l-6 3.08a1.93 1.93 0 0 1-1.78 0l-6-3.08A2.06 2.06 0 0 1 4 16.87V13"/><path d="M21 12.43a1.93 1.93 0 0 0 0-3.36L8.83 2.2a1.64 1.64 0 0 0-1.63 0L3 4.57a1.93 1.93 0 0 0 0 3.36l12.18 6.86a1.636 1.636 0 0 0 1.63 0z"/></svg>
+                        @else
                             {{-- Default icon if no match --}}
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-tag"><path d="M12.586 2.586A2 2 0 0 0 11.172 2H4a2 2 0 0 0-2 2v7.172a2 2 0 0 0 .586 1.414L19 21l3.5-7.5L12.586 2.586z"/><circle cx="7" cy="7" r="1"/></svg>
                         @endif

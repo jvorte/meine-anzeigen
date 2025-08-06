@@ -14,12 +14,41 @@ use Illuminate\Http\Request; // Make sure this is imported for getModelsByBrand
 
 class CamperController extends Controller
 {
+
+
+
     // Dummy data for dropdowns - you might get this from a database or config
     private $colors = ['Black', 'White', 'Silver', 'Grey', 'Red', 'Blue', 'Green', 'Yellow', 'Orange', 'Brown'];
     private $camperTypes = ['Alkoven', 'Teilintegriert', 'Vollintegriert', 'Kastenwagen', 'Wohnwagen'];
     private $fuelTypes = ['Diesel', 'Petrol', 'Electric'];
     private $transmissions = ['Manual', 'Automatic'];
     private $emissionClasses = ['Euro 1', 'Euro 2', 'Euro 3', 'Euro 4', 'Euro 5', 'Euro 6'];
+
+
+
+
+      public function index(Request $request)
+    {
+        $query = Camper::with('images')->orderBy('created_at', 'desc');
+
+        // Example filter logic: filter by a specific 'make'
+        if ($request->filled('make')) {
+            $query->where('make', $request->input('make'));
+        }
+
+        // Example filter logic: filter by 'year'
+        if ($request->filled('year')) {
+            $query->where('year', $request->input('year'));
+        }
+        
+        $camper = $query->paginate(12);
+
+        // This returns the new, dedicated cars index blade file
+        return view('ads.camper.index', [
+            'ads' => $camper,
+            'category' => (object)['name' => 'Autos', 'slug' => 'cars'] // Pass a mock category for the header
+        ]);
+    }
 
     /**
      * Get models by brand ID for AJAX requests.

@@ -13,6 +13,30 @@ use Illuminate\Validation\Rule;
 
 class MotorradAdController extends Controller
 {
+
+    
+      public function index(Request $request)
+    {
+        $query = MotorradAd::with('images')->orderBy('created_at', 'desc');
+
+        // Example filter logic: filter by a specific 'make'
+        if ($request->filled('make')) {
+            $query->where('make', $request->input('make'));
+        }
+
+        // Example filter logic: filter by 'year'
+        if ($request->filled('year')) {
+            $query->where('year', $request->input('year'));
+        }
+        
+        $motorrad = $query->paginate(12);
+
+        // This returns the new, dedicated cars index blade file
+        return view('ads.motorrad.index', [
+            'ads' => $motorrad,
+            'category' => (object)['name' => 'motorrad', 'slug' => 'cars'] // Pass a mock category for the header
+        ]);
+    }
     /**
      * Show the form for creating a new motorrad ad.
      */
