@@ -9,6 +9,15 @@ use Illuminate\Support\Facades\Auth;
 
 use App\Models\Service;
 use App\Models\Car;
+use App\Models\Boat;
+use App\Models\Electronic;
+use App\Models\HouseholdItem;
+use App\Models\RealEstate;
+use App\Models\Other;
+use App\Models\MotorradAd;
+use App\Models\CommercialVehicle;
+use App\Models\Camper;
+use App\Models\UsedVehiclePart;
 
 class MessageController extends Controller
 {
@@ -102,82 +111,22 @@ class MessageController extends Controller
     }
 
     // Αποστολή νέου μηνύματος
-   public function store(Request $request, Conversation $conversation)
-{
-    $userId = Auth::id();
-
-    if (!in_array($userId, [$conversation->sender_id, $conversation->receiver_id])) {
-        abort(403, 'Unauthorized');
-    }
-
-    $request->validate([
-        'body' => 'required|string|max:2000',
-    ]);
-
-    // Αν ο χρήστης είχε διαγράψει τη συνομιλία, "ξεδιαγράφεται"
-    if ($conversation->deleted_by === $userId) {
-        $conversation->deleted_by = null;
-        $conversation->save();
-    }
-
-    Message::create([
-        'conversation_id' => $conversation->id,
-        'user_id' => $userId,
-        'body' => $request->body,
-    ]);
-
-    $conversation->touch(); // Ενημερώνει το updated_at
-
-    return redirect()->route('messages.show', $conversation)->with('success', 'Μήνυμα στάλθηκε!');
-}
-
-
-    // Δημιουργία συνομιλίας + πρώτο μήνυμα (μέσω POST)
-    public function start(Request $request)
+    public function store(Request $request, Conversation $conversation)
     {
         $userId = Auth::id();
 
+        if (!in_array($userId, [$conversation->sender_id, $conversation->receiver_id])) {
+            abort(403, 'Unauthorized');
+        }
+
         $request->validate([
-            'ad_id' => 'required|integer',
-            'ad_category' => 'required|string',
-            'receiver_id' => 'required|integer|exists:users,id',
             'body' => 'required|string|max:2000',
         ]);
 
-        if ($userId == $request->receiver_id) {
-            return redirect()->back()->withErrors('Δεν μπορείς να στείλεις μήνυμα στον εαυτό σου.');
-        }
-
-        // Φόρτωσε την αγγελία ανά κατηγορία
-        switch ($request->ad_category) {
-            case 'services':
-                $ad = Service::find($request->ad_id);
-                break;
-            case 'cars':
-                $ad = Car::find($request->ad_id);
-                break;
-            // άλλες κατηγορίες...
-            default:
-                return redirect()->back()->withErrors('Άγνωστη κατηγορία αγγελίας.');
-        }
-
-        if (!$ad) {
-            return redirect()->back()->withErrors('Η αγγελία δεν βρέθηκε.');
-        }
-
-        $adTitle = $ad->title ?? $ad->name ?? 'Άγνωστος τίτλος';
-
-        // Έλεγξε αν υπάρχει ήδη συνομιλία
-        $conversation = Conversation::betweenUsersForAd($userId, $request->receiver_id, $request->ad_id, $request->ad_category)->first();
-
-        if (!$conversation) {
-            $conversation = Conversation::create([
-                'ad_id' => $request->ad_id,
-                'sender_id' => $userId,
-                'receiver_id' => $request->receiver_id,
-                'ad_title' => $adTitle,
-                'ad_category' => $request->ad_category,
-            ]);
+        // Αν ο χρήστης είχε διαγράψει τη συνομιλία, "ξεδιαγράφεται"
+        if ($conversation->deleted_by === $userId) {
+            $conversation->deleted_by = null;
+            $conversation->save();
         }
 
         Message::create([
@@ -186,9 +135,158 @@ class MessageController extends Controller
             'body' => $request->body,
         ]);
 
-        return redirect()->route('messages.show', $conversation)->with('success', 'Η συνομιλία ξεκίνησε!');
+        $conversation->touch(); // Ενημερώνει το updated_at
+
+        return redirect()->route('messages.show', $conversation)->with('success', 'Μήνυμα στάλθηκε!');
     }
 
+
+    // Δημιουργία συνομιλίας + πρώτο μήνυμα (μέσω POST)
+    // public function start(Request $request)
+    // {
+    //     $userId = Auth::id();
+
+    //     $request->validate([
+    //         'ad_id' => 'required|integer',
+    //         'ad_category' => 'required|string',
+    //         'receiver_id' => 'required|integer|exists:users,id',
+    //         'body' => 'required|string|max:2000',
+    //     ]);
+
+    //     if ($userId == $request->receiver_id) {
+    //         return redirect()->back()->withErrors('Δεν μπορείς να στείλεις μήνυμα στον εαυτό σου.');
+    //     }
+
+    //     // Φόρτωσε την αγγελία ανά κατηγορία
+    //     switch ($request->ad_category) {
+    //         case 'cars':
+    //             $ad = Car::find($request->ad_id);
+    //             break;
+    //         case 'vehicles-parts':
+    //             $ad = UsedVehiclePart::find($request->ad_id);
+    //             break;
+    //         case 'boats':
+    //             $ad = Boat::find($request->ad_id);
+    //             break;
+    //         case 'electronics':
+    //             $ad = Electronic::find($request->ad_id);
+    //             break;
+    //         case 'household':
+    //             $ad = HouseholdItem::find($request->ad_id);
+    //             break;
+    //         case 'real-estate':
+    //             $ad = RealEstate::find($request->ad_id);
+    //             break;
+    //         case 'services':
+    //             $ad = Service::find($request->ad_id);
+    //             break;
+    //         case 'others':
+    //             $ad = Other::find($request->ad_id);
+    //             break;
+    //         case 'motorcycles':
+    //             $ad = MotorradAd::find($request->ad_id);
+    //             break;
+    //         case 'commercial-vehicle':
+    //             $ad = CommercialVehicle::find($request->ad_id);
+    //             break;
+    //         case 'campers':
+    //             $ad = Camper::find($request->ad_id);
+    //             break;
+    //         default:
+    //             return redirect()->back()->withErrors('Άγνωστη κατηγορία αγγελίας.');
+    //     }
+
+    //     if (!$ad) {
+    //         return redirect()->back()->withErrors('Η αγγελία δεν βρέθηκε.');
+    //     }
+
+    //     $adTitle = $ad->title ?? $ad->name ?? 'Άγνωστος τίτλος';
+
+    //     // Έλεγξε αν υπάρχει ήδη συνομιλία
+    //     $conversation = Conversation::betweenUsersForAd($userId, $request->receiver_id, $request->ad_id, $request->ad_category)->first();
+
+    //     if (!$conversation) {
+    //         $conversation = Conversation::create([
+    //             'ad_id' => $request->ad_id,
+    //             'sender_id' => $userId,
+    //             'receiver_id' => $request->receiver_id,
+    //             'ad_title' => $adTitle,
+    //             'ad_category' => $request->ad_category,
+    //         ]);
+    //     }
+
+    //     Message::create([
+    //         'conversation_id' => $conversation->id,
+    //         'user_id' => $userId,
+    //         'body' => $request->body,
+    //     ]);
+
+    //     return redirect()->route('messages.show', $conversation)->with('success', 'Η συνομιλία ξεκίνησε!');
+    // }
+
+
+    // In MessageController.php
+public function startRedirect(Request $request, $ad, $receiver, $category)
+{
+    // Use the $category and $ad parameters from the route
+    switch ($category) {
+        case 'cars':
+            $adModel = Car::find($ad);
+            break;
+        case 'vehicles-parts':
+            $adModel = UsedVehiclePart::find($ad);
+            break;
+        case 'boats':
+            $adModel = Boat::find($ad);
+            break;
+        case 'electronics':
+            $adModel = Electronic::find($ad);
+            break;
+        case 'household':
+            $adModel = HouseholdItem::find($ad);
+            break;
+        case 'real-estate':
+            $adModel = RealEstate::find($ad);
+            break;
+        case 'services':
+            $adModel = Service::find($ad);
+            break;
+        case 'others':
+            $adModel = Other::find($ad);
+            break;
+        case 'motorcycles':
+            $adModel = MotorradAd::find($ad);
+            break;
+        case 'commercial-vehicle':
+            $adModel = CommercialVehicle::find($ad);
+            break;
+        case 'campers':
+            $adModel = Camper::find($ad);
+            break;
+        default:
+            return redirect()->back()->withErrors('Άγνωστη κατηγορία αγγελίας.');
+    }
+
+    if (!$adModel) {
+        return redirect()->back()->withErrors('Η αγγελία δεν βρέθηκε.');
+    }
+
+    $adTitle = $adModel->title ?? $adModel->name;
+
+    if ($receiver != $adModel->user->id) {
+        return redirect()->back()->withErrors('Μη έγκυρος παραλήπτης μηνύματος.');
+    }
+
+    return redirect()->route('messages.start', [
+        'ad_id' => $adModel->id,
+        'ad_category' => $category,
+        'receiver_id' => $receiver,
+        'ad_title' => $adTitle,
+    ]);
+}
+
+
+    
     public function delete($id)
     {
         $conversation = Conversation::findOrFail($id);
