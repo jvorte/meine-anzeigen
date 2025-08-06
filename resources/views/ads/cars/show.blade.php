@@ -29,7 +29,7 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 p-10"> 
         {{-- Breadcrumbs --}}
        <x-breadcrumbs :items="[
-                ['label' => 'Cars Anzeigen', 'url' => route('categories.show', 'cars')], {{-- Adjusted URL to category show --}}
+                ['label' => 'Cars Anzeigen', 'url' => route('categories.cars.index')], {{-- Adjusted URL to category show --}}
                 ['label' => $car->title, 'url' => null], {{-- Dynamic label using car title --}}
             ]" />
 

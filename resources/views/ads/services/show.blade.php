@@ -30,7 +30,7 @@
         {{-- Breadcrumbs --}}
         <x-breadcrumbs :items="[
         ['label' => 'Alle Anzeigen', 'url' => route('ads.index')],
-        ['label' => 'Dienstleistungen', 'url' => route('categories.show', 'services')],
+        ['label' => 'Dienstleistungen', 'url' => route('categories.services.index')],
         ['label' => $service->title, 'url' => null],
     ]" class="mb-8" />
 

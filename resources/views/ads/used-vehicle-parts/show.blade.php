@@ -30,11 +30,11 @@
     <div class="py-2">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             {{-- Breadcrumbs component --}}
-            <x-breadcrumbs :items="[
-                ['label' => 'Alle Anzeigen', 'url' => route('ads.index')],
-                ['label' => 'Gebrauchtfahrzeugteile', 'url' => route('categories.show', 'used-vehicle-parts')],
-                ['label' => $usedVehiclePart->title, 'url' => null],
-            ]" />
+      <x-breadcrumbs :items="[
+    ['label' => 'Alle Anzeigen', 'url' => route('ads.index')],
+    ['label' => 'Gebrauchtfahrzeugteile', 'url' => route('categories.vehicles-parts.index')], // Use the new route name
+    ['label' => $usedVehiclePart->title, 'url' => null],
+]" />
 
 
            {{-- Action Buttons and Back link --}}

@@ -129,5 +129,8 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('/conversations/{id}', [MessageController::class, 'delete'])->name('conversations.delete');
 });
 
+// Route to show a list of all ads
+Route::get('/ads', [AdController::class, 'index'])->name('ads.index');
+
 // Auth scaffolding routes (login, register, etc.) - ALWAYS keep this at the very end
 require __DIR__ . '/auth.php';

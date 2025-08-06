@@ -32,7 +32,7 @@
         {{-- Breadcrumbs --}}
                 <x-breadcrumbs :items="[
                 ['label' => 'Alle Anzeigen', 'url' => route('ads.index')],
-                ['label' => 'Haushaltsartikel Anzeigen', 'url' => route('categories.show', 'haushaltsartikel')], {{-- Assuming 'haushaltsartikel' is the slug for household items --}}
+                ['label' => 'Haushaltsartikel Anzeigen', 'url' => route('categories.haushaltsartikel.index')], {{-- Assuming 'haushaltsartikel' is the slug for household items --}}
                 ['label' => $householdItem->title, 'url' => null],
             ]" />
         {{-- Action Buttons and Back link --}}
