@@ -3,75 +3,44 @@
         <h2 class="text-xl font-semibold text-gray-800">Meine Anzeigen</h2>
     </x-slot>
 
-    <div class="py-6 px-4 space-y-10">
+    <div class="max-w-6xl mx-auto px-4 py-8">
+        @php
+            $sections = [
+                ['title' => 'Fahrzeuge', 'items' => $carAds, 'route' => 'ads.cars.show'],
+                ['title' => 'Immobilien', 'items' => $realEstates, 'route' => 'ads.realestates.show'],
+                ['title' => 'Dienstleistungen', 'items' => $services, 'route' => 'ads.services.show'],
+                // Πρόσθεσε κι άλλες ενότητες αν χρειάζεται
+            ];
+        @endphp
 
-        {{-- Fahrzeuge --}}
-        <div>
-            <h3 class="text-lg font-bold mb-2">Fahrzeuge</h3>
-            @if($carAds->count())
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                    @foreach($carAds as $car)
-                        <a href="{{ route('ads.cars.show', $car->id) }}" class="block p-4 border rounded shadow-sm bg-white hover:bg-gray-50 transition">
-                            <h4 class="font-bold text-gray-800">{{ $car->title }}</h4>
-                            <p class="text-sm text-gray-600">{{ $car->price }} €</p>
-                        </a>
-                    @endforeach
+        {{-- Grid 2 στηλών για τις κατηγορίες --}}
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            @foreach($sections as $section)
+                <div>
+                    <h3 class="text-1xl font-semibold text-gray-800 mb-4 border-b pb-1">{{ $section['title'] }}</h3>
+
+                    @if($section['items']->count())
+                        <div class="space-y-4">
+                            @foreach($section['items'] as $ad)
+                                <a href="{{ route($section['route'], $ad->id) }}"
+                                   class="block border rounded-lg overflow-hidden shadow-sm hover:shadow-md bg-white transition transform hover:scale-[1.01]">
+                                    <div class="p-4">
+                                        <h4 class="text-lg font-bold text-gray-900 truncate mb-1">
+                                            {{ $ad->title }}
+                                        </h4>
+                                        <p class="text-sm text-gray-600 mb-1">
+                                            {{ $ad->price ? number_format($ad->price, 2, ',', '.') . ' €' : 'Preis auf Anfrage' }}
+                                        </p>
+                                        <p class="text-xs text-gray-500">{{ $ad->created_at->diffForHumans() }}</p>
+                                    </div>
+                                </a>
+                            @endforeach
+                        </div>
+                    @else
+                        <p class="text-gray-500 italic">Keine {{ $section['title'] }} Anzeigen vorhanden.</p>
+                    @endif
                 </div>
-            @else
-                <p class="text-gray-500">Keine Fahrzeuge Anzeigen.</p>
-            @endif
+            @endforeach
         </div>
-
-        {{-- Elektronik --}}
-        {{-- <div>
-            <h3 class="text-lg font-bold mb-2">Elektronik</h3>
-            @if($electronicAds->count())
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                    @foreach($electronicAds as $ad)
-                        <a href="{{ route('ads.electronics.show', $ad->id) }}" class="block p-4 border rounded shadow-sm bg-white hover:bg-gray-50 transition">
-                            <h4 class="font-bold text-gray-800">{{ $ad->title }}</h4>
-                            <p class="text-sm text-gray-600">{{ $ad->price }} €</p>
-                        </a>
-                    @endforeach
-                </div>
-            @else
-                <p class="text-gray-500">Keine Elektronik Anzeigen.</p>
-            @endif
-        </div> --}}
-
-        {{-- Immobilien --}}
-        <div>
-            <h3 class="text-lg font-bold mb-2">Immobilien</h3>
-            @if($realEstates->count())
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                    @foreach($realEstates as $ad)
-                        <a href="{{ route('ads.realestates.show', $ad->id) }}" class="block p-4 border rounded shadow-sm bg-white hover:bg-gray-50 transition">
-                            <h4 class="font-bold text-gray-800">{{ $ad->title }}</h4>
-                            <p class="text-sm text-gray-600">{{ $ad->price }} €</p>
-                        </a>
-                    @endforeach
-                </div>
-            @else
-                <p class="text-gray-500">Keine Immobilien Anzeigen.</p>
-            @endif
-        </div>
-
-        {{-- Dienstleistungen --}}
-        <div>
-            <h3 class="text-lg font-bold mb-2">Dienstleistungen</h3>
-            @if($services->count())
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                    @foreach($services as $ad)
-                        <a href="{{ route('ads.services.show', $ad->id) }}" class="block p-4 border rounded shadow-sm bg-white hover:bg-gray-50 transition">
-                            <h4 class="font-bold text-gray-800">{{ $ad->title }}</h4>
-                            <p class="text-sm text-gray-600">{{ $ad->price ?? '-' }}</p>
-                        </a>
-                    @endforeach
-                </div>
-            @else
-                <p class="text-gray-500">Keine Dienstleistungen Anzeigen.</p>
-            @endif
-        </div>
-
     </div>
 </x-app-layout>
