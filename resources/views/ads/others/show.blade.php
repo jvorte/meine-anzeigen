@@ -260,10 +260,14 @@
                     </form>
                 @else
                     {{-- Contact button for logged-in non-owners --}}
-          <a href="{{ route('messages.start.redirect', ['ad' => $other->id, 'receiver' => $other->user->id]) }}" 
-   class="mt-6 block w-full text-center bg-red-700 text-white font-semibold py-3 rounded-full shadow-lg hover:bg-gray-800 transition focus:ring-4 focus:ring-gray-500 focus:ring-opacity-75">
-    Kontakt aufnehmen
-</a>
+   <a href="{{ route('messages.start.redirect', [
+                                        'ad' => $other->id,
+                                        'receiver' => $other->user->id,
+                                        'category' => 'others'
+                                    ]) }}"
+                                                    class="mt-6 block w-full text-center bg-red-700 text-white font-semibold py-3 rounded-full shadow-lg hover:bg-gray-800 transition focus:ring-4 focus:ring-gray-500 focus:ring-opacity-75">
+                                                    Contact with seller
+                                                </a>
 
                 @endif
             @endauth

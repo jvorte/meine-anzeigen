@@ -55,4 +55,6 @@ class Electronic extends Model
     {
         return $this->hasMany(ElectronicImage::class);
     }
+
+    
 }

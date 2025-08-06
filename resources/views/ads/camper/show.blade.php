@@ -237,10 +237,14 @@
                     </form>
                 @else
                     {{-- Contact button for logged-in non-owners --}}
-          <a href="{{ route('messages.start.redirect', ['ad' => $camper->id, 'receiver' => $camper->user->id]) }}" 
-   class="mt-6 block w-full text-center bg-red-700 text-white font-semibold py-3 rounded-full shadow-lg hover:bg-gray-800 transition focus:ring-4 focus:ring-gray-500 focus:ring-opacity-75">
-    Kontakt aufnehmen
-</a>
+           <a href="{{ route('messages.start.redirect', [
+                                        'ad' => $camper->id,
+                                        'receiver' => $camper->user->id,
+                                        'category' => 'campers'
+                                    ]) }}"
+                                                    class="mt-6 block w-full text-center bg-red-700 text-white font-semibold py-3 rounded-full shadow-lg hover:bg-gray-800 transition focus:ring-4 focus:ring-gray-500 focus:ring-opacity-75">
+                                                    Contact with seller
+                                                </a>
 
                 @endif
             @endauth
