@@ -18,7 +18,7 @@
         {{-- Breadcrumbs component --}}
         <x-breadcrumbs :items="[
             {{-- Link to the general campers category page --}}
-            ['label' => 'Cars Anzeigen', 'url' => route('categories.show', 'cars')],
+            ['label' => 'Cars Anzeigen', 'url' => route('categories.cars.index')],
 
             {{-- Link to the specific camper's show page --}}
             ['label' => 'Car Anzeige', 'url' => route('categories.cars.show', $car->id)],

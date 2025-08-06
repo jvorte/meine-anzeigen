@@ -16,7 +16,7 @@
         {{-- Breadcrumbs component --}}
         <x-breadcrumbs :items="[
             {{-- Link to the general Cars category listing --}}
-            ['label' => 'camper Anzeigen', 'url' => route('categories.show', 'campers')],
+            ['label' => 'camper Anzeigen', 'url' => route('categories.campers.index')],
 
             {{-- The current page (New Car Ad creation) - set URL to null --}}
             ['label' => 'Neue camper Anzeige', 'url' => null],

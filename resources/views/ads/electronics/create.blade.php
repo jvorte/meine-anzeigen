@@ -12,7 +12,7 @@
     <div class="py-2">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <x-breadcrumbs :items="[
-                ['label' => 'Electronics Anzeigen', 'url' => route('categories.show', 'elektronik')],
+                ['label' => 'Electronics Anzeigen', 'url' => route('categories.electronics.index')],
                 ['label' => 'Neue Electronic Anzeige', 'url' => null],
             ]" />
         </div>

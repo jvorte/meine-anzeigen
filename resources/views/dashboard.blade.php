@@ -35,7 +35,7 @@
                         'services' => asset('storage/images/worker.jpg'),
                         'others' => asset('storage/images/general_items.jpg'),
                         'motorcycles' => asset('storage/images/motorcycle.jpg'),
-                        'commercial-vehicle' => asset('storage/images/trucks.jpg'),
+                        'commercial-vehicles' => asset('storage/images/trucks.jpg'),
                         'campers' => asset('storage/images/camper.jpg'),
                     ];
                 @endphp

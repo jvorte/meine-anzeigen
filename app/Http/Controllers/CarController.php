@@ -14,29 +14,21 @@ use Illuminate\Validation\Rule;
 
 class CarController extends Controller
 {
-       public function index(Request $request)
-    {
-        $query = Car::with('images')->orderBy('created_at', 'desc');
+public function index()
+{
+    $cars = Car::with(['carBrand', 'carModel', 'user', 'images']) // προαιρετικά αν έχεις σχέσεις
+        ->latest()
+        ->paginate(12);
 
-        // Example filter logic: filter by a specific 'make'
-        if ($request->filled('make')) {
-            $query->where('make', $request->input('make'));
-        }
+    return view('ads.cars.index', [
+        'cars' => $cars,
+        'category' => (object)[
+            'name' => 'Cars',
+            'slug' => 'cars',
+        ]
+    ]);
+}
 
-        // Example filter logic: filter by 'year'
-        if ($request->filled('year')) {
-            $query->where('year', $request->input('year'));
-        }
-        
-        $cars = $query->paginate(12);
-
-        // This returns the new, dedicated cars index blade file
-        return view('ads.cars.index', [
-            'ads' => $cars,
-            'category' => (object)['name' => 'Autos', 'slug' => 'cars'] // Pass a mock category for the header
-        ]);
-    }
-    
     public function create()
     {
         $brands = CarBrand::orderBy('name')->pluck('name', 'id');

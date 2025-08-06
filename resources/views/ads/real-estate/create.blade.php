@@ -14,7 +14,7 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             {{-- Breadcrumbs component --}}
             <x-breadcrumbs :items="[
-                ['label' => 'Cars Anzeigen', 'url' => route('categories.show', 'cars')],
+                ['label' => 'Cars Anzeigen', 'url' => route('categories.real-estate.index')],
                 ['label' => 'Neue Auto Anzeige', 'url' => null],
             ]" />
         </div>

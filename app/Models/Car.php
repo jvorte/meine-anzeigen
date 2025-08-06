@@ -39,6 +39,8 @@ class Car extends Model
         return $this->hasMany(CarImage::class); // Already correct here
     }
 
+    
+
     // Corrected relationship for CarBrand
     public function carBrand() // FIX: Renamed function from 'brand' to 'carBrand' for clarity and consistency
     {

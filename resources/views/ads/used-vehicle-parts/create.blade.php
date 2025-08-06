@@ -14,9 +14,9 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             {{-- Breadcrumbs component --}}
             <x-breadcrumbs :items="[
-                ['label' => 'Alle Anzeigen', 'url' => route('ads.index')],
-                ['label' => 'Gebrauchte Fahrzeugteile', 'url' => route('categories.show', 'used-vehicle-parts')],
-                ['label' => 'Neue Anzeige erstellen', 'url' => null],
+                ['label' => 'All Ads', 'url' => route('ads.index')],
+                ['label' => 'vehicles-parts', 'url' => route('categories.vehicles-parts.index')],
+                ['label' => 'New Add', 'url' => null],
             ]" />
         </div>
     </div>

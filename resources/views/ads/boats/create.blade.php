@@ -20,7 +20,7 @@
         {{-- Breadcrumbs component --}}
         <x-breadcrumbs :items="[
             {{-- Link to the general Cars category listing --}}
-            ['label' => 'boats Anzeigen', 'url' => route('categories.show', 'boats')],
+            ['label' => 'boats Anzeigen', 'url' => route('categories.boats.index')],
 
             {{-- The current page (New Car Ad creation) - set URL to null --}}
             ['label' => 'Neue boats Anzeige', 'url' => null],

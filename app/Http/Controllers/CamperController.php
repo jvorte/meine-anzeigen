@@ -27,28 +27,21 @@ class CamperController extends Controller
 
 
 
-      public function index(Request $request)
-    {
-        $query = Camper::with('images')->orderBy('created_at', 'desc');
+// CamperController.php
+public function index()
+{
+    $campers = Camper::with(['camperBrand', 'camperModel', 'user', 'images']) // αν έχεις σχέσεις
+        ->latest()
+        ->paginate(12);
 
-        // Example filter logic: filter by a specific 'make'
-        if ($request->filled('make')) {
-            $query->where('make', $request->input('make'));
-        }
-
-        // Example filter logic: filter by 'year'
-        if ($request->filled('year')) {
-            $query->where('year', $request->input('year'));
-        }
-        
-        $camper = $query->paginate(12);
-
-        // This returns the new, dedicated cars index blade file
-        return view('ads.camper.index', [
-            'ads' => $camper,
-            'category' => (object)['name' => 'Autos', 'slug' => 'cars'] // Pass a mock category for the header
-        ]);
-    }
+    return view('ads.camper.index', [
+        'campers' => $campers,
+        'category' => (object)[
+            'name' => 'Campers',
+            'slug' => 'campers',
+        ]
+    ]);
+}
 
     /**
      * Get models by brand ID for AJAX requests.

@@ -35,7 +35,7 @@ class DashboardController extends Controller
             'boats' => Boat::with('images')->orderBy('created_at', 'desc')->limit(4)->get(),
             'others' => Other::with('images')->orderBy('created_at', 'desc')->limit(4)->get(),
             'motorcycles' => MotorradAd::with('images')->orderBy('created_at', 'desc')->limit(4)->get(),
-            'commercial-vehicle' => CommercialVehicle::with('images')->orderBy('created_at', 'desc')->limit(4)->get(),
+            'commercial-vehicles' => CommercialVehicle::with('images')->orderBy('created_at', 'desc')->limit(4)->get(),
             'campers' => Camper::with('images')->orderBy('created_at', 'desc')->limit(4)->get(),
         ];
 

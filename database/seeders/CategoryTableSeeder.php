@@ -26,7 +26,7 @@ class CategoryTableSeeder extends Seeder
             ['name' => 'Services', 'slug' => 'services'],
             ['name' => 'Οthers', 'slug' => 'others'],
             ['name' => 'Motorcycles', 'slug' => 'motorcycles'],
-            ['name' => 'Commercial-vehicle', 'slug' => 'commercial-vehicle'],
+            ['name' => 'Commercial-vehicles', 'slug' => 'commercial-vehicles'],
             ['name' => 'Campers', 'slug' => 'campers'],
         ];
 
