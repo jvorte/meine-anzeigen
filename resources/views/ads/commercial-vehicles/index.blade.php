@@ -37,7 +37,7 @@
             @foreach ($commercialVehicles as $vehicle)
                 <a href="{{ route('ads.commercial-vehicles.show', $vehicle->id) }}" class="block bg-white border rounded-lg shadow hover:shadow-lg transition overflow-hidden">
                     @if($vehicle->images && $vehicle->images->first())
-                        <img src="{{ asset('storage/commercial_vehicle_images/' . $vehicle->images->first()->path) }}"
+                        <img src="{{ asset('storage/' . $vehicle->images->first()->image_path) }}"
                              alt="{{ $vehicle->title }}"
                              class="w-full h-48 object-cover">
                     @else
