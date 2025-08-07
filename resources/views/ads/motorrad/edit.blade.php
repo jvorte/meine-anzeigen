@@ -3,7 +3,7 @@
 
     <x-slot name="header">
         <h2 class="text-3xl font-extrabold text-gray-900 leading-tight mb-2">
-            Motorrad Anzeige bearbeiten
+            motorcycles 
         </h2>
         <p class="text-md text-gray-700 dark:text-gray-500">
             Bearbeite die Details deiner Motorrad Anzeige.
@@ -13,8 +13,8 @@
     <div class="py-2">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <x-breadcrumbs :items="[
-                ['label' => 'Motorrad Anzeigen', 'url' => route('categories.show', 'motorrad')],
-                ['label' => $motorradAd->title, 'url' => route('ads.motorrad.show', $motorradAd)],
+                ['label' => 'motorcycles Anzeigen', 'url' => route('categories.motorcycles.index')],
+                ['label' => $motorradAd->title, 'url' => route('ads.motorcycles.index', $motorradAd)],
                 ['label' => 'Bearbeiten', 'url' => null],
             ]" />
         </div>

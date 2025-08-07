@@ -30,7 +30,7 @@
           {{-- Breadcrumbs component --}}
             <x-breadcrumbs :items="[
                 ['label' => 'Alle Anzeigen', 'url' => route('ads.index')],
-                ['label' => 'Motorrad Anzeigen', 'url' => route('categories.motorrad.index')],
+                ['label' => 'Motorrad Anzeigen', 'url' => route('categories.motorcycles.index')],
                 ['label' => $motorradAd->title, 'url' => null],
             ]" />
               {{-- Action Buttons and Back link --}}
