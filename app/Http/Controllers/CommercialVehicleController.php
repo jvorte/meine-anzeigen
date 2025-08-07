@@ -221,9 +221,6 @@ public function update(Request $request, CommercialVehicle $commercialVehicle)
 }
 
 
-
-
-
     public function destroy($id)
     {
         $commercialVehicle = CommercialVehicle::findOrFail($id);
