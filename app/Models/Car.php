@@ -9,9 +9,9 @@ class Car extends Model
 {
     use HasFactory; // Added this
 
- protected $fillable = [
+    protected $fillable = [
         'category_slug',
-        'car_brand_id', 
+        'car_brand_id',
         'car_model_id',
         'price',
         'mileage',
@@ -36,20 +36,18 @@ class Car extends Model
 
     public function images()
     {
-        return $this->hasMany(CarImage::class); // Already correct here
+        return $this->hasMany(CarImage::class);
     }
 
-    
 
-    // Corrected relationship for CarBrand
-    public function carBrand() // FIX: Renamed function from 'brand' to 'carBrand' for clarity and consistency
+    public function carBrand()
     {
-        return $this->belongsTo(CarBrand::class, 'brand_id'); // FIX: Pointed to CarBrand::class and specified foreign key
+        return $this->belongsTo(CarBrand::class, 'brand_id');
     }
 
     public function carModel()
     {
-        return $this->belongsTo(CarModel::class, 'car_model_id'); // Correct, explicit foreign key is good
+        return $this->belongsTo(CarModel::class, 'car_model_id');
     }
 
     public function user()

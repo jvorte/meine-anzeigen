@@ -37,13 +37,15 @@
         <div class="bg-white shadow rounded-lg overflow-hidden">
             <a href="{{ route('ads.cars.show', $car->id) }}">
                   @if($car->images->count())
-                        <img src="{{ asset('storage/' . $car->images->first()->path) }}" alt="{{ $car->title }}" class="w-full h-48 object-cover">
+                        <img src="{{ asset('storage/' . $car->images->first()->image_path) }}" alt="{{ $car->title }}" class="w-full h-48 object-cover">
                     @else
                         <div class="w-full h-48 bg-gray-200 flex items-center justify-center text-gray-500">
                             No image
                         </div>
                     @endif
             </a>
+            
+            
             <div class="p-4">
                 <h2 class="text-lg font-semibold">
                     <a href="{{ route('ads.cars.show', $car->id) }}">
