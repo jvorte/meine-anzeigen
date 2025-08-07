@@ -45,7 +45,7 @@
         class="form-select w-full border-gray-300 rounded-md shadow-sm">
         <option value="">Select a Brand</option>
         @foreach($commercialBrands as $brand) {{-- This variable needs to be passed from your controller --}}
-            <option value="{{ $brand->id }}" {{ (old('commercial_brand_id', $commercialAd->commercial_brand_id ?? '') == $brand->id) ? 'selected' : '' }}>
+            <option value="{{ $brand->id }}" {{ (old('commercial_brand_id') == $brand->id) ? 'selected' : '' }}>
                 {{ $brand->name }}
             </option>
         @endforeach
@@ -65,7 +65,7 @@
         {{-- If editing, we might need to pre-fill. This depends on your controller passing initial models. --}}
         @isset($initialCommercialModels)
             @foreach($initialCommercialModels as $model)
-                <option value="{{ $model->id }}" {{ (old('commercial_model_id', $commercialAd->commercial_model_id ?? '') == $model->id) ? 'selected' : '' }}>
+                <option value="{{ $model->id }}" {{ (old('commercial_model_id') == $model->id) ? 'selected' : '' }}>
                     {{ $model->name }}
                 </option>
             @endforeach
@@ -114,13 +114,8 @@
     // (e.g., when the form is redisplayed after a validation error, or when editing an existing ad)
     document.addEventListener('DOMContentLoaded', function() {
         // Use old() helper for repopulating after validation error, or existing ad data
-        const oldBrandId = '{{ old('commercial_brand_id') }}';
-        const existingAdBrandId = '{{ $commercialAd->commercial_brand_id ?? '' }}';
-        const initialBrandId = oldBrandId || existingAdBrandId;
-
-        const oldModelId = '{{ old('commercial_model_id') }}';
-        const existingAdModelId = '{{ $commercialAd->commercial_model_id ?? '' }}';
-        const initialModelId = oldModelId || existingAdModelId;
+  const initialBrandId = '{{ old('commercial_brand_id') }}';
+const initialModelId = '{{ old('commercial_model_id') }}';
 
         if (initialBrandId) {
             loadCommercialModels(initialBrandId, initialModelId);

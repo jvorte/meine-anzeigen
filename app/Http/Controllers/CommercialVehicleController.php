@@ -142,17 +142,17 @@ public function show(CommercialVehicle $commercialVehicle)
      * @param  \App\Models\CommercialVehicle  $commercialAd
      * @return \Illuminate\Http\Response
      */
-public function edit(CommercialVehicle $commercialAd) // Renamed parameter for clarity with your Blade
+public function edit(CommercialVehicle $commercialVehicle) // Renamed parameter for clarity with your Blade
 {
     // Eager load for the edit form if you need to display them this way
-    $commercialAd->load(['commercialBrand', 'commercialModel']);
+    $commercialVehicle->load(['commercialBrand', 'commercialModel']);
 
     // Pass the necessary data to the view
     $commercialBrands = CommercialBrand::orderBy('name')->get();
     // You might also need to pass initial models for the selected brand
     $initialCommercialModels = collect(); // Initialize empty collection
-    if ($commercialAd->commercial_brand_id) {
-        $initialCommercialModels = CommercialModel::where('commercial_brand_id', $commercialAd->commercial_brand_id)->get();
+    if ($commercialVehicle->commercial_brand_id) {
+        $initialCommercialModels = CommercialModel::where('commercial_brand_id', $commercialVehicle->commercial_brand_id)->get();
     }
 
     // Define your static arrays if they are not coming from the database
@@ -163,7 +163,7 @@ public function edit(CommercialVehicle $commercialAd) // Renamed parameter for c
     $emissionClasses = ['Euro 1', 'Euro 2', 'Euro 3', 'Euro 4', 'Euro 5', 'Euro 6', 'Euro 6d']; // Example types
 
     return view('ads.commercial-vehicles.edit', compact(
-        'commercialAd', // The main model
+        'commercialVehicle', // The main model
         'commercialBrands',
         'initialCommercialModels', // For the model dropdown
         'colors',
@@ -177,55 +177,48 @@ public function edit(CommercialVehicle $commercialAd) // Renamed parameter for c
 
 
 
+public function update(Request $request, CommercialVehicle $commercialVehicle)
+{
+    // The model is already provided by Route Model Binding, so this line is not needed.
+    // $commercialVehicle = CommercialVehicle::findOrFail($id);
 
-    public function update(Request $request, $id)
-    {
-        $commercialVehicle = CommercialVehicle::findOrFail($id);
+    $validated = $request->validate([
+        'title' => 'required|string|max:255',
+        'description' => 'required|string',
+        'commercial_brand_id' => 'required|exists:commercial_brands,id',
+        'commercial_model_id' => 'required|exists:commercial_models,id',
+        'first_registration' => 'required|date',
+        'mileage' => 'required|integer|min:0',
+        'power' => 'nullable|integer|min:1',
+        'color' => 'nullable|string|max:50',
+        'condition' => 'required|string|in:neu,gebraucht,unfallfahrzeug',
+        'price' => 'nullable|numeric|min:0',
+        'commercial_vehicle_type' => 'required|string|max:100',
+        'fuel_type' => 'nullable|string|max:50',
+        'transmission' => 'nullable|string|max:50',
+        'payload_capacity' => 'nullable|integer|min:0',
+        'gross_vehicle_weight' => 'nullable|integer|min:0',
+        'number_of_axles' => 'nullable|integer|min:1',
+        'emission_class' => 'nullable|string|max:50',
+        'seats' => 'nullable|integer|min:1',
+        'images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+    ]);
+    
+    // Update the existing model instance
+    $commercialVehicle->update($validated);
 
-        $validated = $request->validate([
-            'title' => 'required|string|max:255',
-            'description' => 'required|string',
-            
-            // --- FIX START: Use commercial_brand_id and commercial_model_id ---
-            'commercial_brand_id' => 'required|exists:commercial_brands,id', // Use your new table
-            'commercial_model_id' => 'required|exists:commercial_models,id', // Use your new table
-            // --- FIX END ---
-
-            'first_registration' => 'required|date',
-            'mileage' => 'required|integer|min:0',
-            'power' => 'nullable|integer|min:1',
-            'color' => 'nullable|string|max:50',
-            'condition' => 'required|string|in:neu,gebraucht,unfallfahrzeug',
-            'price' => 'nullable|numeric|min:0',
-            'commercial_vehicle_type' => 'required|string|max:100',
-            'fuel_type' => 'nullable|string|max:50',
-            'transmission' => 'nullable|string|max:50',
-            'payload_capacity' => 'nullable|integer|min:0',
-            'gross_vehicle_weight' => 'nullable|integer|min:0',
-            'number_of_axles' => 'nullable|integer|min:1',
-            'emission_class' => 'nullable|string|max:50',
-            'seats' => 'nullable|integer|min:1',
-            'images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-        ]);
-        // dd($validated); // For debugging, uncomment if needed
-
-        // Make sure your CommercialVehicle model's $fillable array includes
-        // 'commercial_brand_id' and 'commercial_model_id'
-        $commercialVehicle->update($validated);
-
-        // Handle new image uploads (existing images are not affected by this logic)
-        if ($request->hasFile('images')) {
-            foreach ($request->file('images') as $image) {
-                $path = $image->store('commercial_vehicle_images', 'public');
-                $commercialVehicle->images()->create([
-                    'image_path' => $path,
-                ]);
-            }
+    // Handle new image uploads
+    if ($request->hasFile('images')) {
+        foreach ($request->file('images') as $image) {
+            $path = $image->store('commercial_vehicle_images', 'public');
+            $commercialVehicle->images()->create([
+                'image_path' => $path,
+            ]);
         }
-
-        return redirect()->route('ads.commercial-vehicles.show', $commercialVehicle);
     }
 
+    return redirect()->route('ads.commercial-vehicles.show', $commercialVehicle);
+}
 
 
 
@@ -243,7 +236,7 @@ public function edit(CommercialVehicle $commercialAd) // Renamed parameter for c
 
         $commercialVehicle->delete();
 
-        return redirect()->route('categories.show', 'commercial-vehicle')
+        return redirect()->route('categories.commercial-vehicles.index', 'commercial-vehicle')
             ->with('success', 'Anzeige gelöscht');
     }
 
