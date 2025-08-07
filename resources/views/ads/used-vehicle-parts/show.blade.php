@@ -278,12 +278,12 @@
         <hr class="my-8 border-gray-200" />
 
         {{-- Description Section --}}
-        <section class="bg-gray-50 p-6 rounded-lg shadow-inner mb-8">
+        {{-- <section class="bg-gray-50 p-6 rounded-lg shadow-inner mb-8">
             <h4 class="text-xl font-semibold text-gray-700 mb-6">Beschreibung</h4>
             <div>
                 <p class="text-gray-700 leading-relaxed">{{ $usedVehiclePart->description ?? 'Keine Beschreibung verfügbar.' }}</p>
             </div>
-        </section>
+        </section> --}}
 
         {{-- Part Details Section (Updated for broader vehicle types) --}}
         <section class="bg-gray-50 p-6 rounded-lg shadow-inner mb-8">

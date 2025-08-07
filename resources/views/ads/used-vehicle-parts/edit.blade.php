@@ -15,8 +15,8 @@
             {{-- Breadcrumbs component --}}
             <x-breadcrumbs :items="[
                 ['label' => 'Alle Anzeigen', 'url' => route('ads.index')],
-                ['label' => 'Gebrauchte Fahrzeugteile', 'url' => route('categories.show', 'used-vehicle-parts')],
-                ['label' => $usedVehiclePart->title, 'url' => route('ads.used-vehicle-parts.show', $usedVehiclePart)],
+                ['label' => 'Gebrauchte Fahrzeugteile', 'url' => route('categories.vehicles-parts.index')],
+                ['label' => $usedVehiclePart->title, 'url' => route('ads.vehicles-parts.index', $usedVehiclePart)],
                 ['label' => 'Bearbeiten', 'url' => null],
             ]" />
         </div>

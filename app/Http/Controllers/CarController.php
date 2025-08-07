@@ -16,9 +16,11 @@ class CarController extends Controller
 {
 public function index()
 {
-    $cars = Car::with(['carBrand', 'carModel', 'user', 'images']) // προαιρετικά αν έχεις σχέσεις
+    $cars = Car::with(['carBrand', 'carModel', 'user', 'images']) 
         ->latest()
         ->paginate(12);
+
+
 
     return view('ads.cars.index', [
         'cars' => $cars,

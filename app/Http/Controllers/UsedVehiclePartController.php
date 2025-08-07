@@ -15,31 +15,20 @@ use Illuminate\Validation\Rule; // Still useful for general validation, but spec
 class UsedVehiclePartController extends Controller
 {
 
+public function index()
+{
+    $usedVehicleParts = UsedVehiclePart::with(['user', 'images']) // προαιρετικά αν έχεις σχέσεις
+        ->latest()
+        ->paginate(12);
 
-
-    
-      public function index(Request $request)
-    {
-        $query = UsedVehiclePart::with('images')->orderBy('created_at', 'desc');
-
-        // Example filter logic: filter by a specific 'make'
-        if ($request->filled('make')) {
-            $query->where('make', $request->input('make'));
-        }
-
-        // Example filter logic: filter by 'year'
-        if ($request->filled('year')) {
-            $query->where('year', $request->input('year'));
-        }
-        
-        $used_vehicle_parts = $query->paginate(12);
-
-        // This returns the new, dedicated cars index blade file
-        return view('ads.used-vehicle-parts.index', [
-            'ads' => $used_vehicle_parts,
-            'category' => (object)['name' => 'ads.used-vehicle-parts', 'slug' => 'cars'] // Pass a mock category for the header
-        ]);
-    }
+    return view('ads.used-vehicle-parts.index', [
+        'usedVehicleParts' => $usedVehicleParts,
+        'category' => (object)[
+            'name' => 'usedVehicleParts',
+            'slug' => 'usedVehicleParts',
+        ]
+    ]);
+}
     /**
      * Show the form for creating a new used vehicle part ad.
      */
