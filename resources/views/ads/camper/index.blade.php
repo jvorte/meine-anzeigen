@@ -33,13 +33,13 @@
         ]" class="mb-8" />
 
         @if ($campers->count())
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 my-5 gap-6">
                 @foreach ($campers as $camper)
                     <div class="bg-white rounded-2xl shadow hover:shadow-lg transition duration-300 overflow-hidden">
                         <a href="{{ route('ads.camper.show', $camper->id) }}">
                             <div class="aspect-w-4 aspect-h-3 bg-gray-100">
                                 @if ($camper->images->isNotEmpty())
-                                    <img src="{{ asset('storage/' . $camper->images->first()->path) }}" alt="{{ $camper->title }}" class="w-full h-full object-cover">
+                                    <img src="{{ asset('storage/' . $camper->images->first()->image_path) }}" alt="{{ $camper->title }}" class="w-full h-full object-cover">
                                 @else
                                     <div class="w-full h-full flex items-center justify-center text-gray-400">No Image</div>
                                 @endif
