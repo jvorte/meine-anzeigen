@@ -252,9 +252,4 @@ Route::get('/ads/camper', [CamperController::class, 'index'])->name('ads.camper.
     }); 
 }); 
 
-
-
-Route::get('/categories/vehicles-parts', [UsedVehiclePartController::class, 'index'])
-    ->name('categories.vehicles-parts.index');
-// Auth scaffolding routes (login, register, etc.) - ALWAYS keep this at the very end
 require __DIR__ . '/auth.php';

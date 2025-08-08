@@ -17,7 +17,7 @@ class UsedVehiclePartController extends Controller
 
 public function index()
 {
-    $usedVehicleParts = UsedVehiclePart::with(['user', 'images']) // προαιρετικά αν έχεις σχέσεις
+    $usedVehicleParts = UsedVehiclePart::with(['user', 'images']) 
         ->latest()
         ->paginate(12);
 
@@ -34,9 +34,7 @@ public function index()
      */
     public function create()
     {
-        // No longer need to fetch brands or models from the database for dropdowns
-        // $brands = CarBrand::orderBy('name')->pluck('name', 'id');
-        // $models = [];
+    
 
         $partCategories = [
             'Motor & Anbauteile', 'Getriebe & Antrieb', 'Karosserie & Anbauteile',

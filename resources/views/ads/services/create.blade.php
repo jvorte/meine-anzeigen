@@ -3,7 +3,7 @@
     {{-- -----------------------------------Header & Breadcrumbs ---------------------------------------------- --}}
     <x-slot name="header">
         <h2 class="text-3xl font-extrabold text-gray-900 leading-tight mb-1">
-            Neue Dienstleistung Anzeige erstellen
+            New Servise
         </h2>
         <p class="text-md text-gray-700 max-w-3xl">
             Wähle eine passende Kategorie und fülle die erforderlichen Felder aus, um deine Anzeige zu erstellen.

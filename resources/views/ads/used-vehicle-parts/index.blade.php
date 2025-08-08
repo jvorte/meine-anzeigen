@@ -1,23 +1,23 @@
 <x-app-layout>
-    <x-slot name="header">
+     <x-slot name="header">
         <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center px-4 py-2">
             <div>
                 <h1 class="text-4xl font-extrabold text-gray-900 leading-tight">
-                    All Commercial Vehicles
+                    All parts
                 </h1>
                 <p class="mt-1 text-gray-600 max-w-xl">
-                    Browse all available commercial vehicle listings.
+                    Browse all available camper listings.
                 </p>
             </div>
 
             <div class="px-4 py-1 md:py-1 flex justify-end items-center">
-                <a href="{{ route('ads.commercial-vehicles.create') }}" class="c-button">
+                <a href="{{ route('ads.vehicles-parts.create') }}" class="c-button">
                     <span class="c-main">
                         <span class="c-ico">
                             <span class="c-blur"></span>
                             <span class="ico-text">+</span>
                         </span>
-                        New Ad
+                        New Add
                     </span>
                 </a>
             </div>
@@ -29,7 +29,7 @@
         {{-- Breadcrumbs --}}
         <x-breadcrumbs :items="[
             ['label' => 'All Ads', 'url' => route('ads.index')],
-            ['label' => 'Commercial Vehicles', 'url' => route('ads.commercial-vehicles.index')],
+            ['label' => 'Commercial Vehicles', 'url' => route('ads.vehicles-parts.index')],
         ]" class="mb-8" />
 
         {{-- Ads Grid --}}

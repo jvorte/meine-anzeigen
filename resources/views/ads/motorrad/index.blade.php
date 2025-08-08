@@ -3,7 +3,7 @@
         <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center px-4 py-2">
             <div>
                 <h1 class="text-4xl font-extrabold text-gray-900 leading-tight">
-                    All Cars
+                    All Motos
                 </h1>
                 <p class="mt-1 text-gray-600 max-w-xl">
                     Browse all available camper listings.

@@ -1,13 +1,24 @@
 <x-app-layout>
-    <x-slot name="header">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex flex-col sm:flex-row sm:items-center sm:justify-between">
+   <x-slot name="header">
+        <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center px-4 py-2">
             <div>
-                <h1 class="text-3xl font-bold text-gray-900">All Boats</h1>
-                <p class="mt-1 text-gray-600">Browse all available boat listings and find your perfect match.</p>
+                <h1 class="text-4xl font-extrabold text-gray-900 leading-tight">
+                    All Boats
+                </h1>
+                <p class="mt-1 text-gray-600 max-w-xl">
+                    Browse all available camper listings.
+                </p>
             </div>
-            <div class="mt-4 sm:mt-0">
-                <a href="{{ route('ads.create') }}" class="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition">
-                    + New Add
+
+            <div class="px-4 py-1 md:py-1 flex justify-end items-center">
+                <a href="{{ route('ads.boats.create') }}" class="c-button">
+                    <span class="c-main">
+                        <span class="c-ico">
+                            <span class="c-blur"></span>
+                            <span class="ico-text">+</span>
+                        </span>
+                        New Add
+                    </span>
                 </a>
             </div>
         </div>
