@@ -21,7 +21,6 @@ public function index()
         ->paginate(12);
 
 
-
     return view('ads.cars.index', [
         'cars' => $cars,
         'category' => (object)[
