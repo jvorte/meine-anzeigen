@@ -9,26 +9,75 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Arr; // Importieren Sie Arr helper for data manipulation
 use Illuminate\Validation\Rule; // Importieren Sie Rule for advanced validation
-
+use Illuminate\View\View;
 class ServiceController extends Controller
 {
 
 
     
-public function index()
-{
-    $serviceAds = Service::with('images')->latest()->paginate(12);
+// public function index()
+// {
+//     $serviceAds = Service::with('images')->latest()->paginate(12);
 
-    return view('ads.services.index', [
-        'serviceAds' => $serviceAds,
-    ]);
-}
+//     return view('ads.services.index', [
+//         'serviceAds' => $serviceAds,
+//     ]);
+// }
 
 
     /**
      * Show the form for creating a new service ad.
      * This method prepares data needed for the form.
      */
+
+
+public function index(Request $request): View
+    {
+        // Start with a base query
+        $query = Service::query();
+
+        // Apply filters if they exist in the request
+        if ($request->has('title') && $request->input('title')) {
+            $query->where('title', 'like', '%' . $request->input('title') . '%');
+        }
+
+        if ($request->has('service_type') && $request->input('service_type')) {
+            $query->where('service_type', $request->input('service_type'));
+        }
+
+        if ($request->has('location') && $request->input('location')) {
+            $query->where('location', 'like', '%' . $request->input('location') . '%');
+        }
+        
+        if ($request->has('price') && $request->input('price')) {
+            $priceRange = explode('-', $request->input('price'));
+            $query->whereBetween('price', [(int)$priceRange[0], (int)$priceRange[1]]);
+        }
+        
+        // Apply sorting based on the request, or default to latest
+        $sortBy = $request->input('sort_by', 'latest');
+        
+        switch ($sortBy) {
+            case 'price_asc':
+                $query->orderBy('price', 'asc');
+                break;
+            case 'price_desc':
+                $query->orderBy('price', 'desc');
+                break;
+            case 'latest':
+            default:
+                $query->orderBy('created_at', 'desc');
+                break;
+        }
+
+        $serviceAds = $query->paginate(12);
+        
+        // Fetch unique values for filter dropdowns
+        $serviceTypes = Service::distinct()->pluck('service_type')->filter()->toArray();
+        $locations = Service::distinct()->pluck('location')->filter()->toArray();
+
+        return view('ads.services.index', compact('serviceAds', 'serviceTypes', 'locations'));
+    }
     public function create()
     {
       

@@ -13,17 +13,62 @@ use App\Models\BoatImage;
 class BoatController extends Controller
 {
 
-    public function index()
+   public function index(Request $request)
     {
-        $boatAds = Boat::with('images')->latest()->paginate(12);
+        // Start with a base query
+        $query = Boat::with(['images']);
 
-        return view('ads.boats.index', [
-            'boatAds' => $boatAds,
-            'category' => (object)[
-                'name' => 'Boats',
-                'slug' => 'boats'
-            ]
-        ]);
+        // Apply filters if they exist in the request
+        if ($request->has('brand') && $request->input('brand')) {
+            $query->where('brand', $request->input('brand'));
+        }
+        
+        if ($request->has('boat_type') && $request->input('boat_type')) {
+            $query->where('boat_type', $request->input('boat_type'));
+        }
+
+        if ($request->has('material') && $request->input('material')) {
+            $query->where('material', $request->input('material'));
+        }
+
+        if ($request->has('price') && $request->input('price')) {
+            $priceRange = explode('-', $request->input('price'));
+            $query->whereBetween('price', [(int)$priceRange[0], (int)$priceRange[1]]);
+        }
+        
+        if ($request->has('year_of_construction') && $request->input('year_of_construction')) {
+            $yearRange = explode('-', $request->input('year_of_construction'));
+            $query->whereBetween('year_of_construction', [(int)$yearRange[0], (int)$yearRange[1]]);
+        }
+        
+        if ($request->has('condition') && $request->input('condition')) {
+            $query->where('condition', $request->input('condition'));
+        }
+
+        if ($request->has('engine_type') && $request->input('engine_type')) {
+            $query->where('engine_type', $request->input('engine_type'));
+        }
+
+        // Apply sorting based on the request, or default to latest
+        $sortBy = $request->input('sort_by', 'latest');
+        
+        switch ($sortBy) {
+            case 'price_asc':
+                $query->orderBy('price', 'asc');
+                break;
+            case 'price_desc':
+                $query->orderBy('price', 'desc');
+                break;
+            case 'latest':
+            default:
+                $query->orderBy('created_at', 'desc');
+                break;
+        }
+
+        $boatAds = $query->paginate(15);
+        $brands = Boat::distinct()->pluck('brand')->filter()->toArray();
+
+        return view('ads.boats.index', compact('boatAds', 'brands'));
     }
 
 

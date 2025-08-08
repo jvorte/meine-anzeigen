@@ -9,20 +9,89 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Arr;
 use Illuminate\Validation\Rule;
-
+use Illuminate\View\View;
 class RealEstateController extends Controller
 {
 
     
 
-public function index()
-{
-    $realEstateAds = RealEstate::with('images')->latest()->paginate(12);
+// public function index()
+// {
+//     $realEstateAds = RealEstate::with('images')->latest()->paginate(12);
 
-    return view('ads.real-estate.index', [
-        'realEstateAds' => $realEstateAds,
-    ]);
-}
+//     return view('ads.real-estate.index', [
+//         'realEstateAds' => $realEstateAds,
+//     ]);
+// }
+
+ public function index(Request $request): View
+    {
+        // Start with a base query and eager load images.
+        $query = RealEstate::with('images');
+
+        // Apply filters if they exist in the request
+        if ($request->has('immobilientyp') && $request->input('immobilientyp')) {
+            $query->where('immobilientyp', $request->input('immobilientyp'));
+        }
+        
+        if ($request->has('objekttyp') && $request->input('objekttyp')) {
+            $query->where('objekttyp', $request->input('objekttyp'));
+        }
+
+        if ($request->has('zustand') && $request->input('zustand')) {
+            $query->where('zustand', $request->input('zustand'));
+        }
+
+        if ($request->has('bautyp') && $request->input('bautyp')) {
+            $query->where('bautyp', $request->input('bautyp'));
+        }
+
+        if ($request->has('ort') && $request->input('ort')) {
+            $query->where('ort', 'like', '%' . $request->input('ort') . '%');
+        }
+        
+        if ($request->has('anzahl_zimmer') && $request->input('anzahl_zimmer')) {
+            // Filter for 4+ rooms if selected
+            if ($request->input('anzahl_zimmer') == '4') {
+                $query->where('anzahl_zimmer', '>=', 4);
+            } else {
+                $query->where('anzahl_zimmer', $request->input('anzahl_zimmer'));
+            }
+        }
+        
+        if ($request->has('price') && $request->input('price')) {
+            $priceRange = explode('-', $request->input('price'));
+            $query->whereBetween('price', [(int)$priceRange[0], (int)$priceRange[1]]);
+        }
+        
+        // Apply sorting based on the request, or default to latest
+        $sortBy = $request->input('sort_by', 'latest');
+        
+        switch ($sortBy) {
+            case 'price_asc':
+                $query->orderBy('price', 'asc');
+                break;
+            case 'price_desc':
+                $query->orderBy('price', 'desc');
+                break;
+            case 'latest':
+            default:
+                $query->orderBy('created_at', 'desc');
+                break;
+        }
+
+        $realEstateAds = $query->paginate(12);
+        
+        // Fetch unique values for filter dropdowns
+        $immobilientyps = RealEstate::distinct()->pluck('immobilientyp')->filter()->toArray();
+        $objekttypen = RealEstate::distinct()->pluck('objekttyp')->filter()->toArray();
+        $zustaende = RealEstate::distinct()->pluck('zustand')->filter()->toArray();
+        $bautypen = RealEstate::distinct()->pluck('bautyp')->filter()->toArray();
+        $orte = RealEstate::distinct()->pluck('ort')->filter()->toArray();
+
+
+        return view('ads.real-estate.index', compact('realEstateAds', 'immobilientyps', 'objekttypen', 'zustaende', 'bautypen', 'orte'));
+    }
     /**
      * Display a form to create a new real estate listing.
      * This method prepares the data needed for the form.

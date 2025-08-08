@@ -10,19 +10,72 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Arr; // Import Arr helper
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
-
+use Illuminate\View\View;
 class HouseholdItemController extends Controller
 {
 
     
-    public function index()
-    {
-        // Φέρνουμε όλες τις αγγελίες είδη σπιτιού με pagination
-        // και φορτώνουμε προληπτικά και τις εικόνες τους.
-        $householdAds = HouseholdItem::with('images')->latest()->paginate(10);
+    // public function index()
+    // {
+    //     // Φέρνουμε όλες τις αγγελίες είδη σπιτιού με pagination
+    //     // και φορτώνουμε προληπτικά και τις εικόνες τους.
+    //     $householdAds = HouseholdItem::with('images')->latest()->paginate(10);
 
-        // Επιστρέφουμε το view με τη σωστή μεταβλητή.
-        return view('ads.household.index', compact('householdAds'));
+    //     // Επιστρέφουμε το view με τη σωστή μεταβλητή.
+    //     return view('ads.household.index', compact('householdAds'));
+    // }
+
+    public function index(Request $request): View
+    {
+        // Start with a base query and eager load images.
+        $query = HouseholdItem::with('images');
+
+        // Apply filters if they exist in the request
+        if ($request->has('category') && $request->input('category')) {
+            $query->where('category', $request->input('category'));
+        }
+        
+        if ($request->has('brand') && $request->input('brand')) {
+            $query->where('brand', 'like', '%' . $request->input('brand') . '%');
+        }
+        
+        if ($request->has('material') && $request->input('material')) {
+            $query->where('material', $request->input('material'));
+        }
+        
+        if ($request->has('condition') && $request->input('condition')) {
+            $query->where('condition', $request->input('condition'));
+        }
+        
+        if ($request->has('price') && $request->input('price')) {
+            $priceRange = explode('-', $request->input('price'));
+            $query->whereBetween('price', [(int)$priceRange[0], (int)$priceRange[1]]);
+        }
+        
+        // Apply sorting based on the request, or default to latest
+        $sortBy = $request->input('sort_by', 'latest');
+        
+        switch ($sortBy) {
+            case 'price_asc':
+                $query->orderBy('price', 'asc');
+                break;
+            case 'price_desc':
+                $query->orderBy('price', 'desc');
+                break;
+            case 'latest':
+            default:
+                $query->orderBy('created_at', 'desc');
+                break;
+        }
+
+        $householdAds = $query->paginate(12);
+        
+        // Fetch unique values for filter dropdowns
+        $categories = HouseholdItem::distinct()->pluck('category')->filter()->toArray();
+        $brands = HouseholdItem::distinct()->pluck('brand')->filter()->toArray();
+        $materials = HouseholdItem::distinct()->pluck('material')->filter()->toArray();
+
+        return view('ads.household.index', compact('householdAds', 'categories', 'brands', 'materials'));
     }
 
     use AuthorizesRequests;

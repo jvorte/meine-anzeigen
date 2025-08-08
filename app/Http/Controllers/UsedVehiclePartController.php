@@ -18,7 +18,7 @@ class UsedVehiclePartController extends Controller
  public function index(Request $request)
     {
         // Start with a base query
-        $query = UsedVehiclePartAd::with(['images']);
+        $query = UsedVehiclePart::with(['images']);
 
         // Apply filters if they exist in the request
         if ($request->has('part_category') && $request->input('part_category')) {
@@ -62,7 +62,7 @@ class UsedVehiclePartController extends Controller
         // You may need to pass compatible brands and models if they are dynamic.
         // For this example, I've used static values in the blade file.
 
-        return view('ads.vehicles-parts.index', compact('usedVehicleParts'));
+        return view('ads.used-vehicle-parts.index', compact('usedVehicleParts'));
     }
     /**
      * Show the form for creating a new used vehicle part ad.

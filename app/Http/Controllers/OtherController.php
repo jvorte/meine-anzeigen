@@ -10,19 +10,61 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Arr;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\DB; // Import DB facade for transactions
-
+use Illuminate\View\View;
 class OtherController extends Controller
 {
 
     
-public function index()
-{
-    $otherAds = Other::with('images')->latest()->paginate(12);
+// public function index()
+// {
+//     $otherAds = Other::with('images')->latest()->paginate(12);
 
-    return view('ads.others.index', [
-        'otherAds' => $otherAds,
-    ]);
-}
+//     return view('ads.others.index', [
+//         'otherAds' => $otherAds,
+//     ]);
+// }
+public function index(Request $request): View
+    {
+        // Start with a base query
+        $query = Other::query();
+
+        // Apply filters if they exist in the request
+        if ($request->has('title') && $request->input('title')) {
+            $query->where('title', 'like', '%' . $request->input('title') . '%');
+        }
+
+        if ($request->has('condition') && $request->input('condition')) {
+            $query->where('condition', $request->input('condition'));
+        }
+
+        if ($request->has('price') && $request->input('price')) {
+            $priceRange = explode('-', $request->input('price'));
+            $query->whereBetween('price', [(int)$priceRange[0], (int)$priceRange[1]]);
+        }
+        
+        // Apply sorting based on the request, or default to latest
+        $sortBy = $request->input('sort_by', 'latest');
+        
+        switch ($sortBy) {
+            case 'price_asc':
+                $query->orderBy('price', 'asc');
+                break;
+            case 'price_desc':
+                $query->orderBy('price', 'desc');
+                break;
+            case 'latest':
+            default:
+                $query->orderBy('created_at', 'desc');
+                break;
+        }
+
+        $otherAds = $query->paginate(12);
+        
+        // Fetch unique values for filter dropdowns
+        $conditions = Other::distinct()->pluck('condition')->filter()->toArray();
+
+        return view('ads.others.index', compact('otherAds', 'conditions'));
+    }
     /**
      * Display a listing of the "other" ads.
      * This method fetches all "other" ads for listing.
