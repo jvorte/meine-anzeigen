@@ -133,7 +133,7 @@ class ElectronicController extends Controller
             'Used Warranty'
         ];
 
-        $categories = [
+         $categories = [
             'Mobile Phone',
             'TV',
             'Laptop',
@@ -144,6 +144,7 @@ class ElectronicController extends Controller
             'Tablet',
             'Other'
         ];
+
         
         return view('ads.electronics.edit', compact('electronic', 'warrantyStatuses', 'categories'));
     }
@@ -157,6 +158,7 @@ class ElectronicController extends Controller
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
             'brand' => 'nullable|string|max:255',
+             'category' => 'nullable|string|max:255',
             'electronic_model' => 'nullable|string|max:255',
             'price' => 'nullable|numeric',
             'condition' => 'nullable|string|in:neu,gebraucht,defekt',

@@ -16,8 +16,8 @@ class Electronic extends Model
         'description',
         'price',
         'user_id',
-        'brand', // Διόρθωση: Απλό πεδίο κειμένου για τη μάρκα
-        'electronic_model', // Διόρθωση: Απλό πεδίο κειμένου για το μοντέλο
+        'brand', 
+        'electronic_model',
         'condition',
         'year_of_purchase',
         'warranty_status',
