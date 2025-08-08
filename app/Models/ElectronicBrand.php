@@ -16,10 +16,11 @@ class ElectronicBrand extends Model
     protected $fillable = ['name'];
 
     // If you plan to have ElectronicModels tied to these brands
-    public function electronicModels()
-    {
-        return $this->hasMany(ElectronicModel::class);
-    }
+public function electronicModels()
+{
+    return $this->hasMany(ElectronicModel::class, 'brand_id');
+}
+
 
     // An electronic brand has many electronic listings
     public function electronics()

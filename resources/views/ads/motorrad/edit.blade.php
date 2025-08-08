@@ -32,7 +32,7 @@
 
                     {{-- Marke --}}
                     <div>
-                        <label for="motorcycle_brand_id" class="block text-sm font-medium text-gray-700 mb-2">Marke</label>
+                        <label for="motorcycle_brand_id" class="block text-sm font-medium text-gray-700 mb-2">Brand</label>
                         <select name="motorcycle_brand_id" id="motorcycle_brand_id" onchange="loadModels(this.value)"
                             class="form-select w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
                             <option value="">Bitte wählen</option>

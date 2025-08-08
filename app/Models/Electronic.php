@@ -4,19 +4,20 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes; // If you use SoftDeletes
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Electronic extends Model
 {
-    use HasFactory, SoftDeletes; // Include SoftDeletes if you have `deleted_at`
+    use HasFactory;
 
     protected $fillable = [
         'title',
         'description',
         'price',
         'user_id',
-        'brand_id', // This refers to the ID in the electronic_brands table now
-        'electronic_model_id',
+        'brand', // Διόρθωση: Απλό πεδίο κειμένου για τη μάρκα
+        'electronic_model', // Διόρθωση: Απλό πεδίο κειμένου για το μοντέλο
         'condition',
         'year_of_purchase',
         'warranty_status',
@@ -34,27 +35,19 @@ class Electronic extends Model
         'ram',
     ];
 
-    // Define relationship to the new ElectronicBrand model
-    public function electronicBrand()
-    {
-        return $this->belongsTo(ElectronicBrand::class, 'brand_id');
-    }
-
-    // Existing relationships
-    public function user()
+    /**
+     * Get the user that owns the electronic ad.
+     */
+    public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }
 
-    public function electronicModel()
-    {
-        return $this->belongsTo(ElectronicModel::class);
-    }
-
-    public function images()
+    /**
+     * Get the images for the electronic ad.
+     */
+    public function images(): HasMany
     {
         return $this->hasMany(ElectronicImage::class);
     }
-
-    
 }

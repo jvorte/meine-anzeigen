@@ -32,7 +32,7 @@
         {{-- Breadcrumbs --}}
                 <x-breadcrumbs :items="[
                 ['label' => 'Alle Anzeigen', 'url' => route('ads.index')],
-                ['label' => 'Haushaltsartikel Anzeigen', 'url' => route('categories.haushaltsartikel.index')], {{-- Assuming 'haushaltsartikel' is the slug for household items --}}
+                ['label' => 'Haushaltsartikel Anzeigen', 'url' => route('categories.household.index')], {{-- Assuming 'household' is the slug for household items --}}
                 ['label' => $householdItem->title, 'url' => null],
             ]" />
         {{-- Action Buttons and Back link --}}
@@ -53,7 +53,7 @@
             {{-- Left Column: Images and Thumbnails --}}
             <section x-data="{
                 images: @js($householdItem->images->pluck('path')),
-                activeImage: '{{ $householdItem->images->first()->path ?? '' }}',
+                activeImage: '{{ $householdItem->images->first()->image_path ?? '' }}',
                 showModal: false,
                 scaleUp: false,
                 currentIndex: 0,

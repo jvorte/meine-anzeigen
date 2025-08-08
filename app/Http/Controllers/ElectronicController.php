@@ -1,50 +1,45 @@
 <?php
 
 namespace App\Http\Controllers;
-use App\Models\ElectronicBrand;
+
 use App\Models\Electronic;
-use App\Models\ElectronicImage; // Import the ElectronicImage Model
-use App\Models\Brand;
-use App\Models\ElectronicModel;
+use App\Models\ElectronicImage;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Arr;
-use Illuminate\Http\RedirectResponse; // Add this import for redirect types
-
+use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
 
 class ElectronicController extends Controller
 {
-
-
-    
-      public function index(Request $request)
+    /**
+     * Display a listing of the resource.
+     */
+    public function index(Request $request): View
     {
         $query = Electronic::with('images')->orderBy('created_at', 'desc');
 
-        // Example filter logic: filter by a specific 'make'
-        if ($request->filled('make')) {
-            $query->where('make', $request->input('make'));
+        if ($request->filled('brand')) {
+            $query->where('brand', 'like', '%' . $request->input('brand') . '%');
         }
 
-        // Example filter logic: filter by 'year'
-        if ($request->filled('year')) {
-            $query->where('year', $request->input('year'));
+        if ($request->filled('year_of_purchase')) {
+            $query->where('year_of_purchase', $request->input('year_of_purchase'));
         }
         
-        $electronic = $query->paginate(12);
+        $electronics = $query->paginate(12);
 
-        // This returns the new, dedicated cars index blade file
         return view('ads.electronics.index', [
-            'ads' => $electronic,
-            'category' => (object)['name' => 'Autos', 'slug' => 'cars'] // Pass a mock category for the header
+            'ads' => $electronics,
+            'category' => (object)['name' => 'Elektronik', 'slug' => 'electronics']
         ]);
     }
+
     /**
      * Show the form for creating a new electronic ad.
      */
-public function create()
+    public function create(): View
     {
         $categories = [
             'Mobile Phone',
@@ -65,57 +60,34 @@ public function create()
             'Used Warranty'
         ];
 
-        // Fetch brands from the NEW ElectronicBrand model
-        $electronicBrands = ElectronicBrand::orderBy('name')->get();
-
-        // Handle pre-selected old value for electronic models if brand_id was already selected
-        $initialElectronicModels = [];
-        if (old('brand_id')) { // brand_id here still refers to the foreign key in electronics table
-            $initialElectronicModels = ElectronicModel::where('brand_id', old('brand_id'))->pluck('name', 'id')->toArray();
-        }
-
-        return view('ads.electronics.create', compact('categories', 'warrantyStatuses', 'electronicBrands', 'initialElectronicModels'));
+        return view('ads.electronics.create', compact('categories', 'warrantyStatuses'));
     }
 
-
-public function store(Request $request)
+    /**
+     * Store a newly created resource in storage.
+     */
+    public function store(Request $request): RedirectResponse
     {
-        // ... (validation rules and logic remain the same as previous answer) ...
         $rules = [
             'images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'title' => 'required|string|max:255',
             'description' => 'required|string',
-            'price' => 'required|numeric|min:0',
+            'price' => 'nullable|numeric|min:0',
             'condition' => 'required|in:neu,gebraucht,defekt',
             'category' => 'required|string|max:255',
-            'brand_id' => 'nullable|exists:electronic_brands,id', // IMPORTANT: Validate against electronic_brands
-            'electronic_model_id' => 'nullable|exists:electronic_models,id',
+            'brand' => 'nullable|string|max:255',
+            'electronic_model' => 'nullable|string|max:255',
             'year_of_purchase' => 'nullable|integer|min:1950|max:' . date('Y'),
             'warranty_status' => 'nullable|string|max:255',
             'accessories' => 'nullable|string|max:65535',
+            'color' => 'nullable|string|max:50',
+            'usage_time' => 'nullable|string|max:100',
+            'operating_system' => 'nullable|string|max:100',
+            'storage_capacity' => 'nullable|string|max:100',
+            'screen_size' => 'nullable|string|max:100',
+            'processor' => 'nullable|string|max:100',
+            'ram' => 'nullable|string|max:100',
         ];
-
-        // Define rules for fields that are conditionally required based on category
-        $conditionalRules = [
-            // ... (keep your conditional rules as before) ...
-            'Mobile Phone' => [
-                'color' => 'nullable|string|max:50',
-                'usage_time' => 'nullable|string|max:100',
-                'operating_system' => 'nullable|string|max:100',
-                'storage_capacity' => 'nullable|string|max:100',
-                'processor' => 'nullable|string|max:100',
-                'ram' => 'nullable|string|max:100',
-            ],
-            'TV' => [
-                'screen_size' => 'nullable|string|max:100',
-                'usage_time' => 'nullable|string|max:100',
-            ],
-        ];
-
-        $selectedCategory = $request->input('category');
-        if ($selectedCategory && isset($conditionalRules[$selectedCategory])) {
-            $rules = array_merge($rules, $conditionalRules[$selectedCategory]);
-        }
 
         $validatedData = $request->validate($rules);
 
@@ -126,7 +98,6 @@ public function store(Request $request)
 
         $electronic = Electronic::create($dataToCreateElectronic);
 
-        // ... (image handling remains the same) ...
         if ($imageFiles) {
             foreach ($imageFiles as $index => $image) {
                 $path = $image->store('electronic_images', 'public');
@@ -144,88 +115,99 @@ public function store(Request $request)
     /**
      * Display the specified resource.
      */
-public function show(Electronic $electronic)
+    public function show(Electronic $electronic): View
     {
-        // Eager load all necessary relationships for the show page
-        $electronic->load(['electronicBrand', 'electronicModel', 'images']);
-
-        // --- DEBUG STEP ---
-        // Temporarily uncomment the line below to see all the data.
-        // This is the most important step to understand what's missing.
-        // dd($electronic->toArray());
-        // ------------------
-
+        $electronic->load('images');
         return view('ads.electronics.show', compact('electronic'));
     }
 
-    public function edit(Electronic $electronic)
+    /**
+     * Show the form for editing the specified resource.
+     */
+    public function edit(Electronic $electronic): View
     {
-        $warrantyStatuses = ['Keine', 'Noch gültig', 'Abgelaufen'];
-        $initialElectronicModels = $electronic->brand
-            ? $electronic->brand->electronicModels->pluck('name', 'id')
-            : [];
+        $warrantyStatuses = [
+            'No warranty',
+            'Manufacturer Warranty',
+            'Retailer Warranty',
+            'Used Warranty'
+        ];
 
-        return view('ads.electronics.edit', compact('electronic', 'warrantyStatuses', 'initialElectronicModels'));
+        $categories = [
+            'Mobile Phone',
+            'TV',
+            'Laptop',
+            'Camera',
+            'Audio Device',
+            'Gaming Console',
+            'Smartwatch',
+            'Tablet',
+            'Other'
+        ];
+        
+        return view('ads.electronics.edit', compact('electronic', 'warrantyStatuses', 'categories'));
     }
- public function update(Request $request, Electronic $electronic)
-{
-    $validatedData = $request->validate([
-        'title' => 'required|string|max:255',
-        'description' => 'nullable|string',
-        'brand' => 'nullable|string|max:255',
-        'model' => 'nullable|string|max:255',
-        'electronic_model_id' => 'nullable|exists:electronic_models,id',
-        'price' => 'nullable|numeric',
-        'condition' => 'nullable|string|in:neu,gebraucht,defekt',
-        'year_of_purchase' => 'nullable|integer|min:1950|max:' . date('Y'),
-        'warranty_status' => 'nullable|string|max:255',
-        'accessories' => 'nullable|string',
-        'new_images.*' => 'image|mimes:jpg,jpeg,png|max:2048',
-        'delete_images' => 'array',
-        'delete_images.*' => 'integer|exists:electronic_images,id',
-    ]);
 
-    // Απομόνωσε τα πεδία που θέλεις να κάνεις update (χωρίς new_images & delete_images)
-    $updateData = collect($validatedData)->except(['new_images', 'delete_images'])->toArray();
+    /**
+     * Update the specified resource in storage.
+     */
+    public function update(Request $request, Electronic $electronic): RedirectResponse
+    {
+        $validatedData = $request->validate([
+            'title' => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'brand' => 'nullable|string|max:255',
+            'electronic_model' => 'nullable|string|max:255',
+            'price' => 'nullable|numeric',
+            'condition' => 'nullable|string|in:neu,gebraucht,defekt',
+            'year_of_purchase' => 'nullable|integer|min:1950|max:' . date('Y'),
+            'warranty_status' => 'nullable|string|max:255',
+            'accessories' => 'nullable|string',
+            'color' => 'nullable|string|max:50',
+            'usage_time' => 'nullable|string|max:100',
+            'operating_system' => 'nullable|string|max:100',
+            'storage_capacity' => 'nullable|string|max:100',
+            'screen_size' => 'nullable|string|max:100',
+            'processor' => 'nullable|string|max:100',
+            'ram' => 'nullable|string|max:100',
+            'new_images.*' => 'image|mimes:jpg,jpeg,png|max:2048',
+            'delete_images' => 'array',
+            'delete_images.*' => 'integer|exists:electronic_images,id',
+        ]);
 
-    $electronic->update($updateData);
+        $updateData = collect($validatedData)->except(['new_images', 'delete_images'])->toArray();
+        $electronic->update($updateData);
 
-    // Διαγραφή εικόνων που επιλέχθηκαν για διαγραφή
-    if ($request->filled('delete_images')) {
-        $imagesToDelete = $electronic->images()->whereIn('id', $request->input('delete_images'))->get();
+        if ($request->filled('delete_images')) {
+            $imagesToDelete = $electronic->images()->whereIn('id', $request->input('delete_images'))->get();
+            foreach ($imagesToDelete as $image) {
+                Storage::disk('public')->delete($image->image_path);
+                $image->delete();
+            }
+        }
 
-        foreach ($imagesToDelete as $image) {
+        if ($request->hasFile('new_images')) {
+            foreach ($request->file('new_images') as $imageFile) {
+                $path = $imageFile->store('electronic_images', 'public');
+                $electronic->images()->create(['image_path' => $path]);
+            }
+        }
+
+        return redirect()->route('ads.electronics.show', $electronic)->with('success', 'Anzeige erfolgreich aktualisiert!');
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy(Electronic $electronic): RedirectResponse
+    {
+        foreach ($electronic->images as $image) {
             Storage::disk('public')->delete($image->image_path);
             $image->delete();
         }
+
+        $electronic->delete();
+
+        return redirect()->route('dashboard')->with('success', 'Anzeige erfolgreich gelöscht!');
     }
-
-    // Αποθήκευση νέων εικόνων
-    if ($request->hasFile('new_images')) {
-        foreach ($request->file('new_images') as $imageFile) {
-            $path = $imageFile->store('electronics', 'public');
-            $electronic->images()->create(['image_path' => $path]);
-        }
-    }
-
-    return redirect()->route('categories.electronics.show', $electronic)->with('success', 'Anzeige aktualisiert.');
-}
-
-
-public function destroy(Electronic $electronic)
-{
-    // Delete images
-    foreach ($electronic->images as $image) {
-        // Check if the path exists before attempting to delete the file
-        if ($image->path) { // <--- ADD THIS CHECK
-            Storage::delete($image->path);
-        }
-        // Always delete the image record from the database, regardless of file existence
-        $image->delete();
-    }
-
-    $electronic->delete();
-
-    return redirect()->route('dashboard', 'elektronik')->with('success', 'Anzeige gelöscht.');
-}
 }

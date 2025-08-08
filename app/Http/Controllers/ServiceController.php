@@ -15,28 +15,14 @@ class ServiceController extends Controller
 
 
     
-      public function index(Request $request)
-    {
-        $query = Service::with('images')->orderBy('created_at', 'desc');
+public function index()
+{
+    $serviceAds = Service::with('images')->latest()->paginate(12);
 
-        // Example filter logic: filter by a specific 'make'
-        if ($request->filled('make')) {
-            $query->where('make', $request->input('make'));
-        }
-
-        // Example filter logic: filter by 'year'
-        if ($request->filled('year')) {
-            $query->where('year', $request->input('year'));
-        }
-        
-        $services = $query->paginate(12);
-
-        // This returns the new, dedicated cars index blade file
-        return view('ads.services.index', [
-            'ads' => $services,
-            'category' => (object)['name' => 'Autos', 'slug' => 'cars'] // Pass a mock category for the header
-        ]);
-    }
+    return view('ads.services.index', [
+        'serviceAds' => $serviceAds,
+    ]);
+}
 
 
     /**

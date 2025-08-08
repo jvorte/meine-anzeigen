@@ -26,41 +26,19 @@
             {{-- Electronic Details Section --}}
             <section class="bg-gray-50 p-6 rounded-lg shadow-inner">
                 <h4 class="text-xl font-semibold text-gray-700 mb-6">Electronics-Details</h4>
-             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
-     x-data="{
-        selectedBrandId: @json(old('brand_id')),
-        selectedElectronicModelId: @json(old('electronic_model_id')),
-        electronicModels: @json($initialElectronicModels),
-        selectedCategory: @json(old('category')),
-
-        // Mapping categories to their required fields
-        categoryFields: {
-            'Mobile Phone': ['color', 'usage_time', 'operating_system', 'storage_capacity', 'processor', 'ram'],
-            'TV': ['screen_size', 'usage_time'],
-            // Add other categories and their specific fields here
-        },
-
-        shouldShowField(field) {
-            if (!this.selectedCategory) return false;
-            const category = this.selectedCategory.replace(/\s+/g, ' ').trim();
-            return this.categoryFields[category] && this.categoryFields[category].includes(field);
-        },
-
-        async fetchElectronicModels() {
-            if (this.selectedBrandId) {
-                const response = await fetch(`/electronic-models/${this.selectedBrandId}`);
-                this.electronicModels = await response.json();
-                if (!Object.keys(this.electronicModels).includes(String(this.selectedElectronicModelId))) {
-                    this.selectedElectronicModelId = '';
-                }
-            } else {
-                this.electronicModels = {};
-                this.selectedElectronicModelId = '';
-            }
-        }
-    }"
-    x-init="fetchElectronicModels(); $watch('selectedBrandId', fetchElectronicModels)">
-
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+                     x-data="{
+                         selectedCategory: @json(old('category')),
+                         categoryFields: {
+                             'Mobile Phone': ['color', 'usage_time', 'operating_system', 'storage_capacity', 'processor', 'ram'],
+                             'TV': ['screen_size', 'usage_time'],
+                         },
+                         shouldShowField(field) {
+                             if (!this.selectedCategory) return false;
+                             const category = this.selectedCategory.replace(/\s+/g, ' ').trim();
+                             return this.categoryFields[category] && this.categoryFields[category].includes(field);
+                         }
+                     }">
 
                     {{-- Category --}}
                     <div>
@@ -77,33 +55,22 @@
                         @enderror
                     </div>
 
-                    {{-- Brand (Dropdown) --}}
-                  <div>
-        <label for="brand_id" class="block text-sm font-medium text-gray-700 mb-2">Marke</label>
-        <select name="brand_id" id="brand_id" x-model="selectedBrandId"
-                class="form-select w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
-            <option value="">Bitte wählen</option>
-            {{-- Loop through $electronicBrands now --}}
-            @foreach($electronicBrands as $electronicBrand)
-                <option value="{{ $electronicBrand->id }}" {{ old('brand_id') == $electronicBrand->id ? 'selected' : '' }}>{{ $electronicBrand->name }}</option>
-            @endforeach
-        </select>
-        @error('brand_id')
-            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-        @enderror
-    </div>
+                    {{-- Brand (Free Input) --}}
+                    <div>
+                        <label for="brand" class="block text-sm font-medium text-gray-700 mb-2">Marke</label>
+                        <input type="text" name="brand" id="brand" value="{{ old('brand') }}" placeholder="z.B. Apple"
+                               class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
+                        @error('brand')
+                            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                        @enderror
+                    </div>
 
-                    {{-- Electronic Model (Dynamic with Alpine.js) --}}
-                    <div x-show="Object.keys(electronicModels).length > 0" x-transition>
-                        <label for="electronic_model_id" class="block text-sm font-medium text-gray-700 mb-2">Modell</label>
-                        <select name="electronic_model_id" id="electronic_model_id" x-model="selectedElectronicModelId"
-                                class="form-select w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
-                            <option value="">Bitte wählen</option>
-                            <template x-for="(name, id) in electronicModels" :key="id">
-                                <option :value="id" x-text="name"></option>
-                            </template>
-                        </select>
-                        @error('electronic_model_id')
+                    {{-- Electronic Model (Free Input) --}}
+                    <div>
+                        <label for="electronic_model" class="block text-sm font-medium text-gray-700 mb-2">Modell</label>
+                        <input type="text" name="electronic_model" id="electronic_model" value="{{ old('electronic_model') }}" placeholder="z.B. iPhone 15 Pro Max"
+                               class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
+                        @error('electronic_model')
                             <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                         @enderror
                     </div>
@@ -159,7 +126,6 @@
                     </div>
 
                     {{-- Specific fields that show based on category selection --}}
-
                     <div x-show="shouldShowField('color')" x-transition:enter.duration.500ms x-transition:leave.duration.400ms>
                         <label for="color" class="block text-sm font-medium text-gray-700 mb-2">Farbe (optional)</label>
                         <input type="text" name="color" id="color" value="{{ old('color') }}" placeholder="z.B. Schwarz"
@@ -174,15 +140,6 @@
                         <input type="text" name="usage_time" id="usage_time" value="{{ old('usage_time') }}" placeholder="z.B. 1 Jahr"
                                class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
                         @error('usage_time')
-                            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-                        @enderror
-                    </div>
-
-                    <div x-show="shouldShowField('power')" x-transition:enter.duration.500ms x-transition:leave.duration.400ms>
-                        <label for="power" class="block text-sm font-medium text-gray-700 mb-2">Leistung (optional)</label>
-                        <input type="text" name="power" id="power" value="{{ old('power') }}" placeholder="z.B. 60W"
-                               class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
-                        @error('power')
                             <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                         @enderror
                     </div>
@@ -232,11 +189,11 @@
                         @enderror
                     </div>
 
-                    {{-- Accessories (always visible) --}}
+                     {{-- Accessories (always visible) --}}
                     <div class="md:col-span-2 lg:col-span-3">
                         <label for="accessories" class="block text-sm font-medium text-gray-700 mb-2">Zubehör (optional, z.B. Ladekabel, Fernbedienung)</label>
                         <textarea name="accessories" id="accessories" rows="3" placeholder="Liste hier enthaltenes Zubehör auf."
-                                    class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">{{ old('accessories') }}</textarea>
+                                  class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">{{ old('accessories') }}</textarea>
                         @error('accessories')
                             <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                         @enderror
@@ -259,26 +216,24 @@
                 <div>
                     <label for="description" class="block text-sm font-semibold text-gray-800 mb-2">Beschreibung</label>
                     <textarea name="description" id="description" rows="7"
-                                placeholder="Gib hier alle wichtigen Details zu deinem Elektronikartikel ein. Zustand, Funktionen, Mängel."
-                                class="w-full p-3 border border-gray-300 rounded-md shadow-sm bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-600 transition duration-150 ease-in-out">{{ old('description') }}</textarea>
+                                 placeholder="Gib hier alle wichtigen Details zu deinem Elektronikartikel ein. Zustand, Funktionen, Mängel."
+                                 class="w-full p-3 border border-gray-300 rounded-md shadow-sm bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-600 transition duration-150 ease-in-out">{{ old('description') }}</textarea>
                     @error('description')
                         <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                     @enderror
                 </div>
             </section>
 
-        {{-- Photo Upload Section --}}
-            {{-- The x-data="multiImageUploader()" is placed on a div wrapping the input and previews --}}
+            {{-- Photo Upload Section --}}
             <section class="bg-gray-50 p-6 rounded-lg shadow-inner">
                 <h4 class="text-xl font-semibold text-gray-700 mb-6">Fotos hinzufügen</h4>
 
                 <div x-data="multiImageUploader()" class="space-y-4">
-                    {{-- The file input field. Laravel will pick up files from here. --}}
                     <input type="file" name="images[]" multiple @change="addFiles($event)" class="block w-full border p-2 rounded" />
                     @error('images')
                         <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                     @enderror
-                    @error('images.*') {{-- For individual image validation errors --}}
+                    @error('images.*')
                         <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                     @enderror
 
@@ -287,18 +242,17 @@
                             <div class="relative group">
                                 <img :src="image" class="w-full h-32 object-cover rounded shadow">
                                 <button type="button" @click="remove(index)"
-                                    class="absolute top-1 right-1 bg-red-700 text-white w-6 h-6 rounded-full text-xs flex items-center justify-center hidden group-hover:flex">✕</button>
+                                        class="absolute top-1 right-1 bg-red-700 text-white w-6 h-6 rounded-full text-xs flex items-center justify-center hidden group-hover:flex">✕</button>
                             </div>
                         </template>
                     </div>
                 </div>
 
-                {{-- Alpine.js Script for Image Previews --}}
                 <script>
                     function multiImageUploader() {
                         return {
-                            files: [], // Stores the actual File objects
-                            previews: [], // Stores URLs for image previews
+                            files: [],
+                            previews: [],
 
                             addFiles(event) {
                                 const newFiles = Array.from(event.target.files);
@@ -308,25 +262,15 @@
                                     this.previews.push(URL.createObjectURL(file));
                                 });
 
-                                // Important: Assign the collected files back to the input's files property
-                                // This ensures the native form submission sends the correct set of files
                                 const dataTransfer = new DataTransfer();
                                 this.files.forEach(file => dataTransfer.items.add(file));
                                 event.target.files = dataTransfer.files;
-
-                                // No need to clear event.target.value = '' if you're managing `event.target.files` directly.
-                                // It can sometimes interfere with re-selecting the *same* file if you clear it.
-                                // If you want to allow selecting the same file multiple times, you might need
-                                // to rethink the preview logic or clear it but rely on the `files` array.
                             },
 
                             remove(index) {
-                                // Remove from internal arrays
                                 this.files.splice(index, 1);
                                 this.previews.splice(index, 1);
 
-                                // Update the actual file input's files property
-                                // Find the file input within the current component's scope
                                 const fileInput = this.$el.querySelector('input[type="file"][name="images[]"]');
                                 if (fileInput) {
                                     const dataTransfer = new DataTransfer();
@@ -350,40 +294,4 @@
         </form>
     </div>
 
-    @push('scripts')
-        <script>
-            document.addEventListener('alpine:init', () => {
-                Alpine.data('electronicForm', () => ({
-                    selectedBrandId: @json(old('brand_id')),
-                    selectedElectronicModelId: @json(old('electronic_model_id')),
-                    electronicModels: @json($initialElectronicModels),
-                    // This `selectedCategory` here is for the Alpine data scope,
-                    // but the main `selectedCategory` controlling the form is in the x-data of the grid div
-                    // We can remove this if not strictly needed here for other Alpine logic.
-
-                    async fetchElectronicModels() {
-                        if (this.selectedBrandId) {
-                            try {
-                                const response = await fetch(`/electronic-models/${this.selectedBrandId}`);
-                                if (!response.ok) {
-                                    throw new Error(`HTTP error! status: ${response.status}`);
-                                }
-                                this.electronicModels = await response.json();
-                                if (!Object.keys(this.electronicModels).includes(String(this.selectedElectronicModelId))) {
-                                    this.selectedElectronicModelId = '';
-                                }
-                            } catch (error) {
-                                console.error('Error fetching electronic models:', error);
-                                this.electronicModels = {};
-                                this.selectedElectronicModelId = '';
-                            }
-                        } else {
-                            this.electronicModels = {};
-                            this.selectedElectronicModelId = '';
-                        }
-                    }
-                }));
-            });
-        </script>
-    @endpush
 </x-app-layout>

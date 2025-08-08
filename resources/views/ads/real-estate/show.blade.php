@@ -31,7 +31,7 @@
         {{-- Breadcrumbs component --}}
         <x-breadcrumbs :items="[
             {{-- Changed "Immobilien Anzeigen" to "Real Estate Listings" --}}
-            ['label' => 'Real Estate Listings', 'url' => route('categories.show', 'immobilien')],
+            ['label' => 'Real Estate Listings', 'url' => route('categories.real-estate.index')],
             ['label' => $realEstate->title, 'url' => null],
         ]" />
     </div>

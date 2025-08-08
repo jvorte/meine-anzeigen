@@ -34,6 +34,46 @@
         <form method="POST" action="{{ route('ads.boats.store') }}" enctype="multipart/form-data" class="space-y-8">
             @csrf
 
+            {{-- Title & Description Section --}}
+            <section class="bg-white p-6 rounded-lg shadow">
+                {{-- Titel --}}
+                <div class="mb-6">
+                    <label for="title" class="block text-sm font-semibold text-gray-800 mb-2">Anzeigentitel</label>
+                    <input type="text" name="title" id="title" value="{{ old('title') }}"
+                        placeholder="Aussagekräftiger Titel für deine Anzeige (z.B. Segelboot Bavaria 37 Cruiser)"
+                        class="w-full p-3 border border-gray-300 rounded-md shadow-sm bg-white text-gray-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50">
+                    @error('title')
+                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                    @enderror
+                </div>
+
+                {{-- Beschreibung --}}
+                <div>
+                    <label for="description" class="block text-sm font-semibold text-gray-800 mb-2">Beschreibung</label>
+                    <textarea name="description" id="description" rows="7"
+                        placeholder="Gib hier alle wichtigen Details zu deinem Boot ein. Ausstattung, Zustand, Besonderheiten."
+                        class="w-full p-3 border border-gray-300 rounded-md shadow-sm bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-600 transition duration-150 ease-in-out">{{ old('description') }}</textarea>
+                    @error('description')
+                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                    @enderror
+                </div>
+            </section>
+
+                {{-- Preise Section --}}
+            <section class="bg-gray-50 p-6 rounded-lg shadow-inner">
+                <h4 class="text-xl font-semibold text-gray-700 mb-6">Preise</h4>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    {{-- Preis --}}
+                    <div>
+                        <label for="price" class="block text-sm font-medium text-gray-700 mb-2">Preis (in €)</label>
+                        <input type="number" step="0.01" name="price" id="price" value="" placeholder="z.B. 15000.00"
+                               class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
+                        @error('price')
+                            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                        @enderror
+                    </div>
+                </div>
+            </section>
             {{-- Boat Details Section (Marke & Modell) --}}
             <section class="bg-gray-50 p-6 rounded-lg shadow-inner">
                 <h4 class="text-xl font-semibold text-gray-700 mb-6">Bootsdetails</h4>
@@ -234,46 +274,6 @@
                 </div>
             </section>
 
-            {{-- Title & Description Section --}}
-            <section class="bg-white p-6 rounded-lg shadow">
-                {{-- Titel --}}
-                <div class="mb-6">
-                    <label for="title" class="block text-sm font-semibold text-gray-800 mb-2">Anzeigentitel</label>
-                    <input type="text" name="title" id="title" value="{{ old('title') }}"
-                        placeholder="Aussagekräftiger Titel für deine Anzeige (z.B. Segelboot Bavaria 37 Cruiser)"
-                        class="w-full p-3 border border-gray-300 rounded-md shadow-sm bg-white text-gray-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50">
-                    @error('title')
-                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-                    @enderror
-                </div>
-
-                {{-- Beschreibung --}}
-                <div>
-                    <label for="description" class="block text-sm font-semibold text-gray-800 mb-2">Beschreibung</label>
-                    <textarea name="description" id="description" rows="7"
-                        placeholder="Gib hier alle wichtigen Details zu deinem Boot ein. Ausstattung, Zustand, Besonderheiten."
-                        class="w-full p-3 border border-gray-300 rounded-md shadow-sm bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-600 transition duration-150 ease-in-out">{{ old('description') }}</textarea>
-                    @error('description')
-                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-                    @enderror
-                </div>
-            </section>
-
-                {{-- Preise Section --}}
-            <section class="bg-gray-50 p-6 rounded-lg shadow-inner">
-                <h4 class="text-xl font-semibold text-gray-700 mb-6">Preise</h4>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    {{-- Preis --}}
-                    <div>
-                        <label for="price" class="block text-sm font-medium text-gray-700 mb-2">Preis (in €)</label>
-                        <input type="number" step="0.01" name="price" id="price" value="" placeholder="z.B. 15000.00"
-                               class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
-                        @error('price')
-                            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-                        @enderror
-                    </div>
-                </div>
-            </section>
             
 
 

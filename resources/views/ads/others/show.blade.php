@@ -30,7 +30,7 @@
           {{-- Breadcrumbs component --}}
            <x-breadcrumbs :items="[
                 ['label' => 'Alle Anzeigen', 'url' => route('ads.index')],
-                ['label' => 'Sonstige Anzeigen', 'url' => route('categories.sonstiges.index')], {{-- Assuming 'sonstiges' is the slug for others --}}
+                ['label' => 'Sonstige Anzeigen', 'url' => route('categories.others.index')], {{-- Assuming 'sonstiges' is the slug for others --}}
                 ['label' => $other->title, 'url' => null],
             ]" />
           {{-- Action Buttons and Back link --}}

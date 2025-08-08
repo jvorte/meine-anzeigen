@@ -49,12 +49,25 @@
                         @error('title')
                             <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                         @enderror
+
+                              {{-- Hauptbeschreibung --}}
+                 
+                         <label for="title" class="block text-sm font-semibold text-gray-800 my-2">Hauptbeschreibung</label>
+                        <textarea name="description" id="description" rows="5"
+                                  placeholder="Gib hier die Hauptbeschreibung deines Boots ein."
+                                  class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">{{ old('description', $boat->description) }}</textarea>
+                        @error('description')
+                            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                        @enderror
+                 
                     </div>
+
+
 
                     {{-- Marke (Brand) - Now a simple text input --}}
                     <div>
                         <label for="brand_name" class="block text-sm font-medium text-gray-700 mb-2">Marke</label>
-                        <input type="text" name="brand_name" id="brand_name" value="{{ old('brand', $boat->brand_name) }}" {{-- Ensure $boat->brand_name is directly used --}}
+                        <input type="text" name="brand_name" id="brand_name" value="{{ old('brand', $boat->brand) }}" {{-- Ensure $boat->brand_name is directly used --}}
                                placeholder="z.B. Bavaria, Jeanneau"
                                class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
                         @error('brand_name')
@@ -65,13 +78,31 @@
                     {{-- Modell (Model) - Now a simple text input --}}
                     <div>
                         <label for="model_name" class="block text-sm font-medium text-gray-700 mb-2">Modell</label>
-                        <input type="text" name="model_name" id="model_name" value="{{ old('model', $boat->model_name) }}" {{-- Ensure $boat->model_name is directly used --}}
+                        <input type="text" name="model_name" id="model_name" value="{{ old('model', $boat->model) }}" {{-- Ensure $boat->model_name is directly used --}}
                                placeholder="z.B. Cruiser 34, Sun Odyssey 409"
                                class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
                         @error('model_name')
                             <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                         @enderror
                     </div>
+
+                                {{-- Preise Section --}}
+          <div>   
+                    {{-- Preis --}}
+                    <div>
+                        <label for="price" class="block text-sm font-medium text-gray-700 mb-2">Preis (in €)</label>
+                        <input type="number" step="0.01" name="price" id="price" value="{{ old('price', $boat->price) }}" placeholder="z.B. 15000.00"
+                               class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
+                        @error('price')
+                            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                        @enderror
+                    </div>
+                </div>
+    
+
+
+          
+         
 
                     {{-- Baujahr --}}
                     <div>
@@ -199,39 +230,6 @@
                         <input type="date" name="last_service" id="last_service" value="{{ old('last_service', $boat->last_service ? \Carbon\Carbon::parse($boat->last_service)->format('Y-m-d') : '') }}"
                                class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
                         @error('last_service')
-                            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-                        @enderror
-                    </div>
-                </div>
-            </section>
-
-            {{-- Beschreibung Section --}}
-            <section class="bg-gray-50 p-6 rounded-lg shadow-inner">
-                <h4 class="text-xl font-semibold text-gray-700 mb-6">Beschreibung</h4>
-                <div class="space-y-6">
-                    {{-- Hauptbeschreibung --}}
-                    <div>
-                        <label for="description" class="block text-sm font-medium text-gray-700 mb-2">Hauptbeschreibung</label>
-                        <textarea name="description" id="description" rows="5"
-                                  placeholder="Gib hier die Hauptbeschreibung deines Boots ein."
-                                  class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">{{ old('description', $boat->description) }}</textarea>
-                        @error('description')
-                            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-                        @enderror
-                    </div>
-                </div>
-            </section>
-
-            {{-- Preise Section --}}
-            <section class="bg-gray-50 p-6 rounded-lg shadow-inner">
-                <h4 class="text-xl font-semibold text-gray-700 mb-6">Preise</h4>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    {{-- Preis --}}
-                    <div>
-                        <label for="price" class="block text-sm font-medium text-gray-700 mb-2">Preis (in €)</label>
-                        <input type="number" step="0.01" name="price" id="price" value="{{ old('price', $boat->price) }}" placeholder="z.B. 15000.00"
-                               class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
-                        @error('price')
                             <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                         @enderror
                     </div>
