@@ -10,20 +10,16 @@
             Angaben übersichtlich und einfach zu bearbeiten.
         </p>
     </x-slot>
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+   <x-breadcrumbs :items="[
+    ['label' => 'Alle Anzeigen', 'url' => route('ads.index')],
+    ['label' => 'Dienstleistungen', 'url' => route('categories.services.index')],
+    ['label' => $service->title, 'url' => null],
+]" class="mb-8" />
+</div>
 
-    <div class="py-4">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            {{-- Breadcrumbs component --}}
-            <x-breadcrumbs :items="[
-        ['label' => 'Meine Anzeigen', 'url' => route('dashboard')],
-        ['label' => $ad->title, 'url' => route('ads.services.show', $ad)],
-        ['label' => 'Bearbeiten', 'url' => route('ads.services.edit', $ad)],
-    ]" class="mb-10" />
-        </div>
-    </div>
-
-    <div class="max-w-6xl mx-auto p-8 bg-white rounded-3xl shadow-xl mt-6">
-        <form method="POST" action="{{ route('ads.services.update', $ad->id) }}" enctype="multipart/form-data"
+    <div class="max-w-6xl mx-auto p-8 bg-white rounded-3xl shadow-xl my-6">
+        <form method="POST" action="{{ route('ads.services.update', $service->id) }}" enctype="multipart/form-data"
             class="space-y-10">
             @csrf
             @method('PUT')
@@ -46,7 +42,7 @@
                             class="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-opacity-50 transition duration-200">
                             <option value="">Bitte wählen</option>
                             @foreach(['reinigung', 'handwerk', 'it', 'beratung', 'transport', 'sonstiges'] as $category)
-                                <option value="{{ $category }}" {{ old('service_type', $ad->service_type) == $category ? 'selected' : '' }}>
+                                <option value="{{ $category }}" {{ old('service_type', $service->service_type) == $category ? 'selected' : '' }}>
                                     {{ ucfirst($category) }}
                                 </option>
                             @endforeach
@@ -59,7 +55,7 @@
                     <div class="md:col-span-2">
                         <label for="title" class="block text-sm font-semibold text-gray-700 mb-3">Titel der
                             Dienstleistung</label>
-                        <input type="text" name="title" id="title" value="{{ old('title', $ad->title) }}"
+                        <input type="text" name="title" id="title" value="{{ old('title', $service->title) }}"
                             placeholder="z.B. Professionelle Fensterreinigung"
                             class="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-opacity-50 transition duration-200">
                         @error('title')<p class="text-red-600 text-sm mt-1 font-semibold">{{ $message }}</p>@enderror
@@ -69,7 +65,7 @@
                     <div>
                         <label for="location" class="block text-sm font-semibold text-gray-700 mb-3">Region /
                             Ort</label>
-                        <input type="text" name="location" id="location" value="{{ old('location', $ad->location) }}"
+                        <input type="text" name="location" id="location" value="{{ old('location', $service->location) }}"
                             placeholder="z.B. Wien, Niederösterreich"
                             class="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-opacity-50 transition duration-200">
                         @error('location')<p class="text-red-600 text-sm mt-1 font-semibold">{{ $message }}</p>@enderror
@@ -79,7 +75,7 @@
                     <div>
                         <label for="price" class="block text-sm font-semibold text-gray-700 mb-3">Preis (in
                             €/Stunde/Pauschale, optional)</label>
-                        <input type="number" step="0.01" name="price" id="price" value="{{ old('price', $ad->price) }}"
+                        <input type="number" step="0.01" name="price" id="price" value="{{ old('price', $service->price) }}"
                             placeholder="z.B. 50.00"
                             class="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-opacity-50 transition duration-200">
                         @error('price')<p class="text-red-600 text-sm mt-1 font-semibold">{{ $message }}</p>@enderror
@@ -93,7 +89,7 @@
                             class="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-opacity-50 transition duration-200">
                             <option value="">Bitte wählen</option>
                             @foreach(['sofort', 'nach_vereinbarung', 'während_wochentagen', 'wochenende'] as $avail)
-                                <option value="{{ $avail }}" {{ old('availability', $ad->availability) == $avail ? 'selected' : '' }}>
+                                <option value="{{ $avail }}" {{ old('availability', $service->availability) == $avail ? 'selected' : '' }}>
                                     {{ ucfirst(str_replace('_', ' ', $avail)) }}
                                 </option>
                             @endforeach
@@ -109,7 +105,7 @@
                         Dienstleistung</label>
                     <textarea name="description" id="description" rows="7"
                         placeholder="Beschreibe hier deine Dienstleistung detailliert. Was bietest du an? Welche Erfahrungen hast du?"
-                        class="w-full p-4 border border-gray-300 rounded-lg shadow-sm resize-none focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-opacity-50 transition duration-200">{{ old('description', $ad->description) }}</textarea>
+                        class="w-full p-4 border border-gray-300 rounded-lg shadow-sm resize-none focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-opacity-50 transition duration-200">{{ old('description', $service->description) }}</textarea>
                     @error('description')<p class="text-red-600 text-sm mt-1 font-semibold">{{ $message }}</p>@enderror
                 </div>
             </section>
@@ -120,7 +116,7 @@
 
                 {{-- Unified Alpine.js component for both existing and new images --}}
                 <div x-data="multiImageUploader(
-                    {{ json_encode($ad->images->map(fn($image) => [
+                    {{ json_encode($service->images->map(fn($image) => [
                         'id' => $image->id,
                         'url' => asset('storage/' . $image->image_path),
                         'is_thumbnail' => $image->is_thumbnail ?? false, // Ensure this maps correctly if you use it

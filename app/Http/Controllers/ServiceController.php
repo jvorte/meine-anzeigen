@@ -106,18 +106,18 @@ public function index()
         return view('ads.services.show', compact('service'));
     }
 
-    public function edit(Service $ad) // Using route model binding
-    {
-     
-        return view('ads.services.edit', compact('ad'));
-    }
+   public function edit(Service $service)
+{
+    return view('ads.services.edit', compact('service'));
+}
+
 
  // ... (previous code)
 
 /**
  * Update the specified resource in storage.
  */
-public function update(Request $request, Service $ad) // Using route model binding
+public function update(Request $request, Service $service) // Using route model binding
     {
     //    dd($request->all(), $request->file('images'));
 
@@ -135,7 +135,7 @@ public function update(Request $request, Service $ad) // Using route model bindi
         ]);
   
         // Update the basic ad details
-        $ad->update([
+        $service->update([
             'service_type' => $validated['service_type'],
             'title' => $validated['title'], // Use 'title' if that's your DB column
             'location' => $validated['location'],
@@ -162,7 +162,7 @@ public function update(Request $request, Service $ad) // Using route model bindi
             foreach ($request->file('images') as $imageFile) {
                 $path = $imageFile->store('service_images', 'public'); 
                 // Use the correct relationship method from the Service model
-                $ad->images()->create([ 
+                $service->images()->create([ 
                     'image_path' => $path, 
                     'is_thumbnail' => false, 
                 ]);
@@ -172,22 +172,22 @@ public function update(Request $request, Service $ad) // Using route model bindi
 
         }
 
-        return redirect()->route('ads.services.show', $ad)->with('success', 'Dienstleistung Anzeige erfolgreich aktualisiert.');
+        return redirect()->route('ads.services.show', $service)->with('success', 'Dienstleistung Anzeige erfolgreich aktualisiert.');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Service $ad) // Using route model binding
+    public function destroy(Service $service) // Using route model binding
     {
         
         // Delete associated images from storage
-        foreach ($ad->images as $image) {
+        foreach ($service->images as $image) {
             Storage::disk('public')->delete($image->path);
         }
 
         // Delete the ad and its associated images from the database
-        $ad->delete();
+        $service->delete();
 
         return redirect()->route('dashboard')->with('success', 'Dienstleistung Anzeige erfolgreich gelöscht.'); // Redirect to user's dashboard or ad list
     }

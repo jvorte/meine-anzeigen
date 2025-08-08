@@ -35,8 +35,9 @@
 
                     <div class="p-4">
                         <h2 class="text-xl font-semibold text-gray-800 truncate">{{ $realEstate->title }}</h2>
-                        <p class="text-gray-600 mt-1">Τοποθεσία: {{ $realEstate->city ?? 'Δ/Α' }}</p>
-                        <p class="text-gray-500 mt-1">Είδος: {{ $realEstate->category ?? 'Δ/Α' }}</p>
+                          <p class="text-gray-500 mt-1"> {{ $realEstate->bautyp ?? 'Δ/Α' }}</p>
+                        <p class="text-gray-600 mt-1">{{ $realEstate->ort ?? 'Δ/Α' }}</p>
+                      
                         @if($realEstate->price)
                             <p class="text-blue-600 font-semibold mt-2">€ {{ number_format($realEstate->price, 2) }}</p>
                         @else

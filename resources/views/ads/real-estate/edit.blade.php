@@ -14,7 +14,7 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             {{-- Breadcrumbs component --}}
             <x-breadcrumbs :items="[
-                ['label' => 'Immobilien Anzeigen', 'url' => route('categories.show', 'immobilien')],
+                ['label' => 'Immobilien Anzeigen', 'url' => route('categories.real-estate.index')],
                 ['label' => $realEstate->title, 'url' => route('ads.real-estate.show', $realEstate->id)],
                 ['label' => 'Bearbeiten', 'url' => null],
             ]" />
