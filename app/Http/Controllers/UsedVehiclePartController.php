@@ -15,20 +15,55 @@ use Illuminate\Validation\Rule; // Still useful for general validation, but spec
 class UsedVehiclePartController extends Controller
 {
 
-public function index()
-{
-    $usedVehicleParts = UsedVehiclePart::with(['user', 'images']) 
-        ->latest()
-        ->paginate(12);
+ public function index(Request $request)
+    {
+        // Start with a base query
+        $query = UsedVehiclePartAd::with(['images']);
 
-    return view('ads.used-vehicle-parts.index', [
-        'usedVehicleParts' => $usedVehicleParts,
-        'category' => (object)[
-            'name' => 'usedVehicleParts',
-            'slug' => 'usedVehicleParts',
-        ]
-    ]);
-}
+        // Apply filters if they exist in the request
+        if ($request->has('part_category') && $request->input('part_category')) {
+            $query->where('part_category', $request->input('part_category'));
+        }
+
+        if ($request->has('compatible_brand') && $request->input('compatible_brand')) {
+            $query->where('compatible_brand', $request->input('compatible_brand'));
+        }
+        
+        if ($request->has('vehicle_type') && $request->input('vehicle_type')) {
+            $query->where('vehicle_type', $request->input('vehicle_type'));
+        }
+
+        if ($request->has('price') && $request->input('price')) {
+            $priceRange = explode('-', $request->input('price'));
+            $query->whereBetween('price', [(int)$priceRange[0], (int)$priceRange[1]]);
+        }
+        
+        if ($request->has('condition') && $request->input('condition')) {
+            $query->where('condition', $request->input('condition'));
+        }
+
+        // Apply sorting based on the request, or default to latest
+        $sortBy = $request->input('sort_by', 'latest');
+        
+        switch ($sortBy) {
+            case 'price_asc':
+                $query->orderBy('price', 'asc');
+                break;
+            case 'price_desc':
+                $query->orderBy('price', 'desc');
+                break;
+            case 'latest':
+            default:
+                $query->orderBy('created_at', 'desc');
+                break;
+        }
+
+        $usedVehicleParts = $query->paginate(15);
+        // You may need to pass compatible brands and models if they are dynamic.
+        // For this example, I've used static values in the blade file.
+
+        return view('ads.vehicles-parts.index', compact('usedVehicleParts'));
+    }
     /**
      * Show the form for creating a new used vehicle part ad.
      */

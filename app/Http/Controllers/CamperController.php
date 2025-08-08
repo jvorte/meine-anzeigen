@@ -28,21 +28,87 @@ class CamperController extends Controller
 
 
 // CamperController.php
-public function index()
-{
-    $campers = Camper::with(['camperBrand', 'camperModel', 'user', 'images']) // αν έχεις σχέσεις
-        ->latest()
-        ->paginate(12);
+ public function index(Request $request)
+    {
+        // Start with a base query
+        $query = Camper::with(['camperBrand', 'camperModel', 'images']);
 
-    return view('ads.camper.index', [
-        'campers' => $campers,
-        'category' => (object)[
-            'name' => 'Campers',
-            'slug' => 'campers',
-        ]
-    ]);
-}
+        // Apply filters if they exist in the request
+        if ($request->has('brand') && $request->input('brand')) {
+            $query->where('camper_brand_id', $request->input('brand'));
+        }
 
+        if ($request->has('model') && $request->input('model')) {
+            $query->where('camper_model_id', $request->input('model'));
+        }
+
+        if ($request->has('price') && $request->input('price')) {
+            $priceRange = explode('-', $request->input('price'));
+            $query->whereBetween('price', [(int)$priceRange[0], (int)$priceRange[1]]);
+        }
+        
+        if ($request->has('mileage') && $request->input('mileage')) {
+            $mileageRange = explode('-', $request->input('mileage'));
+            $query->whereBetween('mileage', [(int)$mileageRange[0], (int)$mileageRange[1]]);
+        }
+        
+        if ($request->has('first_registration') && $request->input('first_registration')) {
+            $registrationRange = explode('-', $request->input('first_registration'));
+            $query->whereBetween('first_registration', [(int)$registrationRange[0], (int)$registrationRange[1]]);
+        }
+        
+        if ($request->has('power') && $request->input('power')) {
+            $powerRange = explode('-', $request->input('power'));
+            $query->whereBetween('power', [(int)$powerRange[0], (int)$powerRange[1]]);
+        }
+        
+        if ($request->has('condition') && $request->input('condition')) {
+            $query->where('condition', $request->input('condition'));
+        }
+        
+        if ($request->has('camper_type') && $request->input('camper_type')) {
+            $query->where('camper_type', $request->input('camper_type'));
+        }
+
+        if ($request->has('berths') && $request->input('berths')) {
+            $berthsRange = explode('-', $request->input('berths'));
+            $query->whereBetween('berths', [(int)$berthsRange[0], (int)$berthsRange[1]]);
+        }
+
+        if ($request->has('fuel_type') && $request->input('fuel_type')) {
+            $query->where('fuel_type', $request->input('fuel_type'));
+        }
+        
+        if ($request->has('transmission') && $request->input('transmission')) {
+            $query->where('transmission', $request->input('transmission'));
+        }
+        
+        if ($request->has('emission_class') && $request->input('emission_class')) {
+            $query->where('emission_class', $request->input('emission_class'));
+        }
+
+        // Apply sorting based on the request, or default to latest
+        $sortBy = $request->input('sort_by', 'latest');
+        
+        switch ($sortBy) {
+            case 'price_asc':
+                $query->orderBy('price', 'asc');
+                break;
+            case 'price_desc':
+                $query->orderBy('price', 'desc');
+                break;
+            case 'latest':
+            default:
+                $query->orderBy('created_at', 'desc');
+                break;
+        }
+
+        $campers = $query->paginate(15);
+        $camperBrands = CamperBrand::all();
+        $camperModels = CamperModel::all();
+
+        return view('ads.camper.index', compact('campers', 'camperBrands', 'camperModels'));
+    }
     /**
      * Get models by brand ID for AJAX requests.
      */
