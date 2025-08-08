@@ -14,7 +14,7 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             {{-- Breadcrumbs component (προαιρετικό, αν έχεις) --}}
             <x-breadcrumbs :items="[
-                ['label' => 'Haushaltsartikel Anzeigen', 'url' => route('categories.show', 'haushalt')],
+                ['label' => 'household Anzeigen', 'url' => route('categories.household.index')],
                 ['label' => 'Anzeige bearbeiten', 'url' => null],
             ]" />
         </div>

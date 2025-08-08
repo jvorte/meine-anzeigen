@@ -59,6 +59,7 @@ Route::prefix('categories')->name('categories.')->group(function () {
     Route::get('/commercial-vehicle/{commercialVehicle}', [CommercialVehicleController::class, 'show'])->name('commercial-vehicles.show');
     Route::get('/campers/{camper}', [CamperController::class, 'show'])->name('campers.show');
 });
+Route::get('/ads/household/{householdItem}', [HouseholdItemController::class, 'show'])->name('ads.household.show');
 
 // AJAX Routes
 Route::get('/electronic-models/{brandId}', function ($brandId) {

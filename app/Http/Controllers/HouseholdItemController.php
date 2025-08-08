@@ -15,14 +15,15 @@ class HouseholdItemController extends Controller
 {
 
     
- public function index()
-{
-    $householdAds = HouseholdItem::with('images')->latest()->paginate(12);
+    public function index()
+    {
+        // Φέρνουμε όλες τις αγγελίες είδη σπιτιού με pagination
+        // και φορτώνουμε προληπτικά και τις εικόνες τους.
+        $householdAds = HouseholdItem::with('images')->latest()->paginate(10);
 
-    return view('ads.household.index', [
-        'householdAds' => $householdAds,
-    ]);
-}
+        // Επιστρέφουμε το view με τη σωστή μεταβλητή.
+        return view('ads.household.index', compact('householdAds'));
+    }
 
     use AuthorizesRequests;
     /**
@@ -105,7 +106,7 @@ class HouseholdItemController extends Controller
      */
     public function show(HouseholdItem $householdItem)
     {
-        
+        $householdItem->load('images');
         return view('ads.household.show', compact('householdItem'));
     }
 
