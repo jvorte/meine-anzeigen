@@ -154,6 +154,10 @@
                 </div>
             </section>
 
+
+            
+ 
+
          {{-- Photo Upload Section --}}
             {{-- The x-data="multiImageUploader()" is placed on a div wrapping the input and previews --}}
             <section class="bg-gray-50 p-6 rounded-lg shadow-inner">

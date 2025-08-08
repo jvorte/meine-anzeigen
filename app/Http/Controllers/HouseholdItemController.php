@@ -62,7 +62,7 @@ class HouseholdItemController extends Controller
         // 1. Validation
         $validatedData = $request->validate([
 
-            'images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048', // Validation for files
+            'images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg', // Validation for files
             'title' => 'required|string|max:255',
             'brand' => 'required|string|max:255',
             'description' => 'required|string',
@@ -114,7 +114,18 @@ class HouseholdItemController extends Controller
     public function edit(HouseholdItem $householdItem)
     {
         // Φόρτωσε τις κατηγορίες για το dropdown (αν χρειάζεται)
-        $categories = ['Möbel', 'Elektronik', 'Küche', 'Sonstiges']; // Παράδειγμα, φέρε από τη βάση αν έχεις
+             $categories = [
+            'Möbel',
+            'Küchengeräte',
+            'Waschmaschinen & Trockner',
+            'Staubsauger & Reinigungsgeräte',
+            'Beleuchtung',
+            'Dekoration',
+            'Gartenmöbel & -geräte',
+            'Sport & Freizeit',
+            'Baby & Kind',
+            'Sonstiges'
+        ];
 
         return view('ads.household.edit', compact('householdItem', 'categories'));
     }
@@ -123,18 +134,18 @@ class HouseholdItemController extends Controller
     public function update(Request $request, HouseholdItem $householdItem)
     {
         $validated = $request->validate([
-            'category' => 'required|string|max:255',
-            'brand' => 'nullable|string|max:255',
-            'model_name' => 'nullable|string|max:255',
-            'price' => 'required|numeric|min:0',
-            'condition' => 'required|string|in:neu,gebraucht,stark gebraucht,defekt',
-            'material' => 'nullable|string|max:255',
-            'color' => 'nullable|string|max:255',
-            'dimensions' => 'nullable|string|max:255',
+            'images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'title' => 'required|string|max:255',
+            'brand' => 'required|string|max:255',
             'description' => 'required|string',
-            'images.*' => 'nullable|image|max:2048', // For newly uploaded images
-            // No validation for existing_images_to_delete as it's an internal mechanism
+            'price' => 'nullable|numeric|min:0',
+            'condition' => 'required|in:neu,gebraucht,stark gebraucht,defekt',
+            'category' => 'required|string|max:100',
+            'brand_id' => 'nullable|exists:brands,id',
+            'model_name' => 'nullable|string|max:255',
+            'material' => 'nullable|string|max:100',
+            'color' => 'nullable|string|max:50',
+            'dimensions' => 'nullable|string|max:255',
         ]);
 
         // Update main HouseholdItem fields
