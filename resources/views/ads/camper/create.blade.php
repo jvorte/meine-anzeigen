@@ -80,7 +80,7 @@
 
         <div>
             {{-- Modell (Dynamic Dropdown) --}}
-            <label for="camper_model_id" class="block text-sm font-medium text-gray-700 mb-2">Modell</label>
+            <label for="camper_model_id" class="block text-sm font-medium text-gray-700 mb-2">Modell (optional)</label>
             <select name="camper_model_id" id="camper_model_id"
                 class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50"
                 :disabled="!selectedBrand"> {{-- Disable until a brand is selected --}}

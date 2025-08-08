@@ -16,42 +16,83 @@ class CommercialModelSeeder extends Seeder
     {
         $brandModels = [
             'Volkswagen' => [
-                'Caddy', 'Transporter', 'Crafter', 'Multivan', 'California'
+                'Caddy',
+                'Transporter',
+                'Crafter',
+                'Multivan',
+                'California'
             ],
             'Mercedes-Benz' => [
-                'Citan', 'Vito', 'Sprinter', 'V-Class'
+                'Citan',
+                'Vito',
+                'Sprinter',
+                'V-Class'
             ],
             'Ford' => [
-                'Transit Connect', 'Transit Custom', 'Transit', 'Tourneo Connect', 'Tourneo Custom'
+                'Transit Connect',
+                'Transit Custom',
+                'Transit',
+                'Tourneo Connect',
+                'Tourneo Custom'
             ],
             'Renault' => [
-                'Kangoo', 'Trafic', 'Master'
+                'Kangoo',
+                'Trafic',
+                'Master'
             ],
             'Peugeot' => [
-                'Partner', 'Expert', 'Boxer', 'Traveller'
+                'Partner',
+                'Expert',
+                'Boxer',
+                'Traveller'
             ],
             'Citroën' => [
-                'Berlingo', 'Jumpy', 'Jumper', 'SpaceTourer'
+                'Berlingo',
+                'Jumpy',
+                'Jumper',
+                'SpaceTourer'
             ],
             'Opel' => [
-                'Combo', 'Vivaro', 'Movano', 'Zafira Life'
+                'Combo',
+                'Vivaro',
+                'Movano',
+                'Zafira Life'
             ],
             'Toyota' => [
-                'Proace City', 'Proace', 'Proace Verso'
+                'Proace City',
+                'Proace',
+                'Proace Verso'
             ],
             'Fiat' => [
-                'Doblo Cargo', 'Talento', 'Ducato'
+                'Doblo Cargo',
+                'Talento',
+                'Ducato'
             ],
             'Hyundai' => [
-                'H-1', 'Staria'
+                'H-1',
+                'Staria'
             ],
             'Nissan' => [
-                'NV200', 'NV300', 'NV400'
+                'NV200',
+                'NV300',
+                'NV400'
             ],
             'Iveco' => [
-                'Daily Van', 'Daily Minibus'
+                'Daily Van',
+                'Daily Minibus',
+                'eDaily'
             ],
-            // Add more brands and their models as needed
+            'Isuzu' => [
+                'D-Max'
+            ],
+            'Mitsubishi' => [
+                'L200',
+                'L300'
+            ],
+
+
+
+
         ];
 
         foreach ($brandModels as $brandName => $models) {

@@ -26,6 +26,9 @@ class CommercialBrandSeeder extends Seeder
             'Hyundai',
             'Nissan',
             'Iveco',
+             'Isuzu',
+             'Mitsubishi',
+            
             // Add more brands as needed
         ];
 

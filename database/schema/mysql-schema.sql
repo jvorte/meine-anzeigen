@@ -356,8 +356,11 @@ CREATE TABLE `conversations` (
   `receiver_id` bigint(20) unsigned NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
+  `ad_title` varchar(255) DEFAULT NULL,
+  `ad_category` varchar(255) DEFAULT NULL,
+  `deleted_by` bigint(20) unsigned DEFAULT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `conversations_ad_id_sender_id_receiver_id_unique` (`ad_id`,`sender_id`,`receiver_id`),
+  UNIQUE KEY `conversations_unique_ad_sender_receiver_category` (`ad_id`,`sender_id`,`receiver_id`,`ad_category`),
   KEY `conversations_sender_id_foreign` (`sender_id`),
   KEY `conversations_receiver_id_foreign` (`receiver_id`),
   CONSTRAINT `conversations_receiver_id_foreign` FOREIGN KEY (`receiver_id`) REFERENCES `users` (`id`) ON DELETE CASCADE,
@@ -415,10 +418,10 @@ CREATE TABLE `electronics` (
   `user_id` bigint(20) unsigned NOT NULL,
   `title` varchar(255) NOT NULL,
   `description` text NOT NULL,
+  `brand` varchar(255) DEFAULT NULL,
+  `electronic_model` varchar(255) DEFAULT NULL,
   `price` decimal(10,2) NOT NULL,
   `category` varchar(255) DEFAULT NULL,
-  `brand_id` bigint(20) unsigned DEFAULT NULL,
-  `electronic_model_id` bigint(20) unsigned DEFAULT NULL,
   `condition` varchar(255) NOT NULL,
   `year_of_purchase` int(11) DEFAULT NULL,
   `warranty_status` varchar(255) DEFAULT NULL,
@@ -438,10 +441,6 @@ CREATE TABLE `electronics` (
   `ram` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `electronics_user_id_foreign` (`user_id`),
-  KEY `electronics_brand_id_foreign` (`brand_id`),
-  KEY `electronics_electronic_model_id_foreign` (`electronic_model_id`),
-  CONSTRAINT `electronics_brand_id_foreign` FOREIGN KEY (`brand_id`) REFERENCES `electronic_brands` (`id`) ON DELETE SET NULL,
-  CONSTRAINT `electronics_electronic_model_id_foreign` FOREIGN KEY (`electronic_model_id`) REFERENCES `electronic_models` (`id`) ON DELETE SET NULL,
   CONSTRAINT `electronics_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -947,3 +946,7 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (49,'2025_08_03_103
 INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (50,'2025_08_04_063042_create_conversations_table',7);
 INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (51,'2025_08_04_063112_create_messages_table',7);
 INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (52,'2025_08_05_092905_create_ads_table',8);
+INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (53,'2025_08_05_135359_add_title_to_conversations_table',9);
+INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (54,'2025_08_05_150811_add_deleted_by_to_conversations_table',10);
+INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (55,'2025_08_06_073952_update_conversations_unique_index',11);
+INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (56,'2025_08_08_044952_update_electronics_table_for_brands',12);

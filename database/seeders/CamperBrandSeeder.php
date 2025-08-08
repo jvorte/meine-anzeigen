@@ -4,21 +4,29 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-use App\Models\CamperBrand; // Make sure to import
+use App\Models\CamperBrand;
+use Illuminate\Support\Str; // <-- Added this line
 
 class CamperBrandSeeder extends Seeder
 {
     public function run(): void
     {
-        CamperBrand::create(['name' => 'Adria', 'slug' => 'adria']); // ID 1 (or whatever the auto-increment is)
-        CamperBrand::create(['name' => 'Bürstner', 'slug' => 'burstner']); // ID 2
-        CamperBrand::create(['name' => 'Dethleffs', 'slug' => 'dethleffs']); // ID 3
-        CamperBrand::create(['name' => 'Hymer', 'slug' => 'hymer']); // ID 4
-        CamperBrand::create(['name' => 'Knaus', 'slug' => 'knaus']); // ID 5
-        CamperBrand::create(['name' => 'Sunlight', 'slug' => 'sunlight']); // ID 6
-        CamperBrand::create(['name' => 'Weinsberg', 'slug' => 'weinsberg']); // ID 7
-        CamperBrand::create(['name' => 'Pilote', 'slug' => 'pilote']); // ID 8 (This one is important as you tested with ID 8)
-        CamperBrand::create(['name' => 'Challenger', 'slug' => 'challenger']); // ID 9
-        // ... add more brands as needed
+        $brands = [
+            'Fiat', 'Ford', 'Mercedes-Benz', 'Renault', 'Volkswagen',
+            'Hymer', 'Dethleffs', 'Bürstner', 'Knaus', 'LMC', 'Carthago', 'Frankia', 'Eura Mobil', 'Hobby', 'Sunlight',
+            'Pilote', 'Challenger', 'Benimar', 'Rapido', 'Chausson', 'Fleurette',
+            'Adria', 'Laika', 'Rimor', 'Mobilvetta',
+            'Bailey', 'Swift', 'Elddis',
+            'Forest River', 'Thor Motor Coach', 'Jayco', 'Winnebago',
+            'Weinsberg', 'Niesmann + Bischoff', 'Carado', 'Morelo', 'Globecar', 'Pössl', 'Westfalia', 'Eriba', 'Vantourer',
+            'Other',
+        ];
+
+        foreach ($brands as $brandName) {
+            CamperBrand::firstOrCreate([
+                'name' => $brandName,
+                'slug' => Str::slug($brandName), // <-- Updated this line
+            ]);
+        }
     }
 }
