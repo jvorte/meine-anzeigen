@@ -135,9 +135,8 @@
                 {{-- Titel --}}
                 <div class="mb-6">
                     <label for="title" class="block text-sm font-semibold text-gray-800 mb-2">Anzeigentitel</label>
-                    <input type="text" name="title" id="title" value="{{ old('title') }}"
-                           placeholder="Aussagekräftiger Titel für deine Anzeige (z.B. Modernes 3-Sitzer Sofa)"
-                           class="w-full p-3 border border-gray-300 rounded-md shadow-sm bg-white text-gray-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 focus:border-blue-600 transition duration-150 ease-in-out">
+                    <input type="text" name="title" id="title"   placeholder="Aussagekräftiger Titel für deine Anzeige (z.B. Modernes 3-Sitzer Sofa)"
+                           class="w-full p-3 border border-gray-300 rounded-md shadow-sm bg-white text-gray-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 transition duration-150 ease-in-out">
                     @error('title')
                         <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                     @enderror
@@ -148,7 +147,7 @@
                     <label for="description" class="block text-sm font-semibold text-gray-800 mb-2">Beschreibung</label>
                     <textarea name="description" id="description" rows="7"
                               placeholder="Gib hier alle wichtigen Details zu deinem Haushaltsartikel ein. Zustand, Alter, Besonderheiten, Abholbedingungen."
-                              class="w-full p-3 border border-gray-300 rounded-md shadow-sm bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-600 transition duration-150 ease-in-out">{{ old('description') }}</textarea>
+                              class="w-full p-3 border border-gray-300 rounded-md shadow-sm bg-white text-gray-900 focus:outline-none focus:ring-2  focus:ring-blue-500 focus:border-blue-600 transition duration-150 ease-in-out"></textarea>
                     @error('description')
                         <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                     @enderror

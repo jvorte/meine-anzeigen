@@ -13,7 +13,7 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             {{-- Breadcrumbs component --}}
             <x-breadcrumbs :items="[
-                ['label' => 'Sonstiges Anzeigen', 'url' => route('categories.show', 'sonstiges')],
+                ['label' => 'Sonstiges Anzeigen', 'url' => route('categories.others.index')],
                 ['label' => $other->title, 'url' => route('ads.others.show', $other->id)],
                 ['label' => 'Bearbeiten', 'url' => null],
             ]" />

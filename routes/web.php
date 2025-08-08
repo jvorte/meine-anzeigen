@@ -22,6 +22,7 @@ use App\Http\Controllers\UsedVehiclePartController;
 
 
 // --- PUBLIC ROUTES ---
+//    Route::get('/ads/household/create', )->name('ads.household.create');
 
 // Main Dashboard/Home Page
 Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
@@ -44,13 +45,15 @@ Route::prefix('categories')->name('categories.')->group(function () {
     Route::get('/commercial-vehicles', [CommercialVehicleController::class, 'index'])->name('commercial-vehicles.index');
     Route::get('/campers', [CamperController::class, 'index'])->name('campers.index');
 });
-
+ Route::get('/ads/household/create', [HouseholdItemController::class, 'create'])->name('ads.household.create'); 
 // Ad Detail Pages (showing a single ad)
 Route::prefix('categories')->name('categories.')->group(function () {
     Route::get('/cars/{car}', [CarController::class, 'show'])->name('cars.show');
     Route::get('/boats/{boat}', [BoatController::class, 'show'])->name('boats.show');
     Route::get('/vehicles-parts/{usedVehiclePart}', [UsedVehiclePartController::class, 'show'])->name('vehicles-parts.show');
     Route::get('/electronics/{electronic}', [ElectronicController::class, 'show'])->name('electronics.show');
+
+    
     Route::get('/household/{householdItem}', [HouseholdItemController::class, 'show'])->name('household.show');
     Route::get('/real-estate/{realEstate}', [RealEstateController::class, 'show'])->name('real-estate.show');
     Route::get('/services/{service}', [ServiceController::class, 'show'])->name('services.show');
@@ -176,15 +179,7 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('/ads/motorrad/{motorradAd}', [MotorradAdController::class, 'destroy'])->name('ads.motorrad.destroy'); 
 
 
-    // // Commercial Vehicles 
-    // Route::prefix('ads/commercial-vehicles')->name('ads.commercial-vehicles.')->group(function () { 
-    //     Route::get('/create', [CommercialVehicleController::class, 'create'])->name('create'); 
-    //     Route::post('/', [CommercialVehicleController::class, 'store'])->name('store'); 
-    //     Route::get('/{commercialAd}/edit', [CommercialVehicleController::class, 'edit'])->name('edit'); 
-    //     Route::put('/{commercialAd}', [CommercialVehicleController::class, 'update'])->name('update'); 
-    //     Route::delete('/{ad}', [CommercialVehicleController::class, 'destroy'])->name('destroy'); 
-    //     Route::get('/{commercialVehicle}', [CommercialVehicleController::class, 'show'])->name('show'); 
-    // }); 
+  
     Route::get('categories/commercial-vehicles', [CommercialVehicleController::class, 'index'])
     ->name('categories.commercial-vehicles.index');
     
@@ -256,6 +251,9 @@ Route::get('/ads/camper', [CamperController::class, 'index'])->name('ads.camper.
         
     }); 
 }); 
+
+
+
 Route::get('/categories/vehicles-parts', [UsedVehiclePartController::class, 'index'])
     ->name('categories.vehicles-parts.index');
 // Auth scaffolding routes (login, register, etc.) - ALWAYS keep this at the very end

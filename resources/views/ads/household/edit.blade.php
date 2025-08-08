@@ -150,7 +150,7 @@
             </section>
 
        {{-- Existing Photos Section --}}
-            @if ($householdItem->images->count() > 0)
+            {{-- @if ($householdItem->images->count() > 0)
                 <section class="bg-gray-50 p-6 rounded-lg shadow-inner">
                     <h4 class="text-xl font-semibold text-gray-700 mb-6">Vorhandene Fotos</h4>
                     <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
@@ -165,7 +165,7 @@
                     </div>
                     <p class="text-sm text-gray-600 mt-4">Wähle Fotos zum Löschen aus.</p>
                 </section>
-            @endif
+            @endif --}}
 
 
 

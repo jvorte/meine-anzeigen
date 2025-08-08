@@ -53,6 +53,7 @@ class HouseholdItemController extends Controller
         ));
     }
 
+
     /**
      * Store a newly created household item ad in storage.
      */
@@ -62,7 +63,7 @@ class HouseholdItemController extends Controller
         $validatedData = $request->validate([
 
             'images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048', // Validation for files
-            'title' => 'nullable|string|max:255',
+            'title' => 'required|string|max:255',
             'brand' => 'required|string|max:255',
             'description' => 'required|string',
             'price' => 'nullable|numeric|min:0',
