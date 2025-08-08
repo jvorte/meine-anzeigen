@@ -14,21 +14,105 @@ use Illuminate\Validation\Rule;
 
 class CarController extends Controller
 {
-public function index()
-{
-    $cars = Car::with(['carBrand', 'carModel', 'user', 'images']) 
-        ->latest()
-        ->paginate(12);
+ public function index(Request $request)
+    {
+        $query = Car::with(['carBrand', 'carModel', 'user', 'images']);
 
+        // Εφαρμογή φίλτρων με βάση τις παραμέτρους του URL
+        $query->when($request->filled('brand'), function ($q) use ($request) {
+            $q->where('car_brand_id', $request->get('brand'));
+        });
 
-    return view('ads.cars.index', [
-        'cars' => $cars,
-        'category' => (object)[
-            'name' => 'Cars',
-            'slug' => 'cars',
-        ]
-    ]);
-}
+        $query->when($request->filled('model'), function ($q) use ($request) {
+            $q->where('car_model_id', $request->get('model'));
+        });
+        
+        $query->when($request->filled('price'), function ($q) use ($request) {
+            list($min, $max) = explode('-', $request->get('price'));
+            $q->whereBetween('price', [(int)$min, (int)$max]);
+        });
+        
+        $query->when($request->filled('mileage'), function ($q) use ($request) {
+            list($min, $max) = explode('-', $request->get('mileage'));
+            $q->whereBetween('mileage', [(int)$min, (int)$max]);
+        });
+        
+        $query->when($request->filled('registration'), function ($q) use ($request) {
+            list($min, $max) = explode('-', $request->get('registration'));
+            $q->whereBetween('registration', [(int)$min, (int)$max]);
+        });
+        
+        $query->when($request->filled('vehicle_type'), function ($q) use ($request) {
+            $q->where('vehicle_type', $request->get('vehicle_type'));
+        });
+        
+        $query->when($request->filled('condition'), function ($q) use ($request) {
+            $q->where('condition', $request->get('condition'));
+        });
+
+        $query->when($request->filled('warranty'), function ($q) use ($request) {
+            $q->where('warranty', $request->get('warranty'));
+        });
+
+        $query->when($request->filled('power'), function ($q) use ($request) {
+            list($min, $max) = explode('-', $request->get('power'));
+            $q->whereBetween('power', [(int)$min, (int)$max]);
+        });
+
+        $query->when($request->filled('fuel_type'), function ($q) use ($request) {
+            $q->where('fuel_type', $request->get('fuel_type'));
+        });
+
+        $query->when($request->filled('transmission'), function ($q) use ($request) {
+            $q->where('transmission', $request->get('transmission'));
+        });
+
+        $query->when($request->filled('drive'), function ($q) use ($request) {
+            $q->where('drive', $request->get('drive'));
+        });
+
+        $query->when($request->filled('color'), function ($q) use ($request) {
+            $q->where('color', $request->get('color'));
+        });
+
+        $query->when($request->filled('doors'), function ($q) use ($request) {
+            $q->where('doors', $request->get('doors'));
+        });
+
+        $query->when($request->filled('seats'), function ($q) use ($request) {
+            $q->where('seats', $request->get('seats'));
+        });
+
+        $cars = $query->latest()->paginate(12);
+
+        $brands = CarBrand::all();
+        $models = CarModel::all();
+        
+        return view('ads.cars.index', [
+            'cars' => $cars,
+            'brands' => $brands, 
+            'models' => $models, 
+            'category' => (object)[
+                'name' => 'Cars',
+                'slug' => 'cars',
+            ]
+        ]);
+    }
+
+    /**
+     * Επιστρέφει τα μοντέλα με βάση την ID της μάρκας.
+     * Χρησιμοποιείται για κλήσεις AJAX από το frontend.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getModelsByBrand(Request $request)
+    {
+        $brandId = $request->input('brand_id');
+        $models = CarModel::where('car_brand_id', $brandId)->get();
+
+        return response()->json($models);
+    }
 
     public function create()
     {

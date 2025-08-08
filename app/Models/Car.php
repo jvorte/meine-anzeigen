@@ -42,7 +42,7 @@ class Car extends Model
 
     public function carBrand()
     {
-        return $this->belongsTo(CarBrand::class, 'brand_id');
+        return $this->belongsTo(CarBrand::class, 'car_brand_id');
     }
 
     public function carModel()
