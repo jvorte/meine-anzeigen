@@ -315,7 +315,8 @@
                 @if($motorradAd->first_registration)
                 <div>
                     <p class="text-sm font-semibold text-gray-800">Erstzulassung:</p>
-                    <p class="text-gray-700">{{ \Carbon\Carbon::parse($motorradAd->first_registration)->format('d.m.Y') }}</p>
+               <p class="text-gray-700">{{ $motorradAd->first_registration }}</p>
+
                 </div>
                 @endif
                 @if(isset($motorradAd->mileage))

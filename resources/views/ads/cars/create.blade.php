@@ -311,14 +311,13 @@ document.addEventListener('DOMContentLoaded', function() {
                             <option value="sedan" {{ old('vehicle_type') == 'sedan' ? 'selected' : '' }}>Sedan
                             </option>
                             <option value="station" {{ old('vehicle_type') == 'station' ? 'selected' : '' }}>station wagon</option>
-                            <option value="suv" {{ old('vehicle_type') == 'suv' ? 'selected' : '' }}>SUV/Off-road vehicle
+                            <option value="SUV/Off-road" {{ old('vehicle_type') == 'SUV/Off-road' ? 'selected' : '' }}>SUV/Off-road vehicle
                             </option>
                             <option value="coupe" {{ old('vehicle_type') == 'coupe' ? 'selected' : '' }}>Coupe</option>
                             <option value="convertible" {{ old('vehicle_type') == 'convertible' ? 'selected' : '' }}>convertible</option>
                             <option value="minivan" {{ old('vehicle_type') == 'minivan' ? 'selected' : '' }}>Minivan
                             </option>
-                            <option value="kleinwagen" {{ old('vehicle_type') == 'kleinwagen' ? 'selected' : '' }}>
-                                Kleinwagen</option>
+                            
                             <option value="pickup" {{ old('vehicle_type') == 'pickup' ? 'selected' : '' }}>Pickup</option>
                         </select>
                         @error('vehicle_type')

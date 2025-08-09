@@ -4,17 +4,17 @@ namespace App\Http\Controllers;
 
 use App\Models\Car;
 use App\Models\CarBrand;
-use App\Models\CarModel; 
+use App\Models\CarModel;
 use App\Models\CarImage;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Validation\Rule; 
+use Illuminate\Validation\Rule;
 
 class CarController extends Controller
 {
- public function index(Request $request)
+    public function index(Request $request)
     {
         $query = Car::with(['carBrand', 'carModel', 'user', 'images']);
 
@@ -26,37 +26,37 @@ class CarController extends Controller
         $query->when($request->filled('model'), function ($q) use ($request) {
             $q->where('car_model_id', $request->get('model'));
         });
-        
+
         $query->when($request->filled('price'), function ($q) use ($request) {
             list($min, $max) = explode('-', $request->get('price'));
             $q->whereBetween('price', [(int)$min, (int)$max]);
         });
-        
+
         $query->when($request->filled('mileage'), function ($q) use ($request) {
             list($min, $max) = explode('-', $request->get('mileage'));
             $q->whereBetween('mileage', [(int)$min, (int)$max]);
         });
-        
-      $query->when($request->filled(['min_year', 'max_year']), function ($q) use ($request) {
-    $minYear = (int)$request->get('min_year');
-    $maxYear = (int)$request->get('max_year');
-    $q->whereBetween('registration', [$minYear, $maxYear]);
-})
-// Handle only a minimum year being provided
-->when($request->filled('min_year') && !$request->filled('max_year'), function ($q) use ($request) {
-    $minYear = (int)$request->get('min_year');
-    $q->where('registration', '>=', $minYear);
-})
-// Handle only a maximum year being provided
-->when($request->filled('max_year') && !$request->filled('min_year'), function ($q) use ($request) {
-    $maxYear = (int)$request->get('max_year');
-    $q->where('registration', '<=', $maxYear);
-});
-        
+
+        $query->when($request->filled(['min_year', 'max_year']), function ($q) use ($request) {
+            $minYear = (int)$request->get('min_year');
+            $maxYear = (int)$request->get('max_year');
+            $q->whereBetween('registration', [$minYear, $maxYear]);
+        })
+            // Handle only a minimum year being provided
+            ->when($request->filled('min_year') && !$request->filled('max_year'), function ($q) use ($request) {
+                $minYear = (int)$request->get('min_year');
+                $q->where('registration', '>=', $minYear);
+            })
+            // Handle only a maximum year being provided
+            ->when($request->filled('max_year') && !$request->filled('min_year'), function ($q) use ($request) {
+                $maxYear = (int)$request->get('max_year');
+                $q->where('registration', '<=', $maxYear);
+            });
+
         $query->when($request->filled('vehicle_type'), function ($q) use ($request) {
             $q->where('vehicle_type', $request->get('vehicle_type'));
         });
-        
+
         $query->when($request->filled('condition'), function ($q) use ($request) {
             $q->where('condition', $request->get('condition'));
         });
@@ -98,11 +98,11 @@ class CarController extends Controller
 
         $brands = CarBrand::all();
         $models = CarModel::all();
-        
+
         return view('ads.cars.index', [
             'cars' => $cars,
-            'brands' => $brands, 
-            'models' => $models, 
+            'brands' => $brands,
+            'models' => $models,
             'category' => (object)[
                 'name' => 'Cars',
                 'slug' => 'cars',
@@ -128,14 +128,14 @@ class CarController extends Controller
     public function create()
     {
         $brands = CarBrand::orderBy('name')->pluck('name', 'id');
-        
+
         $initialModels = []; // No models initially selected
 
         $colors = ['Black', 'White', 'Red', 'Blue', 'Green', 'Yellow', 'Orange', 'Silver', 'Grey', 'Brown', 'Other'];
-        $conditions = ['new', 'used', 'accident','damaged']; 
-        $vehicleTypes = ['sedan', 'station wagon', 'SUV/Off-road vehicle', 'coupe', 'convertible', 'minivan', 'pickup'];
-        $fuelTypes = ['Petrol', 'Diesel', 'Electric', 'Hybrid', 'LPG', 'CNG']; 
-        $transmissions = ['manual', 'automatic']; 
+        $conditions = ['new', 'used', 'accident', 'damaged'];
+        $vehicleTypes = ['sedan', 'station', 'SUV/Off-road', 'coupe', 'convertible', 'minivan', 'pickup'];
+        $fuelTypes = ['Petrol', 'Diesel', 'Electric', 'Hybrid', 'LPG', 'CNG'];
+        $transmissions = ['manual', 'automatic'];
         $drives = ['front', 'rear', 'all'];
         $sellerTypes = ['Private', 'Handler'];
 
@@ -158,11 +158,11 @@ class CarController extends Controller
 
     public function store(Request $request)
     {
-    //    dd('dd');
+        //    dd('dd');
         $data = $request->validate([
-           
+
             'category_slug' => ['required', 'string', 'max:255'],
-           'car_brand_id' => ['required', 'exists:car_brands,id'], // Validates input named 'car_brand_id'
+            'car_brand_id' => ['required', 'exists:car_brands,id'], // Validates input named 'car_brand_id'
             'car_model_id' => [
                 'nullable',
                 Rule::exists('car_models', 'id')->where(function ($query) use ($request) {
@@ -171,7 +171,7 @@ class CarController extends Controller
             ],
             'price_from' => ['required', 'numeric', 'min:0'],
             'mileage_from' => ['required', 'numeric', 'min:0'],
-          'registration_to' => ['required', 'integer', 'digits:4', 'min:1900', 'max:' . date('Y')],
+            'registration_to' => ['required', 'integer', 'digits:4', 'min:1900', 'max:' . date('Y')],
 
             'vehicle_type' => ['required', 'string', 'max:255'],
             'condition' => ['required', 'string', 'max:255'],
@@ -192,7 +192,7 @@ class CarController extends Controller
 
         $mappedData = [
             'category_slug' => $data['category_slug'],
-            'car_brand_id'  => $data['car_brand_id'], 
+            'car_brand_id'  => $data['car_brand_id'],
             'car_model_id'  => $data['car_model_id'] ?? null,
             'price' => $data['price_from'],
             'mileage' => $data['mileage_from'],
@@ -242,37 +242,39 @@ class CarController extends Controller
      * @param  \App\Models\Car  $car The Car model instance to be edited.
      * @return \Illuminate\Http\Response
      */
-// In your CarsController@edit method:
-  public function edit(Car $car)
+    // In your CarsController@edit method:
+    public function edit(Car $car)
     {
-    $brands = CarBrand::pluck('name', 'id');
+        $brands = CarBrand::pluck('name', 'id');
 
-    // Make sure $initialModels contains models for the *actual* brand_id of the car
-    $initialModels = [];
-    if ($car->brand_id) { // Use $car->brand_id (the correct DB column)
-        // Assuming CarModel has a foreign key 'car_brand_id' to CarBrand table
-        $initialModels = CarModel::where('car_brand_id', $car->brand_id)->pluck('name', 'id');
+        // Make sure $initialModels contains models for the *actual* brand_id of the car
+        $initialModels = [];
+        if ($car->brand_id) { // Use $car->brand_id (the correct DB column)
+            // Assuming CarModel has a foreign key 'car_brand_id' to CarBrand table
+            $initialModels = CarModel::where('car_brand_id', $car->brand_id)->pluck('name', 'id');
+        }
+        $condition = ['new', 'used', 'accident', 'damaged'];
+        $vehicleTypes = ['sedan', 'station', 'SUV/Off-road', 'coupe', 'convertible', 'minivan', 'pickup'];
+        $colors = ['Black', 'White', 'Red', 'Blue', 'Green', 'Yellow', 'Orange', 'Silver', 'Grey', 'Brown', 'Other'];
+        $fuelType = ['Petrol', 'Diesel', 'Electric', 'Hybrid', 'LPG', 'CNG'];
+        $transmission = ['manual', 'automatic'];
+        $drives = ['front', 'rear', 'all'];
+        $sellerTypes = ['Private', 'Handler'];
+
+
+        return view('ads.cars.edit', compact('car', 'brands', 'initialModels', 'colors', 'condition', 'vehicleTypes', 'fuelType', 'transmission', 'drives', 'sellerTypes'));
     }
 
-    $colors = ['Black', 'White', 'Red', 'Blue', 'Green', 'Yellow', 'Orange', 'Silver', 'Grey', 'Brown', 'Other'];
 
-    return view('ads.cars.edit', compact('car', 'brands', 'initialModels', 'colors'));
-}
-
-
-public function getModels($id)
-{
-    return response()->json(
-        CarModel::where('car_brand_id', $id)->get(['id', 'name'])
-    );
-}
+    public function getModels($id)
+    {
+        return response()->json(
+            CarModel::where('car_brand_id', $id)->get(['id', 'name'])
+        );
+    }
 
 
-// public function getModels($id)
-// {
-//     $models = CarModel::where('car_brand_id', $id)->pluck('name', 'id');
-//     return response()->json($models);
-// }
+
     /**
      * Update the specified car advertisement in storage.
      *
@@ -280,94 +282,90 @@ public function getModels($id)
      * @param  \App\Models\Car  $car The Car model instance to be updated.
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function update(Request $request, Car $car)
-    {  
-
-      
-        // Ensure only the owner can update the car ad
-        if (Auth::id() !== $car->user_id) {
-            abort(403, 'Unauthorized action. You do not own this car advertisement.');
-        }
- 
-        $validatedData = $request->validate([
-              
-            'category_slug' => ['required', 'string', 'max:255'], // Assuming this is still sent
-            'car_brand_id' => ['required', 'exists:car_brands,id'],
-            'car_model_id' => [
-                'nullable',
-                Rule::exists('car_models', 'id')->where(function ($query) use ($request) {
-                    return $query->where('car_brand_id', $request->car_brand_id);
-                }),
-              
-            ],
-            'price_from' => ['required', 'numeric', 'min:0'],
-            'mileage_from' => ['required', 'numeric', 'min:0'],
-            'registration_to' => ['required', 'date'],
-            'vehicle_type' => ['required', 'string', 'max:255'],
-            'condition' => ['required', 'string', 'max:255'],
-            'warranty' => ['nullable', 'string', 'in:yes,no'], // Corrected validation rule for 'yes'/'no' strings
-            'power_from' => ['required', 'numeric', 'min:0'],
-            'fuel_type' => ['required', 'string', 'max:255'],
-            'transmission' => ['required', 'string', 'max:255'],
-            'drive' => ['required', 'string', 'max:255'],
-            'color' => ['required', 'string', 'max:255'],
-            'doors_from' => ['required', 'numeric', 'min:2', 'max:7'],
-            'seats_from' => ['required', 'numeric', 'min:2', 'max:9'],
-            'seller_type' => ['required', 'string', 'max:255'],
-            'title' => ['required', 'string', 'max:255'],
-            'description' => ['required', 'string'],
-            'new_images' => ['nullable', 'array', 'max:10'], // For newly uploaded images
-            'new_images.*' => ['image', 'mimes:jpeg,png,jpg,gif,svg', 'max:2048'], // Rules for each new image
-            'delete_images' => ['nullable', 'array'], // Array of image IDs to delete
-            'delete_images.*' => ['exists:car_images,id'], // Validate that each ID exists in car_images table
-        ]);
-//   dd( $validatedData );
-        // 2. Map validated data to Car model attributes
-        $car->title = $validatedData['title'];
-        $car->description = $validatedData['description'];
-        $car->car_brand_id = $validatedData['car_brand_id'];
-        $car->car_model_id = $validatedData['car_model_id'] ?? null;
-        $car->price = $validatedData['price_from'];
-        $car->mileage = $validatedData['mileage_from'];
-        $car->registration = $validatedData['registration_to'];
-        $car->vehicle_type = $validatedData['vehicle_type'];
-        $car->condition = $validatedData['condition'];
-        $car->warranty = $validatedData['warranty'] ?? 'no';
-        $car->power = $validatedData['power_from'];
-        $car->fuel_type = $validatedData['fuel_type'];
-        $car->transmission = $validatedData['transmission'];
-        $car->drive = $validatedData['drive'];
-        $car->color = $validatedData['color'];
-        $car->doors = $validatedData['doors_from'];
-        $car->seats = $validatedData['seats_from'];
-        $car->seller_type = $validatedData['seller_type'];
-        // category_slug and user_id should not change on update
-        $car->save();
-
-        // 3. Handle image deletions
-        if (isset($validatedData['delete_images'])) {
-            foreach ($validatedData['delete_images'] as $imageId) {
-                $image = CarImage::find($imageId);
-                if ($image && $image->car_id === $car->id) { // Ensure image belongs to this car
-                    Storage::disk('public')->delete($image->image_path);
-                    $image->delete();
-                }
-            }
-        }
-
-        // 4. Handle new image uploads
-        if ($request->hasFile('new_images')) {
-            foreach ($request->file('new_images') as $imageFile) {
-                $path = $imageFile->store('car_images', 'public');
-                $car->images()->create([
-                    'image_path' => $path,
-                    'is_thumbnail' => false, // New images are not thumbnails by default
-                ]);
-            }
-        }
-
-        return redirect()->route('ads.cars.show', $car)->with('success', 'Auto Anzeige erfolgreich aktualisiert!');
+public function update(Request $request, Car $car)
+{
+    if (Auth::id() !== $car->user_id) {
+        abort(403, 'Unauthorized action. You do not own this car advertisement.');
     }
+
+    $validatedData = $request->validate([
+        'category_slug' => ['required', 'string', 'max:255'],
+        'car_brand_id' => ['required', 'exists:car_brands,id'],
+        'car_model_id' => [
+            'nullable',
+            Rule::exists('car_models', 'id')->where(function ($query) use ($request) {
+                return $query->where('car_brand_id', $request->car_brand_id);
+            }),
+        ],
+        'price_from' => ['required', 'numeric', 'min:0'],
+        'mileage_from' => ['required', 'numeric', 'min:0'],
+        'registration_to' => ['required', 'integer', 'min:1900', 'max:' . date('Y')],
+
+        'vehicle_type' => ['required', 'string', 'max:255'],
+        'condition' => ['required', 'string', Rule::in(['new', 'used', 'accident', 'damaged'])],
+
+        'warranty' => ['nullable', 'string', 'in:yes,no'],
+        'power_from' => ['required', 'numeric', 'min:0'],
+        'fuel_type' => ['required', 'string', 'max:255'],
+        'transmission' => ['required', 'string', 'max:255'],
+        'drive' => ['required', 'string', 'max:255'],
+        'color' => ['required', 'string', 'max:255'],
+        'doors_from' => ['required', 'numeric', 'min:2', 'max:7'],
+        'seats_from' => ['required', 'numeric', 'min:2', 'max:9'],
+        'seller_type' => ['required', 'string', 'max:255'],
+        'title' => ['required', 'string', 'max:255'],
+        'description' => ['required', 'string'],
+        'new_images' => ['nullable', 'array', 'max:10'],
+        'new_images.*' => ['image', 'mimes:jpeg,png,jpg,gif,svg', 'max:2048'],
+        'delete_images' => ['nullable', 'array'],
+        'delete_images.*' => ['exists:car_images,id'],
+    ]);
+
+    $car->title = $validatedData['title'];
+    $car->description = $validatedData['description'];
+    $car->car_brand_id = $validatedData['car_brand_id'];
+    $car->car_model_id = $validatedData['car_model_id'] ?? null;
+    $car->price = $validatedData['price_from'];
+    $car->mileage = $validatedData['mileage_from'];
+    $car->registration = \Carbon\Carbon::parse($validatedData['registration_to'])->format('Y'); // μόνο έτος
+    $car->vehicle_type = $validatedData['vehicle_type'];
+    $car->condition = $validatedData['condition'];
+    $car->warranty = $validatedData['warranty'] ?? 'no';
+    $car->power = $validatedData['power_from'];
+    $car->fuel_type = $validatedData['fuel_type'];
+    $car->transmission = $validatedData['transmission'];
+    $car->drive = $validatedData['drive'];
+    $car->color = $validatedData['color'];
+    $car->doors = $validatedData['doors_from'];
+    $car->seats = $validatedData['seats_from'];
+    $car->seller_type = $validatedData['seller_type'];
+
+    $car->save();
+
+    // Διαγραφή εικόνων
+    if (isset($validatedData['delete_images'])) {
+        foreach ($validatedData['delete_images'] as $imageId) {
+            $image = CarImage::find($imageId);
+            if ($image && $image->car_id === $car->id) {
+                Storage::disk('public')->delete($image->image_path);
+                $image->delete();
+            }
+        }
+    }
+
+    // Νέες εικόνες
+    if ($request->hasFile('new_images')) {
+        foreach ($request->file('new_images') as $imageFile) {
+            $path = $imageFile->store('car_images', 'public');
+            $car->images()->create([
+                'image_path' => $path,
+                'is_thumbnail' => false,
+            ]);
+        }
+    }
+
+    return redirect()->route('ads.cars.show', $car)->with('success', 'Auto Anzeige erfolgreich aktualisiert!');
+}
 
     /**
      * Remove the specified car ad from storage.
@@ -395,8 +393,7 @@ public function getModels($id)
     }
 
     /**
-  * @param  \App\Models\CarBrand  $brand The CarBrand model instance resolved by route model binding.
+     * @param  \App\Models\CarBrand  $brand The CarBrand model instance resolved by route model binding.
      * @return \Illuminate\Http\JsonResponse
      */
-
 }

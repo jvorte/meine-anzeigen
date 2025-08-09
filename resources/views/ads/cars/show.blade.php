@@ -228,7 +228,7 @@
             @endif
         </dl>
 
-        <div class="flex flex-wrap justify-center sm:justify-start items-center space-x-0 sm:space-x-3 pt-4 sm:pt-0">
+        <div class="flex flex-wrap justify-center sm:justify-start items-center space-x-0 sm:space-x-3 my-4 sm:pt-0">
             @auth
                 @if (auth()->id() === $car->user_id || auth()->user()->isAdmin())
                     {{-- Edit & Delete --}}
@@ -250,15 +250,15 @@
                         </button>
                     </form>
                 @else
-                    {{-- Contact button for logged-in non-owners --}}
-      <a href="{{ route('messages.start.redirect', [
-                                        'ad' => $car->id,
-                                        'receiver' => $car->user->id,
-                                        'category' => 'cars'
-                                    ]) }}"
-                                                    class="mt-6 block w-full text-center bg-red-700 text-white font-semibold py-3 rounded-full shadow-lg hover:bg-gray-800 transition focus:ring-4 focus:ring-gray-500 focus:ring-opacity-75">
-                                                    Contact with seller
-                                                </a>
+                                {{-- Contact button for logged-in non-owners --}}
+                <a href="{{ route('messages.start.redirect', [
+                                                    'ad' => $car->id,
+                                                    'receiver' => $car->user->id,
+                                                    'category' => 'cars'
+                                                ]) }}"
+                        class="mt-6 block w-full text-center bg-red-700 text-white font-semibold py-3 rounded-full shadow-lg hover:bg-gray-800 transition focus:ring-4 focus:ring-gray-500 focus:ring-opacity-75">
+                        Contact with seller
+                    </a>
 
                 @endif
             @endauth

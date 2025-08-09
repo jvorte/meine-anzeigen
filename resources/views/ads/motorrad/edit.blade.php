@@ -120,15 +120,17 @@
                         @enderror
                     </div>
 
-                    <div>
-                        <label for="first_registration" class="block text-sm font-medium text-gray-700 mb-2">Erstzulassung</label>
-                        <input type="date" name="first_registration" id="first_registration"
-                            value="{{ old('first_registration', $motorradAd->first_registration ? \Carbon\Carbon::parse($motorradAd->first_registration)->format('Y-m-d') : '') }}"
-                            class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
-                        @error('first_registration')
-                            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-                        @enderror
-                    </div>
+             <div>
+    <label for="first_registration" class="block text-sm font-medium text-gray-700 mb-2">Erstzulassung</label>
+    <input type="number" name="first_registration" id="first_registration"
+        min="1900" max="{{ date('Y') }}"
+        value="{{ old('first_registration', $motorradAd->first_registration) }}"
+        class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
+    @error('first_registration')
+        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+    @enderror
+</div>
+
 
                     <div>
                         <label for="mileage" class="block text-sm font-medium text-gray-700 mb-2">Kilometerstand (in km)</label>

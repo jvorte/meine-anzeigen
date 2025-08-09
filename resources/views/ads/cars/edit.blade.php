@@ -126,16 +126,17 @@
                 <h4 class="text-xl font-semibold text-gray-700 mb-6">Basisdaten</h4>
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     {{-- Erstzulassung --}}
-                    <div>
-                        <label for="registration_to"
-                            class="block text-sm font-medium text-gray-700 mb-2">Erstzulassung</label>
-                        <input type="date" name="registration_to" id="registration_to"
-                            value="{{ old('registration_to', $car->registration) }}"
-                            class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
-                        @error('registration_to')
-                            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-                        @enderror
-                    </div>
+        <div>
+    <label for="registration_to" class="block text-sm font-medium text-gray-700 mb-2">Erstzulassung (Year)</label>
+    <input type="number" name="registration_to" id="registration_to" 
+        value="{{ old('registration_to', $car->registration) }}"
+        min="1900" max="{{ date('Y') }}"
+        class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
+    @error('registration_to')
+        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+    @enderror
+</div>
+
 
                     {{-- Kilometerstand --}}
                     <div>
@@ -184,21 +185,21 @@
                     </div>
 
                     {{-- Zustand --}}
-                    <div>
-                        <label for="condition" class="block text-sm font-medium text-gray-700 mb-2">Zustand</label>
-                        <select name="condition" id="condition"
-                            class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
-                            <option value="">Bitte wählen</option>
-                            <option value="neu" {{ old('condition', $car->condition) == 'neu' ? 'selected' : '' }}>Neu</option>
-                            <option value="gebraucht" {{ old('condition', $car->condition) == 'gebraucht' ? 'selected' : '' }}>Gebraucht
-                            </option>
-                            <option value="unfallfahrzeug" {{ old('condition', $car->condition) == 'unfallfahrzeug' ? 'selected' : '' }}>
-                                Unfallfahrzeug</option>
-                        </select>
-                        @error('condition')
-                            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-                        @enderror
-                    </div>
+         <div>
+    <label for="condition" class="block text-sm font-medium text-gray-700 mb-2">Condition</label>
+    <select name="condition" id="condition"
+        class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
+        <option value="">Please select</option>
+        <option value="new" {{ old('condition', $car->condition) == 'new' ? 'selected' : '' }}>New</option>
+        <option value="used" {{ old('condition', $car->condition) == 'used' ? 'selected' : '' }}>Used</option>
+        <option value="accident" {{ old('condition', $car->condition) == 'accident' ? 'selected' : '' }}>Accident vehicle</option>
+        <option value="damaged" {{ old('condition', $car->condition) == 'damaged' ? 'selected' : '' }}>Damaged vehicle</option>
+    </select>
+    @error('condition')
+        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+    @enderror
+</div>
+
                 </div>
             </section>
 
@@ -227,13 +228,13 @@
 
                     {{-- Transmission --}}
                     <div>
-                        <label for="transmission" class="block text-sm font-medium text-gray-700 mb-2">Getriebe</label>
+                        <label for="transmission" class="block text-sm font-medium text-gray-700 mb-2">Transmission</label>
                         <select name="transmission" id="transmission"
                             class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
                             <option value="">Bitte wählen</option>
-                            <option value="manuell" {{ old('transmission', $car->transmission) == 'manuell' ? 'selected' : '' }}>Manuell
+                            <option value="manual" {{ old('transmission', $car->transmission) == 'manual' ? 'selected' : '' }}>Manual
                             </option>
-                            <option value="automatik" {{ old('transmission', $car->transmission) == 'automatik' ? 'selected' : '' }}>Automatik
+                            <option value="automatic" {{ old('transmission', $car->transmission) == 'automatic' ? 'selected' : '' }}>Automatic
                             </option>
                         </select>
                         @error('transmission')
@@ -247,10 +248,10 @@
                         <select name="drive" id="drive"
                             class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
                             <option value="">Bitte wählen</option>
-                            <option value="front" {{ old('drive', $car->drive) == 'front' ? 'selected' : '' }}>Vorderradantrieb
+                            <option value="front" {{ old('drive', $car->drive) == 'front' ? 'selected' : '' }}>Front
                             </option>
-                            <option value="rear" {{ old('drive', $car->drive) == 'rear' ? 'selected' : '' }}>Hinterradantrieb</option>
-                            <option value="all" {{ old('drive', $car->drive) == 'all' ? 'selected' : '' }}>Allrad</option>
+                            <option value="rear" {{ old('drive', $car->drive) == 'rear' ? 'selected' : '' }}>Rear</option>
+                            <option value="all" {{ old('drive', $car->drive) == 'all' ? 'selected' : '' }}>All</option>
                         </select>
                         @error('drive')
                             <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
@@ -304,29 +305,25 @@
                     </div>
 
                     {{-- Vehicle Type --}}
-                    <div>
-                        <label for="vehicle_type"
-                            class="block text-sm font-medium text-gray-700 mb-2">Fahrzeugtyp</label>
-                        <select name="vehicle_type" id="vehicle_type"
-                            class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
-                            <option value="">Bitte wählen</option>
-                            <option value="limousine" {{ old('vehicle_type', $car->vehicle_type) == 'limousine' ? 'selected' : '' }}>Limousine
-                            </option>
-                            <option value="kombi" {{ old('vehicle_type', $car->vehicle_type) == 'kombi' ? 'selected' : '' }}>Kombi</option>
-                            <option value="suv" {{ old('vehicle_type', $car->vehicle_type) == 'suv' ? 'selected' : '' }}>SUV/Geländewagen
-                            </option>
-                            <option value="coupe" {{ old('vehicle_type', $car->vehicle_type) == 'coupe' ? 'selected' : '' }}>Coupé</option>
-                            <option value="cabrio" {{ old('vehicle_type', $car->vehicle_type) == 'cabrio' ? 'selected' : '' }}>Cabrio</option>
-                            <option value="minivan" {{ old('vehicle_type', $car->vehicle_type) == 'minivan' ? 'selected' : '' }}>Minivan
-                            </option>
-                            <option value="kleinwagen" {{ old('vehicle_type', $car->vehicle_type) == 'kleinwagen' ? 'selected' : '' }}>
-                                Kleinwagen</option>
-                            <option value="pickup" {{ old('vehicle_type', $car->vehicle_type) == 'pickup' ? 'selected' : '' }}>Pickup</option>
-                        </select>
-                        @error('vehicle_type')
-                            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-                        @enderror
-                    </div>
+                  <div>
+    <label for="vehicle_type" class="block text-sm font-medium text-gray-700 mb-2">Type</label>
+    <select name="vehicle_type" id="vehicle_type"
+        class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
+        <option value="">Bitte wählen</option>
+
+        <option value="sedan" {{ old('vehicle_type', $car->vehicle_type) == 'sedan' ? 'selected' : '' }}>sedan</option>
+        <option value="station" {{ old('vehicle_type', $car->vehicle_type) == 'station' ? 'selected' : '' }}>station wagon</option>
+        <option value="SUV/Off-road" {{ old('vehicle_type', $car->vehicle_type) == 'SUV/Off-road' ? 'selected' : '' }}>SUV/Off-road</option>
+        <option value="coupe" {{ old('vehicle_type', $car->vehicle_type) == 'coupe' ? 'selected' : '' }}>coupe</option>
+        <option value="convertible" {{ old('vehicle_type', $car->vehicle_type) == 'convertible' ? 'selected' : '' }}>convertible</option>
+        <option value="minivan" {{ old('vehicle_type', $car->vehicle_type) == 'minivan' ? 'selected' : '' }}>minivan</option>
+        <option value="pickup" {{ old('vehicle_type', $car->vehicle_type) == 'pickup' ? 'selected' : '' }}>Pickup</option>
+    </select>
+    @error('vehicle_type')
+        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+    @enderror
+</div>
+
 
                     {{-- Warranty --}}
                     <div>

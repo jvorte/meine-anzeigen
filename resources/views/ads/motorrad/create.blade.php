@@ -27,16 +27,16 @@
 
             {{-- Vehicle Details Section (Marke & Modell) --}}
             <section class="bg-gray-50 p-6 rounded-lg shadow-inner">
-                <h4 class="text-xl font-semibold text-gray-700 mb-6">Fahrzeugdetails</h4>
+                <h4 class="text-xl font-semibold text-gray-700 mb-6">Vehicle Details</h4>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
 
                     {{-- Marke --}}
                     <div>
                         <label for="motorcycle_brand_id"
-                            class="block text-sm font-medium text-gray-700 mb-2">Marke</label>
+                            class="block text-sm font-medium text-gray-700 mb-2">Brand</label>
                         <select name="motorcycle_brand_id" id="motorcycle_brand_id" onchange="loadModels(this.value)"
                             class="form-select w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
-                            <option value="">Bitte wählen</option>
+                            <option value="">select</option>
                             @foreach($brands as $id => $name)
                                 <option value="{{ $id }}" {{ old('motorcycle_brand_id') == $id ? 'selected' : '' }}>
                                     {{ $name }}
@@ -51,10 +51,10 @@
                     {{-- Modell --}}
                     <div>
                         <label for="motorcycle_model_id"
-                            class="block text-sm font-medium text-gray-700 mb-2">Modell</label>
+                            class="block text-sm font-medium text-gray-700 mb-2">Model</label>
                         <select name="motorcycle_model_id" id="motorcycle_model_id"
                             class="form-select w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
-                            <option value="">Bitte wählen</option>
+                            <option value="">select</option>
                             {{-- Δεν φορτώνουμε μοντέλα server side στο create --}}
                         </select>
                         @error('motorcycle_model_id')
@@ -116,7 +116,7 @@
                 <h4 class="text-xl font-semibold text-gray-700 mb-6">Basisdaten</h4>
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     <div>
-                        <label for="price" class="block text-sm font-medium text-gray-700 mb-2">Preis (€)</label>
+                        <label for="price" class="block text-sm font-medium text-gray-700 mb-2">Price (€)</label>
                         <input type="number" name="price" id="price" value="{{ old('price') }}" step="0.01" min="0"
                             placeholder="z.B. 5000.00"
                             class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
@@ -128,14 +128,25 @@
                     {{-- Erstzulassung --}}
                     <div>
                         <label for="first_registration"
-                            class="block text-sm font-medium text-gray-700 mb-2">Erstzulassung</label>
-                        <input type="date" name="first_registration" id="first_registration"
-                            value="{{ old('first_registration') }}"
+                            class="block text-sm font-medium text-gray-700 mb-2">Registration Year</label>
+                        <select name="first_registration" id="first_registration"
                             class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
+                            <option value="">Select Year</option>
+                            @php
+                                $currentYear = date('Y');
+                                $startYear = $currentYear - 100; // 50 years back
+                            @endphp
+                            @for ($year = $currentYear; $year >= $startYear; $year--)
+                                <option value="{{ $year }}" {{ old('first_registration') == $year ? 'selected' : '' }}>
+                                    {{ $year }}
+                                </option>
+                            @endfor
+                        </select>
                         @error('first_registration')
                             <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                         @enderror
                     </div>
+
 
                     {{-- Kilometerstand --}}
                     <div>
@@ -151,7 +162,7 @@
 
                     {{-- Leistung (PS) --}}
                     <div>
-                        <label for="power" class="block text-sm font-medium text-gray-700 mb-2">Leistung (PS)</label>
+                        <label for="power" class="block text-sm font-medium text-gray-700 mb-2">Power (PS)</label>
                         <input type="number" name="power" id="power" value="{{ old('power') }}" placeholder="z.B. 150"
                             class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
                         @error('power')
@@ -163,11 +174,11 @@
 
             {{-- Type & Condition Section (Farbe & Zustand) --}}
             <section class="bg-gray-50 p-6 rounded-lg shadow-inner">
-                <h4 class="text-xl font-semibold text-gray-700 mb-6">Typ & Zustand</h4>
+                <h4 class="text-xl font-semibold text-gray-700 mb-6">Type & Condition</h4>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     {{-- Farbe --}}
                     <div>
-                        <label for="color" class="block text-sm font-medium text-gray-700 mb-2">Farbe</label>
+                        <label for="color" class="block text-sm font-medium text-gray-700 mb-2">Color</label>
                         <select name="color" id="color"
                             class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
                             <option value="">Bitte wählen</option>
@@ -183,7 +194,7 @@
 
                     {{-- Zustand --}}
                     <div>
-                        <label for="condition" class="block text-sm font-medium text-gray-700 mb-2">Zustand</label>
+                        <label for="condition" class="block text-sm font-medium text-gray-700 mb-2">Condition</label>
                         <select name="condition" id="condition"
                             class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
                             <option value="">Bitte wählen</option>
@@ -204,7 +215,7 @@
             <section class="bg-white p-6 rounded-lg shadow">
                 {{-- Titel --}}
                 <div class="mb-6">
-                    <label for="title" class="block text-sm font-semibold text-gray-800 mb-2">Anzeigentitel</label>
+                    <label for="title" class="block text-sm font-semibold text-gray-800 mb-2">Titel</label>
                     <input type="text" name="title" id="title" value="{{ old('title') }}"
                         placeholder="Aussagekräftiger Titel für deine Anzeige"
                         class="w-full p-3 border border-gray-300 rounded-md shadow-sm bg-white text-gray-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 focus:border-blue-600 transition duration-150 ease-in-out">
@@ -215,7 +226,7 @@
 
                 {{-- Beschreibung --}}
                 <div>
-                    <label for="description" class="block text-sm font-semibold text-gray-800 mb-2">Beschreibung</label>
+                    <label for="description" class="block text-sm font-semibold text-gray-800 mb-2">Description</label>
                     <textarea name="description" id="description" rows="7"
                         placeholder="Gib hier alle wichtigen Details zu deinem Motorrad ein. Je mehr Informationen, desto besser!"
                         class="w-full p-3 border border-gray-300 rounded-md shadow-sm bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-600 transition duration-150 ease-in-out">{{ old('description') }}</textarea>
@@ -225,37 +236,37 @@
                 </div>
             </section>
 
-           {{-- Photo Upload Section (with Alpine.js for previews) --}}
-<section class="bg-gray-50 p-6 rounded-lg shadow-inner">
-    <h4 class="text-xl font-semibold text-gray-700 mb-6">Fotos hinzufügen</h4>
+            {{-- Photo Upload Section (with Alpine.js for previews) --}}
+            <section class="bg-gray-50 p-6 rounded-lg shadow-inner">
+                <h4 class="text-xl font-semibold text-gray-700 mb-6">Select Photos</h4>
 
-    {{-- Pass an empty array for initial images in create form --}}
-    <div x-data="multiImageUploader([])" class="space-y-4">
-        <input type="file" name="images[]" multiple @change="addNewFiles($event)"
-            class="block w-full border p-2 rounded" />
-        @error('images')
-            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-        @enderror
-        @error('images.*')
-            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-        @enderror
+                {{-- Pass an empty array for initial images in create form --}}
+                <div x-data="multiImageUploader([])" class="space-y-4">
+                    <input type="file" name="images[]" multiple @change="addNewFiles($event)"
+                        class="block w-full border p-2 rounded" />
+                    @error('images')
+                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                    @enderror
+                    @error('images.*')
+                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                    @enderror
 
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-            {{-- Loop through existing images (will be empty in create form) --}}
-            <template x-for="(image, index) in existingImages" :key="'existing-' + index">
-                {{-- ... (existing image display logic - won't be shown in create) ... --}}
-            </template>
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                        {{-- Loop through existing images (will be empty in create form) --}}
+                        <template x-for="(image, index) in existingImages" :key="'existing-' + index">
+                            {{-- ... (existing image display logic - won't be shown in create) ... --}}
+                        </template>
 
-            {{-- Loop through new previews (from uploaded files) --}}
-            <template x-for="(preview, index) in newFilePreviews" :key="'new-' + index">
-                <div class="relative group">
-                    <img :src="preview" class="w-full h-32 object-cover rounded shadow">
-                    <button type="button" @click="removeNewFile(index)"
-                        class="absolute top-1 right-1 bg-red-700 text-white w-6 h-6 rounded-full text-xs flex items-center justify-center hidden group-hover:flex">✕</button>
+                        {{-- Loop through new previews (from uploaded files) --}}
+                        <template x-for="(preview, index) in newFilePreviews" :key="'new-' + index">
+                            <div class="relative group">
+                                <img :src="preview" class="w-full h-32 object-cover rounded shadow">
+                                <button type="button" @click="removeNewFile(index)"
+                                    class="absolute top-1 right-1 bg-red-700 text-white w-6 h-6 rounded-full text-xs flex items-center justify-center hidden group-hover:flex">✕</button>
+                            </div>
+                        </template>
+                    </div>
                 </div>
-            </template>
-        </div>
-    </div>
 
                 {{-- Alpine.js Script for Image Previews and Main Form Logic --}}
                 <script>
@@ -302,16 +313,16 @@
                         };
                     }
                 </script>
-         
 
 
-            {{-- Submit Button --}}
-            <div class="pt-6 border-t border-gray-200 flex justify-end">
-                <button type="submit"
-                    class="bg-blue-600 text-white px-8 py-3 rounded-lg font-semibold text-lg hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-300 transition-all duration-300 shadow-lg">
-                    Anzeige erstellen
-                </button>
-            </div>
+
+                {{-- Submit Button --}}
+                <div class="pt-6 border-t border-gray-200 flex justify-end">
+                    <button type="submit"
+                        class="bg-blue-600 text-white px-8 py-3 rounded-lg font-semibold text-lg hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-300 transition-all duration-300 shadow-lg">
+                        Anzeige erstellen
+                    </button>
+                </div>
 
         </form>
     </div>
