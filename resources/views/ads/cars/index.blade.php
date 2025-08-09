@@ -82,14 +82,12 @@
                     {{-- Price Range with Input Fields --}}
                     <div class="flex-grow min-w-[150px] relative">
                         <label for="min_price" class="sr-only">min Price</label>
-                        <input type="number" name="min_price" value="{{ request('min_price') }}"
-                            placeholder="min price"
+                        <input type="number" name="min_price" value="{{ request('min_price') }}" placeholder="min price"
                             class="w-full rounded-l-lg border-gray-300 shadow-sm text-sm focus:ring-indigo-500 focus:border-indigo-500" />
                     </div>
                     <div class="flex-grow min-w-[150px] relative">
                         <label for="max_price" class="sr-only">max Price</label>
-                        <input type="number" name="max_price" value="{{ request('max_price') }}"
-                            placeholder="max price"
+                        <input type="number" name="max_price" value="{{ request('max_price') }}" placeholder="max price"
                             class="w-full rounded-r-lg border-gray-300 shadow-sm text-sm focus:ring-indigo-500 focus:border-indigo-500" />
                     </div>
 
@@ -159,7 +157,8 @@
 
                             {{-- Year of Registration with Input Fields --}}
                             <div class="flex-grow min-w-[150px] relative">
-                                <label for="min_year" class="block text-sm font-medium text-gray-700">Year of manufacture</label>
+                                <label for="min_year" class="block text-sm font-medium text-gray-700">Year of
+                                    manufacture</label>
                                 <div class="flex items-center mt-1">
                                     <input type="number" name="min_year" id="min_year" value="{{ request('min_year') }}"
                                         placeholder="Από" min="1920" max="{{ date('Y') }}"
@@ -174,55 +173,61 @@
                         </div>
 
                         {{-- Vehicle Type Filter --}}
-                  <div>
-    <label for="vehicle_type" class="block text-sm font-medium text-gray-700">Vehicle Type</label>
-    <select name="vehicle_type" id="vehicle_type"
-        class="mt-1 w-full rounded-lg border-gray-300 shadow-sm text-sm focus:ring-indigo-500 focus:border-indigo-500">
-        <option value="">select</option>
-        <option value="sedan" {{ request('vehicle_type') == 'sedan' ? 'selected' : '' }}>Sedan</option>
-        <option value="station wagon" {{ request('vehicle_type') == 'station wagon' ? 'selected' : '' }}>Station Wagon</option>
-        <option value="SUV/Off-road vehicle" {{ request('vehicle_type') == 'SUV/Off-road vehicle' ? 'selected' : '' }}>SUV/Off-road vehicle</option>
-        <option value="coupe" {{ request('vehicle_type') == 'coupe' ? 'selected' : '' }}>Coupe</option>
-        <option value="convertible" {{ request('vehicle_type') == 'convertible' ? 'selected' : '' }}>Convertible</option>
-        <option value="minivan" {{ request('vehicle_type') == 'minivan' ? 'selected' : '' }}>Minivan</option>
-        <option value="pickup" {{ request('vehicle_type') == 'pickup' ? 'selected' : '' }}>Pickup</option>
-    </select>
-</div>
-
-                        {{-- Condition Filter --}}
                         <div>
-                            <label for="condition" class="block text-sm font-medium text-gray-700">Κατάσταση</label>
-                            <select name="condition" id="condition"
+                            <label for="vehicle_type" class="block text-sm font-medium text-gray-700">Vehicle
+                                Type</label>
+                            <select name="vehicle_type" id="vehicle_type"
                                 class="mt-1 w-full rounded-lg border-gray-300 shadow-sm text-sm focus:ring-indigo-500 focus:border-indigo-500">
-                                <option value="">Επιλέξτε</option>
-                                <option value="new" {{ request('condition') == 'new' ? 'selected' : '' }}>Καινούργιο
+                                <option value="">select</option>
+                                <option value="sedan" {{ request('vehicle_type') == 'sedan' ? 'selected' : '' }}>Sedan
                                 </option>
-                                <option value="used" {{ request('condition') == 'used' ? 'selected' : '' }}>Μεταχειρισμένο
+                                <option value="station wagon" {{ request('vehicle_type') == 'station wagon' ? 'selected' : '' }}>Station Wagon</option>
+                                <option value="SUV/Off-road vehicle" {{ request('vehicle_type') == 'SUV/Off-road vehicle' ? 'selected' : '' }}>SUV/Off-road vehicle</option>
+                                <option value="coupe" {{ request('vehicle_type') == 'coupe' ? 'selected' : '' }}>Coupe
                                 </option>
-                                 <option value="used" {{ request('condition') == 'used' ? 'selected' : '' }}>Μεταχειρισμένο
+                                <option value="convertible" {{ request('vehicle_type') == 'convertible' ? 'selected' : '' }}>Convertible</option>
+                                <option value="minivan" {{ request('vehicle_type') == 'minivan' ? 'selected' : '' }}>
+                                    Minivan</option>
+                                <option value="pickup" {{ request('vehicle_type') == 'pickup' ? 'selected' : '' }}>Pickup
                                 </option>
                             </select>
                         </div>
 
+                        {{-- Condition Filter --}}
+                        <div>
+                            <label for="condition" class="block text-sm font-medium text-gray-700">Condition</label>
+                            <select name="condition" id="condition"
+                                class="mt-1 w-full rounded-lg border-gray-300 shadow-sm text-sm focus:ring-indigo-500 focus:border-indigo-500">
+                                <option value="">Select</option>
+                                <option value="new" {{ request('condition') == 'new' ? 'selected' : '' }}>New</option>
+                                <option value="used" {{ request('condition') == 'used' ? 'selected' : '' }}>Used</option>
+                                <option value="accident" {{ request('condition') == 'accident' ? 'selected' : '' }}>
+                                    Accident</option>
+                                <option value="damaged" {{ request('condition') == 'damaged' ? 'selected' : '' }}>Damaged
+                                </option>
+                            </select>
+                        </div>
+
+
                         {{-- Warranty Filter --}}
                         <div>
-                            <label for="warranty" class="block text-sm font-medium text-gray-700">Εγγύηση</label>
+                            <label for="warranty" class="block text-sm font-medium text-gray-700">Guarantee</label>
                             <select name="warranty" id="warranty"
                                 class="mt-1 w-full rounded-lg border-gray-300 shadow-sm text-sm focus:ring-indigo-500 focus:border-indigo-500">
-                                <option value="">Επιλέξτε</option>
-                                <option value="yes" {{ request('warranty') == 'yes' ? 'selected' : '' }}>Με εγγύηση
+                                <option value="">select</option>
+                                <option value="yes" {{ request('warranty') == 'yes' ? 'selected' : '' }}>Yes
                                 </option>
-                                <option value="no" {{ request('warranty') == 'no' ? 'selected' : '' }}>Χωρίς εγγύηση
+                                <option value="no" {{ request('warranty') == 'no' ? 'selected' : '' }}>No
                                 </option>
                             </select>
                         </div>
 
                         {{-- Power (HP) Filter --}}
                         <div>
-                            <label for="power" class="block text-sm font-medium text-gray-700">Ιπποδύναμη</label>
+                            <label for="power" class="block text-sm font-medium text-gray-700">Horse Power(HP)</label>
                             <select name="power" id="power"
                                 class="mt-1 w-full rounded-lg border-gray-300 shadow-sm text-sm focus:ring-indigo-500 focus:border-indigo-500">
-                                <option value="">Επιλέξτε</option>
+                                <option value="">select</option>
                                 <option value="0-100" {{ request('power') == '0-100' ? 'selected' : '' }}>0 - 100 HP
                                 </option>
                                 <option value="101-200" {{ request('power') == '101-200' ? 'selected' : '' }}>101 - 200 HP
@@ -234,64 +239,82 @@
 
                         {{-- Fuel Type Filter --}}
                         <div>
-                            <label for="fuel_type" class="block text-sm font-medium text-gray-700">Καύσιμο</label>
+                            <label for="fuel_type" class="block text-sm font-medium text-gray-700">Fuel Type</label>
                             <select name="fuel_type" id="fuel_type"
                                 class="mt-1 w-full rounded-lg border-gray-300 shadow-sm text-sm focus:ring-indigo-500 focus:border-indigo-500">
-                                <option value="">Επιλέξτε</option>
-                                <option value="petrol" {{ request('fuel_type') == 'petrol' ? 'selected' : '' }}>Βενζίνη
+                                <option value="">select</option>
+                                <option value="petrol" {{ request('fuel_type') == 'petrol' ? 'selected' : '' }}>Petrol
                                 </option>
-                                <option value="diesel" {{ request('fuel_type') == 'diesel' ? 'selected' : '' }}>Πετρέλαιο
-                                </option>
-                                <option value="hybrid" {{ request('fuel_type') == 'hybrid' ? 'selected' : '' }}>Υβριδικό
+                                <option value="diesel" {{ request('fuel_type') == 'diesel' ? 'selected' : '' }}>Diesel
                                 </option>
                                 <option value="electric" {{ request('fuel_type') == 'electric' ? 'selected' : '' }}>
-                                    Ηλεκτρικό</option>
+                                    Electric</option>
+                                <option value="hybrid" {{ request('fuel_type') == 'hybrid' ? 'selected' : '' }}>Hybrid
+                                </option>
+                                <option value="lpg" {{ request('fuel_type') == 'lpg' ? 'selected' : '' }}>LPG</option>
+                                <option value="cng" {{ request('fuel_type') == 'cng' ? 'selected' : '' }}>CNG</option>
                             </select>
                         </div>
+
 
                         {{-- Transmission Filter --}}
                         <div>
-                            <label for="transmission" class="block text-sm font-medium text-gray-700">Μετάδοση</label>
+                            <label for="transmission"
+                                class="block text-sm font-medium text-gray-700">Transmission</label>
                             <select name="transmission" id="transmission"
                                 class="mt-1 w-full rounded-lg border-gray-300 shadow-sm text-sm focus:ring-indigo-500 focus:border-indigo-500">
-                                <option value="">Επιλέξτε</option>
+                                <option value="">select</option>
                                 <option value="automatic" {{ request('transmission') == 'automatic' ? 'selected' : '' }}>
-                                    Αυτόματο</option>
-                                <option value="manual" {{ request('transmission') == 'manual' ? 'selected' : '' }}>
-                                    Χειροκίνητο</option>
+                                    Automatic</option>
+                                <option value="manual" {{ request('transmission') == 'manual' ? 'selected' : '' }}>Manual
+                                </option>
                             </select>
                         </div>
 
+
                         {{-- Drive Filter --}}
                         <div>
-                            <label for="drive" class="block text-sm font-medium text-gray-700">Κίνηση</label>
+                            <label for="drive" class="block text-sm font-medium text-gray-700">Wheel drive</label>
                             <select name="drive" id="drive"
                                 class="mt-1 w-full rounded-lg border-gray-300 shadow-sm text-sm focus:ring-indigo-500 focus:border-indigo-500">
-                                <option value="">Επιλέξτε</option>
-                                <option value="fwd" {{ request('drive') == 'fwd' ? 'selected' : '' }}>Προηγούμενη</option>
-                                <option value="rwd" {{ request('drive') == 'rwd' ? 'selected' : '' }}>Πίσω</option>
-                                <option value="awd" {{ request('drive') == 'awd' ? 'selected' : '' }}>Τετρακίνηση</option>
+                                <option value="">select</option>
+                                <option value="front" {{ old('drive') == 'front' ? 'selected' : '' }}>Front wheel drive
+                                </option>
+                                <option value="rear" {{ old('drive') == 'rear' ? 'selected' : '' }}>Rear wheel drive
+                                </option>
+                                <option value="all" {{ old('drive') == 'all' ? 'selected' : '' }}>All wheels</option>
                             </select>
                         </div>
 
                         {{-- Color Filter --}}
                         <div>
-                            <label for="color" class="block text-sm font-medium text-gray-700">Χρώμα</label>
+                            <label for="color" class="block text-sm font-medium text-gray-700">Color</label>
                             <select name="color" id="color"
                                 class="mt-1 w-full rounded-lg border-gray-300 shadow-sm text-sm focus:ring-indigo-500 focus:border-indigo-500">
-                                <option value="">Επιλέξτε</option>
-                                <option value="white" {{ request('color') == 'white' ? 'selected' : '' }}>Λευκό</option>
-                                <option value="black" {{ request('color') == 'black' ? 'selected' : '' }}>Μαύρο</option>
-                                <option value="silver" {{ request('color') == 'silver' ? 'selected' : '' }}>Ασημί</option>
+                                <option value="">select</option>
+                                <option value="black" {{ request('color') == 'black' ? 'selected' : '' }}>Black</option>
+                                <option value="white" {{ request('color') == 'white' ? 'selected' : '' }}>White</option>
+                                <option value="red" {{ request('color') == 'red' ? 'selected' : '' }}>Red</option>
+                                <option value="blue" {{ request('color') == 'blue' ? 'selected' : '' }}>Blue</option>
+                                <option value="green" {{ request('color') == 'green' ? 'selected' : '' }}>Green</option>
+                                <option value="yellow" {{ request('color') == 'yellow' ? 'selected' : '' }}>Yellow
+                                </option>
+                                <option value="orange" {{ request('color') == 'orange' ? 'selected' : '' }}>Orange
+                                </option>
+                                <option value="silver" {{ request('color') == 'silver' ? 'selected' : '' }}>Silver
+                                </option>
+                                <option value="grey" {{ request('color') == 'grey' ? 'selected' : '' }}>Grey</option>
+                                <option value="brown" {{ request('color') == 'brown' ? 'selected' : '' }}>Brown</option>
+                                <option value="other" {{ request('color') == 'other' ? 'selected' : '' }}>Other</option>
                             </select>
                         </div>
 
                         {{-- Doors Filter --}}
                         <div>
-                            <label for="doors" class="block text-sm font-medium text-gray-700">Πόρτες</label>
+                            <label for="doors" class="block text-sm font-medium text-gray-700">Doors</label>
                             <select name="doors" id="doors"
                                 class="mt-1 w-full rounded-lg border-gray-300 shadow-sm text-sm focus:ring-indigo-500 focus:border-indigo-500">
-                                <option value="">Επιλέξτε</option>
+                                <option value="">select</option>
                                 <option value="2" {{ request('doors') == '2' ? 'selected' : '' }}>2</option>
                                 <option value="3" {{ request('doors') == '3' ? 'selected' : '' }}>3</option>
                                 <option value="4" {{ request('doors') == '4' ? 'selected' : '' }}>4</option>
@@ -301,10 +324,10 @@
 
                         {{-- Seats Filter --}}
                         <div>
-                            <label for="seats" class="block text-sm font-medium text-gray-700">Θέσεις</label>
+                            <label for="seats" class="block text-sm font-medium text-gray-700">Seats</label>
                             <select name="seats" id="seats"
                                 class="mt-1 w-full rounded-lg border-gray-300 shadow-sm text-sm focus:ring-indigo-500 focus:border-indigo-500">
-                                <option value="">Επιλέξτε</option>
+                                <option value="">select</option>
                                 <option value="2" {{ request('seats') == '2' ? 'selected' : '' }}>2</option>
                                 <option value="4" {{ request('seats') == '4' ? 'selected' : '' }}>4</option>
                                 <option value="5" {{ request('seats') == '5' ? 'selected' : '' }}>5</option>
