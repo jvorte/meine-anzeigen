@@ -37,10 +37,21 @@ class CarController extends Controller
             $q->whereBetween('mileage', [(int)$min, (int)$max]);
         });
         
-        $query->when($request->filled('registration'), function ($q) use ($request) {
-            list($min, $max) = explode('-', $request->get('registration'));
-            $q->whereBetween('registration', [(int)$min, (int)$max]);
-        });
+      $query->when($request->filled(['min_year', 'max_year']), function ($q) use ($request) {
+    $minYear = (int)$request->get('min_year');
+    $maxYear = (int)$request->get('max_year');
+    $q->whereBetween('registration', [$minYear, $maxYear]);
+})
+// Handle only a minimum year being provided
+->when($request->filled('min_year') && !$request->filled('max_year'), function ($q) use ($request) {
+    $minYear = (int)$request->get('min_year');
+    $q->where('registration', '>=', $minYear);
+})
+// Handle only a maximum year being provided
+->when($request->filled('max_year') && !$request->filled('min_year'), function ($q) use ($request) {
+    $maxYear = (int)$request->get('max_year');
+    $q->where('registration', '<=', $maxYear);
+});
         
         $query->when($request->filled('vehicle_type'), function ($q) use ($request) {
             $q->where('vehicle_type', $request->get('vehicle_type'));
@@ -120,13 +131,13 @@ class CarController extends Controller
         
         $initialModels = []; // No models initially selected
 
-        $colors = ['Schwarz', 'Weiß', 'Rot', 'Blau', 'Grün', 'Gelb', 'Orange', 'Silber', 'Grau', 'Braun', 'Andere'];
-        $conditions = ['Neu', 'Gebraucht', 'Unfallfahrzeug']; // Consistent with your blade
-        $vehicleTypes = ['Limousine', 'Kombi', 'SUV/Geländewagen', 'Coupé', 'Cabrio', 'Minivan', 'Kleinwagen', 'Pickup']; // Example
-        $fuelTypes = ['Benzin', 'Diesel', 'Elektro', 'Hybrid', 'LPG', 'CNG']; // Example
-        $transmissions = ['Manuell', 'Automatik']; // Example
-        $drives = ['Vorderradantrieb', 'Hinterradantrieb', 'Allrad']; // Example
-        $sellerTypes = ['Privat', 'Händler']; // Example
+        $colors = ['Black', 'White', 'Red', 'Blue', 'Green', 'Yellow', 'Orange', 'Silver', 'Grey', 'Brown', 'Other'];
+        $conditions = ['new', 'used', 'accident','damaged']; 
+        $vehicleTypes = ['sedan', 'station wagon', 'SUV/Off-road vehicle', 'coupe', 'convertible', 'minivan', 'pickup'];
+        $fuelTypes = ['Petrol', 'Diesel', 'Electric', 'Hybrid', 'LPG', 'CNG']; 
+        $transmissions = ['manual', 'automatic']; 
+        $drives = ['front', 'rear', 'all'];
+        $sellerTypes = ['Private', 'Handler'];
 
         return view('ads.cars.create', compact(
             'brands',
@@ -160,7 +171,8 @@ class CarController extends Controller
             ],
             'price_from' => ['required', 'numeric', 'min:0'],
             'mileage_from' => ['required', 'numeric', 'min:0'],
-            'registration_to' => ['required', 'date'],
+          'registration_to' => ['required', 'integer', 'digits:4', 'min:1900', 'max:' . date('Y')],
+
             'vehicle_type' => ['required', 'string', 'max:255'],
             'condition' => ['required', 'string', 'max:255'],
             'warranty' => ['nullable', 'string', 'in:yes,no'], // Corrected validation rule
@@ -242,7 +254,7 @@ class CarController extends Controller
         $initialModels = CarModel::where('car_brand_id', $car->brand_id)->pluck('name', 'id');
     }
 
-    $colors = ['Schwarz', 'Weiß', 'Grau', 'Silber', 'Rot', 'Blau', 'Grün', 'Gelb', 'Braun', 'Orange', 'Violett', 'Metallic']; // Example
+    $colors = ['Black', 'White', 'Red', 'Blue', 'Green', 'Yellow', 'Orange', 'Silver', 'Grey', 'Brown', 'Other'];
 
     return view('ads.cars.edit', compact('car', 'brands', 'initialModels', 'colors'));
 }

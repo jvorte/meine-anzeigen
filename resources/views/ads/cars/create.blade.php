@@ -4,7 +4,7 @@
     {{-- ----------------------------------breadcrumbs --------------------------------------------------- --}}
     <x-slot name="header">
         <h2 class="text-3xl font-extrabold text-gray-900 leading-tight mb-2">
-            Neue Auto Anzeige erstellen
+            New Car ad
         </h2>
         <p class="text-md text-gray-700 dark:text-gray-500">
             Wähle eine passende Kategorie und fülle die erforderlichen Felder aus, um deine Anzeige zu erstellen.
@@ -32,12 +32,12 @@
             @csrf
 
 <section class="bg-gray-50 p-6 rounded-lg shadow-inner">
-    <h4 class="text-xl font-semibold text-gray-700 mb-6">Fahrzeugdetails</h4>
+    <h4 class="text-xl font-semibold text-gray-700 mb-6">Vehicle details</h4>
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
 
         {{-- Marke --}}
         <div>
-            <label for="car_brand_id" class="block text-sm font-medium text-gray-700 mb-2">Marke</label>
+            <label for="car_brand_id" class="block text-sm font-medium text-gray-700 mb-2">Brand</label>
             <select name="car_brand_id" id="car_brand_id" onchange="loadModels(this.value)"
                     class="form-select w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
                 <option value="">Bitte wählen</option>
@@ -55,7 +55,7 @@
 
         {{-- Modell --}}
         <div>
-            <label for="car_model_id" class="block text-sm font-medium text-gray-700 mb-2">Modell</label>
+            <label for="car_model_id" class="block text-sm font-medium text-gray-700 mb-2">Model</label>
             <select name="car_model_id" id="car_model_id"
                     class="form-select w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
                 <option value="">Bitte wählen</option>
@@ -117,23 +117,29 @@ document.addEventListener('DOMContentLoaded', function() {
 
             {{-- Basic Data Section (Erstzulassung, Kilometerstand, Leistung) --}}
             <section class="bg-gray-50 p-6 rounded-lg shadow-inner">
-                <h4 class="text-xl font-semibold text-gray-700 mb-6">Basisdaten</h4>
+                <h4 class="text-xl font-semibold text-gray-700 mb-6">Basic data</h4>
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     {{-- Erstzulassung --}}
-                    <div>
-                        <label for="registration_to"
-                            class="block text-sm font-medium text-gray-700 mb-2">Erstzulassung</label>
-                        <input type="date" name="registration_to" id="registration_to"
-                            value="{{ old('registration_to') }}"
-                            class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
-                        @error('registration_to')
-                            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-                        @enderror
-                    </div>
+                <div>
+    <label for="registration_to" class="block text-sm font-medium text-gray-700 mb-2">First registration</label>
+    <select name="registration_to" id="registration_to" class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
+        <option value="">Επιλέξτε Έτος</option>
+        @php
+            $currentYear = date('Y');
+            $startYear = 1990; // μπορείς να αλλάξεις την αρχή
+        @endphp
+        @for ($year = $currentYear; $year >= $startYear; $year--)
+            <option value="{{ $year }}" {{ old('registration_to') == $year ? 'selected' : '' }}>{{ $year }}</option>
+        @endfor
+    </select>
+    @error('registration_to')
+        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+    @enderror
+</div>
 
                     {{-- Kilometerstand --}}
                     <div>
-                        <label for="mileage_from" class="block text-sm font-medium text-gray-700 mb-2">Kilometerstand
+                        <label for="mileage_from" class="block text-sm font-medium text-gray-700 mb-2">Mileage
                             (in km)</label>
                         <input type="number" name="mileage_from" id="mileage_from" value="{{ old('mileage_from') }}"
                             placeholder="z.B. 50.000"
@@ -159,11 +165,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
             {{-- Type & Condition Section (Farbe & Zustand) --}}
             <section class="bg-gray-50 p-6 rounded-lg shadow-inner">
-                <h4 class="text-xl font-semibold text-gray-700 mb-6">Typ & Zustand</h4>
+                <h4 class="text-xl font-semibold text-gray-700 mb-6">Type and Condition</h4>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     {{-- Farbe --}}
                     <div>
-                        <label for="color" class="block text-sm font-medium text-gray-700 mb-2">Farbe</label>
+                        <label for="color" class="block text-sm font-medium text-gray-700 mb-2">Color</label>
                         <select name="color" id="color"
                             class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
                             <option value="">Bitte wählen</option>
@@ -179,15 +185,14 @@ document.addEventListener('DOMContentLoaded', function() {
 
                     {{-- Zustand --}}
                     <div>
-                        <label for="condition" class="block text-sm font-medium text-gray-700 mb-2">Zustand</label>
+                        <label for="condition" class="block text-sm font-medium text-gray-700 mb-2">Condition</label>
                         <select name="condition" id="condition"
                             class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
                             <option value="">Bitte wählen</option>
-                            <option value="neu" {{ old('condition') == 'neu' ? 'selected' : '' }}>Neu</option>
-                            <option value="gebraucht" {{ old('condition') == 'gebraucht' ? 'selected' : '' }}>Gebraucht
-                            </option>
-                            <option value="unfallfahrzeug" {{ old('condition') == 'unfallfahrzeug' ? 'selected' : '' }}>
-                                Unfallfahrzeug</option>
+                            <option value="neu" {{ old('condition') == 'new' ? 'selected' : '' }}>New</option>
+                            <option value="used" {{ old('condition') == 'used' ? 'selected' : '' }}>Used</option>
+                            <option value="accident" {{ old('condition') == 'accident' ? 'selected' : '' }}>Accident vehicle</option>
+                            <option value="damaged" {{ old('condition') == 'damaged' ? 'selected' : '' }}>Damaged vehicle</option>
                         </select>
                         @error('condition')
                             <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
@@ -203,7 +208,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     {{-- Fuel Type --}}
                     <div>
                         <label for="fuel_type"
-                            class="block text-sm font-medium text-gray-700 mb-2">Kraftstoffart</label>
+                            class="block text-sm font-medium text-gray-700 mb-2">Fuel</label>
                         <select name="fuel_type" id="fuel_type"
                             class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
                             <option value="">Bitte wählen</option>
@@ -221,13 +226,13 @@ document.addEventListener('DOMContentLoaded', function() {
 
                     {{-- Transmission --}}
                     <div>
-                        <label for="transmission" class="block text-sm font-medium text-gray-700 mb-2">Getriebe</label>
+                        <label for="transmission" class="block text-sm font-medium text-gray-700 mb-2">Gearbox</label>
                         <select name="transmission" id="transmission"
                             class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
                             <option value="">Bitte wählen</option>
-                            <option value="manuell" {{ old('transmission') == 'manuell' ? 'selected' : '' }}>Manuell
+                            <option value="manual" {{ old('transmission') == 'manual' ? 'selected' : '' }}>Manual
                             </option>
-                            <option value="automatik" {{ old('transmission') == 'automatik' ? 'selected' : '' }}>Automatik
+                            <option value="automatic" {{ old('transmission') == 'automatic' ? 'selected' : '' }}>Automatic
                             </option>
                         </select>
                         @error('transmission')
@@ -237,14 +242,13 @@ document.addEventListener('DOMContentLoaded', function() {
 
                     {{-- Drive --}}
                     <div>
-                        <label for="drive" class="block text-sm font-medium text-gray-700 mb-2">Antrieb</label>
+                        <label for="drive" class="block text-sm font-medium text-gray-700 mb-2">Wheel drive</label>
                         <select name="drive" id="drive"
                             class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
                             <option value="">Bitte wählen</option>
-                            <option value="front" {{ old('drive') == 'front' ? 'selected' : '' }}>Vorderradantrieb
-                            </option>
-                            <option value="rear" {{ old('drive') == 'rear' ? 'selected' : '' }}>Hinterradantrieb</option>
-                            <option value="all" {{ old('drive') == 'all' ? 'selected' : '' }}>Allrad</option>
+                            <option value="front" {{ old('drive') == 'front' ? 'selected' : '' }}>Front wheel drive</option>
+                            <option value="rear" {{ old('drive') == 'rear' ? 'selected' : '' }}>Rear wheel drive</option>
+                            <option value="all" {{ old('drive') == 'all' ? 'selected' : '' }}>All wheels</option>
                         </select>
                         @error('drive')
                             <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
@@ -253,8 +257,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
                     {{-- Doors --}}
                     <div>
-                        <label for="doors_from" class="block text-sm font-medium text-gray-700 mb-2">Anzahl
-                            Türen</label>
+                        <label for="doors_from" class="block text-sm font-medium text-gray-700 mb-2">
+                            Doors</label>
                         <select name="doors_from" id="doors_from"
                             class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
                             <option value="">Bitte wählen</option>
@@ -269,8 +273,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
                     {{-- Seats --}}
                     <div>
-                        <label for="seats_from" class="block text-sm font-medium text-gray-700 mb-2">Anzahl
-                            Sitze</label>
+                        <label for="seats_from" class="block text-sm font-medium text-gray-700 mb-2">Seats
+                            </label>
                         <select name="seats_from" id="seats_from"
                             class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
                             <option value="">Bitte wählen</option>
@@ -288,7 +292,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
                     {{-- Price --}}
                     <div>
-                        <label for="price_from" class="block text-sm font-medium text-gray-700 mb-2">Preis (€)</label>
+                        <label for="price_from" class="block text-sm font-medium text-gray-700 mb-2">Price (€)</label>
                         <input type="number" name="price_from" id="price_from" value="{{ old('price_from') }}"
                             placeholder="z.B. 15000"
                             class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
@@ -300,17 +304,17 @@ document.addEventListener('DOMContentLoaded', function() {
                     {{-- Vehicle Type --}}
                     <div>
                         <label for="vehicle_type"
-                            class="block text-sm font-medium text-gray-700 mb-2">Fahrzeugtyp</label>
+                            class="block text-sm font-medium text-gray-700 mb-2">Vehicle type</label>
                         <select name="vehicle_type" id="vehicle_type"
                             class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
                             <option value="">Bitte wählen</option>
-                            <option value="limousine" {{ old('vehicle_type') == 'limousine' ? 'selected' : '' }}>Limousine
+                            <option value="sedan" {{ old('vehicle_type') == 'sedan' ? 'selected' : '' }}>Sedan
                             </option>
-                            <option value="kombi" {{ old('vehicle_type') == 'kombi' ? 'selected' : '' }}>Kombi</option>
-                            <option value="suv" {{ old('vehicle_type') == 'suv' ? 'selected' : '' }}>SUV/Geländewagen
+                            <option value="station" {{ old('vehicle_type') == 'station' ? 'selected' : '' }}>station wagon</option>
+                            <option value="suv" {{ old('vehicle_type') == 'suv' ? 'selected' : '' }}>SUV/Off-road vehicle
                             </option>
-                            <option value="coupe" {{ old('vehicle_type') == 'coupe' ? 'selected' : '' }}>Coupé</option>
-                            <option value="cabrio" {{ old('vehicle_type') == 'cabrio' ? 'selected' : '' }}>Cabrio</option>
+                            <option value="coupe" {{ old('vehicle_type') == 'coupe' ? 'selected' : '' }}>Coupe</option>
+                            <option value="convertible" {{ old('vehicle_type') == 'convertible' ? 'selected' : '' }}>convertible</option>
                             <option value="minivan" {{ old('vehicle_type') == 'minivan' ? 'selected' : '' }}>Minivan
                             </option>
                             <option value="kleinwagen" {{ old('vehicle_type') == 'kleinwagen' ? 'selected' : '' }}>
@@ -324,12 +328,12 @@ document.addEventListener('DOMContentLoaded', function() {
 
                     {{-- Warranty --}}
                     <div>
-                        <label for="warranty" class="block text-sm font-medium text-gray-700 mb-2">Garantie</label>
+                        <label for="warranty" class="block text-sm font-medium text-gray-700 mb-2">Guarantee</label>
                         <select name="warranty" id="warranty"
                             class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
                             <option value="">Bitte wählen</option>
-                            <option value="yes" {{ old('warranty') == 'yes' ? 'selected' : '' }}>Ja</option>
-                            <option value="no" {{ old('warranty') == 'no' ? 'selected' : '' }}>Nein</option>
+                            <option value="yes" {{ old('warranty') == 'yes' ? 'selected' : '' }}>Yes</option>
+                            <option value="no" {{ old('warranty') == 'no' ? 'selected' : '' }}>No</option>
                         </select>
                         @error('warranty')
                             <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
@@ -338,13 +342,13 @@ document.addEventListener('DOMContentLoaded', function() {
 
                     {{-- Seller Type --}}
                     <div>
-                        <label for="seller_type" class="block text-sm font-medium text-gray-700 mb-2">Anbieter</label>
+                        <label for="seller_type" class="block text-sm font-medium text-gray-700 mb-2">Provider</label>
                         <select name="seller_type" id="seller_type"
                             class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
                             <option value="">Bitte wählen</option>
-                            <option value="private" {{ old('seller_type') == 'private' ? 'selected' : '' }}>Privat
+                            <option value="private" {{ old('seller_type') == 'private' ? 'selected' : '' }}>Private
                             </option>
-                            <option value="dealer" {{ old('seller_type') == 'dealer' ? 'selected' : '' }}>Händler</option>
+                            <option value="dealer" {{ old('seller_type') == 'dealer' ? 'selected' : '' }}>Handler</option>
                         </select>
                         @error('seller_type')
                             <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
@@ -357,7 +361,7 @@ document.addEventListener('DOMContentLoaded', function() {
             <section class="bg-white p-6 rounded-lg shadow">
                 {{-- Titel --}}
                 <div class="mb-6">
-                    <label for="title" class="block text-sm font-semibold text-gray-800 mb-2">Anzeigentitel</label>
+                    <label for="title" class="block text-sm  text-gray-800 mb-2">Ad title</label>
                     <input type="text" name="title" id="title" value="{{ old('title') }}"
                         placeholder="Aussagekräftiger Titel für deine Anzeige"
                         class="w-full p-3 border border-gray-300 rounded-md shadow-sm bg-white text-gray-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50">
@@ -368,7 +372,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
                 {{-- Beschreibung --}}
                 <div>
-                    <label for="description" class="block text-sm font-medium text-gray-800 mb-2">Beschreibung</label>
+                    <label for="description" class="block text-sm font-medium text-gray-800 mb-2">Description</label>
                     <textarea name="description" id="description" rows="7"
                         placeholder="Gib hier alle wichtigen Details zu deinem Auto ein. Je mehr Informationen, desto besser!"
                         class="w-full p-3 border border-gray-300 rounded-md shadow-sm bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-600 transition duration-150 ease-in-out">{{ old('description') }}</textarea>
@@ -381,7 +385,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
             {{-- Photo Upload Section --}}
             <section class="bg-gray-50 p-6 rounded-lg shadow-inner">
-                <h4 class="text-xl font-semibold text-gray-700 mb-6">Fotos hinzufügen</h4>
+                <h4 class="text-xl font-semibold text-gray-700 mb-6">Select Photos</h4>
 
                 <div x-data="multiImageUploader()" class="space-y-4">
                     {{-- The file input field. Laravel will pick up files from here. --}}
