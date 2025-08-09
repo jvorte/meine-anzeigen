@@ -126,16 +126,16 @@
                 <h4 class="text-xl font-semibold text-gray-700 mb-6">Basisdaten</h4>
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     {{-- Erstzulassung --}}
-        <div>
-    <label for="registration_to" class="block text-sm font-medium text-gray-700 mb-2">Erstzulassung (Year)</label>
-    <input type="number" name="registration_to" id="registration_to" 
-        value="{{ old('registration_to', $car->registration) }}"
-        min="1900" max="{{ date('Y') }}"
-        class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
-    @error('registration_to')
-        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-    @enderror
-</div>
+                        <div>
+                    <label for="registration_to" class="block text-sm font-medium text-gray-700 mb-2">Erstzulassung (Year)</label>
+                    <input type="number" name="registration_to" id="registration_to" 
+                        value="{{ old('registration_to', $car->registration) }}"
+                        min="1900" max="{{ date('Y') }}"
+                        class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
+                    @error('registration_to')
+                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                    @enderror
+                </div>
 
 
                     {{-- Kilometerstand --}}
@@ -207,6 +207,8 @@
             <section class="bg-gray-50 p-6 rounded-lg shadow-inner">
                 <h4 class="text-xl font-semibold text-gray-700 mb-6">Zusätzliche Fahrzeugmerkmale</h4>
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+                    
                     {{-- Fuel Type --}}
                     <div>
                         <label for="fuel_type"

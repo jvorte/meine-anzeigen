@@ -10,12 +10,13 @@ use App\Models\CarModel; // You might still need this for cars
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\Rule;
 
 class CommercialVehicleController extends Controller
 {
 
-    
-public function index(Request $request)
+
+    public function index(Request $request)
     {
         // Start with a base query
         $query = CommercialVehicle::with(['commercialBrand', 'commercialModel', 'images']);
@@ -28,35 +29,54 @@ public function index(Request $request)
         if ($request->has('model') && $request->input('model')) {
             $query->where('commercial_model_id', $request->input('model'));
         }
+        // PHP Backend
+        if ($request->has('min_price') && $request->input('min_price') !== null) {
+            $query->where('price', '>=', (int)$request->input('min_price'));
+        }
 
-        if ($request->has('price') && $request->input('price')) {
-            $priceRange = explode('-', $request->input('price'));
-            $query->whereBetween('price', [(int)$priceRange[0], (int)$priceRange[1]]);
+        if ($request->has('max_price') && $request->input('max_price') !== null) {
+            $query->where('price', '<=', (int)$request->input('max_price'));
         }
-        
-        if ($request->has('mileage') && $request->input('mileage')) {
-            $mileageRange = explode('-', $request->input('mileage'));
-            $query->whereBetween('mileage', [(int)$mileageRange[0], (int)$mileageRange[1]]);
+
+        // Year of registration filters
+        if ($request->filled('min_year') && $request->filled('max_year')) {
+            $query->whereBetween('first_registration', [(int)$request->min_year, (int)$request->max_year]);
+        } elseif ($request->filled('min_year')) {
+            $query->where('first_registration', '>=', (int)$request->min_year);
+        } elseif ($request->filled('max_year')) {
+            $query->where('first_registration', '<=', (int)$request->max_year);
         }
-        
+
         if ($request->has('first_registration') && $request->input('first_registration')) {
             $registrationRange = explode('-', $request->input('first_registration'));
             $query->whereBetween('first_registration', [(int)$registrationRange[0], (int)$registrationRange[1]]);
         }
+
+              $query->when($request->filled('mileage'), function ($q) use ($request) {
+            list($min, $max) = explode('-', $request->get('mileage'));
+            $q->whereBetween('mileage', [(int)$min, (int)$max]);
+        });
         
+
+         // Color filter (case-insensitive)
+    if ($request->filled('color')) {
+        $color = strtolower($request->input('color'));
+        $query->whereRaw('LOWER(`color`) = ?', [$color]);
+    }
+
         if ($request->has('power') && $request->input('power')) {
             $powerRange = explode('-', $request->input('power'));
             $query->whereBetween('power', [(int)$powerRange[0], (int)$powerRange[1]]);
         }
-        
+
         if ($request->has('condition') && $request->input('condition')) {
             $query->where('condition', $request->input('condition'));
         }
-        
+
         if ($request->has('commercial_vehicle_type') && $request->input('commercial_vehicle_type')) {
             $query->where('commercial_vehicle_type', $request->input('commercial_vehicle_type'));
         }
-        
+
         if ($request->has('fuel_type') && $request->input('fuel_type')) {
             $query->where('fuel_type', $request->input('fuel_type'));
         }
@@ -64,14 +84,19 @@ public function index(Request $request)
         if ($request->has('transmission') && $request->input('transmission')) {
             $query->where('transmission', $request->input('transmission'));
         }
-        
+
         if ($request->has('emission_class') && $request->input('emission_class')) {
             $query->where('emission_class', $request->input('emission_class'));
         }
 
+          if ($request->has('seats') && $request->input('seats')) {
+            $query->where('seats', $request->input('seats'));
+        }
+
+
         // Apply sorting based on the request, or default to latest
         $sortBy = $request->input('sort_by', 'latest');
-        
+
         switch ($sortBy) {
             case 'price_asc':
                 $query->orderBy('price', 'asc');
@@ -99,15 +124,14 @@ public function index(Request $request)
     {
         // --- FIX START: Define $commercialBrands here ---
         $commercialBrands = CommercialBrand::orderBy('name')->get(); // Fetch commercial brands
-    
 
-        $colors = ['Schwarz', 'Weiß', 'Rot', 'Blau', 'Grün', 'Gelb', 'Orange', 'Silber', 'Grau', 'Braun', 'Violett', 'Andere'];
-        // You mentioned mini-vans/mini-buses, so review this list. 'LKW', 'Anhänger', 'Spezialfahrzeug' might be too broad.
-        $commercialVehicleTypes = ['Kleintransporter', 'Minibus', 'Kastenwagen', 'Kombi', 'Pick-up', 'Spezialumbau', 'Andere'];
-        $fuelTypes = ['Diesel', 'Benzin', 'Elektro', 'Hybrid', 'Gas'];
-        $transmissions = ['Manuell', 'Automatik'];
+
+        $colors = ['Black', 'White', 'Red', 'Blue', 'Green', 'Yellow', 'Orange', 'Silver', 'Grey', 'Brown', 'Purple', 'Other'];
+        $commercialVehicleTypes = ['Small van', 'Minibus', 'Panel van', 'Station wagon', 'Pick-up', 'Special conversion', 'Other'];
+        $fuelTypes = ['Diesel', 'Petrol', 'Electric', 'Hybrid', 'Gas'];
+        $transmissions = ['Manual', 'Automatic'];
         $emissionClasses = ['Euro 1', 'Euro 2', 'Euro 3', 'Euro 4', 'Euro 5', 'Euro 6', 'Euro 6d-TEMP', 'Euro 6d'];
-
+        $conditions = ['new', 'used', 'accident', 'damaged'];
         return view('ads.commercial-vehicles.create', compact(
             'commercialBrands', // Now correctly defined
             // Removed the duplicate 'commercialBrands'
@@ -115,7 +139,9 @@ public function index(Request $request)
             'commercialVehicleTypes',
             'fuelTypes',
             'transmissions',
-            'emissionClasses'
+            'emissionClasses',
+            'conditions'
+
         ));
     }
 
@@ -133,17 +159,17 @@ public function index(Request $request)
             'images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048', // Validate each image
             'title' => 'required|string|max:255',
             'description' => 'required|string',
-            
+
             // --- FIX START: Use commercial_brand_id and commercial_model_id ---
             'commercial_brand_id' => 'required|exists:commercial_brands,id', // Use your new table
             'commercial_model_id' => 'required|exists:commercial_models,id', // Use your new table
             // --- FIX END ---
 
-            'first_registration' => 'required|date',
+            'first_registration' => ['required', 'integer', 'min:1990', 'max:' . date('Y')],
             'mileage' => 'required|integer|min:0',
             'power' => 'nullable|integer|min:1',
             'color' => 'nullable|string|max:50',
-            'condition' => 'required|in:neu,gebraucht,unfallfahrzeug',
+            'condition' => 'required|in:neu,used,accident,damaged',
             'price' => 'nullable|numeric|min:0',
             'commercial_vehicle_type' => 'required|string|max:100',
             'fuel_type' => 'nullable|string|max:50',
@@ -156,7 +182,7 @@ public function index(Request $request)
         ]);
         // dd($validatedData); // For debugging, uncomment if needed
 
-      
+
         $commercialVehicle = new CommercialVehicle();
         $commercialVehicle->user_id = Auth::id(); // Assign the authenticated user's ID
         $commercialVehicle->fill($validatedData); // Fill all validated data
@@ -172,7 +198,7 @@ public function index(Request $request)
             }
         }
 
-    
+
         return redirect()->route('dashboard')->with('success', 'Nutzfahrzeug Anzeige erfolgreich erstellt!');
     }
 
@@ -184,15 +210,15 @@ public function index(Request $request)
     /**
      * Display the specified resource.
      */
-public function show(CommercialVehicle $commercialVehicle)
-{
+    public function show(CommercialVehicle $commercialVehicle)
+    {
 
-    $commercialVehicle->load(['commercialBrand', 'commercialModel', 'images', 'user']);
+        $commercialVehicle->load(['commercialBrand', 'commercialModel', 'images', 'user']);
 
-    // dd($commercialVehicle);
+        // dd($commercialVehicle);
 
-    return view('ads.commercial-vehicles.show', compact('commercialVehicle'));
-}
+        return view('ads.commercial-vehicles.show', compact('commercialVehicle'));
+    }
 
 
 
@@ -204,83 +230,94 @@ public function show(CommercialVehicle $commercialVehicle)
      * @param  \App\Models\CommercialVehicle  $commercialAd
      * @return \Illuminate\Http\Response
      */
-public function edit(CommercialVehicle $commercialVehicle) // Renamed parameter for clarity with your Blade
-{
-    // Eager load for the edit form if you need to display them this way
-    $commercialVehicle->load(['commercialBrand', 'commercialModel']);
+    public function edit(CommercialVehicle $commercialVehicle) // Renamed parameter for clarity with your Blade
+    {
+        // Eager load for the edit form if you need to display them this way
+        $commercialVehicle->load(['commercialBrand', 'commercialModel']);
 
-    // Pass the necessary data to the view
-    $commercialBrands = CommercialBrand::orderBy('name')->get();
-    // You might also need to pass initial models for the selected brand
-    $initialCommercialModels = collect(); // Initialize empty collection
-    if ($commercialVehicle->commercial_brand_id) {
-        $initialCommercialModels = CommercialModel::where('commercial_brand_id', $commercialVehicle->commercial_brand_id)->get();
-    }
-
-    // Define your static arrays if they are not coming from the database
-    $colors = ['Rot', 'Blau', 'Grün', 'Schwarz', 'Weiß', 'Grau', 'Silber', 'Gelb', 'Orange', 'Braun', 'Beige', 'Violett', 'Metallic', 'Andere'];
-    $commercialVehicleTypes = ['Kastenwagen', 'LKW', 'Transporter', 'Bus', 'Anhänger', 'Sattelzugmaschine', 'Kipper', 'Pritsche', 'Sonderfahrzeug', 'Wohnmobil']; // Example types
-    $fuelTypes = ['Diesel', 'Benzin', 'Elektro', 'Hybrid', 'Gas', 'Ethanol', 'Andere']; // Example types
-    $transmissions = ['Manuell', 'Automatik']; // Example types
-    $emissionClasses = ['Euro 1', 'Euro 2', 'Euro 3', 'Euro 4', 'Euro 5', 'Euro 6', 'Euro 6d']; // Example types
-
-    return view('ads.commercial-vehicles.edit', compact(
-        'commercialVehicle', // The main model
-        'commercialBrands',
-        'initialCommercialModels', // For the model dropdown
-        'colors',
-        'commercialVehicleTypes',
-        'fuelTypes',
-        'transmissions',
-        'emissionClasses'
-    ));
-}
-
-
-
-
-public function update(Request $request, CommercialVehicle $commercialVehicle)
-{
-    // The model is already provided by Route Model Binding, so this line is not needed.
-    // $commercialVehicle = CommercialVehicle::findOrFail($id);
-
-    $validated = $request->validate([
-        'title' => 'required|string|max:255',
-        'description' => 'required|string',
-        'commercial_brand_id' => 'required|exists:commercial_brands,id',
-        'commercial_model_id' => 'required|exists:commercial_models,id',
-        'first_registration' => 'required|date',
-        'mileage' => 'required|integer|min:0',
-        'power' => 'nullable|integer|min:1',
-        'color' => 'nullable|string|max:50',
-        'condition' => 'required|string|in:neu,gebraucht,unfallfahrzeug',
-        'price' => 'nullable|numeric|min:0',
-        'commercial_vehicle_type' => 'required|string|max:100',
-        'fuel_type' => 'nullable|string|max:50',
-        'transmission' => 'nullable|string|max:50',
-        'payload_capacity' => 'nullable|integer|min:0',
-        'gross_vehicle_weight' => 'nullable|integer|min:0',
-        'number_of_axles' => 'nullable|integer|min:1',
-        'emission_class' => 'nullable|string|max:50',
-        'seats' => 'nullable|integer|min:1',
-        'images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-    ]);
-    
-    // Update the existing model instance
-    $commercialVehicle->update($validated);
-
-    // Handle new image uploads
-    if ($request->hasFile('images')) {
-        foreach ($request->file('images') as $image) {
-            $path = $image->store('commercial_vehicle_images', 'public');
-            $commercialVehicle->images()->create([
-                'image_path' => $path,
-            ]);
+        // Pass the necessary data to the view
+        $commercialBrands = CommercialBrand::orderBy('name')->get();
+        // You might also need to pass initial models for the selected brand
+        $initialCommercialModels = collect(); // Initialize empty collection
+        if ($commercialVehicle->commercial_brand_id) {
+            $initialCommercialModels = CommercialModel::where('commercial_brand_id', $commercialVehicle->commercial_brand_id)->get();
         }
+
+
+
+        $colors = ['Black', 'White', 'Red', 'Blue', 'Green', 'Yellow', 'Orange', 'Silver', 'Grey', 'Brown', 'Purple', 'Other'];
+        $commercialVehicleTypes = ['Small van', 'Minibus', 'Panel van', 'Station wagon', 'Pick-up', 'Special conversion', 'Other'];
+        $fuelTypes = ['Diesel', 'Petrol', 'Electric', 'Hybrid', 'Gas'];
+        $transmissions = ['manual', 'automatic'];
+        $emissionClasses = ['Euro 1', 'Euro 2', 'Euro 3', 'Euro 4', 'Euro 5', 'Euro 6', 'Euro 6d-TEMP', 'Euro 6d'];
+        $conditions = [
+            'new' => 'New',
+            'used' => 'Used',
+            'Accident vehicle' => 'Accident vehicle',
+            'Damaged vehicle' => 'Damaged vehicle'
+        ];
+
+
+        return view('ads.commercial-vehicles.edit', compact(
+            'commercialVehicle', // The main model
+            'commercialBrands',
+            'initialCommercialModels', // For the model dropdown
+            'colors',
+            'commercialVehicleTypes',
+            'fuelTypes',
+            'transmissions',
+            'emissionClasses',
+            'conditions'
+
+        ));
     }
 
-    return redirect()->route('ads.commercial-vehicles.show', $commercialVehicle);
-}
+
+
+
+    public function update(Request $request, CommercialVehicle $commercialVehicle)
+    {
+        // The model is already provided by Route Model Binding, so this line is not needed.
+        // $commercialVehicle = CommercialVehicle::findOrFail($id);
+        // dd('fdfd');
+        $validated = $request->validate([
+            'title' => 'required|string|max:255',
+            'description' => 'required|string',
+            'commercial_brand_id' => 'required|exists:commercial_brands,id',
+            'commercial_model_id' => 'required|exists:commercial_models,id',
+            'first_registration' => ['required', 'integer', 'min:1900', 'max:' . date('Y')],
+            'mileage' => 'required|integer|min:0',
+            'power' => 'nullable|integer|min:1',
+            'color' => 'nullable|string|max:50',
+            'condition' => 'required',
+            'string',
+            'price' => 'nullable|numeric|min:0',
+            'commercial_vehicle_type' => 'required|string|max:100',
+            'fuel_type' => 'nullable|string|max:50',
+            'transmission' => 'nullable|string|max:50',
+            'payload_capacity' => 'nullable|integer|min:0',
+            'gross_vehicle_weight' => 'nullable|integer|min:0',
+            'number_of_axles' => 'nullable|integer|min:1',
+            'emission_class' => 'nullable|string|max:50',
+            'seats' => 'nullable|integer|min:1',
+            'images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+        ]);
+
+        // Update the existing model instance
+        $commercialVehicle->update($validated);
+
+        // Handle new image uploads
+        if ($request->hasFile('images')) {
+            foreach ($request->file('images') as $image) {
+                $path = $image->store('commercial_vehicle_images', 'public');
+                $commercialVehicle->images()->create([
+                    'image_path' => $path,
+                ]);
+            }
+        }
+
+        return redirect()->route('ads.commercial-vehicles.show', $commercialVehicle);
+    }
 
 
     public function destroy($id)
@@ -323,9 +360,4 @@ public function update(Request $request, CommercialVehicle $commercialVehicle)
 
         return response()->json($models);
     }
-
-
-
-
-
 }

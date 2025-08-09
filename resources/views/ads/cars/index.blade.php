@@ -145,9 +145,9 @@
                                     km</option>
                                 <option value="50001-100000" {{ request('mileage') == '50001-100000' ? 'selected' : '' }}>
                                     50.001 - 100.000 km</option>
-                                <option value="50001-100000" {{ request('mileage') == '100001-150000' ? 'selected' : '' }}>100.001 - 150.000 km</option>
-                                <option value="50001-100000" {{ request('mileage') == '150001-200000' ? 'selected' : '' }}>150.001 - 200.000 km</option>
-                                <option value="50001-100000" {{ request('mileage') == '200001-250000' ? 'selected' : '' }}>200.001 - 250.000 km</option>
+                                <option value="100001-150000" {{ request('mileage') == '100001-150000' ? 'selected' : '' }}>100.001 - 150.000 km</option>
+                                <option value="150001-200000" {{ request('mileage') == '150001-200000' ? 'selected' : '' }}>150.001 - 200.000 km</option>
+                                <option value="200001-250000" {{ request('mileage') == '200001-250000' ? 'selected' : '' }}>200.001 - 250.000 km</option>
                             </select>
                         </div>
 

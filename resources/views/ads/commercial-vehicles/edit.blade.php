@@ -32,7 +32,9 @@
     {{-- ------------------------------------------------------------------------------------- --}}
 
     <div class="py-6">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+
+        <div class="max-w-6xl mx-auto sm:px-6 lg:px-8 bg-white  rounded-md my-3 py-4">
+                  
        <form method="POST" action="{{ route('ads.commercial-vehicles.update', ['commercial_vehicle' => $commercialVehicle->id]) }}" enctype="multipart/form-data">
 
                 @csrf
@@ -75,11 +77,48 @@
                         </select>
                     </div>
 
+                {{-- Erstzulassung --}}
+
+<div>
+    <label for="first_registration" class="block text-sm font-medium text-gray-700 mb-2">Erstzulassung (Year)</label>
+    <select name="first_registration" id="first_registration"
+        class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
+        <option value="">Bitte wählen</option>
+        @php
+            $currentYear = date('Y');
+            $startYear = 1990;
+        @endphp
+        @for ($year = $currentYear; $year >= $startYear; $year--)
+            <option value="{{ $year }}" {{ old('first_registration', $commercialVehicle->first_registration) == $year ? 'selected' : '' }}>
+                {{ $year }}
+            </option>
+        @endfor
+    </select>
+    @error('first_registration')
+        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+    @enderror
+</div>
+
+
+
+
+      {{-- Commercial Vehicle Type --}}
                     <div>
-                        <label for="first_registration" class="block text-sm font-medium text-gray-700 mb-1">Erstzulassung</label>
-                        <input type="date" name="first_registration" id="first_registration" value="{{ old('first_registration', $commercialVehicle->first_registration) }}"
-                               class="w-full border border-gray-300 rounded-md shadow-sm px-3 py-2 focus:ring-indigo-500 focus:border-indigo-500" />
+                        <label for="commercial_vehicle_type" class="block text-sm font-medium text-gray-700 mb-2">Fahrzeugtyp</label>
+                        <select name="commercial_vehicle_type" id="commercial_vehicle_type"
+                                class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
+                            <option value="">Bitte wählen</option>
+                            @foreach($commercialVehicleTypes as $type)
+                                <option value="{{ $type }}" {{ old('commercial_vehicle_type', $commercialVehicle->commercial_vehicle_type) == $type ? 'selected' : '' }}>{{ $type }}</option>
+                            @endforeach
+                        </select>
+                        @error('commercial_vehicle_type')
+                            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                        @enderror
                     </div>
+
+
+
 
                     <div>
                         <label for="mileage" class="block text-sm font-medium text-gray-700 mb-1">Kilometerstand (km)</label>
@@ -93,34 +132,77 @@
                                class="w-full border border-gray-300 rounded-md shadow-sm px-3 py-2 focus:ring-indigo-500 focus:border-indigo-500" />
                     </div>
 
+           <div>
+    <label for="color" class="block text-sm font-medium text-gray-700 mb-2">Farbe</label>
+    <select name="color" id="color" class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+        <option value="">Bitte wählen</option>
+        @foreach($colors as $color)
+            <option value="{{ $color }}" {{ old('color', $commercialVehicle->color) == $color ? 'selected' : '' }}>{{ $color }}</option>
+        @endforeach
+    </select>
+    @error('color')
+        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+    @enderror
+</div>
+
+
+    
+
+<div>
+    <label for="condition" class="block text-sm font-medium text-gray-700 mb-2">Condition</label>
+    <select name="condition" id="condition"
+        class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
+        <option value="">Please select</option>
+         @foreach($conditions as $key => $label)
+                <option value="{{ $key }}" {{ old('condition', $commercialVehicle->condition) == $key ? 'selected' : '' }}>
+                 {{ $label }}
+            </option>
+
+        @endforeach
+    </select>
+    @error('condition')
+        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+    @enderror
+</div>
+
+
+                    
+                        {{-- Fuel Type --}}
                     <div>
-                        <label for="color" class="block text-sm font-medium text-gray-700 mb-1">Farbe</label>
-                        <input type="text" name="color" id="color" value="{{ old('color', $commercialVehicle->color) }}"
-                               class="w-full border border-gray-300 rounded-md shadow-sm px-3 py-2 focus:ring-indigo-500 focus:border-indigo-500" />
+                        <label for="fuel_type"
+                            class="block text-sm font-medium text-gray-700 mb-2">Kraftstoffart</label>
+                        <select name="fuel_type" id="fuel_type"
+                            class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
+                            <option value="">Bitte wählen</option>
+                            <option value="Petrol" {{ old('fuel_type', $commercialVehicle->fuel_type) == 'Petrol' ? 'selected' : '' }}>Petrol</option>
+                            <option value="Diesel" {{ old('fuel_type', $commercialVehicle->fuel_type) == 'Diesel' ? 'selected' : '' }}>Diesel</option>
+                            <option value="Electric" {{ old('fuel_type', $commercialVehicle->fuel_type) == 'Electric' ? 'selected' : '' }}>Electric</option>
+                            <option value="hybrid" {{ old('fuel_type', $commercialVehicle->fuel_type) == 'hybrid' ? 'selected' : '' }}>Hybrid</option>
+                            <option value="lpg" {{ old('fuel_type', $commercialVehicle->fuel_type) == 'lpg' ? 'selected' : '' }}>LPG</option>
+                            <option value="cng" {{ old('fuel_type', $commercialVehicle->fuel_type) == 'cng' ? 'selected' : '' }}>CNG</option>
+                        </select>
+                        @error('fuel_type')
+                            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                        @enderror
                     </div>
+<div>
+    <label for="transmission" class="block text-sm font-medium text-gray-700 mb-2">Transmission</label>
+    <select name="transmission" id="transmission"
+        class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
+        <option value="">Bitte wählen</option>
+        @foreach(['manual' => 'Manual', 'automatic' => 'Automatic'] as $value => $label)
+            <option value="{{ $value }}" {{ strtolower(old('transmission', $commercialVehicle->transmission)) == $value ? 'selected' : '' }}>
+                {{ $label }}
+            </option>
+        @endforeach
+    </select>
+    @error('transmission')
+        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+    @enderror
+</div>
 
-                    <div>
-                        <label for="condition" class="block text-sm font-medium text-gray-700 mb-1">Zustand</label>
-                        <input type="text" name="condition" id="condition" value="{{ old('condition', $commercialVehicle->condition) }}"
-                               class="w-full border border-gray-300 rounded-md shadow-sm px-3 py-2 focus:ring-indigo-500 focus:border-indigo-500" />
-                    </div>
 
-                    <div>
-                        <label for="commercial_vehicle_type" class="block text-sm font-medium text-gray-700 mb-1">Fahrzeugtyp</label>
-                     <input type="text" name="commercial_vehicle_type" id="commercial_vehicle_type" value="{{ old('commercial_vehicle_type', $commercialVehicle->commercial_vehicle_type) }}" ... />         </div>
-
-                    <div>
-                        <label for="fuel_type" class="block text-sm font-medium text-gray-700 mb-1">Kraftstoffart</label>
-                        <input type="text" name="fuel_type" id="fuel_type" value="{{ old('fuel_type', $commercialVehicle->fuel_type) }}"
-                               class="w-full border border-gray-300 rounded-md shadow-sm px-3 py-2 focus:ring-indigo-500 focus:border-indigo-500" />
-                    </div>
-
-                    <div>
-                        <label for="transmission" class="block text-sm font-medium text-gray-700 mb-1">Getriebe</label>
-                        <input type="text" name="transmission" id="transmission" value="{{ old('transmission', $commercialVehicle->transmission) }}"
-                               class="w-full border border-gray-300 rounded-md shadow-sm px-3 py-2 focus:ring-indigo-500 focus:border-indigo-500" />
-                    </div>
-
+                    
                     <div>
                         <label for="payload_capacity" class="block text-sm font-medium text-gray-700 mb-1">Nutzlast (kg)</label>
                         <input type="number" name="payload_capacity" id="payload_capacity" value="{{ old('payload_capacity', $commercialVehicle->payload_capacity) }}"
@@ -139,22 +221,49 @@
                                class="w-full border border-gray-300 rounded-md shadow-sm px-3 py-2 focus:ring-indigo-500 focus:border-indigo-500" />
                     </div>
 
+               
+
+                        {{-- Emission Class --}}
                     <div>
-                        <label for="emission_class" class="block text-sm font-medium text-gray-700 mb-1">Emissionsklasse</label>
-                        <input type="text" name="emission_class" id="emission_class" value="{{ old('emission_class', $commercialVehicle->emission_class) }}"
-                               class="w-full border border-gray-300 rounded-md shadow-sm px-3 py-2 focus:ring-indigo-500 focus:border-indigo-500" />
+                        <label for="emission_class" class="block text-sm font-medium text-gray-700 mb-2">Emissionsklasse</label>
+                        <select name="emission_class" id="emission_class"
+                                class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
+                            <option value="">Bitte wählen</option>
+                            @foreach($emissionClasses as $class)
+                            <option value="{{ $class }}" {{ old('emission_class', $commercialVehicle->emission_class) == $class ? 'selected' : '' }}>{{ $class }}</option>
+
+                            @endforeach
+                        </select>
+                        @error('emission_class')
+                            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                        @enderror
                     </div>
 
+                       {{-- Seats --}}
                     <div>
-                        <label for="seats" class="block text-sm font-medium text-gray-700 mb-1">Sitze</label>
-                        <input type="number" name="seats" id="seats" value="{{ old('seats', $commercialVehicle->seats) }}"
-                               class="w-full border border-gray-300 rounded-md shadow-sm px-3 py-2 focus:ring-indigo-500 focus:border-indigo-500" />
+                        <label for="seats_from" class="block text-sm font-medium text-gray-700 mb-2">Anzahl
+                            Sitze</label>
+                        <select name="seats_from" id="seats_from"
+                            class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
+                            <option value="">Bitte wählen</option>
+                            <option value="2" {{ old('seats_from', $commercialVehicle->seats) == '2' ? 'selected' : '' }}>2</option>
+                            <option value="3" {{ old('seats_from', $commercialVehicle->seats) == '3' ? 'selected' : '' }}>3</option>
+                            <option value="4" {{ old('seats_from', $commercialVehicle->seats) == '4' ? 'selected' : '' }}>4</option>
+                            <option value="5" {{ old('seats_from', $commercialVehicle->seats) == '5' ? 'selected' : '' }}>5</option>
+                            <option value="7" {{ old('seats_from', $commercialVehicle->seats) == '7' ? 'selected' : '' }}>7</option>
+                            <option value="9" {{ old('seats_from', $commercialVehicle->seats) == '9' ? 'selected' : '' }}>9</option>
+                        </select>
+                        @error('seats_from')
+                            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                        @enderror
                     </div>
 
                 </div>
 
-                <div>
-                    <label for="description" class="block text-sm font-medium text-gray-700 mb-1">Beschreibung</label><textarea name="description" id="description" rows="6" ...>{{ old('description', $commercialVehicle->description) }}</textarea>     </div>
+             <div class="my-6">
+    <label for="description" class="block text-sm font-semibold text-gray-700 mb-2">Beschreibung</label>
+    <textarea name="description" id="description" rows="6" class="w-full border border-gray-300 rounded-md shadow-sm px-4 py-2 focus:ring-indigo-500 focus:border-indigo-500">{{ old('description', $commercialVehicle->description) }}</textarea>
+  </div>
 
 
                 
@@ -251,6 +360,15 @@
                 </script>
             </section>
 
+@if ($errors->any())
+    <div class="mb-4 p-4 bg-red-100 text-red-700 rounded">
+        <ul class="list-disc list-inside">
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif
 
 
 

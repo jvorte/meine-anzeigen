@@ -139,14 +139,26 @@ const initialModelId = '{{ old('commercial_model_id') }}';
                     </div>
 
                     {{-- Erstzulassung --}}
-                    <div>
-                        <label for="first_registration" class="block text-sm font-medium text-gray-700 mb-2">Erstzulassung</label>
-                        <input type="date" name="first_registration" id="first_registration" value="{{ old('first_registration') }}"
-                               class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
-                        @error('first_registration')
-                            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-                        @enderror
-                    </div>
+ 
+                  <div>
+    <label for="first_registration" class="block text-sm font-medium text-gray-700 mb-2">First registration</label>
+    <select name="first_registration" id="first_registration"
+        class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
+        <option value="">Επιλέξτε Έτος</option>
+        @php
+            $currentYear = date('Y');
+            $startYear = 1990;
+        @endphp
+        @for ($year = $currentYear; $year >= $startYear; $year--)
+            <option value="{{ $year }}" {{ old('first_registration') == $year ? 'selected' : '' }}>{{ $year }}</option>
+        @endfor
+    </select>
+    @error('first_registration')
+        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+    @enderror
+</div>
+
+
 
                     {{-- Kilometerstand --}}
                     <div>
@@ -185,13 +197,14 @@ const initialModelId = '{{ old('commercial_model_id') }}';
 
                     {{-- Zustand --}}
                     <div>
-                        <label for="condition" class="block text-sm font-medium text-gray-700 mb-2">Zustand</label>
+                        <label for="condition" class="block text-sm font-medium text-gray-700 mb-2">Condition</label>
                         <select name="condition" id="condition"
                                 class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
                             <option value="">Bitte wählen</option>
-                            <option value="neu" {{ old('condition') == 'neu' ? 'selected' : '' }}>Neu</option>
-                            <option value="gebraucht" {{ old('condition') == 'gebraucht' ? 'selected' : '' }}>Gebraucht</option>
-                            <option value="unfallfahrzeug" {{ old('condition') == 'unfallfahrzeug' ? 'selected' : '' }}>Unfallfahrzeug</option>
+                     <option value="neu" {{ old('condition') == 'new' ? 'selected' : '' }}>New</option>
+                            <option value="used" {{ old('condition') == 'used' ? 'selected' : '' }}>Used</option>
+                            <option value="accident" {{ old('condition') == 'accident' ? 'selected' : '' }}>Accident vehicle</option>
+                            <option value="damaged" {{ old('condition') == 'damaged' ? 'selected' : '' }}>Damaged vehicle</option>
                         </select>
                         @error('condition')
                             <p class="text-red-500 text-sm mt-1">{{ $message }}</p>

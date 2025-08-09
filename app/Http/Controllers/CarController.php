@@ -85,6 +85,7 @@ class CarController extends Controller
         $query->when($request->filled('color'), function ($q) use ($request) {
             $q->where('color', $request->get('color'));
         });
+        
 
         $query->when($request->filled('doors'), function ($q) use ($request) {
             $q->where('doors', $request->get('doors'));
@@ -282,90 +283,90 @@ class CarController extends Controller
      * @param  \App\Models\Car  $car The Car model instance to be updated.
      * @return \Illuminate\Http\RedirectResponse
      */
-public function update(Request $request, Car $car)
-{
-    if (Auth::id() !== $car->user_id) {
-        abort(403, 'Unauthorized action. You do not own this car advertisement.');
-    }
+    public function update(Request $request, Car $car)
+    {
+        if (Auth::id() !== $car->user_id) {
+            abort(403, 'Unauthorized action. You do not own this car advertisement.');
+        }
 
-    $validatedData = $request->validate([
-        'category_slug' => ['required', 'string', 'max:255'],
-        'car_brand_id' => ['required', 'exists:car_brands,id'],
-        'car_model_id' => [
-            'nullable',
-            Rule::exists('car_models', 'id')->where(function ($query) use ($request) {
-                return $query->where('car_brand_id', $request->car_brand_id);
-            }),
-        ],
-        'price_from' => ['required', 'numeric', 'min:0'],
-        'mileage_from' => ['required', 'numeric', 'min:0'],
-        'registration_to' => ['required', 'integer', 'min:1900', 'max:' . date('Y')],
+        $validatedData = $request->validate([
+            'category_slug' => ['required', 'string', 'max:255'],
+            'car_brand_id' => ['required', 'exists:car_brands,id'],
+            'car_model_id' => [
+                'nullable',
+                Rule::exists('car_models', 'id')->where(function ($query) use ($request) {
+                    return $query->where('car_brand_id', $request->car_brand_id);
+                }),
+            ],
+            'price_from' => ['required', 'numeric', 'min:0'],
+            'mileage_from' => ['required', 'numeric', 'min:0'],
+            'registration_to' => ['required', 'integer', 'min:1900', 'max:' . date('Y')],
 
-        'vehicle_type' => ['required', 'string', 'max:255'],
-        'condition' => ['required', 'string', Rule::in(['new', 'used', 'accident', 'damaged'])],
+            'vehicle_type' => ['required', 'string', 'max:255'],
+            'condition' => ['required', 'string', Rule::in(['new', 'used', 'accident', 'damaged'])],
 
-        'warranty' => ['nullable', 'string', 'in:yes,no'],
-        'power_from' => ['required', 'numeric', 'min:0'],
-        'fuel_type' => ['required', 'string', 'max:255'],
-        'transmission' => ['required', 'string', 'max:255'],
-        'drive' => ['required', 'string', 'max:255'],
-        'color' => ['required', 'string', 'max:255'],
-        'doors_from' => ['required', 'numeric', 'min:2', 'max:7'],
-        'seats_from' => ['required', 'numeric', 'min:2', 'max:9'],
-        'seller_type' => ['required', 'string', 'max:255'],
-        'title' => ['required', 'string', 'max:255'],
-        'description' => ['required', 'string'],
-        'new_images' => ['nullable', 'array', 'max:10'],
-        'new_images.*' => ['image', 'mimes:jpeg,png,jpg,gif,svg', 'max:2048'],
-        'delete_images' => ['nullable', 'array'],
-        'delete_images.*' => ['exists:car_images,id'],
-    ]);
+            'warranty' => ['nullable', 'string', 'in:yes,no'],
+            'power_from' => ['required', 'numeric', 'min:0'],
+            'fuel_type' => ['required', 'string', 'max:255'],
+            'transmission' => ['required', 'string', 'max:255'],
+            'drive' => ['required', 'string', 'max:255'],
+            'color' => ['required', 'string', 'max:255'],
+            'doors_from' => ['required', 'numeric', 'min:2', 'max:7'],
+            'seats_from' => ['required', 'numeric', 'min:2', 'max:9'],
+            'seller_type' => ['required', 'string', 'max:255'],
+            'title' => ['required', 'string', 'max:255'],
+            'description' => ['required', 'string'],
+            'new_images' => ['nullable', 'array', 'max:10'],
+            'new_images.*' => ['image', 'mimes:jpeg,png,jpg,gif,svg', 'max:2048'],
+            'delete_images' => ['nullable', 'array'],
+            'delete_images.*' => ['exists:car_images,id'],
+        ]);
 
-    $car->title = $validatedData['title'];
-    $car->description = $validatedData['description'];
-    $car->car_brand_id = $validatedData['car_brand_id'];
-    $car->car_model_id = $validatedData['car_model_id'] ?? null;
-    $car->price = $validatedData['price_from'];
-    $car->mileage = $validatedData['mileage_from'];
-    $car->registration = \Carbon\Carbon::parse($validatedData['registration_to'])->format('Y'); // μόνο έτος
-    $car->vehicle_type = $validatedData['vehicle_type'];
-    $car->condition = $validatedData['condition'];
-    $car->warranty = $validatedData['warranty'] ?? 'no';
-    $car->power = $validatedData['power_from'];
-    $car->fuel_type = $validatedData['fuel_type'];
-    $car->transmission = $validatedData['transmission'];
-    $car->drive = $validatedData['drive'];
-    $car->color = $validatedData['color'];
-    $car->doors = $validatedData['doors_from'];
-    $car->seats = $validatedData['seats_from'];
-    $car->seller_type = $validatedData['seller_type'];
+        $car->title = $validatedData['title'];
+        $car->description = $validatedData['description'];
+        $car->car_brand_id = $validatedData['car_brand_id'];
+        $car->car_model_id = $validatedData['car_model_id'] ?? null;
+        $car->price = $validatedData['price_from'];
+        $car->mileage = $validatedData['mileage_from'];
+        $car->registration = \Carbon\Carbon::parse($validatedData['registration_to'])->format('Y'); // μόνο έτος
+        $car->vehicle_type = $validatedData['vehicle_type'];
+        $car->condition = $validatedData['condition'];
+        $car->warranty = $validatedData['warranty'] ?? 'no';
+        $car->power = $validatedData['power_from'];
+        $car->fuel_type = $validatedData['fuel_type'];
+        $car->transmission = $validatedData['transmission'];
+        $car->drive = $validatedData['drive'];
+        $car->color = $validatedData['color'];
+        $car->doors = $validatedData['doors_from'];
+        $car->seats = $validatedData['seats_from'];
+        $car->seller_type = $validatedData['seller_type'];
 
-    $car->save();
+        $car->save();
 
-    // Διαγραφή εικόνων
-    if (isset($validatedData['delete_images'])) {
-        foreach ($validatedData['delete_images'] as $imageId) {
-            $image = CarImage::find($imageId);
-            if ($image && $image->car_id === $car->id) {
-                Storage::disk('public')->delete($image->image_path);
-                $image->delete();
+        // Διαγραφή εικόνων
+        if (isset($validatedData['delete_images'])) {
+            foreach ($validatedData['delete_images'] as $imageId) {
+                $image = CarImage::find($imageId);
+                if ($image && $image->car_id === $car->id) {
+                    Storage::disk('public')->delete($image->image_path);
+                    $image->delete();
+                }
             }
         }
-    }
 
-    // Νέες εικόνες
-    if ($request->hasFile('new_images')) {
-        foreach ($request->file('new_images') as $imageFile) {
-            $path = $imageFile->store('car_images', 'public');
-            $car->images()->create([
-                'image_path' => $path,
-                'is_thumbnail' => false,
-            ]);
+        // Νέες εικόνες
+        if ($request->hasFile('new_images')) {
+            foreach ($request->file('new_images') as $imageFile) {
+                $path = $imageFile->store('car_images', 'public');
+                $car->images()->create([
+                    'image_path' => $path,
+                    'is_thumbnail' => false,
+                ]);
+            }
         }
-    }
 
-    return redirect()->route('ads.cars.show', $car)->with('success', 'Auto Anzeige erfolgreich aktualisiert!');
-}
+        return redirect()->route('ads.cars.show', $car)->with('success', 'Auto Anzeige erfolgreich aktualisiert!');
+    }
 
     /**
      * Remove the specified car ad from storage.
