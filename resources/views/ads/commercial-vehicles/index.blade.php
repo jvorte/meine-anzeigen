@@ -33,135 +33,168 @@
         ]" class="mb-8" />
 
         {{-- Filters Section --}}
-        <form action="{{ route('ads.commercial-vehicles.index') }}" method="GET" x-data="{
-            commercialBrands: {{ json_encode($commercialBrands) }},
-            commercialModels: {{ json_encode($commercialModels) }},
-            selectedBrand: '{{ request('brand') }}',
-            selectedModel: '{{ request('model') }}',
-            filteredModels: [],
-            filterModels() {
-                this.filteredModels = this.commercialModels.filter(model => model.commercial_brand_id == this.selectedBrand);
-                if (!this.filteredModels.some(model => model.id == this.selectedModel)) {
-                    this.selectedModel = '';
-                }
-            },
-            init() {
-                this.filterModels();
-            }
-        }">
-            <div class="flex flex-wrap gap-2 mb-8 p-4 rounded-lg bg-gray-50 border border-gray-200">
+ <form action="{{ route('ads.commercial-vehicles.index') }}" method="GET" x-data="{
+    commercialBrands: {{ json_encode($commercialBrands) }},
+    commercialModels: {{ json_encode($commercialModels) }},
+    selectedBrand: '{{ request('brand') }}',
+    selectedModel: '{{ request('model') }}',
+    filteredModels: [],
+    showMoreFilters: false,
+    filterModels() {
+        this.filteredModels = this.commercialModels.filter(model => model.commercial_brand_id == this.selectedBrand);
+        if (!this.filteredModels.some(model => model.id == this.selectedModel)) {
+            this.selectedModel = '';
+        }
+    },
+    init() {
+        this.filterModels();
+    }
+}">
+    <div class="p-6 rounded-xl bg-gray-50 border border-gray-200">
+        {{-- Primary Filters --}}
+        <div class="flex flex-wrap items-center gap-4 mb-4">
+            {{-- Brand and Model --}}
+            <div class="flex-grow min-w-[150px]">
+                <label for="brand" class="sr-only">Μάρκα</label>
+                <select name="brand" x-model="selectedBrand" @change="filterModels" class="w-full rounded-lg border-gray-300 shadow-sm text-sm focus:ring-indigo-500 focus:border-indigo-500">
+                    <option value="">Μάρκα</option>
+                    <template x-for="brand in commercialBrands" :key="brand.id">
+                        <option :value="brand.id" x-text="brand.name"></option>
+                    </template>
+                </select>
+            </div>
+            
+            <div class="flex-grow min-w-[150px]">
+                <label for="model" class="sr-only">Μοντέλο</label>
+                <select name="model" x-model="selectedModel" class="w-full rounded-lg border-gray-300 shadow-sm text-sm focus:ring-indigo-500 focus:border-indigo-500" :disabled="!selectedBrand">
+                    <option value="">Μοντέλο</option>
+                    <template x-for="model in filteredModels" :key="model.id">
+                        <option :value="model.id" x-text="model.name"></option>
+                    </template>
+                </select>
+            </div>
 
-                {{-- Dropdown Filter for 'Μάρκα' --}}
-                <div class="relative flex-shrink-0">
-                    <select name="brand" x-model="selectedBrand" @change="filterModels" class="inline-flex justify-center w-full rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                        <option value="">Μάρκα</option>
-                        <template x-for="brand in commercialBrands" :key="brand.id">
-                            <option :value="brand.id" x-text="brand.name"></option>
-                        </template>
-                    </select>
-                </div>
+            {{-- Price Range with Input Fields --}}
+            <div class="flex-grow min-w-[150px] relative">
+                <label for="min_price" class="sr-only">Ελάχιστη Τιμή</label>
+                <input type="number" name="min_price" value="{{ request('min_price') }}" placeholder="Ελάχιστη τιμή" class="w-full rounded-l-lg border-gray-300 shadow-sm text-sm focus:ring-indigo-500 focus:border-indigo-500" />
+            </div>
+            <div class="flex-grow min-w-[150px] relative">
+                <label for="max_price" class="sr-only">Μέγιστη Τιμή</label>
+                <input type="number" name="max_price" value="{{ request('max_price') }}" placeholder="Μέγιστη τιμή" class="w-full rounded-r-lg border-gray-300 shadow-sm text-sm focus:ring-indigo-500 focus:border-indigo-500" />
+            </div>
 
-                {{-- Dropdown Filter for 'Μοντέλο' --}}
-                <div class="relative flex-shrink-0">
-                    <select name="model" x-model="selectedModel" class="inline-flex justify-center w-full rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                        <option value="">Μοντέλο</option>
-                        <template x-for="model in filteredModels" :key="model.id">
-                            <option :value="model.id" x-text="model.name"></option>
-                        </template>
-                    </select>
-                </div>
-                
-                {{-- Dropdown Filter for 'Τιμή' --}}
-                <div class="relative flex-shrink-0">
-                    <select name="price" class="inline-flex justify-center w-full rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                        <option value="">Τιμή</option>
-                        <option value="0-10000" {{ request('price') == '0-10000' ? 'selected' : '' }}>€0 - €10.000</option>
-                        <option value="10001-30000" {{ request('price') == '10001-30000' ? 'selected' : '' }}>€10.001 - €30.000</option>
-                        <option value="30001-999999" {{ request('price') == '30001-999999' ? 'selected' : '' }}>€30.001+</option>
-                    </select>
-                </div>
+            {{-- Submit and Reset Buttons --}}
+            <div class="flex items-center gap-2">
+                <button type="submit" class="inline-flex items-center justify-center rounded-lg border border-transparent shadow-sm px-4 py-2 bg-indigo-600 text-sm font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                    <span class="hidden sm:inline">Αναζήτηση</span>
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 sm:ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                    </svg>
+                </button>
+                <a href="{{ route('ads.commercial-vehicles.index') }}" class="inline-flex items-center justify-center rounded-lg border border-gray-300 shadow-sm px-4 py-2 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </a>
+            </div>
+        </div>
+        
+        {{-- More Filters Toggle Button --}}
+        <div class="flex justify-start">
+            <button type="button" @click="showMoreFilters = !showMoreFilters" class="text-sm text-indigo-600 hover:text-indigo-800 transition duration-150 ease-in-out font-medium inline-flex items-center">
+                <span x-text="showMoreFilters ? 'Λιγότερα Φίλτρα' : 'Περισσότερα Φίλτρα'"></span>
+                <svg x-show="!showMoreFilters" class="ml-1 h-4 w-4 transform transition-transform duration-200" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                </svg>
+                <svg x-show="showMoreFilters" class="ml-1 h-4 w-4 transform transition-transform duration-200" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M14.707 12.707a1 1 0 01-1.414 0L10 9.414l-3.293 3.293a1 1 0 01-1.414-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 010 1.414z" clip-rule="evenodd" />
+                </svg>
+            </button>
+        </div>
 
-                {{-- Dropdown Filter for 'Έτος Κυκλοφορίας' --}}
-                <div class="relative flex-shrink-0">
-                    <select name="first_registration" class="inline-flex justify-center w-full rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                        <option value="">Έτος</option>
+        {{-- Secondary Filters (Collapsible) --}}
+        <div x-show="showMoreFilters" x-collapse.duration.300ms class="mt-4 border-t border-gray-200 pt-4">
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                {{-- Year of Registration Filter --}}
+                <div>
+                    <label for="first_registration" class="block text-sm font-medium text-gray-700">Έτος Κυκλοφορίας</label>
+                    <select name="first_registration" id="first_registration" class="mt-1 w-full rounded-lg border-gray-300 shadow-sm text-sm focus:ring-indigo-500 focus:border-indigo-500">
+                        <option value="">Επιλέξτε</option>
                         <option value="2020-2024" {{ request('first_registration') == '2020-2024' ? 'selected' : '' }}>2020 - 2024</option>
                         <option value="2010-2019" {{ request('first_registration') == '2010-2019' ? 'selected' : '' }}>2010 - 2019</option>
                         <option value="0-2009" {{ request('first_registration') == '0-2009' ? 'selected' : '' }}>Πριν από το 2010</option>
                     </select>
                 </div>
-
-                {{-- Dropdown Filter for 'Τύπος Οχήματος' --}}
-                <div class="relative flex-shrink-0">
-                    <select name="commercial_vehicle_type" class="inline-flex justify-center w-full rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                        <option value="">Τύπος Οχήματος</option>
+                
+                {{-- Vehicle Type Filter --}}
+                <div>
+                    <label for="commercial_vehicle_type" class="block text-sm font-medium text-gray-700">Τύπος Οχήματος</label>
+                    <select name="commercial_vehicle_type" id="commercial_vehicle_type" class="mt-1 w-full rounded-lg border-gray-300 shadow-sm text-sm focus:ring-indigo-500 focus:border-indigo-500">
+                        <option value="">Επιλέξτε</option>
                         @foreach(['truck' => 'Φορτηγό', 'van' => 'Βαν', 'bus' => 'Λεωφορείο'] as $value => $label)
                             <option value="{{ $value }}" {{ request('commercial_vehicle_type') == $value ? 'selected' : '' }}>{{ $label }}</option>
                         @endforeach
                     </select>
                 </div>
-                
-                {{-- Dropdown Filter for 'Τύπος Καυσίμου' --}}
-                <div class="relative flex-shrink-0">
-                    <select name="fuel_type" class="inline-flex justify-center w-full rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                        <option value="">Καύσιμο</option>
+
+                {{-- Fuel Type Filter --}}
+                <div>
+                    <label for="fuel_type" class="block text-sm font-medium text-gray-700">Καύσιμο</label>
+                    <select name="fuel_type" id="fuel_type" class="mt-1 w-full rounded-lg border-gray-300 shadow-sm text-sm focus:ring-indigo-500 focus:border-indigo-500">
+                        <option value="">Επιλέξτε</option>
                         @foreach(['diesel' => 'Πετρέλαιο', 'petrol' => 'Βενζίνη', 'electric' => 'Ηλεκτρικό', 'gas' => 'Αέριο'] as $value => $label)
                             <option value="{{ $value }}" {{ request('fuel_type') == $value ? 'selected' : '' }}>{{ $label }}</option>
                         @endforeach
                     </select>
                 </div>
-
-                {{-- Dropdown Filter for 'Μετάδοση' --}}
-                <div class="relative flex-shrink-0">
-                    <select name="transmission" class="inline-flex justify-center w-full rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                        <option value="">Μετάδοση</option>
+                
+                {{-- Transmission Filter --}}
+                <div>
+                    <label for="transmission" class="block text-sm font-medium text-gray-700">Μετάδοση</label>
+                    <select name="transmission" id="transmission" class="mt-1 w-full rounded-lg border-gray-300 shadow-sm text-sm focus:ring-indigo-500 focus:border-indigo-500">
+                        <option value="">Επιλέξτε</option>
                         @foreach(['manual' => 'Χειροκίνητο', 'automatic' => 'Αυτόματο'] as $value => $label)
                             <option value="{{ $value }}" {{ request('transmission') == $value ? 'selected' : '' }}>{{ $label }}</option>
                         @endforeach
                     </select>
                 </div>
-
-                {{-- Dropdown Filter for 'Εκπομπές' --}}
-                <div class="relative flex-shrink-0">
-                    <select name="emission_class" class="inline-flex justify-center w-full rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                        <option value="">Κατηγορία Εκπομπών</option>
+                
+                {{-- Emission Class Filter --}}
+                <div>
+                    <label for="emission_class" class="block text-sm font-medium text-gray-700">Κατηγορία Εκπομπών</label>
+                    <select name="emission_class" id="emission_class" class="mt-1 w-full rounded-lg border-gray-300 shadow-sm text-sm focus:ring-indigo-500 focus:border-indigo-500">
+                        <option value="">Επιλέξτε</option>
                         @foreach(['euro_4' => 'Euro 4', 'euro_5' => 'Euro 5', 'euro_6' => 'Euro 6'] as $value => $label)
                             <option value="{{ $value }}" {{ request('emission_class') == $value ? 'selected' : '' }}>{{ $label }}</option>
                         @endforeach
                     </select>
                 </div>
-                
-                {{-- Dropdown Filter for 'Κατάσταση' --}}
-                <div class="relative flex-shrink-0">
-                    <select name="condition" class="inline-flex justify-center w-full rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                        <option value="">Κατάσταση</option>
+
+                {{-- Condition Filter --}}
+                <div>
+                    <label for="condition" class="block text-sm font-medium text-gray-700">Κατάσταση</label>
+                    <select name="condition" id="condition" class="mt-1 w-full rounded-lg border-gray-300 shadow-sm text-sm focus:ring-indigo-500 focus:border-indigo-500">
+                        <option value="">Επιλέξτε</option>
                         <option value="new" {{ request('condition') == 'new' ? 'selected' : '' }}>Καινούργιο</option>
                         <option value="used" {{ request('condition') == 'used' ? 'selected' : '' }}>Μεταχειρισμένο</option>
                     </select>
                 </div>
 
-                {{-- Dropdown for 'Ταξινόμηση' --}}
-                <div class="relative flex-shrink-0">
-                    <select name="sort_by" class="inline-flex justify-center w-full rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                        <option value="">Ταξινόμηση</option>
+                {{-- Sort By Dropdown --}}
+                <div>
+                    <label for="sort_by" class="block text-sm font-medium text-gray-700">Ταξινόμηση</label>
+                    <select name="sort_by" id="sort_by" class="mt-1 w-full rounded-lg border-gray-300 shadow-sm text-sm focus:ring-indigo-500 focus:border-indigo-500">
+                        <option value="">Επιλέξτε</option>
                         <option value="latest" {{ request('sort_by') == 'latest' ? 'selected' : '' }}>Τελευταία</option>
                         <option value="price_asc" {{ request('sort_by') == 'price_asc' ? 'selected' : '' }}>Τιμή: Φθηνότερο πρώτα</option>
                         <option value="price_desc" {{ request('sort_by') == 'price_desc' ? 'selected' : '' }}>Τιμή: Ακριβότερο πρώτα</option>
                     </select>
                 </div>
-
-                {{-- Submit Button --}}
-                <button type="submit" class="inline-flex items-center justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-indigo-600 text-sm font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                    Αναζήτηση
-                </button>
-
-                {{-- Reset Button --}}
-                <a href="{{ route('ads.commercial-vehicles.index') }}" class="inline-flex items-center justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                    Καθαρισμός Φίλτρων
-                </a>
             </div>
-        </form>
-
+        </div>
+    </div>
+</form>
         {{-- Ads Grid --}}
         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 my-5 gap-6">
             @foreach ($commercialVehicles as $vehicle)
