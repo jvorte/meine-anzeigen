@@ -270,7 +270,6 @@
 
                         {{-- Emission Class Filter --}}
 
-
                         <div>
                             <label for="emission_class" class="block text-sm font-medium text-gray-700">Κατηγορία
                                 Εκπομπών</label>

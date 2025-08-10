@@ -25,11 +25,12 @@ class StoreCamperRequest extends FormRequest
             'camper_model_id' => ['nullable', 'exists:camper_models,id'], 
 
             'price' => ['required', 'numeric', 'min:0'],
-            'first_registration' => ['required', 'date'],
+           
+            'first_registration' => ['required', 'integer', 'digits:4', 'min:1900', 'max:' . date('Y')],
             'mileage' => ['required', 'integer', 'min:0'],
             'power' => ['required', 'integer', 'min:1'],
             'color' => ['required', 'string', 'max:255'],
-            'condition' => ['required', 'string', 'in:neu,gebraucht,unfallfahrzeug'],
+           'condition' => ['required', 'string', 'max:255'],
             'camper_type' => ['required', 'string', 'max:255'],
             'berths' => ['required', 'integer', 'min:1'],
             'total_length' => ['required', 'numeric', 'min:0'],

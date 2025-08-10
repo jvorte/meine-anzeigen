@@ -328,7 +328,9 @@ class CarController extends Controller
         $car->car_model_id = $validatedData['car_model_id'] ?? null;
         $car->price = $validatedData['price_from'];
         $car->mileage = $validatedData['mileage_from'];
-        $car->registration = \Carbon\Carbon::parse($validatedData['registration_to'])->format('Y'); // μόνο έτος
+       $car->registration = $validatedData['registration_to'];
+
+
         $car->vehicle_type = $validatedData['vehicle_type'];
         $car->condition = $validatedData['condition'];
         $car->warranty = $validatedData['warranty'] ?? 'no';

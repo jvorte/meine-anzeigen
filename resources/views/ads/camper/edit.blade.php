@@ -113,16 +113,28 @@
                         @enderror
                     </div>
 
-                    {{-- Erstzulassung --}}
-                    <div>
-                        <label for="first_registration"
-                            class="block text-sm font-medium text-gray-700 mb-2">Erstzulassung</label>
-                        <input type="date" name="first_registration" id="first_registration"
-    value="{{ old('first_registration', $camper->first_registration ? $camper->first_registration->format('Y-m-d') : '') }}"
-    class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">@error('first_registration')
-                            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-                        @enderror
-                    </div>
+
+         
+             {{-- Erstzulassung (Year) --}}
+<div>
+    <label for="first_registration" class="block text-sm font-medium text-gray-700 mb-2">
+        Erstzulassung (Year)
+    </label>
+    <select name="first_registration" id="first_registration"
+        class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
+        <option value="">-- Bitte wählen --</option>
+        @for ($year = date('Y'); $year >= 1900; $year--)
+            <option value="{{ $year }}"
+                {{ old('first_registration', $camper->first_registration ? $camper->first_registration->format('Y') : '') == $year ? 'selected' : '' }}>
+                {{ $year }}
+            </option>
+        @endfor
+    </select>
+    @error('first_registration')
+        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+    @enderror
+</div>
+
 
                     {{-- Kilometerstand --}}
                     <div>
@@ -162,22 +174,26 @@
                         @enderror
                     </div>
 
+               
+                  
                     {{-- Zustand --}}
-                    <div>
-                        <label for="condition" class="block text-sm font-medium text-gray-700 mb-2">Zustand</label>
-                        <select name="condition" id="condition"
-                            class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
-                            <option value="">Bitte wählen</option>
-                            <option value="neu" {{ old('condition', $camper->condition) == 'neu' ? 'selected' : '' }}>Neu</option>
-                            <option value="gebraucht" {{ old('condition', $camper->condition) == 'gebraucht' ? 'selected' : '' }}>Gebraucht
-                            </option>
-                            <option value="unfallfahrzeug" {{ old('condition', $camper->condition) == 'unfallfahrzeug' ? 'selected' : '' }}>
-                                Unfallfahrzeug</option>
-                        </select>
-                        @error('condition')
-                            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-                        @enderror
-                    </div>
+         <div>
+    <label for="condition" class="block text-sm font-medium text-gray-700 mb-2">Condition</label>
+    <select name="condition" id="condition"
+        class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
+        <option value="">Please select</option>
+        <option value="new" {{ old('condition', $camper->condition) == 'new' ? 'selected' : '' }}>New</option>
+        <option value="used" {{ old('condition', $camper->condition) == 'used' ? 'selected' : '' }}>Used</option>
+        <option value="accident" {{ old('condition', $camper->condition) == 'accident' ? 'selected' : '' }}>Accident vehicle</option>
+        <option value="damaged" {{ old('condition', $camper->condition) == 'damaged' ? 'selected' : '' }}>Damaged vehicle</option>
+    </select>
+    @error('condition')
+        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+    @enderror
+</div>
+
+
+
                 </div>
             </section>
 

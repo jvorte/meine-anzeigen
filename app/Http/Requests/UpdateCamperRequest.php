@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
-
+use Illuminate\Validation\Rule;
 class UpdateCamperRequest extends FormRequest
 {
     /**
@@ -25,11 +25,12 @@ class UpdateCamperRequest extends FormRequest
             'camper_brand_id' => ['required', 'exists:camper_brands,id'],
             'camper_model_id' => ['nullable', 'exists:camper_models,id'],
             'price' => ['required', 'numeric', 'min:0'],
-            'first_registration' => ['required', 'date'],
+          
+             'first_registration' => ['required', 'integer', 'min:1900', 'max:' . date('Y')],
             'mileage' => ['required', 'integer', 'min:0'],
             'power' => ['required', 'integer', 'min:1'],
             'color' => ['required', 'string', 'max:255'],
-            'condition' => ['required', 'string', 'in:neu,gebraucht,unfallfahrzeug'],
+              'condition' => ['required', 'string', Rule::in(['new', 'used', 'accident', 'damaged'])],
             'camper_type' => ['required', 'string', 'max:255'],
             'berths' => ['required', 'integer', 'min:1'],
             'total_length' => ['required', 'numeric', 'min:0'],
@@ -41,10 +42,10 @@ class UpdateCamperRequest extends FormRequest
             'emission_class' => ['required', 'string', 'max:255'],
             'title' => ['required', 'string', 'max:255'],
             'description' => ['required', 'string'],
-            'images' => ['nullable', 'array', 'max:10'], // New images being uploaded
+            'images' => ['nullable', 'array', 'max:10'],
             'images.*' => ['image', 'mimes:jpeg,png,jpg,gif,svg', 'max:2048'],
-            'existing_images' => ['nullable', 'array'], // Array of IDs of existing images to keep
-            'existing_images.*' => ['exists:camper_images,id'], // Ensure existing images actually exist
+            'existing_images' => ['nullable', 'array'], 
+            'existing_images.*' => ['exists:camper_images,id'], 
         ];
     }
 }

@@ -18,78 +18,97 @@ class CamperController extends Controller
 
 
     // Dummy data for dropdowns - you might get this from a database or config
-    private $colors = ['Black', 'White', 'Silver', 'Grey', 'Red', 'Blue', 'Green', 'Yellow', 'Orange', 'Brown'];
-    private $camperTypes = ['Alkoven', 'Teilintegriert', 'Vollintegriert', 'Kastenwagen', 'Wohnwagen'];
-    private $fuelTypes = ['Diesel', 'Petrol', 'Electric'];
-    private $transmissions = ['Manual', 'Automatic'];
+    private  $colors = ['Black', 'White', 'Red', 'Blue', 'Green', 'Yellow', 'Orange', 'Silver', 'Grey', 'Brown', 'Other'];
+    private $camperTypes = ['Alcove', 'Semi-integrated', 'Fully integrated', 'Panel van', 'Caravan'];
+    private $fuelTypes = ['Petrol', 'Diesel', 'Electric', 'Hybrid', 'LPG', 'CNG'];
+    private  $transmissions = ['manual', 'automatic'];
     private $emissionClasses = ['Euro 1', 'Euro 2', 'Euro 3', 'Euro 4', 'Euro 5', 'Euro 6'];
 
 
 
 
-// CamperController.php
- public function index(Request $request)
+    public function index(Request $request)
     {
         // Start with a base query
         $query = Camper::with(['camperBrand', 'camperModel', 'images']);
 
         // Apply filters if they exist in the request
-        if ($request->has('brand') && $request->input('brand')) {
+        if ($request->filled('brand')) {
             $query->where('camper_brand_id', $request->input('brand'));
         }
 
-        if ($request->has('model') && $request->input('model')) {
+        if ($request->filled('model')) {
             $query->where('camper_model_id', $request->input('model'));
         }
 
-        if ($request->has('price') && $request->input('price')) {
-            $priceRange = explode('-', $request->input('price'));
-            $query->whereBetween('price', [(int)$priceRange[0], (int)$priceRange[1]]);
+        // Price range filter
+        if ($request->filled('min_price')) {
+            $query->where('price', '>=', (int)$request->input('min_price'));
         }
-        
-        if ($request->has('mileage') && $request->input('mileage')) {
-            $mileageRange = explode('-', $request->input('mileage'));
-            $query->whereBetween('mileage', [(int)$mileageRange[0], (int)$mileageRange[1]]);
+        if ($request->filled('max_price')) {
+            $query->where('price', '<=', (int)$request->input('max_price'));
         }
-        
-        if ($request->has('first_registration') && $request->input('first_registration')) {
-            $registrationRange = explode('-', $request->input('first_registration'));
-            $query->whereBetween('first_registration', [(int)$registrationRange[0], (int)$registrationRange[1]]);
+
+        // Power range filter (newly added to match the form)
+        if ($request->filled('min_power')) {
+            $query->where('power', '>=', (int)$request->input('min_power'));
         }
-        
-        if ($request->has('power') && $request->input('power')) {
-            $powerRange = explode('-', $request->input('power'));
-            $query->whereBetween('power', [(int)$powerRange[0], (int)$powerRange[1]]);
+        if ($request->filled('max_power')) {
+            $query->where('power', '<=', (int)$request->input('max_power'));
         }
-        
-        if ($request->has('condition') && $request->input('condition')) {
+
+        if ($request->filled('transmission')) {
+            $query->where('transmission', $request->input('transmission'));
+        }
+
+        if ($request->filled('emission_class')) {
+            $query->where('emission_class', $request->input('emission_class'));
+        }
+
+        // Color filter (case-insensitive)
+        if ($request->filled('color')) {
+            $color = strtolower($request->input('color'));
+            $query->whereRaw('LOWER(`color`) = ?', [$color]);
+        }
+
+        // Mileage range filters
+        if ($request->filled('min_mileage')) {
+            $query->where('mileage', '>=', (int)$request->min_mileage);
+        }
+        if ($request->filled('max_mileage')) {
+            $query->where('mileage', '<=', (int)$request->max_mileage);
+        }
+
+        if ($request->filled('fuel_type')) {
+            $query->where('fuel_type', $request->input('fuel_type'));
+        }
+
+        // Year of registration filters
+        if ($request->filled('min_year')) {
+            $query->where('first_registration', '>=', (int)$request->min_year);
+        }
+        if ($request->filled('max_year')) {
+            $query->where('first_registration', '<=', (int)$request->max_year);
+        }
+
+        if ($request->filled('condition')) {
             $query->where('condition', $request->input('condition'));
         }
-        
-        if ($request->has('camper_type') && $request->input('camper_type')) {
+
+        if ($request->filled('camper_type')) {
             $query->where('camper_type', $request->input('camper_type'));
         }
 
-        if ($request->has('berths') && $request->input('berths')) {
+        if ($request->filled('berths')) {
             $berthsRange = explode('-', $request->input('berths'));
-            $query->whereBetween('berths', [(int)$berthsRange[0], (int)$berthsRange[1]]);
-        }
-
-        if ($request->has('fuel_type') && $request->input('fuel_type')) {
-            $query->where('fuel_type', $request->input('fuel_type'));
-        }
-        
-        if ($request->has('transmission') && $request->input('transmission')) {
-            $query->where('transmission', $request->input('transmission'));
-        }
-        
-        if ($request->has('emission_class') && $request->input('emission_class')) {
-            $query->where('emission_class', $request->input('emission_class'));
+            if (count($berthsRange) == 2) {
+                $query->whereBetween('berths', [(int)$berthsRange[0], (int)$berthsRange[1]]);
+            }
         }
 
         // Apply sorting based on the request, or default to latest
         $sortBy = $request->input('sort_by', 'latest');
-        
+
         switch ($sortBy) {
             case 'price_asc':
                 $query->orderBy('price', 'asc');
@@ -106,8 +125,9 @@ class CamperController extends Controller
         $campers = $query->paginate(15);
         $camperBrands = CamperBrand::all();
         $camperModels = CamperModel::all();
-
-        return view('ads.camper.index', compact('campers', 'camperBrands', 'camperModels'));
+        $camperTypes = ['Panel van', 'Alcove', 'Fully integrated', 'Semi-integrated', 'Caravan'];
+        
+        return view('ads.camper.index', compact('campers', 'camperBrands', 'camperModels', 'camperTypes'));
     }
     /**
      * Get models by brand ID for AJAX requests.
@@ -137,10 +157,10 @@ class CamperController extends Controller
         ]);
     }
 
- 
+
     public function store(StoreCamperRequest $request)
     {
-   
+
         $validatedData = $request->validated();
 
         // Create the camper
@@ -151,7 +171,6 @@ class CamperController extends Controller
             foreach ($request->file('images') as $image) {
                 $path = $image->store('camper_images', 'public'); // Store in 'storage/app/public/camper_images'
                 $camper->images()->create(['image_path' => $path]);
-                
             }
         }
 
@@ -189,8 +208,8 @@ class CamperController extends Controller
         $currentCamperModels = [];
         if ($camper->camper_brand_id) {
             $currentCamperModels = CamperModel::where('camper_brand_id', $camper->camper_brand_id)
-                                                ->orderBy('name')
-                                                ->get();
+                ->orderBy('name')
+                ->get();
         }
 
         return view('ads.camper.edit', [
@@ -210,10 +229,10 @@ class CamperController extends Controller
      */
     public function update(UpdateCamperRequest $request, Camper $camper)
     {
-      
+
         $validatedData = $request->validated();
 
-     
+
         $camper->update($validatedData);
 
         // Delete images that the user checked for deletion
@@ -235,12 +254,12 @@ class CamperController extends Controller
         }
 
         return redirect()->route('ads.camper.show', $camper->id)
-                         ->with('success', 'Wohnmobil Anzeige erfolgreich aktualisiert!');
+            ->with('success', 'Wohnmobil Anzeige erfolgreich aktualisiert!');
     }
 
 
 
-    
+
     public function destroy(Camper $camper)
     {
         // Add authorization check

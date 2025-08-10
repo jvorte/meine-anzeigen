@@ -303,7 +303,7 @@
                         @if ($camper->first_registration)
                             <dl>
                                 <dt class="font-semibold text-gray-700 mb-1">Erstzulassung</dt>
-                                <dd class="text-gray-900">{{ $camper->first_registration->format('d.m.Y') }}</dd>
+                                <dd class="text-gray-900">{{ $camper->first_registration->format('Y') }}</dd>
                             </dl>
                         @endif
 

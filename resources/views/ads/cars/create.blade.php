@@ -119,6 +119,9 @@ document.addEventListener('DOMContentLoaded', function() {
             <section class="bg-gray-50 p-6 rounded-lg shadow-inner">
                 <h4 class="text-xl font-semibold text-gray-700 mb-6">Basic data</h4>
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+
+
                     {{-- Erstzulassung --}}
                                         <div>
                             <label for="registration_to" class="block text-sm font-medium text-gray-700 mb-2">First registration</label>
@@ -137,6 +140,7 @@ document.addEventListener('DOMContentLoaded', function() {
                             @enderror
                         </div>
 
+                        
                     {{-- Kilometers--}}
                     <div>
                         <label for="mileage_from" class="block text-sm font-medium text-gray-700 mb-2">Mileage

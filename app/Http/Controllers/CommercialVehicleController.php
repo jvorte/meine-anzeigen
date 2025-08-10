@@ -29,7 +29,7 @@ class CommercialVehicleController extends Controller
         if ($request->has('model') && $request->input('model')) {
             $query->where('commercial_model_id', $request->input('model'));
         }
-        // PHP Backend
+    
         if ($request->has('min_price') && $request->input('min_price') !== null) {
             $query->where('price', '>=', (int)$request->input('min_price'));
         }

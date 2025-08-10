@@ -28,6 +28,7 @@ use App\Http\Controllers\UsedVehiclePartController;
 Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
 Route::get('/dashboard', [DashboardController::class, 'index']); // Added redirect for /dashboard to home
 
+Route::get('/ads/camper', [App\Http\Controllers\CamperController::class, 'index'])->name('ads.camper.index');
 // Ad Search
 Route::get('/ads/search', [AdController::class, 'search'])->name('ads.search');
 

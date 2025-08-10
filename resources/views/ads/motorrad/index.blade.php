@@ -136,6 +136,10 @@
                 {{-- Secondary Filters (Collapsible) --}}
                 <div x-show="showMoreFilters" x-collapse.duration.300ms class="mt-4 border-t border-gray-200 pt-4">
                     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                      
+                      
+                      
+                      
                         {{-- Mileage Range with Input Fields --}}
                         <div class="flex-grow min-w-[150px] relative">
                             <label for="min_mileage" class="block text-sm font-medium text-gray-700">Χιλιόμετρα</label>
