@@ -81,12 +81,11 @@
                         <label for="condition" class="block text-sm font-medium text-gray-700 mb-2">Zustand</label>
                         <select name="condition" id="condition"
                                 class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
-                            <option value="">Bitte wählen</option>
-                            <option value="neu" {{ old('condition', $householdItem->condition) == 'neu' ? 'selected' : '' }}>Neu</option>
-                            <option value="gebraucht" {{ old('condition', $householdItem->condition) == 'gebraucht' ? 'selected' : '' }}>Gebraucht</option>
-                            <option value="stark gebraucht" {{ old('condition', $householdItem->condition) == 'stark gebraucht' ? 'selected' : '' }}>Stark gebraucht</option>
-                            <option value="defekt" {{ old('condition', $householdItem->condition) == 'defekt' ? 'selected' : '' }}>Defekt</option>
-                        </select>
+                         @foreach ($conditions as $condition) 
+                         
+                                <option value="{{ $condition }}" {{ old('category', $householdItem->condition) == $cat ? 'selected' : '' }}>{{ $condition }}</option>
+                            @endforeach
+                            </select>
                         @error('condition')
                             <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                         @enderror
@@ -149,23 +148,7 @@
                 </div>
             </section>
 
-       {{-- Existing Photos Section --}}
-            {{-- @if ($householdItem->images->count() > 0)
-                <section class="bg-gray-50 p-6 rounded-lg shadow-inner">
-                    <h4 class="text-xl font-semibold text-gray-700 mb-6">Vorhandene Fotos</h4>
-                    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                        @foreach ($householdItem->images as $image)
-                            <div class="relative group">
-                                <img src="{{ asset('storage/' . $image->image_path) }}" alt="Car Image" class="w-full h-48 object-cover rounded-lg shadow-sm">
-                                <label class="absolute top-2 right-2 bg-red-600 text-white text-xs px-2 py-1 rounded-full cursor-pointer opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-                                    <input type="checkbox" name="delete_images[]" value="{{ $image->id }}" class="mr-1"> Löschen
-                                </label>
-                            </div>
-                        @endforeach
-                    </div>
-                    <p class="text-sm text-gray-600 mt-4">Wähle Fotos zum Löschen aus.</p>
-                </section>
-            @endif --}}
+
 
 
 

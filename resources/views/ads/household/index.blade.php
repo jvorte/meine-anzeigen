@@ -38,6 +38,13 @@
         {{-- Primary Filters --}}
         <div class="flex flex-wrap items-center gap-4 mb-4">
             {{-- Category Dropdown --}}
+
+               <div class="flex-grow min-w-[200px]">
+                <label for="title" class="sr-only">Αναζήτηση με τίτλο</label>
+                <input type="text" name="title" id="title" value="{{ request('title') }}" placeholder="Αναζήτηση με τίτλο..." class="w-full rounded-lg border-gray-300 shadow-sm text-sm focus:ring-indigo-500 focus:border-indigo-500">
+            </div>
+
+
             <div class="flex-grow min-w-[150px]">
                 <label for="category" class="sr-only">Κατηγορία</label>
                 <select name="category" id="category" class="w-full rounded-lg border-gray-300 shadow-sm text-sm focus:ring-indigo-500 focus:border-indigo-500">
@@ -48,16 +55,7 @@
                 </select>
             </div>
 
-            {{-- Brand Dropdown --}}
-            <div class="flex-grow min-w-[150px]">
-                <label for="brand" class="sr-only">Μάρκα</label>
-                <select name="brand" id="brand" class="w-full rounded-lg border-gray-300 shadow-sm text-sm focus:ring-indigo-500 focus:border-indigo-500">
-                    <option value="">Μάρκα</option>
-                    @foreach($brands as $brand)
-                        <option value="{{ $brand }}" {{ request('brand') == $brand ? 'selected' : '' }}>{{ $brand }}</option>
-                    @endforeach
-                </select>
-            </div>
+      
 
             {{-- Price Range with Input Fields --}}
             <div class="flex-grow min-w-[150px] relative">
@@ -101,6 +99,19 @@
         {{-- Secondary Filters (Collapsible) --}}
         <div x-show="showMoreFilters" x-collapse.duration.300ms class="mt-4 border-t border-gray-200 pt-4">
             <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+
+
+                      {{-- Brand Dropdown --}}
+            <div class="flex-grow min-w-[150px]">
+                   <label for="material" class="block text-sm font-medium text-gray-700">Mαρκα</label>
+                <select name="brand" id="brand" class="w-full rounded-lg border-gray-300 shadow-sm text-sm focus:ring-indigo-500 focus:border-indigo-500">
+                    <option value="">select</option>
+                    @foreach($brands as $brand)
+                        <option value="{{ $brand }}" {{ request('brand') == $brand ? 'selected' : '' }}>{{ $brand }}</option>
+                    @endforeach
+                </select>
+            </div>
+
                 {{-- Material Filter --}}
                 <div>
                     <label for="material" class="block text-sm font-medium text-gray-700">Υλικό</label>
@@ -117,9 +128,9 @@
                     <label for="condition" class="block text-sm font-medium text-gray-700">Κατάσταση</label>
                     <select name="condition" id="condition" class="mt-1 w-full rounded-lg border-gray-300 shadow-sm text-sm focus:ring-indigo-500 focus:border-indigo-500">
                         <option value="">Επιλέξτε</option>
-                        <option value="new" {{ request('condition') == 'new' ? 'selected' : '' }}>Καινούργιο</option>
-                        <option value="used" {{ request('condition') == 'used' ? 'selected' : '' }}>Μεταχειρισμένο</option>
-                        <option value="like_new" {{ request('condition') == 'like_new' ? 'selected' : '' }}>Σαν καινούργιο</option>
+                          @foreach($conditions as $condition)
+                            <option value="{{ $condition }}" {{ request('material') == $condition ? 'selected' : '' }}>{{ $condition }}</option>
+                        @endforeach
                     </select>
                 </div>
 

@@ -11,50 +11,49 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Arr; // Import Arr helper
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\View\View;
+
 class HouseholdItemController extends Controller
 {
 
-    
-    // public function index()
-    // {
-    //     // Φέρνουμε όλες τις αγγελίες είδη σπιτιού με pagination
-    //     // και φορτώνουμε προληπτικά και τις εικόνες τους.
-    //     $householdAds = HouseholdItem::with('images')->latest()->paginate(10);
 
-    //     // Επιστρέφουμε το view με τη σωστή μεταβλητή.
-    //     return view('ads.household.index', compact('householdAds'));
-    // }
 
     public function index(Request $request): View
     {
         // Start with a base query and eager load images.
         $query = HouseholdItem::with('images');
 
+          if ($request->filled('title')) {
+            $query->where('title', 'like', '%' . $request->input('title') . '%');
+        }
+
         // Apply filters if they exist in the request
         if ($request->has('category') && $request->input('category')) {
             $query->where('category', $request->input('category'));
         }
-        
+
         if ($request->has('brand') && $request->input('brand')) {
             $query->where('brand', 'like', '%' . $request->input('brand') . '%');
         }
-        
+
         if ($request->has('material') && $request->input('material')) {
             $query->where('material', $request->input('material'));
         }
-        
+
         if ($request->has('condition') && $request->input('condition')) {
             $query->where('condition', $request->input('condition'));
         }
-        
-        if ($request->has('price') && $request->input('price')) {
-            $priceRange = explode('-', $request->input('price'));
-            $query->whereBetween('price', [(int)$priceRange[0], (int)$priceRange[1]]);
-        }
-        
+
+         // Price range filters
+    if ($request->filled('min_price')) {
+        $query->where('price', '>=', $request->input('min_price'));
+    }
+    if ($request->filled('max_price')) {
+        $query->where('price', '<=', $request->input('max_price'));
+    }
+
         // Apply sorting based on the request, or default to latest
         $sortBy = $request->input('sort_by', 'latest');
-        
+
         switch ($sortBy) {
             case 'price_asc':
                 $query->orderBy('price', 'asc');
@@ -69,13 +68,28 @@ class HouseholdItemController extends Controller
         }
 
         $householdAds = $query->paginate(12);
-        
+
+   $categories = [
+            'Furniture',
+            'Kitchen Appliances',
+            'Washing Machines & Dryers',
+            'Vacuum Cleaners & Cleaning Equipment',
+            'Lighting',
+            'Decoration',
+            'Garden Furniture & Equipment',
+            'Sports & Leisure',
+            'Baby & Child',
+            'Other'
+        ];
+
+        $conditions = ['New', 'Used', 'Heavily used', 'Broken'];
+
         // Fetch unique values for filter dropdowns
-        $categories = HouseholdItem::distinct()->pluck('category')->filter()->toArray();
+        // $categories = HouseholdItem::distinct()->pluck('category')->filter()->toArray();
         $brands = HouseholdItem::distinct()->pluck('brand')->filter()->toArray();
         $materials = HouseholdItem::distinct()->pluck('material')->filter()->toArray();
 
-        return view('ads.household.index', compact('householdAds', 'categories', 'brands', 'materials'));
+        return view('ads.household.index', compact('householdAds', 'categories', 'brands', 'materials', 'conditions'));
     }
 
     use AuthorizesRequests;
@@ -86,18 +100,18 @@ class HouseholdItemController extends Controller
     {
         $brands = Brand::pluck('name', 'id');
         $categories = [
-            'Möbel',
-            'Küchengeräte',
-            'Waschmaschinen & Trockner',
-            'Staubsauger & Reinigungsgeräte',
-            'Beleuchtung',
-            'Dekoration',
-            'Gartenmöbel & -geräte',
-            'Sport & Freizeit',
-            'Baby & Kind',
-            'Sonstiges'
+            'Furniture',
+            'Kitchen Appliances',
+            'Washing Machines & Dryers',
+            'Vacuum Cleaners & Cleaning Equipment',
+            'Lighting',
+            'Decoration',
+            'Garden Furniture & Equipment',
+            'Sports & Leisure',
+            'Baby & Child',
+            'Other'
         ];
-        $conditions = ['neu', 'gebraucht', 'stark gebraucht', 'defekt'];
+         $conditions = ['New', 'Used', 'Heavily used', 'Broken'];
 
         return view('ads.household.create', compact(
             'brands',
@@ -120,8 +134,8 @@ class HouseholdItemController extends Controller
             'brand' => 'required|string|max:255',
             'description' => 'required|string',
             'price' => 'nullable|numeric|min:0',
-            'condition' => 'required|in:neu,gebraucht,stark gebraucht,defekt',
-            'category' => 'required|string|max:100',
+            'condition' => 'required|string',
+            'category' => 'required|string',
             'brand_id' => 'nullable|exists:brands,id',
             'model_name' => 'nullable|string|max:255',
             'material' => 'nullable|string|max:100',
@@ -167,20 +181,21 @@ class HouseholdItemController extends Controller
     public function edit(HouseholdItem $householdItem)
     {
         // Φόρτωσε τις κατηγορίες για το dropdown (αν χρειάζεται)
-             $categories = [
-            'Möbel',
-            'Küchengeräte',
-            'Waschmaschinen & Trockner',
-            'Staubsauger & Reinigungsgeräte',
-            'Beleuchtung',
-            'Dekoration',
-            'Gartenmöbel & -geräte',
-            'Sport & Freizeit',
-            'Baby & Kind',
-            'Sonstiges'
+         $categories = [
+            'Furniture',
+            'Kitchen Appliances',
+            'Washing Machines & Dryers',
+            'Vacuum Cleaners & Cleaning Equipment',
+            'Lighting',
+            'Decoration',
+            'Garden Furniture & Equipment',
+            'Sports & Leisure',
+            'Baby & Child',
+            'Other'
         ];
+        $conditions = ['New', 'Used', 'Heavily used', 'Broken'];
 
-        return view('ads.household.edit', compact('householdItem', 'categories'));
+        return view('ads.household.edit', compact('householdItem', 'categories', 'conditions'));
     }
 
 
@@ -192,7 +207,7 @@ class HouseholdItemController extends Controller
             'brand' => 'required|string|max:255',
             'description' => 'required|string',
             'price' => 'nullable|numeric|min:0',
-            'condition' => 'required|in:neu,gebraucht,stark gebraucht,defekt',
+            'condition' => 'required|string|max:255',
             'category' => 'required|string|max:100',
             'brand_id' => 'nullable|exists:brands,id',
             'model_name' => 'nullable|string|max:255',

@@ -84,14 +84,13 @@
 
                     {{-- Condition --}}
                     <div>
-                        <label for="condition" class="block text-sm font-medium text-gray-700 mb-2">Zustand</label>
+                        <label for="condition" class="block text-sm font-medium text-gray-700 mb-2">Condition</label>
                         <select name="condition" id="condition"
                                 class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
                             <option value="">Bitte wählen</option>
-                            <option value="neu" {{ old('condition') == 'neu' ? 'selected' : '' }}>Neu</option>
-                            <option value="gebraucht" {{ old('condition') == 'gebraucht' ? 'selected' : '' }}>Gebraucht</option>
-                            <option value="stark gebraucht" {{ old('condition') == 'stark gebraucht' ? 'selected' : '' }}>Stark gebraucht</option>
-                            <option value="defekt" {{ old('condition') == 'defekt' ? 'selected' : '' }}>Defekt</option>
+                            @foreach($conditions as $condition)
+                                <option value="{{ $condition }}" {{ old('category') == $cat ? 'selected' : '' }}>{{ $condition }}</option>
+                            @endforeach
                         </select>
                         @error('condition')
                             <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
