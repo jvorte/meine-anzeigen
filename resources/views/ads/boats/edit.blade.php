@@ -116,7 +116,7 @@
 
                     {{-- Zustand --}}
                     <div>
-                        <label for="condition" class="block text-sm font-medium text-gray-700 mb-2">Zustand</label>
+                        <label for="condition" class="block text-sm font-medium text-gray-700 mb-2">Condition</label>
                         <select name="condition" id="condition"
                                 class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
                             <option value="">Bitte wählen</option>

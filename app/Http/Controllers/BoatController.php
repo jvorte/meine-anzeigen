@@ -31,10 +31,13 @@ class BoatController extends Controller
             $query->where('material', $request->input('material'));
         }
 
-        if ($request->has('price') && $request->input('price')) {
-            $priceRange = explode('-', $request->input('price'));
-            $query->whereBetween('price', [(int)$priceRange[0], (int)$priceRange[1]]);
-        }
+         // Price range filters
+    if ($request->filled('min_price')) {
+        $query->where('price', '>=', $request->input('min_price'));
+    }
+    if ($request->filled('max_price')) {
+        $query->where('price', '<=', $request->input('max_price'));
+    }
         
         if ($request->has('year_of_construction') && $request->input('year_of_construction')) {
             $yearRange = explode('-', $request->input('year_of_construction'));
@@ -67,18 +70,21 @@ class BoatController extends Controller
 
         $boatAds = $query->paginate(15);
         $brands = Boat::distinct()->pluck('brand')->filter()->toArray();
-
-        return view('ads.boats.index', compact('boatAds', 'brands'));
+         $boatTypes = ['Sailboat', 'Motorboat', 'Inflatable Boat', 'Kayak', 'Canoe', 'Jet ski', 'Houseboat', 'Other'];
+         $conditions = ['new', 'used', 'refurbished', 'broken'];
+         $materials = ['Wood', 'Fiberglass', 'Aluminum', 'Steel'];
+        return view('ads.boats.index', compact('boatAds', 'brands','boatTypes','conditions','materials' ));
     }
 
 
     public function create()
     {
-        $conditions = ['neu', 'gebraucht', 'restaurierungsbedürftig']; // κατάσταση
-        $boatTypes = ['Segelboot', 'Motorboot', 'Schlauchboot', 'Kajak', 'Kanu', 'Jetski', 'Hausboot', 'Andere'];
-        $materials = ['Holz', 'Fiberglas', 'Aluminium', 'Stahl']; // υλικά
-        $engineTypes = ['Innenborder', 'Außenborder', 'Segelantrieb', 'Elektro', 'Kein Motor'];
-        $conditions = ['neu', 'gebraucht', 'restaurierungsbedürftig'];
+     
+        $boatTypes = ['Sailboat', 'Motorboat', 'Inflatable Boat', 'Kayak', 'Canoe', 'Jet ski', 'Houseboat', 'Other'];
+        $materials = ['Wood', 'Fiberglass', 'Aluminum', 'Steel'];
+        $engineTypes = ['Inboard', 'Outboard', 'Sail', 'Electric', 'No Engine'];
+        $conditions = ['new', 'used', 'refurbished', 'broken'];
+
 
         return view('ads.boats.create', compact(
             'boatTypes',
@@ -97,7 +103,7 @@ class BoatController extends Controller
             'title' => 'required|string|max:255',
             'description' => 'required|string',
             'year_of_construction' => 'required|integer|min:1900|max:' . date('Y'),
-            'condition' => 'required|in:neu,gebraucht,restaurierungsbedürftig',
+            'condition' => 'required|string|max:255',
             'price' => 'nullable|numeric|min:0',
             'boat_type' => 'required|string|max:100',
             'material' => 'nullable|string|max:100',
@@ -138,11 +144,10 @@ class BoatController extends Controller
     {
         $boat = Boat::findOrFail($id);
 
-        $conditions = ['neu', 'gebraucht', 'restaurierungsbedürftig']; // κατάσταση
-        $boatTypes = ['Segelboot', 'Motorboot', 'Schlauchboot', 'Kajak', 'Kanu', 'Jetski', 'Hausboot', 'Andere'];
-        $materials = ['Holz', 'Fiberglas', 'Aluminium', 'Stahl']; // υλικά
-        $engineTypes = ['Innenborder', 'Außenborder', 'Segelantrieb', 'Elektro', 'Kein Motor'];
-        $conditions = ['neu', 'gebraucht', 'restaurierungsbedürftig'];
+              $boatTypes = ['Sailboat', 'Motorboat', 'Inflatable Boat', 'Kayak', 'Canoe', 'Jet ski', 'Houseboat', 'Other'];
+        $materials = ['Wood', 'Fiberglass', 'Aluminum', 'Steel'];
+        $engineTypes = ['Inboard', 'Outboard', 'Sail', 'Electric', 'No Engine'];
+        $conditions = ['new', 'used', 'refurbished', 'broken'];
 
 
         return view('ads.boats.edit', compact('boat', 'conditions', 'boatTypes', 'materials', 'engineTypes'));
@@ -173,7 +178,7 @@ class BoatController extends Controller
             'city' => 'nullable|string|max:255',
             'street' => 'nullable|string|max:255',
             'images.*' => 'nullable|image|max:2048',
-            'deleted_images' => 'nullable|string', // comma separated IDs of images to delete
+            'deleted_images' => 'nullable|string', 
         ]);
 
 

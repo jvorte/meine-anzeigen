@@ -60,10 +60,9 @@
             </section>
 
                 {{-- Preise Section --}}
-            <section class="bg-gray-50 p-6 rounded-lg shadow-inner">
+            {{-- <section class="bg-gray-50 p-6 rounded-lg shadow-inner">
                 <h4 class="text-xl font-semibold text-gray-700 mb-6">Preise</h4>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    {{-- Preis --}}
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">              
                     <div>
                         <label for="price" class="block text-sm font-medium text-gray-700 mb-2">Preis (in €)</label>
                         <input type="number" step="0.01" name="price" id="price" value="" placeholder="z.B. 15000.00"
@@ -73,7 +72,10 @@
                         @enderror
                     </div>
                 </div>
-            </section>
+            </section> --}}
+
+
+
             {{-- Boat Details Section (Marke & Modell) --}}
             <section class="bg-gray-50 p-6 rounded-lg shadow-inner">
                 <h4 class="text-xl font-semibold text-gray-700 mb-6">Bootsdetails</h4>
@@ -137,10 +139,11 @@
                         <select name="condition" id="condition"
                             class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
                             <option value="">Bitte wählen</option>
-                            <option value="neu" {{ old('condition') == 'neu' ? 'selected' : '' }}>Neu</option>
-                            <option value="gebraucht" {{ old('condition') == 'gebraucht' ? 'selected' : '' }}>Gebraucht
-                            </option>
-                            <option value="restaurierungsbedürftig" {{ old('condition') == 'restaurierungsbedürftig' ? 'selected' : '' }}>Restaurierungsbedürftig</option>
+                            <option value="new" {{ old('condition') == 'new' ? 'selected' : '' }}>new</option>
+                            <option value="used" {{ old('condition') == 'used' ? 'selected' : '' }}>used
+                                <option value="refurbished" {{ old('condition') == 'refurbished' ? 'selected' : '' }}>refurbished</option>
+                                  <option value="broken" {{ old('condition') == 'broken' ? 'selected' : '' }}>broken</option>
+                         
                         </select>
                         @error('condition')
                             <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
