@@ -37,13 +37,20 @@
     <div class="p-6 rounded-xl bg-gray-50 border border-gray-200">
         {{-- Primary Filters --}}
         <div class="flex flex-wrap items-center gap-4 mb-4">
+
+
+              <div class="flex-grow min-w-[200px]">
+                <label for="title" class="sr-only">Αναζήτηση με τίτλο</label>
+                <input type="text" name="title" id="title" value="{{ request('title') }}" placeholder="Αναζήτηση με τίτλο..." class="w-full rounded-lg border-gray-300 shadow-sm text-sm focus:ring-indigo-500 focus:border-indigo-500">
+            </div>
+
             {{-- Property Type Dropdown --}}
             <div class="flex-grow min-w-[150px]">
-                <label for="immobilientyp" class="sr-only">Τύπος Ακινήτου</label>
-                <select name="immobilientyp" id="immobilientyp" class="w-full rounded-lg border-gray-300 shadow-sm text-sm focus:ring-indigo-500 focus:border-indigo-500">
+                <label for="propertyTypeOptions" class="sr-only">Τύπος Ακινήτου</label>
+                <select name="propertyTypeOptions" id="propertyTypeOptions" class="w-full rounded-lg border-gray-300 shadow-sm text-sm focus:ring-indigo-500 focus:border-indigo-500">
                     <option value="">Τύπος Ακινήτου</option>
-                    @foreach($immobilientyps as $immobilientyp)
-                        <option value="{{ $immobilientyp }}" {{ request('immobilientyp') == $immobilientyp ? 'selected' : '' }}>{{ $immobilientyp }}</option>
+                    @foreach($propertyTypeOptions  as $propertyTypeOption)
+                        <option value="{{ $propertyTypeOption }}" {{ request('propertyTypeOption') == $propertyTypeOption ? 'selected' : '' }}>{{ $propertyTypeOption }}</option>
                     @endforeach
                 </select>
             </div>

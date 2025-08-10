@@ -12,9 +12,7 @@ class RealEstate extends Model
     protected $fillable = [
         'user_id',
         'category_slug',
-        'immobilientyp',
-       
-   
+        'propertyTypeOptions',  
         'title',
         'objekttyp',
         'zustand',
@@ -54,7 +52,7 @@ class RealEstate extends Model
 
     protected $casts = [
         'ausstattung' => 'array',  
-        'befristung_ende' => 'date',
+        'befristung_ende' => 'date:Y-m-d',
         'zusatzkontakt' => 'boolean',
     ];
 

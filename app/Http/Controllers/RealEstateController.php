@@ -10,30 +10,26 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Arr;
 use Illuminate\Validation\Rule;
 use Illuminate\View\View;
+
 class RealEstateController extends Controller
 {
 
-    
 
-// public function index()
-// {
-//     $realEstateAds = RealEstate::with('images')->latest()->paginate(12);
-
-//     return view('ads.real-estate.index', [
-//         'realEstateAds' => $realEstateAds,
-//     ]);
-// }
-
- public function index(Request $request): View
+    public function index(Request $request): View
     {
         // Start with a base query and eager load images.
         $query = RealEstate::with('images');
 
         // Apply filters if they exist in the request
-        if ($request->has('immobilientyp') && $request->input('immobilientyp')) {
-            $query->where('immobilientyp', $request->input('immobilientyp'));
+
+        if ($request->filled('title')) {
+            $query->where('title', 'like', '%' . $request->input('title') . '%');
         }
-        
+
+        if ($request->has('propertyTypeOption') && $request->input('propertyTypeOption')) {
+            $query->where('propertyTypeOption', $request->input('propertyTypeOption'));
+        }
+
         if ($request->has('objekttyp') && $request->input('objekttyp')) {
             $query->where('objekttyp', $request->input('objekttyp'));
         }
@@ -49,7 +45,7 @@ class RealEstateController extends Controller
         if ($request->has('ort') && $request->input('ort')) {
             $query->where('ort', 'like', '%' . $request->input('ort') . '%');
         }
-        
+
         if ($request->has('anzahl_zimmer') && $request->input('anzahl_zimmer')) {
             // Filter for 4+ rooms if selected
             if ($request->input('anzahl_zimmer') == '4') {
@@ -58,15 +54,18 @@ class RealEstateController extends Controller
                 $query->where('anzahl_zimmer', $request->input('anzahl_zimmer'));
             }
         }
-        
-        if ($request->has('price') && $request->input('price')) {
-            $priceRange = explode('-', $request->input('price'));
-            $query->whereBetween('price', [(int)$priceRange[0], (int)$priceRange[1]]);
+
+        // Price range filters
+        if ($request->filled('min_price')) {
+            $query->where('price', '>=', $request->input('min_price'));
         }
-        
+        if ($request->filled('max_price')) {
+            $query->where('price', '<=', $request->input('max_price'));
+        }
+
         // Apply sorting based on the request, or default to latest
         $sortBy = $request->input('sort_by', 'latest');
-        
+
         switch ($sortBy) {
             case 'price_asc':
                 $query->orderBy('price', 'asc');
@@ -81,16 +80,17 @@ class RealEstateController extends Controller
         }
 
         $realEstateAds = $query->paginate(12);
-        
+
         // Fetch unique values for filter dropdowns
-        $immobilientyps = RealEstate::distinct()->pluck('immobilientyp')->filter()->toArray();
+            $propertyTypeOptions = ['Apartment', 'House', 'Land', 'Commercial Property', 'Garage', 'Other'];
+        // $propertyTypeOptions = RealEstate::distinct()->pluck('propertyTypeOptions')->filter()->toArray();
         $objekttypen = RealEstate::distinct()->pluck('objekttyp')->filter()->toArray();
         $zustaende = RealEstate::distinct()->pluck('zustand')->filter()->toArray();
         $bautypen = RealEstate::distinct()->pluck('bautyp')->filter()->toArray();
         $orte = RealEstate::distinct()->pluck('ort')->filter()->toArray();
 
 
-        return view('ads.real-estate.index', compact('realEstateAds', 'immobilientyps', 'objekttypen', 'zustaende', 'bautypen', 'orte'));
+        return view('ads.real-estate.index', compact('realEstateAds', 'propertyTypeOptions', 'objekttypen', 'zustaende', 'bautypen', 'orte'));
     }
     /**
      * Display a form to create a new real estate listing.
@@ -99,29 +99,49 @@ class RealEstateController extends Controller
     public function create()
     {
         // Define options for dropdowns and checkboxes, matching the Blade form
-        $immobilientypOptions = ['Wohnung', 'Haus', 'Grundstück', 'Gewerbeobjekt', 'Garage/Stellplatz', 'Andere'];
-        $objekttypOptions = ['Kauf', 'Miete'];
-        $zustandOptions = ['Neubau / Erstbezug', 'Saniert', 'Renovierungsbedürftig', 'Altbau', 'Rohbau'];
-        $bautypOptions = ['Massivbau', 'Fertigteilhaus', 'Holzbau', 'Ziegelbau', 'Stahlbeton'];
-        $verfugbarkeitOptions = ['Sofort', 'Nach Vereinbarung', 'Ab [Datum]'];
-        $befristungOptions = ['Unbefristet', 'Befristet'];
-        $heizungOptions = ['Zentralheizung', 'Etagenheizung', 'Fußbodenheizung', 'Fernwärme', 'Gasheizung', 'Ölheizung', 'Elektroheizung', 'Kamin/Ofen'];
-        $ausstattungOptions = [
-            'Balkon', 'Terrasse', 'Garten', 'Keller', 'Dachboden', 'Garage', 'Stellplatz',
-            'Einbauküche', 'Möbliert', 'Barrierefrei', 'Aufzug', 'Klimaanlage', 'Swimmingpool',
-            'Sauna', 'Alarmanlage', 'Rollstuhlgeeignet', 'Kabel/Sat-TV', 'Internetanschluss',
-            'Waschküche', 'Abstellraum', 'Gäste-WC', 'Badewanne', 'Dusche', 'Separate Toilette'
+        $propertyTypeOptions = ['Apartment', 'House', 'Land', 'Commercial Property', 'Garage', 'Other'];
+        $objectTypeOptions = ['Buy', 'Rent'];
+        $stateOptions = ['New building', 'Renovated', 'Needs renovation', 'Old building'];
+        $constructionTypeOptions = ['solid construction', 'prefabricated house', 'timber construction', 'brick construction', 'reinforced concrete'];
+        $availabilityOptions = ['Immediately', 'By appointment', 'From [date]'];
+        $fixedTermContractOptions = ['Permanent', 'Fixed-term'];
+        $heatingOptions = ['Central heating', 'floor heating', 'underfloor heating', 'district heating', 'gas heating', 'oil heating', 'electric heating', 'fireplace/stove'];
+        $equipmentOptions = [
+            'Balcony',
+            'Terrace',
+            'Garden',
+            'Basement',
+            'Attic',
+            'Garage',
+            'Parking space',
+            'Fitted kitchen',
+            'Furnished',
+            'Accessible',
+            'Elevator',
+            'Air conditioning',
+            'Swimming pool',
+            'Sauna',
+            'Alarm system',
+            'Wheelchair accessible',
+            'Cable/satellite TV',
+            'Internet connection',
+            'Laundry room',
+            'Storage room',
+            'Guest toilet',
+            'Bathtub',
+            'Shower',
+            'Separate toilet'
         ];
 
         return view('ads.real-estate.create', compact(
-            'immobilientypOptions',
-            'objekttypOptions',
-            'zustandOptions',
-            'bautypOptions',
-            'verfugbarkeitOptions',
-            'befristungOptions',
-            'heizungOptions',
-            'ausstattungOptions' // Pass these to the view
+            'propertyTypeOptions',
+            'objectTypeOptions',
+            'stateOptions',
+            'constructionTypeOptions',
+            'availabilityOptions',
+            'fixedTermContractOptions',
+            'heatingOptions',
+            'equipmentOptions'
         ));
     }
 
@@ -133,18 +153,19 @@ class RealEstateController extends Controller
     {
         // Define validation rules, ensuring they match the 'name' attributes of the Blade form
         $validatedData = $request->validate([
-            'category_slug' => ['required', 'string', 'max:255', Rule::in(['immobilien'])],
+
+            'category_slug' => ['required', 'string', 'max:255'],
 
             // Basic Data
-            'immobilientyp' => ['required', 'string', Rule::in(['Wohnung', 'Haus', 'Grundstück', 'Gewerbeobjekt', 'Garage/Stellplatz', 'Andere'])],
+            'propertyTypeOption' => ['required', 'string'],
             'title' => ['required', 'string', 'max:255'],
-          
-            'objekttyp' => ['nullable', 'string', Rule::in(['Kauf', 'Miete'])],
-            'zustand' => ['nullable', 'string', Rule::in(['Neubau / Erstbezug', 'Saniert', 'Renovierungsbedürftig', 'Altbau', 'Rohbau'])],
+
+            'objekttyp' => ['nullable', 'string'],
+            'zustand' => ['nullable', 'string'],
             'anzahl_zimmer' => ['nullable', 'numeric', 'min:0.5'],
-            'bautyp' => ['nullable', 'string', Rule::in(['Massivbau', 'Fertigteilhaus', 'Holzbau', 'Ziegelbau', 'Stahlbeton'])],
-            'verfugbarkeit' => ['nullable', 'string', Rule::in(['Sofort', 'Nach Vereinbarung', 'Ab [Datum]'])],
-            'befristung' => ['nullable', 'string', Rule::in(['Unbefristet', 'Befristet'])],
+            'bautyp' => ['nullable', 'string'],
+            'verfugbarkeit' => ['nullable', 'string'],
+            'befristung' => ['nullable', 'string'],
             'befristung_ende' => ['nullable', 'date'],
 
             // Description
@@ -160,7 +181,7 @@ class RealEstateController extends Controller
             'strasse' => ['nullable', 'string', 'max:255'],
 
             // Prices & Areas
-            'price' => 'required|numeric|min:0|max:9999999999999.99', 
+            'price' => 'required|numeric|min:0|max:9999999999999.99',
             'wohnflaeche' => ['nullable', 'numeric', 'min:0'],
             'grundflaeche' => ['nullable', 'numeric', 'min:0'],
             'kaution' => ['nullable', 'numeric', 'min:0'],
@@ -169,12 +190,7 @@ class RealEstateController extends Controller
 
             // Features & Heating
             'ausstattung' => ['nullable', 'array'],
-            'ausstattung.*' => ['string', Rule::in([
-                'Balkon', 'Terrasse', 'Garten', 'Keller', 'Dachboden', 'Garage', 'Stellplatz',
-                'Einbauküche', 'Möbliert', 'Barrierefrei', 'Aufzug', 'Klimaanlage', 'Swimmingpool',
-                'Sauna', 'Alarmanlage', 'Rollstuhlgeeignet', 'Kabel/Sat-TV', 'Internetanschluss',
-                'Waschküche', 'Abstellraum', 'Gäste-WC', 'Badewanne', 'Dusche', 'Separate Toilette'
-            ])],
+            'ausstattung.*' => ['string'],
             'heizung' => ['nullable', 'string', Rule::in(['Zentralheizung', 'Etagenheizung', 'Fußbodenheizung', 'Fernwärme', 'Gasheizung', 'Ölheizung', 'Elektroheizung', 'Kamin/Ofen'])],
 
             // Photos & Documents
@@ -188,16 +204,16 @@ class RealEstateController extends Controller
 
             // Contact
             'contact_name' => ['required', 'string', 'max:255'],
-        
+
             'homepage' => ['nullable', 'url', 'max:2048'],
-         
+
             'zusatzkontakt' => ['boolean'], // Make sure this is validated if present in the form
         ]);
 
         // Separate image files from other validated data
         $imageFiles = $request->file('images'); // Get uploaded image files
         // Remove 'images' and 'zusatzkontakt' from the data for RealEstate creation, as 'zusatzkontakt' might not always be present
-        $dataToCreateRealEstate = Arr::except($validatedData, ['images', 'zusatzkontakt']); 
+        $dataToCreateRealEstate = Arr::except($validatedData, ['images', 'zusatzkontakt']);
 
         // Handle 'zusatzkontakt' checkbox explicitly, as it might not be present in $validatedData if unchecked
         $dataToCreateRealEstate['zusatzkontakt'] = $request->has('zusatzkontakt');
@@ -221,7 +237,7 @@ class RealEstateController extends Controller
             'grundriss_path' => $grundrissPath,
             'energieausweis_path' => $energieausweisPath,
         ]));
-// dd($validatedData);
+        // dd($validatedData);
         // 4. Save images to the separate RealEstateImage table
         if ($imageFiles) {
             foreach ($imageFiles as $index => $image) {
@@ -234,7 +250,6 @@ class RealEstateController extends Controller
             }
         }
 
-        // 5. Redirect with a success message
         return redirect()->route('dashboard')->with('success', 'Immobilien Anzeige erfolgreich erstellt!');
     }
 
@@ -257,23 +272,48 @@ class RealEstateController extends Controller
     {
         // Ensure only the owner can edit the listing
         if ($realEstate->user_id !== Auth::id()) {
+
             return redirect()->route('dashboard')->with('error', 'You are not authorized to edit this listing.');
         }
 
         // Define options for dropdowns and checkboxes, same as in create method
-        $immobilientypOptions = ['Wohnung', 'Haus', 'Grundstück', 'Gewerbeobjekt', 'Garage/Stellplatz', 'Andere'];
-        $objekttypOptions = ['Kauf', 'Miete'];
-        $zustandOptions = ['Neubau / Erstbezug', 'Saniert', 'Renovierungsbedürftig', 'Altbau', 'Rohbau'];
-        $bautypOptions = ['Massivbau', 'Fertigteilhaus', 'Holzbau', 'Ziegelbau', 'Stahlbeton'];
-        $verfugbarkeitOptions = ['Sofort', 'Nach Vereinbarung', 'Ab [Datum]'];
-        $befristungOptions = ['Unbefristet', 'Befristet'];
-        $heizungOptions = ['Zentralheizung', 'Etagenheizung', 'Fußbodenheizung', 'Fernwärme', 'Gasheizung', 'Ölheizung', 'Elektroheizung', 'Kamin/Ofen'];
-        $ausstattungOptions = [
-            'Balkon', 'Terrasse', 'Garten', 'Keller', 'Dachboden', 'Garage', 'Stellplatz',
-            'Einbauküche', 'Möbliert', 'Barrierefrei', 'Aufzug', 'Klimaanlage', 'Swimmingpool',
-            'Sauna', 'Alarmanlage', 'Rollstuhlgeeignet', 'Kabel/Sat-TV', 'Internetanschluss',
-            'Waschküche', 'Abstellraum', 'Gäste-WC', 'Badewanne', 'Dusche', 'Separate Toilette'
+        $propertyTypeOptions = ['Apartment', 'House', 'Land', 'Commercial Property', 'Garage', 'Other'];
+        $objectTypeOptions = ['Buy', 'Rent'];
+        $stateOptions = ['New building', 'Renovated', 'Needs renovation', 'Old building'];
+        $constructionTypeOptions = ['solid construction', 'prefabricated house', 'timber construction', 'brick construction', 'reinforced concrete'];
+        $availabilityOptions = ['Immediately', 'By appointment', 'From [date]'];
+        $fixedTermContractOptions = ['Permanent', 'Fixed-term'];
+        $heatingOptions = ['Central heating', 'floor heating', 'underfloor heating', 'district heating', 'gas heating', 'oil heating', 'electric heating', 'fireplace/stove'];
+        $equipmentOptions = [
+            'Balcony',
+            'Terrace',
+            'Garden',
+            'Basement',
+            'Attic',
+            'Garage',
+            'Parking space',
+            'Fitted kitchen',
+            'Furnished',
+            'Accessible',
+            'Elevator',
+            'Air conditioning',
+            'Swimming pool',
+            'Sauna',
+            'Alarm system',
+            'Wheelchair accessible',
+            'Cable/satellite TV',
+            'Internet connection',
+            'Laundry room',
+            'Storage room',
+            'Guest toilet',
+            'Bathtub',
+            'Shower',
+            'Separate toilet'
         ];
+        if ($realEstate->befristung_ende) {
+            $realEstate->befristung_ende = \Carbon\Carbon::parse($realEstate->befristung_ende);
+        }
+
 
         // Ensure 'ausstattung' is an array for the form
         if (!is_array($realEstate->ausstattung)) {
@@ -282,14 +322,14 @@ class RealEstateController extends Controller
 
         return view('ads.real-estate.edit', compact(
             'realEstate',
-            'immobilientypOptions',
-            'objekttypOptions',
-            'zustandOptions',
-            'bautypOptions',
-            'verfugbarkeitOptions',
-            'befristungOptions',
-            'heizungOptions',
-            'ausstattungOptions'
+            'propertyTypeOptions',
+            'objectTypeOptions',
+            'stateOptions',
+            'constructionTypeOptions',
+            'availabilityOptions',
+            'fixedTermContractOptions',
+            'heatingOptions',
+            'equipmentOptions'
         ));
     }
 
@@ -312,14 +352,14 @@ class RealEstateController extends Controller
             'category_slug' => ['required', 'string', 'max:255', Rule::in(['immobilien'])],
 
             // Basic Data
-            'immobilientyp' => ['required', 'string', Rule::in(['Wohnung', 'Haus', 'Grundstück', 'Gewerbeobjekt', 'Garage/Stellplatz', 'Andere'])],
+            'propertyTypeOptions' => ['required', 'string'],
             'title' => ['required', 'string', 'max:255'],
-            'objekttyp' => ['nullable', 'string', Rule::in(['Kauf', 'Miete'])],
-            'zustand' => ['nullable', 'string', Rule::in(['Neubau / Erstbezug', 'Saniert', 'Renovierungsbedürftig', 'Altbau', 'Rohbau'])],
+            'objekttyp' => ['nullable', 'string'],
+            'zustand' => ['nullable', 'string'],
             'anzahl_zimmer' => ['nullable', 'numeric', 'min:0.5'],
-            'bautyp' => ['nullable', 'string', Rule::in(['Massivbau', 'Fertigteilhaus', 'Holzbau', 'Ziegelbau', 'Stahlbeton'])],
-            'verfugbarkeit' => ['nullable', 'string', Rule::in(['Sofort', 'Nach Vereinbarung', 'Ab [Datum]'])],
-            'befristung' => ['nullable', 'string', Rule::in(['Unbefristet', 'Befristet'])],
+            'bautyp' => ['nullable', 'string'],
+            'verfugbarkeit' => ['nullable', 'string'],
+            'befristung' => ['nullable', 'string'],
             'befristung_ende' => ['nullable', 'date'],
 
             // Description
@@ -344,13 +384,8 @@ class RealEstateController extends Controller
 
             // Features & Heating
             'ausstattung' => ['nullable', 'array'],
-            'ausstattung.*' => ['string', Rule::in([
-                'Balkon', 'Terrasse', 'Garten', 'Keller', 'Dachboden', 'Garage', 'Stellplatz',
-                'Einbauküche', 'Möbliert', 'Barrierefrei', 'Aufzug', 'Klimaanlage', 'Swimmingpool',
-                'Sauna', 'Alarmanlage', 'Rollstuhlgeeignet', 'Kabel/Sat-TV', 'Internetanschluss',
-                'Waschküche', 'Abstellraum', 'Gäste-WC', 'Badewanne', 'Dusche', 'Separate Toilette'
-            ])],
-            'heizung' => ['nullable', 'string', Rule::in(['Zentralheizung', 'Etagenheizung', 'Fußbodenheizung', 'Fernwärme', 'Gasheizung', 'Ölheizung', 'Elektroheizung', 'Kamin/Ofen'])],
+            'ausstattung.*' => ['string'],
+            'heizung' => ['nullable', 'string'],
 
             // Photos & Documents (images can be added, existing ones are handled separately)
             'images.*' => ['nullable', 'image', 'max:2048'],
@@ -362,8 +397,8 @@ class RealEstateController extends Controller
             'verkaufsbericht_link' => ['nullable', 'url', 'max:2048'],
 
             // Contact
-            'contact_name' => ['required', 'string', 'max:255'],      
-            'homepage' => ['nullable', 'url', 'max:2048'],           
+            'contact_name' => ['required', 'string', 'max:255'],
+            'homepage' => ['nullable', 'url', 'max:2048'],
             'zusatzkontakt' => ['boolean'],
         ]);
 
@@ -419,21 +454,21 @@ class RealEstateController extends Controller
 
         // Logic to remove individual images:
         // Assume you have an array of image IDs to be removed in the request, e.g., 'remove_images_ids'
-   // Διαγραφή επιλεγμένων εικόνων (από hidden input με array IDs)
-if ($request->filled('existing_images_to_delete')) {
-    $imageIdsToRemove = explode(',', $request->input('existing_images_to_delete'));
+        // Διαγραφή επιλεγμένων εικόνων (από hidden input με array IDs)
+        if ($request->filled('existing_images_to_delete')) {
+            $imageIdsToRemove = explode(',', $request->input('existing_images_to_delete'));
 
-    $imagesToDelete = RealEstateImage::where('real_estate_id', $realEstate->id)
-                        ->whereIn('id', $imageIdsToRemove)
-                        ->get();
+            $imagesToDelete = RealEstateImage::where('real_estate_id', $realEstate->id)
+                ->whereIn('id', $imageIdsToRemove)
+                ->get();
 
-    foreach ($imagesToDelete as $image) {
-        // Διαγραφή από storage
-        Storage::disk('public')->delete($image->image_path);
+            foreach ($imagesToDelete as $image) {
+                // Διαγραφή από storage
+                Storage::disk('public')->delete($image->image_path);
 
-        // Διαγραφή από βάση
-        $image->delete();
-    }
+                // Διαγραφή από βάση
+                $image->delete();
+            }
             // If the thumbnail was deleted, find a new one
             if ($realEstate->images()->where('is_thumbnail', true)->doesntExist() && $realEstate->images()->count() > 0) {
                 $realEstate->images()->first()->update(['is_thumbnail' => true]);
@@ -441,7 +476,7 @@ if ($request->filled('existing_images_to_delete')) {
         }
 
 
-        return redirect()->route('dashboard')->with('success', 'Immobilien Anzeige erfolgreich aktualisiert!');
+        return redirect()->route('ads.real-estate.show', $realEstate)->with('success', 'Immobilien Anzeige erfolgreich aktualisiert!');
     }
 
     /**

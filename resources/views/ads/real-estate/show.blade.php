@@ -282,6 +282,33 @@
                     <p class="text-gray-700 leading-relaxed">{{ $realEstate->description }}</p>
                 </div>
         </section>
+
+
+            {{-- Location Section --}}
+        <section class="bg-gray-50 p-6 rounded-lg shadow-inner mt-8"> 
+            <h4 class="text-xl font-semibold text-gray-700 mb-6">Standort</h4>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <p class="text-sm font-semibold text-gray-800">Land:</p>
+                    <p class="text-gray-700">{{ $realEstate->land }}</p>
+                </div>
+                <div>
+                    <p class="text-sm font-semibold text-gray-800">Postleitzahl:</p>
+                    <p class="text-gray-700">{{ $realEstate->plz }}</p>
+                </div>
+                <div>
+                    <p class="text-sm font-semibold text-gray-800">Ort:</p>
+                    <p class="text-gray-700">{{ $realEstate->ort }}</p>
+                </div>
+                @if ($realEstate->strasse)
+                    <div>
+                        <p class="text-sm font-semibold text-gray-800">Straße:</p>
+                        <p class="text-gray-700">{{ $realEstate->strasse }}</p>
+                    </div>
+                @endif
+            </div>
+        </section>
+
         <section class="bg-gray-50 p-6 rounded-lg shadow-inner mt-8"> 
             <h4 class="text-xl font-semibold text-gray-700 mb-6">Beschreibung</h4>
               <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -313,7 +340,7 @@
                  <h4 class="text-xl font-semibold text-gray-700 mb-6">Basisdaten</h4>
                     <div>
                         <p class="text-sm font-semibold text-gray-800">Immobilientyp:</p>
-                        <p class="text-gray-700">{{ $realEstate->immobilientyp }}</p>
+                        <p class="text-gray-700">{{ $realEstate->propertyTypeOptions }}</p>
                     </div>
                     @if ($realEstate->objekttyp)
                         <div>
@@ -362,30 +389,7 @@
 
         </section>
 
-        {{-- Location Section --}}
-        <section class="bg-gray-50 p-6 rounded-lg shadow-inner mt-8"> 
-            <h4 class="text-xl font-semibold text-gray-700 mb-6">Standort</h4>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                    <p class="text-sm font-semibold text-gray-800">Land:</p>
-                    <p class="text-gray-700">{{ $realEstate->land }}</p>
-                </div>
-                <div>
-                    <p class="text-sm font-semibold text-gray-800">Postleitzahl:</p>
-                    <p class="text-gray-700">{{ $realEstate->plz }}</p>
-                </div>
-                <div>
-                    <p class="text-sm font-semibold text-gray-800">Ort:</p>
-                    <p class="text-gray-700">{{ $realEstate->ort }}</p>
-                </div>
-                @if ($realEstate->strasse)
-                    <div>
-                        <p class="text-sm font-semibold text-gray-800">Straße:</p>
-                        <p class="text-gray-700">{{ $realEstate->strasse }}</p>
-                    </div>
-                @endif
-            </div>
-        </section>
+    
 
         {{-- Prices & Areas Section --}}
         <section class="bg-gray-50 p-6 rounded-lg shadow-inner mt-8"> {{-- Added mt-8 for spacing --}}

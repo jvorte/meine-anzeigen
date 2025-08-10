@@ -46,12 +46,14 @@
 
                     {{-- Immobilientyp --}}
                     <div>
-                        <label for="immobilientyp" class="block text-sm font-medium text-gray-700 mb-2">Immobilientyp</label>
+                        <label for="immobilientyp" class="block text-sm font-medium text-gray-700 mb-2">Real Estate type</label>
                         <select name="immobilientyp" id="immobilientyp"
                                 class="form-select w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
-                            <option value="">Bitte wählen</option>
-                            @foreach(['Wohnung', 'Haus', 'Grundstück', 'Gewerbeobjekt', 'Garage/Stellplatz', 'Andere'] as $type)
-                                <option value="{{ $type }}" {{ old('immobilientyp') == $type ? 'selected' : '' }}>{{ $type }}</option>
+                           <option value="">Bitte wählen</option>
+                            @foreach($propertyTypeOptions as $propertyTypeOption)
+                                <option value="{{ $propertyTypeOption }}" {{ old('condition') == $propertyTypeOption ? 'selected' : '' }}>
+                                    {{ ucfirst($propertyTypeOption) }}
+                                </option>
                             @endforeach
                         </select>
                         @error('immobilientyp')
@@ -64,9 +66,11 @@
                         <label for="objekttyp" class="block text-sm font-medium text-gray-700 mb-2">Objekttyp (optional)</label>
                         <select name="objekttyp" id="objekttyp"
                                 class="form-select w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
-                            <option value="">Bitte wählen</option>
-                            @foreach(['Kauf', 'Miete'] as $type)
-                                <option value="{{ $type }}" {{ old('objekttyp') == $type ? 'selected' : '' }}>{{ $type }}</option>
+                         <option value="">Bitte wählen</option>
+                            @foreach($objectTypeOptions as $objectTypeOption)
+                                <option value="{{ $objectTypeOption }}" {{ old('condition') == $objectTypeOption ? 'selected' : '' }}>
+                                    {{ ucfirst($objectTypeOption) }}
+                                </option>
                             @endforeach
                         </select>
                         @error('objekttyp')
@@ -76,12 +80,14 @@
 
                     {{-- Zustand --}}
                     <div>
-                        <label for="zustand" class="block text-sm font-medium text-gray-700 mb-2">Zustand (optional)</label>
+                        <label for="zustand" class="block text-sm font-medium text-gray-700 mb-2">Condition (optional)</label>
                         <select name="zustand" id="zustand"
                                 class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
-                            <option value="">Bitte wählen</option>
-                            @foreach(['Neubau / Erstbezug', 'Saniert', 'Renovierungsbedürftig', 'Altbau', 'Rohbau'] as $cond)
-                                <option value="{{ $cond }}" {{ old('zustand') == $cond ? 'selected' : '' }}>{{ $cond }}</option>
+                              <option value="">Bitte wählen</option>
+                            @foreach($stateOptions as $stateOption)
+                                <option value="{{ $stateOption }}" {{ old('condition') == $stateOption ? 'selected' : '' }}>
+                                    {{ ucfirst($stateOption) }}
+                                </option>
                             @endforeach
                         </select>
                         @error('zustand')
@@ -100,13 +106,16 @@
                     </div>
 
                     {{-- Bautyp --}}
+                    
                     <div>
-                        <label for="bautyp" class="block text-sm font-medium text-gray-700 mb-2">Bautyp (optional)</label>
+                        <label for="bautyp" class="block text-sm font-medium text-gray-700 mb-2">constructionType (optional)</label>
                         <select name="bautyp" id="bautyp"
                                 class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
-                            <option value="">Bitte wählen</option>
-                            @foreach(['Massivbau', 'Fertigteilhaus', 'Holzbau', 'Ziegelbau', 'Stahlbeton'] as $type)
-                                <option value="{{ $type }}" {{ old('bautyp') == $type ? 'selected' : '' }}>{{ $type }}</option>
+                              <option value="">Bitte wählen</option>
+                            @foreach($constructionTypeOptions as $constructionTypeOption)
+                                <option value="{{ $constructionTypeOption }}" {{ old('condition') == $constructionTypeOption ? 'selected' : '' }}>
+                                    {{ ucfirst($constructionTypeOption) }}
+                                </option>
                             @endforeach
                         </select>
                         @error('bautyp')
@@ -115,13 +124,16 @@
                     </div>
 
                     {{-- Verfügbarkeit --}}
+                    
                     <div>
-                        <label for="verfugbarkeit" class="block text-sm font-medium text-gray-700 mb-2">Verfügbarkeit (optional)</label>
+                        <label for="verfugbarkeit" class="block text-sm font-medium text-gray-700 mb-2">Availability (optional)</label>
                         <select name="verfugbarkeit" id="verfugbarkeit"
                                 class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
                             <option value="">Bitte wählen</option>
-                            @foreach(['Sofort', 'Nach Vereinbarung', 'Ab [Datum]'] as $avail)
-                                <option value="{{ $avail }}" {{ old('verfugbarkeit') == $avail ? 'selected' : '' }}>{{ $avail }}</option>
+                            @foreach($availabilityOptions as $availabilityOption)
+                                <option value="{{ $availabilityOption }}" {{ old('condition') == $availabilityOption ? 'selected' : '' }}>
+                                    {{ ucfirst($availabilityOption) }}
+                                </option>
                             @endforeach
                         </select>
                         @error('verfugbarkeit')
@@ -131,12 +143,15 @@
 
                     {{-- Befristung --}}
                     <div>
-                        <label for="befristung" class="block text-sm font-medium text-gray-700 mb-2">Befristung (optional)</label>
+                        
+                        <label for="befristung" class="block text-sm font-medium text-gray-700 mb-2">TermContractOption (optional)</label>
                         <select name="befristung" id="befristung"
                                 class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
-                            <option value="">Bitte wählen</option>
-                            @foreach(['Unbefristet', 'Befristet'] as $term)
-                                <option value="{{ $term }}" {{ old('befristung') == $term ? 'selected' : '' }}>{{ $term }}</option>
+                                <option value="">Bitte wählen</option>
+                            @foreach($fixedTermContractOptions as $fixedTermContractOption)
+                                <option value="{{ $fixedTermContractOption }}" {{ old('condition') == $fixedTermContractOption ? 'selected' : '' }}>
+                                    {{ ucfirst($fixedTermContractOption) }}
+                                </option>
                             @endforeach
                         </select>
                         @error('befristung')
@@ -334,14 +349,16 @@
             <section class="bg-gray-50 p-6 rounded-lg shadow-inner">
                 <h4 class="text-xl font-semibold text-gray-700 mb-6">Ausstattung & Heizung</h4>
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {{-- Heizung --}}
+                    {{-- heatingOptions --}}
                     <div>
-                        <label for="heizung" class="block text-sm font-medium text-gray-700 mb-2">Heizung (optional)</label>
+                        <label for="heizung" class="block text-sm font-medium text-gray-700 mb-2">heatingOptions (optional)</label>
                         <select name="heizung" id="heizung"
                                 class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
-                            <option value="">Bitte wählen</option>
-                            @foreach(['Zentralheizung', 'Etagenheizung', 'Fußbodenheizung', 'Fernwärme', 'Gasheizung', 'Ölheizung', 'Elektroheizung', 'Kamin/Ofen'] as $heat)
-                                <option value="{{ $heat }}" {{ old('heizung') == $heat ? 'selected' : '' }}>{{ $heat }}</option>
+                         <option value="">Bitte wählen</option>
+                            @foreach($heatingOptions as $heatingOption)
+                                <option value="{{ $heatingOption }}" {{ old('condition') == $heatingOption ? 'selected' : '' }}>
+                                    {{ ucfirst($heatingOption) }}
+                                </option>
                             @endforeach
                         </select>
                         @error('heizung')
@@ -355,10 +372,30 @@
                         <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
                             @php
                                 $ausstattungOptions = [
-                                    'Balkon', 'Terrasse', 'Garten', 'Keller', 'Dachboden', 'Garage', 'Stellplatz',
-                                    'Einbauküche', 'Möbliert', 'Barrierefrei', 'Aufzug', 'Klimaanlage', 'Swimmingpool',
-                                    'Sauna', 'Alarmanlage', 'Rollstuhlgeeignet', 'Kabel/Sat-TV', 'Internetanschluss',
-                                    'Waschküche', 'Abstellraum', 'Gäste-WC', 'Badewanne', 'Dusche', 'Separate Toilette'
+                                   'Balcony',
+                                    'Terrace',
+                                    'Garden',
+                                    'Basement',
+                                    'Attic',
+                                    'Garage',
+                                    'Parking space',
+                                    'Fitted kitchen',
+                                    'Furnished',
+                                    'Accessible',
+                                    'Elevator',
+                                    'Air conditioning',
+                                    'Swimming pool',
+                                    'Sauna',
+                                    'Alarm system',
+                                    'Wheelchair accessible',
+                                    'Cable/satellite TV',
+                                    'Internet connection',
+                                    'Laundry room',
+                                    'Storage room',
+                                    'Guest toilet',
+                                    'Bathtub',
+                                    'Shower',
+                                    'Separate toilet'
                                 ];
                             @endphp
                             @foreach($ausstattungOptions as $option)
