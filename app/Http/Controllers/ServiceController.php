@@ -13,24 +13,6 @@ use Illuminate\View\View;
 class ServiceController extends Controller
 {
 
-
-    
-// public function index()
-// {
-//     $serviceAds = Service::with('images')->latest()->paginate(12);
-
-//     return view('ads.services.index', [
-//         'serviceAds' => $serviceAds,
-//     ]);
-// }
-
-
-    /**
-     * Show the form for creating a new service ad.
-     * This method prepares data needed for the form.
-     */
-
-
 public function index(Request $request): View
     {
         // Start with a base query
@@ -49,9 +31,12 @@ public function index(Request $request): View
             $query->where('location', 'like', '%' . $request->input('location') . '%');
         }
         
-        if ($request->has('price') && $request->input('price')) {
-            $priceRange = explode('-', $request->input('price'));
-            $query->whereBetween('price', [(int)$priceRange[0], (int)$priceRange[1]]);
+            // Price range filters
+        if ($request->filled('min_price')) {
+            $query->where('price', '>=', $request->input('min_price'));
+        }
+        if ($request->filled('max_price')) {
+            $query->where('price', '<=', $request->input('max_price'));
         }
         
         // Apply sorting based on the request, or default to latest
@@ -81,33 +66,29 @@ public function index(Request $request): View
     public function create()
     {
       
-        // Define options for dropdowns, matching the Blade form
-        $dienstleistungKategorieOptions = ['reinigung', 'handwerk', 'it', 'beratung', 'transport', 'sonstiges'];
-        $verfugbarkeitOptions = ['sofort', 'nach_vereinbarung', 'während_wochentagen', 'wochenende'];
+   
+       $serviceCategoryOptions = ['cleaning', 'crafts', 'it', 'consulting', 'transport', 'other'];
+        $availabilityOptions = ['immediately', 'by appointment', 'during weekdays', 'weekends'];
 
         return view('ads.services.create', compact(
-            'dienstleistungKategorieOptions',
-            'verfugbarkeitOptions'
+             'serviceCategoryOptions', 'availabilityOptions'
         ));
     }
 
-    /**
-     * Store a newly created service ad in storage.
-     * This method handles the form submission and saves data.
-     */
+
     public function store(Request $request)
     {
         // dd('dsdsds');
         // 1. Validation
         $validatedData = $request->validate([
-            'category_slug' => ['required', 'string', 'max:255', Rule::in(['dienstleistungen'])],
-            'service_type' => ['required', 'string', 'max:255', Rule::in(['reinigung', 'handwerk', 'it', 'beratung', 'transport', 'sonstiges'])],
-            'title' => ['required', 'string', 'max:255'], // Titel der Dienstleistung
-            'description' => ['required', 'string'], // Beschreibung
-            'images.*' => ['nullable', 'image', 'max:2048'], // 'images[]' validates each file in the array (max 2MB per image)
-            'location' => ['required', 'string', 'max:255'], // Region / Ort
-            'price' => ['nullable', 'numeric', 'min:0'], // Preis
-            'availability' => ['nullable', 'string', Rule::in(['sofort', 'nach_vereinbarung', 'während_wochentagen', 'wochenende'])], // Verfügbarkeit
+            'category_slug' => ['required', 'string', 'max:255'],
+            'service_type' => ['required', 'string', 'max:255'],
+            'title' => ['required', 'string', 'max:255'], 
+            'description' => ['required', 'string'], 
+            'images.*' => ['nullable', 'image', 'max:2048'], 
+            'location' => ['required', 'string', 'max:255'], 
+            'price' => ['nullable', 'numeric', 'min:0'],
+            'availability' => ['nullable', 'string'], 
 
         ]);
 // dd($validatedData);
@@ -146,10 +127,7 @@ public function index(Request $request): View
         return redirect()->route('dashboard')->with('success', 'Dienstleistungs-Anzeige erfolgreich erstellt!');
     }
 
-    /**
-     * Display the specified resource.
-     * This method is for showing a single service ad.
-     */
+
     public function show(Service $service)
     {
         return view('ads.services.show', compact('service'));
@@ -157,28 +135,29 @@ public function index(Request $request): View
 
    public function edit(Service $service)
 {
-    return view('ads.services.edit', compact('service'));
+
+     if (Auth::id() !== $service->user_id) {
+            abort(403, 'Unauthorized action.');
+        }
+
+     $serviceCategoryOptions = ['cleaning', 'crafts', 'it', 'consulting', 'transport', 'other'];
+        $availabilityOptions = ['immediately', 'by appointment', 'during weekdays', 'weekends'];
+
+    return view('ads.services.edit', compact('service', 'serviceCategoryOptions', 'availabilityOptions'));
 }
 
 
- // ... (previous code)
-
-/**
- * Update the specified resource in storage.
- */
 public function update(Request $request, Service $service) // Using route model binding
     {
-    //    dd($request->all(), $request->file('images'));
-
-
+   
         $validated = $request->validate([
-            'service_type' => ['required', 'string', Rule::in(['reinigung', 'handwerk', 'it', 'beratung', 'transport', 'sonstiges'])],
+            'service_type' => ['required', 'string'],
             'title' => ['required', 'string', 'max:255'],
             'location' => ['required', 'string', 'max:255'],
             'price' => ['nullable', 'numeric', 'min:0'],
-            'availability' => ['nullable', 'string', Rule::in(['sofort', 'nach_vereinbarung', 'während_wochentagen', 'wochenende'])],
+            'availability' => ['nullable', 'string'],
             'description' => ['required', 'string'],
-            'images.*' => ['nullable', 'image', 'max:2048'], // Max 2MB per image
+            'images.*' => ['nullable', 'image'], 
             'images_to_delete' => ['nullable', 'array'],
             'images_to_delete.*' => ['integer', 'exists:service_images,id'], 
         ]);

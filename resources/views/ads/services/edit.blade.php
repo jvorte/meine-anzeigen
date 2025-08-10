@@ -40,10 +40,10 @@
                             class="block text-sm font-semibold text-gray-700 mb-3">Kategorie</label>
                         <select name="service_type" id="service_type"
                             class="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-opacity-50 transition duration-200">
-                            <option value="">Bitte wählen</option>
-                            @foreach(['reinigung', 'handwerk', 'it', 'beratung', 'transport', 'sonstiges'] as $category)
-                                <option value="{{ $category }}" {{ old('service_type', $service->service_type) == $category ? 'selected' : '' }}>
-                                    {{ ucfirst($category) }}
+                        
+                          @foreach($serviceCategoryOptions as $serviceCategoryOption)
+                                <option value="{{ $serviceCategoryOption }}" {{ old('service_type') == $serviceCategoryOption ? 'selected' : '' }}>
+                                    {{ ucfirst($serviceCategoryOption) }}
                                 </option>
                             @endforeach
                         </select>
@@ -87,10 +87,10 @@
                             (optional)</label>
                         <select name="availability" id="availability"
                             class="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-opacity-50 transition duration-200">
-                            <option value="">Bitte wählen</option>
-                            @foreach(['sofort', 'nach_vereinbarung', 'während_wochentagen', 'wochenende'] as $avail)
-                                <option value="{{ $avail }}" {{ old('availability', $service->availability) == $avail ? 'selected' : '' }}>
-                                    {{ ucfirst(str_replace('_', ' ', $avail)) }}
+                       
+                                  @foreach($availabilityOptions as $availabilityOption)
+                                <option value="{{ $availabilityOption }}" {{ old('condition') == $availabilityOption ? 'selected' : '' }}>
+                                    {{ ucfirst($availabilityOption) }}
                                 </option>
                             @endforeach
                         </select>
