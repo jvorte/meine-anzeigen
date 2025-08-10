@@ -13,61 +13,48 @@ use Illuminate\View\View;
 
 class ElectronicController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    // public function index(Request $request): View
-    // {
-    //     $query = Electronic::with('images')->orderBy('created_at', 'desc');
 
-    //     if ($request->filled('brand')) {
-    //         $query->where('brand', 'like', '%' . $request->input('brand') . '%');
-    //     }
-
-    //     if ($request->filled('year_of_purchase')) {
-    //         $query->where('year_of_purchase', $request->input('year_of_purchase'));
-    //     }
-        
-    //     $electronics = $query->paginate(12);
-
-    //     return view('ads.electronics.index', [
-    //         'ads' => $electronics,
-    //         'category' => (object)['name' => 'Elektronik', 'slug' => 'electronics']
-    //     ]);
-    // }
-public function index(Request $request): View
+    public function index(Request $request): View
     {
         // Start with a base query and eager load images.
         // We order by 'created_at' descending by default.
         $query = Electronic::with(['images']);
 
+           if ($request->filled('title')) {
+            $query->where('title', 'like', '%' . $request->input('title') . '%');
+        }
+
+
         // Apply filters if they exist in the request
         if ($request->has('category') && $request->input('category')) {
             $query->where('category', $request->input('category'));
         }
-        
+
         // Use a 'like' operator for the brand search for partial matches
         if ($request->has('brand') && $request->input('brand')) {
             $query->where('brand', 'like', '%' . $request->input('brand') . '%');
         }
-        
+
         if ($request->has('condition') && $request->input('condition')) {
             $query->where('condition', $request->input('condition'));
         }
-        
+
         // Add the year of purchase filter
         if ($request->has('year_of_purchase') && $request->input('year_of_purchase')) {
             $query->where('year_of_purchase', $request->input('year_of_purchase'));
         }
 
-        if ($request->has('price') && $request->input('price')) {
-            $priceRange = explode('-', $request->input('price'));
-            $query->whereBetween('price', [(int)$priceRange[0], (int)$priceRange[1]]);
+        // Price range filters
+        if ($request->filled('min_price')) {
+            $query->where('price', '>=', $request->input('min_price'));
         }
-        
+        if ($request->filled('max_price')) {
+            $query->where('price', '<=', $request->input('max_price'));
+        }
+
         // Apply sorting based on the request, or default to latest
         $sortBy = $request->input('sort_by', 'latest');
-        
+
         switch ($sortBy) {
             case 'price_asc':
                 $query->orderBy('price', 'asc');
@@ -85,8 +72,29 @@ public function index(Request $request): View
         $ads = $query->paginate(12);
         $brands = Electronic::distinct()->pluck('brand')->filter()->toArray();
 
+        $warrantyStatuses = [
+            'Yes',
+            'No',
+
+        ];
+        $categories = [
+            'Mobile Phone',
+            'TV',
+            'Laptop',
+            'Camera',
+            'Audio Device',
+            'Gaming Console',
+            'Smartwatch',
+            'Tablet',
+            'Other'
+        ];
+
+        $conditions = ['New', 'Used', 'Refurbished', 'Broken'];
+
+
+
         // Pass the paginated ads and brands to the view
-        return view('ads.electronics.index', compact('ads', 'brands'));
+        return view('ads.electronics.index', compact('ads', 'brands', 'warrantyStatuses', 'conditions', 'categories'));
     }
     /**
      * Show the form for creating a new electronic ad.
@@ -106,13 +114,14 @@ public function index(Request $request): View
         ];
 
         $warrantyStatuses = [
-            'No warranty',
-            'Manufacturer Warranty',
-            'Retailer Warranty',
-            'Used Warranty'
+            'Yes',
+            'No',
+
         ];
 
-        return view('ads.electronics.create', compact('categories', 'warrantyStatuses'));
+        $conditions = ['new', 'used', 'refurbished', 'broken'];
+
+        return view('ads.electronics.create', compact('categories', 'warrantyStatuses', 'conditions'));
     }
 
     /**
@@ -125,7 +134,7 @@ public function index(Request $request): View
             'title' => 'required|string|max:255',
             'description' => 'required|string',
             'price' => 'nullable|numeric|min:0',
-            'condition' => 'required|in:neu,gebraucht,defekt',
+            'condition' => 'required|string',
             'category' => 'required|string|max:255',
             'brand' => 'nullable|string|max:255',
             'electronic_model' => 'nullable|string|max:255',
@@ -164,9 +173,7 @@ public function index(Request $request): View
         return redirect()->route('dashboard')->with('success', 'Elektronik Anzeige erfolgreich erstellt!');
     }
 
-    /**
-     * Display the specified resource.
-     */
+
     public function show(Electronic $electronic): View
     {
         $electronic->load('images');
@@ -178,14 +185,7 @@ public function index(Request $request): View
      */
     public function edit(Electronic $electronic): View
     {
-        $warrantyStatuses = [
-            'No warranty',
-            'Manufacturer Warranty',
-            'Retailer Warranty',
-            'Used Warranty'
-        ];
-
-         $categories = [
+        $categories = [
             'Mobile Phone',
             'TV',
             'Laptop',
@@ -197,8 +197,13 @@ public function index(Request $request): View
             'Other'
         ];
 
-        
-        return view('ads.electronics.edit', compact('electronic', 'warrantyStatuses', 'categories'));
+        $garrantyStatus = [
+            'Yes',
+            'No',
+        ];
+        $conditions = ['new', 'used', 'refurbished', 'broken'];
+
+        return view('ads.electronics.edit', compact('electronic', 'garrantyStatus', 'conditions', 'categories'));
     }
 
     /**
@@ -210,10 +215,10 @@ public function index(Request $request): View
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
             'brand' => 'nullable|string|max:255',
-             'category' => 'nullable|string|max:255',
+            'category' => 'nullable|string|max:255',
             'electronic_model' => 'nullable|string|max:255',
             'price' => 'nullable|numeric',
-            'condition' => 'nullable|string|in:neu,gebraucht,defekt',
+            'condition' => 'nullable|string',
             'year_of_purchase' => 'nullable|integer|min:1950|max:' . date('Y'),
             'warranty_status' => 'nullable|string|max:255',
             'accessories' => 'nullable|string',

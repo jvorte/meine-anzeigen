@@ -5,7 +5,7 @@
         <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center px-4 py-2">
             <div>
                 <h1 class="text-4xl font-extrabold text-gray-900 leading-tight">
-                    Όλα τα Ηλεκτρονικά
+                  All Electronics
                 </h1>
                 <p class="mt-1 text-gray-600 max-w-xl">
                     Περιηγηθείτε σε όλες τις διαθέσιμες αγγελίες για ηλεκτρονικές συσκευές.
@@ -36,14 +36,21 @@
      <form action="{{ route('ads.electronics.index') }}" method="GET" x-data="{ showMoreFilters: false }">
     <div class="p-6 rounded-xl bg-gray-50 border border-gray-200">
         {{-- Primary Filters --}}
+        
         <div class="flex flex-wrap items-center gap-4 mb-4">
+
+                 <div class="flex-grow min-w-[200px]">
+                <label for="title" class="sr-only">Αναζήτηση με τίτλο</label>
+                <input type="text" name="title" id="title" value="{{ request('title') }}" placeholder="Αναζήτηση με τίτλο..." class="w-full rounded-lg border-gray-300 shadow-sm text-sm focus:ring-indigo-500 focus:border-indigo-500">
+            </div>
+
             {{-- Category Dropdown --}}
             <div class="flex-grow min-w-[150px]">
                 <label for="category" class="sr-only">Κατηγορία</label>
                 <select name="category" id="category" class="w-full rounded-lg border-gray-300 shadow-sm text-sm focus:ring-indigo-500 focus:border-indigo-500">
                     <option value="">Κατηγορία</option>
-                    @foreach(['phones' => 'Κινητά', 'laptops' => 'Laptops', 'tablets' => 'Tablets', 'consoles' => 'Κονσόλες', 'tvs' => 'Τηλεοράσεις'] as $value => $label)
-                        <option value="{{ $value }}" {{ request('category') == $value ? 'selected' : '' }}>{{ $label }}</option>
+                   @foreach($categories as $categorie)
+                        <option value="{{ $categorie }}" {{ request('brand') == $categorie ? 'selected' : '' }}>{{ $categorie }}</option>
                     @endforeach
                 </select>
             </div>
@@ -106,9 +113,9 @@
                     <label for="condition" class="block text-sm font-medium text-gray-700">Κατάσταση</label>
                     <select name="condition" id="condition" class="mt-1 w-full rounded-lg border-gray-300 shadow-sm text-sm focus:ring-indigo-500 focus:border-indigo-500">
                         <option value="">Επιλέξτε</option>
-                        <option value="new" {{ request('condition') == 'new' ? 'selected' : '' }}>Καινούργιο</option>
-                        <option value="used" {{ request('condition') == 'used' ? 'selected' : '' }}>Μεταχειρισμένο</option>
-                        <option value="like_new" {{ request('condition') == 'like_new' ? 'selected' : '' }}>Σαν καινούργιο</option>
+                           @foreach($conditions as $condition)
+                        <option value="{{ $condition }}" {{ request('brand') == $condition ? 'selected' : '' }}>{{ $condition }}</option>
+                    @endforeach
                     </select>
                 </div>
 

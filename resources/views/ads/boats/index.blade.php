@@ -126,9 +126,9 @@
                             <select name="material" id="material"
                                 class="mt-1 w-full rounded-lg border-gray-300 shadow-sm text-sm focus:ring-indigo-500 focus:border-indigo-500">
                                 <option value="">Επιλέξτε</option>
-                                       @foreach($materials  as $material)
-                                <option value="{{ $material }}" >{{ $material }}</option>
-                            @endforeach
+                                @foreach($materials as $material)
+                                    <option value="{{ $material }}">{{ $material }}</option>
+                                @endforeach
                             </select>
                         </div>
 
@@ -151,13 +151,13 @@
                             <select name="condition" id="condition"
                                 class="mt-1 w-full rounded-lg border-gray-300 shadow-sm text-sm focus:ring-indigo-500 focus:border-indigo-500">
                                 <option value="">Επιλέξτε</option>
-                                     @foreach($conditions  as $condition)
-                                <option value="{{ $condition }}" >{{ $condition }}</option>
-                            @endforeach
-                        </select>
-                        @error('boat_type')
-                            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-                        @enderror
+                                @foreach($conditions as $condition)
+                                    <option value="{{ $condition }}">{{ $condition }}</option>
+                                @endforeach
+                            </select>
+                            @error('boat_type')
+                                <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                            @enderror
                             </select>
                         </div>
 
@@ -181,30 +181,33 @@
         </form>
 
         {{-- Boats Grid --}}
-       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6 my-5">
-    @forelse($boatAds as $boat)
-        <a href="{{ route('ads.boats.show', $boat->id) }}" class="block bg-white shadow rounded-lg overflow-hidden hover:shadow-lg transition duration-300">
-            @if($boat->images->count())
-                <img src="{{ asset('storage/' . $boat->images->first()->path) }}" alt="{{ $boat->title }}" class="w-full h-48 object-cover">
-            @else
-                <div class="w-full h-48 bg-gray-200 flex items-center justify-center text-gray-500">
-                    No image
-                </div>
-            @endif
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6 my-5">
+            @forelse($boatAds as $boat)
+                <a href="{{ route('ads.boats.show', $boat->id) }}"
+                    class="block bg-white shadow rounded-lg overflow-hidden hover:shadow-lg transition duration-300">
+                    @if($boat->images->count())
+                        <img src="{{ asset('storage/' . $boat->images->first()->path) }}" alt="{{ $boat->title }}"
+                            class="w-full h-48 object-cover">
+                    @else
+                        <div class="w-full h-48 bg-gray-200 flex items-center justify-center text-gray-500">
+                            No image
+                        </div>
+                    @endif
 
-            <div class="p-4">
-                <h2 class="text-xl font-semibold text-gray-800 truncate">{{ $boat->title }}</h2>
-                <p class="text-gray-600 mt-1">{{ $boat->brand }} {{ $boat->model }} ({{ $boat->year_of_construction }})</p>
-                <p class="text-gray-500 mt-1">{{ $boat->boat_type }} | {{ $boat->condition }}</p>
-                @if($boat->price)
-                    <p class="text-blue-600 font-semibold mt-2">€ {{ number_format($boat->price, 2) }}</p>
-                @endif
-            </div>
-        </a>
-    @empty
-        <p>Keine Boote gefunden.</p>
-    @endforelse
-</div>
+                    <div class="p-4">
+                        <h2 class="text-xl font-semibold text-gray-800 truncate">{{ $boat->title }}</h2>
+                        <p class="text-gray-600 mt-1">{{ $boat->brand }} {{ $boat->model }}
+                            ({{ $boat->year_of_construction }})</p>
+                        <p class="text-gray-500 mt-1">{{ $boat->boat_type }} | {{ $boat->condition }}</p>
+                        @if($boat->price)
+                            <p class="text-blue-600 font-semibold mt-2">€ {{ number_format($boat->price, 2) }}</p>
+                        @endif
+                    </div>
+                </a>
+            @empty
+                <p>Keine Boote gefunden.</p>
+            @endforelse
+        </div>
 
 
         <div class="mt-8">
