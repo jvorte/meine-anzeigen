@@ -15,10 +15,14 @@ use Illuminate\Validation\Rule; // Still useful for general validation, but spec
 class UsedVehiclePartController extends Controller
 {
 
- public function index(Request $request)
+    public function index(Request $request)
     {
         // Start with a base query
         $query = UsedVehiclePart::with(['images']);
+
+        if ($request->filled('title')) {
+            $query->where('title', 'like', '%' . $request->input('title') . '%');
+        }
 
         // Apply filters if they exist in the request
         if ($request->has('part_category') && $request->input('part_category')) {
@@ -28,23 +32,26 @@ class UsedVehiclePartController extends Controller
         if ($request->has('compatible_brand') && $request->input('compatible_brand')) {
             $query->where('compatible_brand', $request->input('compatible_brand'));
         }
-        
+
         if ($request->has('vehicle_type') && $request->input('vehicle_type')) {
             $query->where('vehicle_type', $request->input('vehicle_type'));
         }
 
-        if ($request->has('price') && $request->input('price')) {
-            $priceRange = explode('-', $request->input('price'));
-            $query->whereBetween('price', [(int)$priceRange[0], (int)$priceRange[1]]);
+        // Price range filters
+        if ($request->filled('min_price')) {
+            $query->where('price', '>=', $request->input('min_price'));
         }
-        
+        if ($request->filled('max_price')) {
+            $query->where('price', '<=', $request->input('max_price'));
+        }
+
         if ($request->has('condition') && $request->input('condition')) {
             $query->where('condition', $request->input('condition'));
         }
 
         // Apply sorting based on the request, or default to latest
         $sortBy = $request->input('sort_by', 'latest');
-        
+
         switch ($sortBy) {
             case 'price_asc':
                 $query->orderBy('price', 'asc');
@@ -59,30 +66,75 @@ class UsedVehiclePartController extends Controller
         }
 
         $usedVehicleParts = $query->paginate(15);
-        // You may need to pass compatible brands and models if they are dynamic.
-        // For this example, I've used static values in the blade file.
 
-        return view('ads.used-vehicle-parts.index', compact('usedVehicleParts'));
+        $partCategories = [
+            'Engine & Attachments',
+            'Transmission & Drivetrain',
+            'Body & Attachments',
+            'Chassis & Steering',
+            'Braking System',
+            'Exhaust System',
+            'Electrical & Lighting',
+            'Interior & Equipment',
+            'Wheels & Tires',
+            'Filters & Maintenance',
+            'Cooling System',
+            'Heating & Air Conditioning',
+            'Fuel System',
+            'Other'
+        ];
+
+        $vehicleTypes = [
+            'Car',
+            'Motorcycle',
+            'Truck',
+            'Motorhome',
+            'Bus',
+            'Trailer',
+            'Boat',
+            'Construction Machine',
+            'Agricultural Machine',
+            'Other'
+        ];
+        return view('ads.used-vehicle-parts.index', compact('usedVehicleParts', 'partCategories', 'vehicleTypes'));
     }
     /**
      * Show the form for creating a new used vehicle part ad.
      */
     public function create()
     {
-    
+
 
         $partCategories = [
-            'Motor & Anbauteile', 'Getriebe & Antrieb', 'Karosserie & Anbauteile',
-            'Fahrwerk & Lenkung', 'Bremsanlage', 'Abgasanlage', 'Elektrik & Beleuchtung',
-            'Innenraum & Ausstattung', 'Räder & Reifen', 'Filter & Wartung', 'Kühlsystem',
-            'Heizung & Klima', 'Kraftstoffsystem', 'Sonstiges'
+            'Engine & Attachments',
+            'Transmission & Drivetrain',
+            'Body & Attachments',
+            'Chassis & Steering',
+            'Braking System',
+            'Exhaust System',
+            'Electrical & Lighting',
+            'Interior & Equipment',
+            'Wheels & Tires',
+            'Filters & Maintenance',
+            'Cooling System',
+            'Heating & Air Conditioning',
+            'Fuel System',
+            'Other'
         ];
-        $conditions = ['neu', 'gebraucht', 'überholt', 'defekt'];
+        $conditions = ['new', 'used', 'refurbished', 'broken'];
 
         // Define a list of generic vehicle types
         $vehicleTypes = [
-            'Auto', 'Motorrad', 'LKW', 'Wohnmobil', 'Bus',
-            'Anhänger', 'Boot', 'Baumaschine', 'Landmaschine', 'Sonstiges'
+            'Car',
+            'Motorcycle',
+            'Truck',
+            'Motorhome',
+            'Bus',
+            'Trailer',
+            'Boat',
+            'Construction Machine',
+            'Agricultural Machine',
+            'Other'
         ];
 
         return view('ads.used-vehicle-parts.create', compact(
@@ -144,7 +196,7 @@ class UsedVehiclePartController extends Controller
     /**
      * Show the form for editing the specified used vehicle part ad.
      */
-   public function edit(UsedVehiclePart $usedVehiclePart)
+    public function edit(UsedVehiclePart $usedVehiclePart)
     {
         if (Auth::id() !== $usedVehiclePart->user_id) {
             abort(403, 'Unauthorized action.');
@@ -153,18 +205,38 @@ class UsedVehiclePartController extends Controller
         // Make sure images are loaded for the view
         $usedVehiclePart->load('images');
 
-        $partCategories = [
-            'Motor & Anbauteile', 'Getriebe & Antrieb', 'Karosserie & Anbauteile',
-            'Fahrwerk & Lenkung', 'Bremsanlage', 'Abgasanlage', 'Elektrik & Beleuchtung',
-            'Innenraum & Ausstattung', 'Räder & Reifen', 'Filter & Wartung', 'Kühlsystem',
-            'Heizung & Klima', 'Kraftstoffsystem', 'Sonstiges'
-        ];
-        $conditions = ['neu', 'gebraucht', 'überholt', 'defekt'];
-        $vehicleTypes = [
-            'Auto', 'Motorrad', 'LKW', 'Wohnmobil', 'Bus',
-            'Anhänger', 'Boot', 'Baumaschine', 'Landmaschine', 'Sonstiges'
-        ];
 
+        $partCategories = [
+            'Engine & Attachments',
+            'Transmission & Drivetrain',
+            'Body & Attachments',
+            'Chassis & Steering',
+            'Braking System',
+            'Exhaust System',
+            'Electrical & Lighting',
+            'Interior & Equipment',
+            'Wheels & Tires',
+            'Filters & Maintenance',
+            'Cooling System',
+            'Heating & Air Conditioning',
+            'Fuel System',
+            'Other'
+        ];
+        $conditions = ['new', 'used', 'refurbished', 'broken'];
+
+        // Define a list of generic vehicle types
+        $vehicleTypes = [
+            'Car',
+            'Motorcycle',
+            'Truck',
+            'Motorhome',
+            'Bus',
+            'Trailer',
+            'Boat',
+            'Construction Machine',
+            'Agricultural Machine',
+            'Other'
+        ];
         return view('ads.used-vehicle-parts.edit', compact(
             'usedVehiclePart',
             'partCategories',
@@ -191,7 +263,7 @@ class UsedVehiclePartController extends Controller
             'part_category' => 'required|string|max:100',
             'part_name' => 'required|string|max:255',
             'manufacturer_part_number' => 'nullable|string|max:255',
-            'condition' => 'required|in:neu,gebraucht,überholt,defekt',
+            'condition' => 'required|string',
             'price' => 'nullable|numeric|min:0',
             'vehicle_type' => 'required|string|max:50',
             'compatible_brand' => 'nullable|string|max:255',
@@ -200,7 +272,7 @@ class UsedVehiclePartController extends Controller
             'compatible_year_to' => 'nullable|integer|min:1900|max:' . (date('Y') + 1) . '|after_or_equal:compatible_year_from',
 
             // Validation for new image uploads
-         'images.*' => ['nullable', 'image', 'max:2048'], // Allow new images
+            'images.*' => ['nullable', 'image', 'max:2048'], // Allow new images
 
             // Validation for images to be deleted
             'images_to_delete' => 'nullable|array', // Expects an array of image IDs to delete
@@ -232,21 +304,20 @@ class UsedVehiclePartController extends Controller
             }
         }
 
-     // Handle new image uploads
+        // Handle new image uploads
         if ($request->hasFile('images')) {
             foreach ($request->file('images') as $imageFile) {
-                $path = $imageFile->store('service_images', 'public'); 
+                $path = $imageFile->store('service_images', 'public');
                 // Use the correct relationship method from the Service model
-                $usedVehiclePart->images()->create([ 
-                    'image_path' => $path, 
-                 
+                $usedVehiclePart->images()->create([
+                    'image_path' => $path,
+
                 ]);
             }
-
         }
 
         return redirect()->route('ads.used-vehicle-parts.show', $usedVehiclePart)
-                         ->with('success', 'Anzeige erfolgreich aktualisiert!');
+            ->with('success', 'Anzeige erfolgreich aktualisiert!');
     }
 
     /**

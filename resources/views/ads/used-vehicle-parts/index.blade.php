@@ -44,15 +44,19 @@
             </div>
 
             {{-- Price Range with Input Fields --}}
-            <div class="flex-grow min-w-[120px] relative">
-                <label for="min_price" class="sr-only">Ελάχιστη Τιμή</label>
-                <input type="number" name="min_price" value="{{ request('min_price') }}" placeholder="Ελάχιστη τιμή" class="w-full rounded-l-lg border-gray-300 shadow-sm text-sm focus:ring-indigo-500 focus:border-indigo-500" />
-            </div>
-            <div class="flex-grow min-w-[120px] relative">
-                <label for="max_price" class="sr-only">Μέγιστη Τιμή</label>
-                <input type="number" name="max_price" value="{{ request('max_price') }}" placeholder="Μέγιστη τιμή" class="w-full rounded-r-lg border-gray-300 shadow-sm text-sm focus:ring-indigo-500 focus:border-indigo-500" />
-            </div>
+                    <div class="flex-grow min-w-[150px] relative">
+                        <label for="min_price" class="sr-only">min Price</label>
+                        <input type="number" name="min_price" value="{{ request('min_price') }}" placeholder="min price"
+                            class="w-full rounded-l-lg border-gray-300 shadow-sm text-sm focus:ring-indigo-500 focus:border-indigo-500" />
+                    </div>
+                    <div class="flex-grow min-w-[150px] relative">
+                        <label for="max_price" class="sr-only">max Price</label>
+                        <input type="number" name="max_price" value="{{ request('max_price') }}" placeholder="max price"
+                            class="w-full rounded-r-lg border-gray-300 shadow-sm text-sm focus:ring-indigo-500 focus:border-indigo-500" />
+                    </div>
 
+
+                    
             {{-- Submit and Reset Buttons --}}
             <div class="flex items-center gap-2">
                 <button type="submit" class="inline-flex items-center justify-center rounded-lg border border-transparent shadow-sm px-4 py-2 bg-indigo-600 text-sm font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
@@ -85,19 +89,27 @@
         {{-- Secondary Filters (Collapsible) --}}
         <div x-show="showMoreFilters" x-collapse.duration.300ms class="mt-4 border-t border-gray-200 pt-4">
             <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                {{-- Category Dropdown --}}
-                <div>
-                    <label for="part_category" class="block text-sm font-medium text-gray-700">Κατηγορία</label>
+
+
+
+        {{-- Part Category --}}
+                    <div>
+                                <label for="part_category" class="block text-sm font-medium text-gray-700">Κατηγορία</label>
                     <select name="part_category" id="part_category" class="mt-1 w-full rounded-lg border-gray-300 shadow-sm text-sm focus:ring-indigo-500 focus:border-indigo-500">
-                        <option value="">Επιλέξτε</option>
-                        @foreach(['engine' => 'Κινητήρας', 'brakes' => 'Φρένα', 'transmission' => 'Μετάδοση', 'body' => 'Φανοποιία'] as $value => $label)
-                            <option value="{{ $value }}" {{ request('part_category') == $value ? 'selected' : '' }}>{{ $label }}</option>
-                        @endforeach
-                    </select>
-                </div>
+                            <option value="">Bitte wählen</option>
+                            @foreach($partCategories as $category)
+                                <option value="{{ $category }}" {{ old('part_category') == $category ? 'selected' : '' }}>{{ $category }}</option>
+                            @endforeach
+                        </select>
+                        @error('part_category')
+                            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                
                 
                 {{-- Compatible Brand Dropdown --}}
-                <div>
+                {{-- <div>
                     <label for="compatible_brand" class="block text-sm font-medium text-gray-700">Μάρκα</label>
                     <select name="compatible_brand" id="compatible_brand" class="mt-1 w-full rounded-lg border-gray-300 shadow-sm text-sm focus:ring-indigo-500 focus:border-indigo-500">
                         <option value="">Επιλέξτε</option>
@@ -105,16 +117,16 @@
                             <option value="{{ $brand }}" {{ request('compatible_brand') == $brand ? 'selected' : '' }}>{{ $brand }}</option>
                         @endforeach
                     </select>
-                </div>
+                </div> --}}
 
                 {{-- Vehicle Type Dropdown --}}
                 <div>
                     <label for="vehicle_type" class="block text-sm font-medium text-gray-700">Τύπος Οχήματος</label>
                     <select name="vehicle_type" id="vehicle_type" class="mt-1 w-full rounded-lg border-gray-300 shadow-sm text-sm focus:ring-indigo-500 focus:border-indigo-500">
                         <option value="">Επιλέξτε</option>
-                        @foreach(['car' => 'Επιβατικό', 'motorcycle' => 'Μοτοσυκλέτα', 'commercial_vehicle' => 'Επαγγελματικό'] as $value => $label)
-                            <option value="{{ $value }}" {{ request('vehicle_type') == $value ? 'selected' : '' }}>{{ $label }}</option>
-                        @endforeach
+                         @foreach($vehicleTypes as $category)
+                                <option value="{{ $category }}" {{ old('part_category') == $category ? 'selected' : '' }}>{{ $category }}</option>
+                            @endforeach
                     </select>
                 </div>
                 
@@ -125,6 +137,8 @@
                         <option value="">Επιλέξτε</option>
                         <option value="new" {{ request('condition') == 'new' ? 'selected' : '' }}>Καινούργιο</option>
                         <option value="used" {{ request('condition') == 'used' ? 'selected' : '' }}>Μεταχειρισμένο</option>
+                         <option value="refurbished" {{ request('condition') == 'refurbished' ? 'selected' : '' }}>refurbished</option>
+                        <option value="broken" {{ request('condition') == 'broken' ? 'selected' : '' }}>broken</option>
                     </select>
                 </div>
                 

@@ -66,7 +66,8 @@
         }
     </style>
 
-    <div class="max-w-7xl mx-auto px-6 lg:px-8 py-6 bg-white rounded-lg shadow-xl my-6">
+   <div class="max-w-7xl mx-auto px-0 py-6 ps-2 bg-white rounded-lg shadow-xl my-6">
+
         <article class="grid grid-cols-1 md:grid-cols-2 gap-8">
             {{-- Left Column: Main Image Gallery --}}
             <section x-data="{
@@ -99,11 +100,15 @@
             }" class="space-y-4">
                 <h3 class="sr-only">Bildergalerie</h3> {{-- Screen reader only heading --}}
                 @if (isset($usedVehiclePart->images) && $usedVehiclePart->images->count() > 0)
+
+
+                
                     {{-- Main Image Display --}}
-                    <div class="relative bg-gray-100 rounded-lg overflow-hidden shadow-md">
-                        <img :src="activeImage ? '{{ Storage::url('') }}' + activeImage : '{{ asset('images/placeholder.webp') }}'"
-                            alt="Hauptbild des Ersatzteils" class="w-full h-96 object-contain cursor-pointer"
-                            @click="openModal(activeImage)">
+                    <div class="relative bg-gray-100 rounded-lg overflow-hidden shadow-md ">
+                       <img :src="activeImage ? '{{ Storage::url('') }}' + activeImage : '{{ asset('images/placeholder.webp') }}'"
+    alt="Hauptbild des Ersatzteils" class="w-full h-96 object-cover cursor-pointer"
+    @click="openModal(activeImage)">
+
                         <div x-cloak x-show="!activeImage"
                             class="absolute inset-0 flex items-center justify-center text-gray-500">
                             Kein Bild verfügbar
