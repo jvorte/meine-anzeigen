@@ -3,9 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\UsedVehiclePart;
-// No longer need these for compatibility lookup, as they'll be text inputs
-// use App\Models\Brand;
-// use App\Models\CarModel;
 use App\Models\UsedVehiclePartImage;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
