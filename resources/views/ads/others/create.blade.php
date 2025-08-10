@@ -66,8 +66,10 @@
                         <select name="condition" id="condition"
                                 class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
                             <option value="">Bitte wählen</option>
-                            @foreach(['Neu', 'Gebraucht', 'Stark gebraucht', 'Defekt'] as $cond)
-                                <option value="{{ $cond }}" {{ old('condition') == $cond ? 'selected' : '' }}>{{ $cond }}</option>
+                                 @foreach($conditionOptions as $conditionOption)
+                                <option value="{{ $conditionOption }}" {{ old('condition') == $conditionOption ? 'selected' : '' }}>
+                                    {{ ucfirst($conditionOption) }}
+                                </option>
                             @endforeach
                         </select>
                         @error('condition')

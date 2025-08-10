@@ -110,7 +110,7 @@
                 </div>
             </section>
 
-            {{-- Fotoverwaltung --}}
+            {{-- Photos --}}
                     <section class="bg-gray-50 p-6 rounded-lg shadow-inner">
                 <h4 class="text-xl font-semibold text-gray-700 mb-6">Fotos verwalten und hinzufügen</h4>
 

@@ -14,15 +14,6 @@ use Illuminate\View\View;
 class OtherController extends Controller
 {
 
-    
-// public function index()
-// {
-//     $otherAds = Other::with('images')->latest()->paginate(12);
-
-//     return view('ads.others.index', [
-//         'otherAds' => $otherAds,
-//     ]);
-// }
 public function index(Request $request): View
     {
         // Start with a base query
@@ -37,10 +28,14 @@ public function index(Request $request): View
             $query->where('condition', $request->input('condition'));
         }
 
-        if ($request->has('price') && $request->input('price')) {
-            $priceRange = explode('-', $request->input('price'));
-            $query->whereBetween('price', [(int)$priceRange[0], (int)$priceRange[1]]);
-        }
+  
+    // Price range filters
+    if ($request->filled('min_price')) {
+        $query->where('price', '>=', $request->input('min_price'));
+    }
+    if ($request->filled('max_price')) {
+        $query->where('price', '<=', $request->input('max_price'));
+    }
         
         // Apply sorting based on the request, or default to latest
         $sortBy = $request->input('sort_by', 'latest');
@@ -61,27 +56,17 @@ public function index(Request $request): View
         $otherAds = $query->paginate(12);
         
         // Fetch unique values for filter dropdowns
-        $conditions = Other::distinct()->pluck('condition')->filter()->toArray();
+      $conditions = ['New', 'Used', 'Heavily used', 'Defective'];
 
         return view('ads.others.index', compact('otherAds', 'conditions'));
     }
-    /**
-     * Display a listing of the "other" ads.
-     * This method fetches all "other" ads for listing.
-     */
 
-    /**
-     * Show the form for creating a new "other" ad.
-     * This method prepares data needed for the form.
-     */
     public function create()
     {
         // Define options for dropdowns, matching the Blade form
-        $conditionOptions = ['Neu', 'Gebraucht', 'Stark gebraucht', 'Defekt'];
+        $conditionOptions = ['New', 'Used', 'Heavily used', 'Defective'];
 
-        return view('ads.others.create', compact(
-            'conditionOptions'
-        ));
+        return view('ads.others.create', compact('conditionOptions'));
     }
 
     /**
@@ -96,7 +81,7 @@ public function index(Request $request): View
             'title' => ['required', 'string', 'max:255'],
             'description' => ['required', 'string'],
             'price' => ['nullable', 'numeric', 'min:0', 'max:9999999.99'], // Added max
-            'condition' => ['nullable', 'string', Rule::in(['Neu', 'Gebraucht', 'Stark gebraucht', 'Defekt'])],
+            'condition' => ['nullable', 'string', Rule::in(['New', 'Used', 'Heavily used', 'Defective'])],
 
             'images.*' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,webp', 'max:2048'], // Added mimes and 'nullable'
         ]);
@@ -156,10 +141,14 @@ public function index(Request $request): View
      */
     public function edit(Other $other)
     {
-        // Optional: Add authorization check. Requires a policy (e.g., OtherPolicy).
-        // Example: $this->authorize('update', $other);
+        
 
-        $conditionOptions = ['Neu', 'Gebraucht', 'Stark gebraucht', 'Defekt'];
+         if (Auth::id() !== $other->user_id) {
+            abort(403, 'Unauthorized action.');
+        }
+
+
+        $conditionOptions = ['New', 'Used', 'Heavily used', 'Defective'];
 
         // Eager load images to ensure they are available in the view
         $other->load('images');
@@ -183,7 +172,7 @@ public function index(Request $request): View
             'title' => ['required', 'string', 'max:255'],
             'description' => ['required', 'string'],
             'price' => ['nullable', 'numeric', 'min:0', 'max:9999999.99'],
-            'condition' => ['nullable', 'string', Rule::in(['Neu', 'Gebraucht', 'Stark gebraucht', 'Defekt'])],
+            'condition' => ['nullable', 'string'],
             'images.*' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,webp', 'max:2048'], // For new images
             'existing_image_ids' => ['nullable', 'array'], // Array of IDs of images to keep
             'existing_image_ids.*' => ['integer', 'exists:other_images,id'], // Each ID must be an integer and exist in other_images
