@@ -106,7 +106,7 @@
                     </div>
 
                     {{-- Bautyp --}}
-                    
+
                     <div>
                         <label for="bautyp" class="block text-sm font-medium text-gray-700 mb-2">constructionType (optional)</label>
                         <select name="bautyp" id="bautyp"
@@ -124,7 +124,7 @@
                     </div>
 
                     {{-- Verfügbarkeit --}}
-                    
+
                     <div>
                         <label for="verfugbarkeit" class="block text-sm font-medium text-gray-700 mb-2">Availability (optional)</label>
                         <select name="verfugbarkeit" id="verfugbarkeit"
@@ -143,7 +143,7 @@
 
                     {{-- Befristung --}}
                     <div>
-                        
+
                         <label for="befristung" class="block text-sm font-medium text-gray-700 mb-2">TermContractOption (optional)</label>
                         <select name="befristung" id="befristung"
                                 class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
@@ -295,10 +295,10 @@
 
                     {{-- Wohnfläche --}}
                     <div>
-                        <label for="wohnflaeche" class="block text-sm font-medium text-gray-700 mb-2">Wohnfläche (in m²)</label>
-                        <input type="number" step="0.01" name="wohnflaeche" id="wohnflaeche" value="{{ old('wohnflaeche') }}" placeholder="z.B. 90.50"
+                        <label for="livingSpace" class="block text-sm font-medium text-gray-700 mb-2">Wohnfläche (in m²)</label>
+                        <input type="number" step="0.01" name="livingSpace" id="livingSpace" value="{{ old('livingSpace') }}" placeholder="z.B. 90.50"
                                class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
-                        @error('wohnflaeche')
+                        @error('livingSpace')
                             <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                         @enderror
                     </div>
@@ -536,7 +536,7 @@
                 </div>
             </section>
 
-         
+
 
             <div class="mt-8 flex justify-end">
                 <button type="submit" class="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">

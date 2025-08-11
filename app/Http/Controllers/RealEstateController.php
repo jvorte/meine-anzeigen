@@ -66,10 +66,10 @@ class RealEstateController extends Controller
 
             // Living space range filters
         if ($request->filled('min_area')) {
-            $query->where('wohnflaeche', '>=', $request->input('min_area'));
+            $query->where('livingSpace', '>=', $request->input('min_area'));
         }
         if ($request->filled('max_area')) {
-            $query->where('wohnflaeche', '<=', $request->input('max_area'));
+            $query->where('livingSpace', '<=', $request->input('max_area'));
         }
 
         // Apply sorting based on the request, or default to latest
@@ -191,7 +191,7 @@ class RealEstateController extends Controller
 
             // Prices & Areas
             'price' => 'required|numeric|min:0|max:9999999999999.99',
-            'wohnflaeche' => ['nullable', 'numeric', 'min:0'],
+            'livingSpace' => ['nullable', 'numeric', 'min:0'],
             'grundflaeche' => ['nullable', 'numeric', 'min:0'],
             'kaution' => ['nullable', 'numeric', 'min:0'],
             'maklerprovision' => ['nullable', 'numeric', 'min:0'],
@@ -385,7 +385,7 @@ class RealEstateController extends Controller
 
             // Prices & Areas
             'price' => ['nullable', 'numeric', 'min:0'],
-            'wohnflaeche' => ['nullable', 'numeric', 'min:0'],
+            'livingSpace' => ['nullable', 'numeric', 'min:0'],
             'grundflaeche' => ['nullable', 'numeric', 'min:0'],
             'kaution' => ['nullable', 'numeric', 'min:0'],
             'maklerprovision' => ['nullable', 'numeric', 'min:0'],

@@ -12,7 +12,7 @@ class RealEstate extends Model
     protected $fillable = [
         'user_id',
         'category_slug',
-        'propertyTypeOptions',  
+        'propertyTypeOptions',
         'title',
         'objekttyp',
         'zustand',
@@ -31,27 +31,27 @@ class RealEstate extends Model
         'ort',
         'strasse',
         'price',
-        'wohnflaeche',
+        'livingSpace',
         'grundflaeche',
         'kaution',
         'maklerprovision',
         'abloese',
         'ausstattung',
-        'heizung',       
+        'heizung',
         'grundriss_path',
         'energieausweis_path',
         'rundgang_link',
         'objektinformationen_link',
         'zustandsbericht_link',
         'verkaufsbericht_link',
-        'contact_name',    
-        'contact_email',     
+        'contact_name',
+        'contact_email',
         'homepage',
-  
+
     ];
 
     protected $casts = [
-        'ausstattung' => 'array',  
+        'ausstattung' => 'array',
         'befristung_ende' => 'date:Y-m-d',
         'zusatzkontakt' => 'boolean',
     ];

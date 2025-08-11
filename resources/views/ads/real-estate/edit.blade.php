@@ -82,7 +82,7 @@
                         <label for="zustand" class="block text-sm font-medium text-gray-700 mb-2">Zustand (optional)</label>
                         <select name="zustand" id="zustand"
                                 class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
-                         
+
                              @foreach($stateOptions   as $stateOption )
                                 <option value="{{ $stateOption }}" {{ old('condition') == $stateOption ? 'selected' : '' }}>
                                     {{ ucfirst($stateOption) }}
@@ -160,16 +160,16 @@
     </label>
     @if($realEstate->befristung_ende)
         <p class="text-sm text-gray-500 mb-1">
-            Aktuelles gespeichertes Datum: 
+            Aktuelles gespeichertes Datum:
             <span class="font-medium text-gray-700">
                 {{ \Carbon\Carbon::parse($realEstate->befristung_ende)->format('d.m.Y') }}
             </span>
         </p>
     @endif
-    <input 
-        type="date" 
-        name="befristung_ende" 
-        id="befristung_ende" 
+    <input
+        type="date"
+        name="befristung_ende"
+        id="befristung_ende"
         value="{{ old('befristung_ende', $realEstate->befristung_ende ? \Carbon\Carbon::parse($realEstate->befristung_ende)->format('Y-m-d') : '') }}"
         class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50"
     >
@@ -306,10 +306,10 @@
 
                     {{-- Wohnfläche --}}
                     <div>
-                        <label for="wohnflaeche" class="block text-sm font-medium text-gray-700 mb-2">Wohnfläche (in m²)</label>
-                        <input type="number" step="0.01" name="wohnflaeche" id="wohnflaeche" value="{{ old('wohnflaeche', $realEstate->wohnflaeche) }}" placeholder="z.B. 90.50"
+                        <label for="livingSpace" class="block text-sm font-medium text-gray-700 mb-2">Wohnfläche (in m²)</label>
+                        <input type="number" step="0.01" name="livingSpace" id="livingSpace" value="{{ old('livingSpace', $realEstate->livingSpace) }}" placeholder="z.B. 90.50"
                                class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
-                        @error('wohnflaeche')
+                        @error('livingSpace')
                             <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                         @enderror
                     </div>
@@ -424,7 +424,7 @@
                 </div>
             </section>
 
-      
+
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     {{-- Grundriss --}}
                     <div>
@@ -526,7 +526,7 @@
                 </div>
             </section>
 
-            
+
  <section class="bg-gray-50 p-6 rounded-lg shadow-inner">
     <h4 class="text-xl font-semibold text-gray-700 mb-6">Fotos hinzufügen</h4>
 

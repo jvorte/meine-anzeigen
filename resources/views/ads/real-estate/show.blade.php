@@ -401,10 +401,10 @@
                         <p class="text-gray-700">&euro;{{ number_format($realEstate->price, 2, ',', '.') }}</p>
                     </div>
                 @endif
-                @if ($realEstate->wohnflaeche)
+                @if ($realEstate->livingSpace)
                     <div>
                         <p class="text-sm font-semibold text-gray-800">Living space:</p>
-                        <p class="text-gray-700">{{ number_format($realEstate->wohnflaeche, 2, ',', '.') }} m&sup2;</p>
+                        <p class="text-gray-700">{{ number_format($realEstate->livingSpace, 2, ',', '.') }} m&sup2;</p>
                     </div>
                 @endif
                 @if ($realEstate->grundflaeche)
