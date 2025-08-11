@@ -159,6 +159,20 @@
                             </select>
                         </div>
 
+                        
+
+                                       {{-- constructionTypeOptions --}}
+                        <div class="flex-grow min-w-[150px]">
+                            <label for="constructionTypeOption" class="block text-sm font-medium text-gray-700">Construction Type</label>
+                            <select name="constructionTypeOption" id="condition" class="w-full rounded-lg border-gray-300 shadow-sm text-sm focus:ring-indigo-500 focus:border-indigo-500">
+                                <option value="">select</option>
+                                @foreach($constructionTypeOptions as $constructionTypeOption)
+                                <option value="{{ $constructionTypeOption }}" {{ request('constructionTypeOption') == $condition ? 'selected' : '' }}>
+                                    {{ $constructionTypeOption }}
+                                </option>
+                                @endforeach
+                            </select>
+                        </div>
 
 
 
@@ -255,7 +269,7 @@
 
                 <div class="p-4">
                     <h2 class="text-xl font-semibold text-gray-800 truncate">{{ $realEstate->title }}</h2>
-                    <p class="text-gray-500 mt-1"> {{ $realEstate->bautyp ?? 'Δ/Α' }}</p>
+                    <p class="text-gray-500 mt-1"> {{ $realEstate->propertyTypeOptions ?? 'Δ/Α' }}</p>
                     <p class="text-gray-600 mt-1">{{ $realEstate->location ?? 'Δ/Α' }}</p>
                     <p class="text-gray-500 mt-1">{{ $realEstate->anzahl_zimmer }} Δωμάτια</p>
 

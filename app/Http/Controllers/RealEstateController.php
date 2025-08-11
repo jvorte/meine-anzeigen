@@ -41,8 +41,8 @@ class RealEstateController extends Controller
             $query->where('condition', $request->input('condition'));
         }
 
-        if ($request->has('bautyp') && $request->input('bautyp')) {
-            $query->where('bautyp', $request->input('bautyp'));
+        if ($request->has('constructionTypeOption') && $request->input('constructionTypeOption')) {
+            $query->where('constructionTypeOption', $request->input('constructionTypeOption'));
         }
 
 
@@ -115,6 +115,7 @@ class RealEstateController extends Controller
         $realEstateAds = $query->paginate(12);
         $petFriendlyOptions = ['Yes', 'No'];
         // Fetch unique values for filter dropdowns
+        $constructionTypeOptions = ['solid construction', 'prefabricated house', 'timber construction', 'brick construction', 'reinforced concrete'];
         $conditions = ['New building', 'Renovated', 'Needs renovation', 'Old building'];
         $propertyTypeOptions = ['Apartment', 'House', 'Land', 'Commercial Property', 'Garage', 'Other'];
         $objekttyps = ['Buy', 'Rent'];
@@ -122,11 +123,11 @@ class RealEstateController extends Controller
         $objekttypen = RealEstate::distinct()->pluck('objekttyp')->filter()->toArray();
         $postcodes = RealEstate::distinct()->pluck('postcode')->filter()->toArray();
         // $zustaende = RealEstate::distinct()->pluck('zustand')->filter()->toArray();
-        $bautypen = RealEstate::distinct()->pluck('bautyp')->filter()->toArray();
+        // $bautypen = RealEstate::distinct()->pluck('propertyTypeOptions')->filter()->toArray();
         $locations = RealEstate::distinct()->pluck('location')->filter()->toArray();
         $heatingOptions = ['Central heating', 'floor heating', 'underfloor heating', 'district heating', 'gas heating', 'oil heating', 'electric heating', 'fireplace/stove'];
 
-        return view('ads.real-estate.index', compact('realEstateAds', 'propertyTypeOptions', 'objekttypen', 'bautypen', 'locations', 'objekttyps', 'petFriendlyOptions', 'heatingOptions', 'postcodes', 'conditions'));
+        return view('ads.real-estate.index', compact('realEstateAds', 'propertyTypeOptions', 'objekttypen', 'locations', 'objekttyps', 'petFriendlyOptions', 'heatingOptions', 'postcodes', 'conditions', 'constructionTypeOptions'));
     }
     /**
      * Display a form to create a new real estate listing.
@@ -208,7 +209,7 @@ class RealEstateController extends Controller
             'objekttyp' => ['nullable', 'string'],
             'zustand' => ['nullable', 'string'],
             'anzahl_zimmer' => ['nullable', 'numeric', 'min:0.5'],
-            'bautyp' => ['nullable', 'string'],
+            'propertyTypeOptions' => ['nullable', 'string'],
             'verfugbarkeit' => ['nullable', 'string'],
             'befristung' => ['nullable', 'string'],
             'befristung_ende' => ['nullable', 'date'],
@@ -414,7 +415,7 @@ class RealEstateController extends Controller
             'objekttyp' => ['nullable', 'string'],
             'zustand' => ['nullable', 'string'],
             'anzahl_zimmer' => ['nullable', 'numeric', 'min:0.5'],
-            'bautyp' => ['nullable', 'string'],
+            'propertyTypeOptions' => ['nullable', 'string'],
             'verfugbarkeit' => ['nullable', 'string'],
             'befristung' => ['nullable', 'string'],
             'befristung_ende' => ['nullable', 'date'],

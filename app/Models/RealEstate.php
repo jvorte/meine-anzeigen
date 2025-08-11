@@ -17,7 +17,7 @@ class RealEstate extends Model
         'objekttyp',
         'zustand',
         'anzahl_zimmer',
-        'bautyp',
+        'constructionTypeOption',
         'verfugbarkeit',
         'befristung',
         'befristung_ende',

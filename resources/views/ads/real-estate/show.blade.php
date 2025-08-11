@@ -413,10 +413,10 @@
                     <p class="text-gray-700">{{ $realEstate->anzahl_zimmer }}</p>
                 </div>
                 @endif
-                @if ($realEstate->bautyp)
+                @if ($realEstate->propertyTypeOptions)
                 <div>
                     <p class="text-sm font-semibold text-gray-800">Construction type:</p>
-                    <p class="text-gray-700">{{ $realEstate->bautyp }}</p>
+                    <p class="text-gray-700">{{ $realEstate->constructionTypeOption }}</p>
                 </div>
                 @endif
                 @if ($realEstate->verfugbarkeit)
