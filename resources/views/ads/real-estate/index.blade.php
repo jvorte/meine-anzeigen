@@ -5,10 +5,10 @@
         <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center px-4 py-2">
             <div>
                 <h1 class="text-4xl font-extrabold text-gray-900 leading-tight">
-                    Ακίνητα
+                    Real Estate
                 </h1>
                 <p class="mt-1 text-gray-600 max-w-xl">
-                    Περιηγηθείτε σε όλες τις διαθέσιμες αγγελίες ακινήτων.
+                   Real Estate Ads
                 </p>
             </div>
 
@@ -19,7 +19,8 @@
                             <span class="c-blur"></span>
                             <span class="ico-text">+</span>
                         </span>
-                        Νέα Αγγελία
+                      New Ad
+
                     </span>
                 </a>
             </div>
@@ -40,15 +41,15 @@
 
 
               <div class="flex-grow min-w-[200px]">
-                <label for="title" class="sr-only">Αναζήτηση με τίτλο</label>
-                <input type="text" name="title" id="title" value="{{ request('title') }}" placeholder="Αναζήτηση με τίτλο..." class="w-full rounded-lg border-gray-300 shadow-sm text-sm focus:ring-indigo-500 focus:border-indigo-500">
+                <label for="title" class="sr-only">Search with title</label>
+                <input type="text" name="title" id="title" value="{{ request('title') }}" placeholder="Search with title..." class="w-full rounded-lg border-gray-300 shadow-sm text-sm focus:ring-indigo-500 focus:border-indigo-500 p-1">
             </div>
 
             {{-- Property Type Dropdown --}}
             <div class="flex-grow min-w-[150px]">
-                <label for="propertyTypeOptions" class="sr-only">Τύπος Ακινήτου</label>
+                <label for="propertyTypeOptions" class="sr-only">property type</label>
                 <select name="propertyTypeOptions" id="propertyTypeOptions" class="w-full rounded-lg border-gray-300 shadow-sm text-sm focus:ring-indigo-500 focus:border-indigo-500">
-                    <option value="">Τύπος Ακινήτου</option>
+                    <option value="">Property type</option>
                     @foreach($propertyTypeOptions  as $propertyTypeOption)
                         <option value="{{ $propertyTypeOption }}" {{ request('propertyTypeOption') == $propertyTypeOption ? 'selected' : '' }}>{{ $propertyTypeOption }}</option>
                     @endforeach
@@ -57,18 +58,18 @@
 
             {{-- Price Range with Input Fields --}}
             <div class="flex-grow min-w-[150px] relative">
-                <label for="min_price" class="sr-only">Ελάχιστη Τιμή</label>
-                <input type="number" name="min_price" value="{{ request('min_price') }}" placeholder="Ελάχιστη τιμή" class="w-full rounded-l-lg border-gray-300 shadow-sm text-sm focus:ring-indigo-500 focus:border-indigo-500" />
+                <label for="min_price" class="sr-only">min Price</label>
+                <input type="number" name="min_price" value="{{ request('min_price') }}" placeholder="min Price" class="w-full rounded-l-lg border-gray-300 shadow-sm text-sm focus:ring-indigo-500 focus:border-indigo-500" />
             </div>
             <div class="flex-grow min-w-[150px] relative">
-                <label for="max_price" class="sr-only">Μέγιστη Τιμή</label>
-                <input type="number" name="max_price" value="{{ request('max_price') }}" placeholder="Μέγιστη τιμή" class="w-full rounded-r-lg border-gray-300 shadow-sm text-sm focus:ring-indigo-500 focus:border-indigo-500" />
+                <label for="max_price" class="sr-only">max Price</label>
+                <input type="number" name="max_price" value="{{ request('max_price') }}" placeholder="max Price" class="w-full rounded-r-lg border-gray-300 shadow-sm text-sm focus:ring-indigo-500 focus:border-indigo-500" />
             </div>
 
             {{-- Submit and Reset Buttons --}}
             <div class="flex items-center gap-2">
                 <button type="submit" class="inline-flex items-center justify-center rounded-lg border border-transparent shadow-sm px-4 py-2 bg-indigo-600 text-sm font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                    <span class="hidden sm:inline">Αναζήτηση</span>
+                    <span class="hidden sm:inline">Search</span>
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 sm:ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                     </svg>
@@ -99,9 +100,9 @@
             <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                 {{-- Number of Rooms Filter --}}
                 <div>
-                    <label for="anzahl_zimmer" class="block text-sm font-medium text-gray-700">Αριθμός Δωματίων</label>
+                    <label for="anzahl_zimmer" class="block text-sm font-medium text-gray-700">Number of Rooms</label>
                     <select name="anzahl_zimmer" id="anzahl_zimmer" class="mt-1 w-full rounded-lg border-gray-300 shadow-sm text-sm focus:ring-indigo-500 focus:border-indigo-500">
-                        <option value="">Επιλέξτε</option>
+                        <option value="">Select</option>
                         <option value="1" {{ request('anzahl_zimmer') == '1' ? 'selected' : '' }}>1</option>
                         <option value="2" {{ request('anzahl_zimmer') == '2' ? 'selected' : '' }}>2</option>
                         <option value="3" {{ request('anzahl_zimmer') == '3' ? 'selected' : '' }}>3</option>
@@ -111,10 +112,10 @@
 
                 {{-- Area Range with Input Fields --}}
                 <div class="flex-grow min-w-[150px] relative">
-                    <label for="min_area" class="block text-sm font-medium text-gray-700">Τετραγωνικά</label>
+                    <label for="min_area" class="block text-sm font-medium text-gray-700">Living space</label>
                     <div class="flex items-center mt-1">
-                        <input type="number" name="min_area" value="{{ request('min_area') }}" placeholder="Από" class="w-1/2 rounded-l-lg border-gray-300 shadow-sm text-sm focus:ring-indigo-500 focus:border-indigo-500" />
-                        <input type="number" name="max_area" value="{{ request('max_area') }}" placeholder="Έως" class="w-1/2 rounded-r-lg border-gray-300 shadow-sm text-sm focus:ring-indigo-500 focus:border-indigo-500" />
+                        <input type="number" name="min_area" value="{{ request('min_area') }}" placeholder="from" class="w-1/2 rounded-l-lg border-gray-300 shadow-sm text-sm focus:ring-indigo-500 focus:border-indigo-500" />
+                        <input type="number" name="max_area" value="{{ request('max_area') }}" placeholder="to" class="w-1/2 rounded-r-lg border-gray-300 shadow-sm text-sm focus:ring-indigo-500 focus:border-indigo-500" />
                     </div>
                 </div>
 
@@ -123,7 +124,7 @@
                     <label for="baujahr" class="block text-sm font-medium text-gray-700">Έτος Κατασκευής</label>
                     <input type="number" name="baujahr" id="baujahr" value="{{ request('baujahr') }}" placeholder="Π.χ. 2005" class="mt-1 w-full rounded-lg border-gray-300 shadow-sm text-sm focus:ring-indigo-500 focus:border-indigo-500">
                 </div>
-                
+
                 {{-- Sort By Dropdown --}}
                 <div>
                     <label for="sort_by" class="block text-sm font-medium text-gray-700">Ταξινόμηση</label>
@@ -156,7 +157,7 @@
                         <p class="text-gray-500 mt-1"> {{ $realEstate->bautyp ?? 'Δ/Α' }}</p>
                         <p class="text-gray-600 mt-1">{{ $realEstate->ort ?? 'Δ/Α' }}</p>
                         <p class="text-gray-500 mt-1">{{ $realEstate->anzahl_zimmer }} Δωμάτια</p>
-                        
+
                         @if($realEstate->price)
                             <p class="text-blue-600 font-semibold mt-2">€ {{ number_format($realEstate->price, 2) }}</p>
                         @else

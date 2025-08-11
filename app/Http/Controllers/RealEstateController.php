@@ -26,8 +26,8 @@ class RealEstateController extends Controller
             $query->where('title', 'like', '%' . $request->input('title') . '%');
         }
 
-        if ($request->has('propertyTypeOption') && $request->input('propertyTypeOption')) {
-            $query->where('propertyTypeOption', $request->input('propertyTypeOption'));
+        if ($request->has('propertyTypeOptions') && $request->input('propertyTypeOptions')) {
+            $query->where('propertyTypeOptions', $request->input('propertyTypeOptions'));
         }
 
         if ($request->has('objekttyp') && $request->input('objekttyp')) {
@@ -63,6 +63,15 @@ class RealEstateController extends Controller
             $query->where('price', '<=', $request->input('max_price'));
         }
 
+
+            // Living space range filters
+        if ($request->filled('min_area')) {
+            $query->where('wohnflaeche', '>=', $request->input('min_area'));
+        }
+        if ($request->filled('max_area')) {
+            $query->where('wohnflaeche', '<=', $request->input('max_area'));
+        }
+
         // Apply sorting based on the request, or default to latest
         $sortBy = $request->input('sort_by', 'latest');
 
@@ -82,7 +91,7 @@ class RealEstateController extends Controller
         $realEstateAds = $query->paginate(12);
 
         // Fetch unique values for filter dropdowns
-            $propertyTypeOptions = ['Apartment', 'House', 'Land', 'Commercial Property', 'Garage', 'Other'];
+        $propertyTypeOptions = ['Apartment', 'House', 'Land', 'Commercial Property', 'Garage', 'Other'];
         // $propertyTypeOptions = RealEstate::distinct()->pluck('propertyTypeOptions')->filter()->toArray();
         $objekttypen = RealEstate::distinct()->pluck('objekttyp')->filter()->toArray();
         $zustaende = RealEstate::distinct()->pluck('zustand')->filter()->toArray();
