@@ -153,7 +153,7 @@ class UsedVehiclePartController extends Controller
             'part_category' => 'required|string|max:100',
             'part_name' => 'required|string|max:255',
             'manufacturer_part_number' => 'nullable|string|max:255',
-            'condition' => 'required|in:neu,gebraucht,überholt,defekt',
+            'condition' => 'required|string',
             'price' => 'nullable|numeric|min:0',
             // NEW VALIDATION RULES for generic fields
             'vehicle_type' => 'required|string|max:50', // Validate the selected vehicle type
