@@ -213,8 +213,8 @@
                 <dd class="inline">{{ $usedVehiclePart->user->name }}</dd>
             </div>
             <div>
-                <dt class="inline font-semibold">E-Mail:</dt>
-                <dd class="inline">{{ $usedVehiclePart->user->email }}</dd>
+                <dt class="inline font-semibold">Mobile phone:</dt>
+                <dd class="inline">{{ $usedVehiclePart->user->mobile_phone }}</dd>
             </div>
             @if($usedVehiclePart->user->city)
                 <div>

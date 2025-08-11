@@ -26,7 +26,7 @@
                 @foreach($sections as $section)
                 @if($section['items']->count())
                 <div>
-                    <h3 class="text-1xl font-semibold text-gray-800 mb-4 border-b pb-1">{{ $section['title'] }}</h3>
+                    <h3 class="text-1xl font-semibold text-gray-100 mb-4 border-b pb-1">{{ $section['title'] }}</h3>
 
                     <div class="space-y-4">
                         @foreach($section['items'] as $ad)
