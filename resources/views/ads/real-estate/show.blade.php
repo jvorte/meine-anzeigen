@@ -45,14 +45,14 @@
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M15 19l-7-7 7-7"></path>
                 </svg>
-                <span>Zurück</span>
+                <span>Back</span>
             </a>
 
         </div>
     </div> {{-- End of new wrapper div --}}
 
     {{-- Main content article - This is where all the detail sections should live --}}
-    <article class="max-w-7xl mx-auto bg-white rounded-2xl shadow-2xl p-8 lg:p-14 mb-8">
+    <article class="max-w-7xl mx-auto bg-white rounded-2xl shadow-2xl p-8 lg:p-14 py-8">
         <div class="grid grid-cols-1 md:grid-cols-2 gap-12"> {{-- This div now wraps the two main columns --}}
 
             {{-- Left Column: Images and Thumbnails --}}
@@ -294,11 +294,11 @@
                 </div>
                 <div>
                     <p class="text-sm font-semibold text-gray-800">Postal code:</p>
-                    <p class="text-gray-700">{{ $realEstate->plz }}</p>
+                    <p class="text-gray-700">{{ $realEstate->postcode }}</p>
                 </div>
                 <div>
                     <p class="text-sm font-semibold text-gray-800">Location:</p>
-                    <p class="text-gray-700">{{ $realEstate->ort }}</p>
+                    <p class="text-gray-700">{{ $realEstate->location }}</p>
                 </div>
                 @if ($realEstate->strasse)
                 <div>
@@ -308,6 +308,52 @@
                 @endif
             </div>
         </section>
+
+
+        
+        {{-- Prices & Areas Section --}}
+        <section class="bg-gray-50 p-6 rounded-lg shadow-inner mt-8"> {{-- Added mt-8 for spacing --}}
+            <h4 class="text-xl font-semibold text-gray-700 mb-6">Prices & Spaces</h4>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                @if ($realEstate->price)
+                <div>
+                    <p class="text-sm font-semibold text-gray-800">Total rent:</p>
+                    <p class="text-gray-700">&euro;{{ number_format($realEstate->price, 2, ',', '.') }}</p>
+                </div>
+                @endif
+                @if ($realEstate->livingSpace)
+                <div>
+                    <p class="text-sm font-semibold text-gray-800">Living space:</p>
+                    <p class="text-gray-700">{{ number_format($realEstate->livingSpace, 2, ',', '.') }} m&sup2;</p>
+                </div>
+                @endif
+                @if ($realEstate->grundflaeche)
+                <div>
+                    <p class="text-sm font-semibold text-gray-800">Floor area:</p>
+                    <p class="text-gray-700">{{ number_format($realEstate->grundflaeche, 2, ',', '.') }} m&sup2;</p>
+                </div>
+                @endif
+                @if ($realEstate->kaution)
+                <div>
+                    <p class="text-sm font-semibold text-gray-800">guarantee:</p>
+                    <p class="text-gray-700">&euro;{{ number_format($realEstate->kaution, 2, ',', '.') }}</p>
+                </div>
+                @endif
+                @if ($realEstate->maklerprovision)
+                <div>
+                    <p class="text-sm font-semibold text-gray-800">Brokerage commission:</p>
+                    <p class="text-gray-700">&euro;{{ number_format($realEstate->maklerprovision, 2, ',', '.') }}</p>
+                </div>
+                @endif
+                @if ($realEstate->abloese)
+                <div>
+                    <p class="text-sm font-semibold text-gray-800">transfer fee:</p>
+                    <p class="text-gray-700">&euro;{{ number_format($realEstate->abloese, 2, ',', '.') }}</p>
+                </div>
+                @endif
+            </div>
+        </section>
+
 
         <section class="bg-gray-50 p-6 rounded-lg shadow-inner mt-8">
             <h4 class="text-xl font-semibold text-gray-700 mb-6">Description</h4>
@@ -390,7 +436,7 @@
                 <div>
                     <p class="text-sm font-semibold text-gray-800">Pet Friendly:</p>
                     <p class="text-gray-700">
-                        {{ $realEstate->pet_friendly ? 'Yes' : 'No' }}
+                        {{ $realEstate->pet_friendly }}
                     </p>
                 </div>
                 @endif
@@ -408,57 +454,14 @@
 
 
 
-        {{-- Prices & Areas Section --}}
-        <section class="bg-gray-50 p-6 rounded-lg shadow-inner mt-8"> {{-- Added mt-8 for spacing --}}
-            <h4 class="text-xl font-semibold text-gray-700 mb-6">Prices & Spaces</h4>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                @if ($realEstate->price)
-                <div>
-                    <p class="text-sm font-semibold text-gray-800">Total rent:</p>
-                    <p class="text-gray-700">&euro;{{ number_format($realEstate->price, 2, ',', '.') }}</p>
-                </div>
-                @endif
-                @if ($realEstate->livingSpace)
-                <div>
-                    <p class="text-sm font-semibold text-gray-800">Living space:</p>
-                    <p class="text-gray-700">{{ number_format($realEstate->livingSpace, 2, ',', '.') }} m&sup2;</p>
-                </div>
-                @endif
-                @if ($realEstate->grundflaeche)
-                <div>
-                    <p class="text-sm font-semibold text-gray-800">Floor area:</p>
-                    <p class="text-gray-700">{{ number_format($realEstate->grundflaeche, 2, ',', '.') }} m&sup2;</p>
-                </div>
-                @endif
-                @if ($realEstate->kaution)
-                <div>
-                    <p class="text-sm font-semibold text-gray-800">guarantee:</p>
-                    <p class="text-gray-700">&euro;{{ number_format($realEstate->kaution, 2, ',', '.') }}</p>
-                </div>
-                @endif
-                @if ($realEstate->maklerprovision)
-                <div>
-                    <p class="text-sm font-semibold text-gray-800">Brokerage commission:</p>
-                    <p class="text-gray-700">&euro;{{ number_format($realEstate->maklerprovision, 2, ',', '.') }}</p>
-                </div>
-                @endif
-                @if ($realEstate->abloese)
-                <div>
-                    <p class="text-sm font-semibold text-gray-800">transfer fee:</p>
-                    <p class="text-gray-700">&euro;{{ number_format($realEstate->abloese, 2, ',', '.') }}</p>
-                </div>
-                @endif
-            </div>
-        </section>
-
         {{-- Ausstattung & Heating Section --}}
         <section class="bg-gray-50 p-6 rounded-lg shadow-inner mt-8"> {{-- Added mt-8 for spacing --}}
             <h4 class="text-xl font-semibold text-gray-700 mb-6">Equipment & Heating</h4>
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                @if ($realEstate->heizung)
+                @if ($realEstate->heating)
                 <div>
                     <p class="text-sm font-semibold text-gray-800">Heizung:</p>
-                    <p class="text-gray-700">{{ $realEstate->heizung }}</p>
+                    <p class="text-gray-700">{{ $realEstate->heating }}</p>
                 </div>
                 @endif
 

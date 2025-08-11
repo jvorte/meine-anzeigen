@@ -27,8 +27,8 @@ class RealEstate extends Model
         'sonstiges',
         'zusatzinformation',
         'land',
-        'plz',
-        'ort',
+        'postcode',
+        'location',
         'strasse',
         'price',
         'livingSpace',
@@ -37,7 +37,7 @@ class RealEstate extends Model
         'maklerprovision',
         'abloese',
         'ausstattung',
-        'heizung',
+        'heating',
         'grundriss_path',
         'energieausweis_path',
         'rundgang_link',
@@ -56,7 +56,7 @@ class RealEstate extends Model
         'ausstattung' => 'array',
         'befristung_ende' => 'date:Y-m-d',
         'zusatzkontakt' => 'boolean',
-           'pet_friendly' => 'boolean',
+        
         'year_of_construction' => 'integer',
     ];
 

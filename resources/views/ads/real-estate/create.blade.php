@@ -20,17 +20,17 @@
         </div>
     </div>
     {{-- --------------------------------------------------------------------------------- --}}
-     <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-    @if ($errors->any())
-    <div class="mb-4 p-4 bg-red-100 text-red-700 rounded">
-        <ul>
-            @foreach ($errors->all() as $error)
+    <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+        @if ($errors->any())
+        <div class="mb-4 p-4 bg-red-100 text-red-700 rounded">
+            <ul>
+                @foreach ($errors->all() as $error)
                 <li>- {{ $error }}</li>
-            @endforeach
-        </ul>
+                @endforeach
+            </ul>
+        </div>
+        @endif
     </div>
-@endif
- </div>
 
     <div class="max-w-6xl mx-auto p-6 bg-white rounded-lg shadow-xl mt-6">
 
@@ -196,9 +196,9 @@
                             name="pet_friendly"
                             id="pet_friendly"
                             class="w-full border border-gray-300 rounded-md p-2">
-                            <option value="">Please select</option>
-                            <option value="1" {{ old('pet_friendly') === '1' ? 'selected' : '' }}>Yes</option>
-                            <option value="0" {{ old('pet_friendly') === '0' ? 'selected' : '' }}>No</option>
+                            <option value="">Select option</option>
+                            <option value="Yes" {{ old('pet_friendly') == 'Yes' ? 'selected' : '' }}>Yes</option>
+                            <option value="No" {{ old('pet_friendly') == 'No' ? 'selected' : '' }}>No</option>
                         </select>
                         @error('pet_friendly')
                         <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
@@ -295,20 +295,20 @@
 
                     {{-- PLZ --}}
                     <div>
-                        <label for="plz" class="block text-sm font-medium text-gray-700 mb-2">Postleitzahl</label>
-                        <input type="text" name="plz" id="plz" value="{{ old('plz') }}" placeholder="z.B. 1010"
+                        <label for="postcode" class="block text-sm font-medium text-gray-700 mb-2">Postleitzahl</label>
+                        <input type="text" name="postcode" id="postcode" value="{{ old('postcode') }}" placeholder="z.B. 1010"
                             class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
-                        @error('plz')
+                        @error('postcode')
                         <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                         @enderror
                     </div>
 
                     {{-- Ort --}}
                     <div>
-                        <label for="ort" class="block text-sm font-medium text-gray-700 mb-2">Ort</label>
-                        <input type="text" name="ort" id="ort" value="{{ old('ort') }}" placeholder="z.B. Wien"
+                        <label for="location" class="block text-sm font-medium text-gray-700 mb-2">Location</label>
+                        <input type="text" name="location" id="location" value="{{ old('location') }}" placeholder="z.B. Wien"
                             class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
-                        @error('ort')
+                        @error('location')
                         <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                         @enderror
                     </div>
@@ -398,8 +398,8 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     {{-- heatingOptions --}}
                     <div>
-                        <label for="heizung" class="block text-sm font-medium text-gray-700 mb-2">heatingOptions (optional)</label>
-                        <select name="heizung" id="heizung"
+                        <label for="heating" class="block text-sm font-medium text-gray-700 mb-2">heatingOptions (optional)</label>
+                        <select name="heating" id="heating"
                             class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
                             <option value="">Bitte wählen</option>
                             @foreach($heatingOptions as $heatingOption)
@@ -408,7 +408,7 @@
                             </option>
                             @endforeach
                         </select>
-                        @error('heizung')
+                        @error('heating')
                         <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                         @enderror
                     </div>

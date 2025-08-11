@@ -25,6 +25,9 @@ class RealEstateController extends Controller
         if ($request->filled('title')) {
             $query->where('title', 'like', '%' . $request->input('title') . '%');
         }
+        if ($request->has('objekttyp') && $request->input('objekttyp')) {
+            $query->where('objekttyp', $request->input('objekttyp'));
+        }
 
         if ($request->has('propertyTypeOptions') && $request->input('propertyTypeOptions')) {
             $query->where('propertyTypeOptions', $request->input('propertyTypeOptions'));
@@ -34,16 +37,27 @@ class RealEstateController extends Controller
             $query->where('objekttyp', $request->input('objekttyp'));
         }
 
-        if ($request->has('zustand') && $request->input('zustand')) {
-            $query->where('zustand', $request->input('zustand'));
+        if ($request->has('condition') && $request->input('condition')) {
+            $query->where('condition', $request->input('condition'));
         }
 
         if ($request->has('bautyp') && $request->input('bautyp')) {
             $query->where('bautyp', $request->input('bautyp'));
         }
 
-        if ($request->has('ort') && $request->input('ort')) {
-            $query->where('ort', 'like', '%' . $request->input('ort') . '%');
+
+        if ($request->has('heatingOptions') && $request->input('heatingOptions')) {
+            $query->where('heating', $request->input('heatingOptions'));
+        }
+
+
+
+        if ($request->has('petFriendlyOption') && $request->input('petFriendlyOption')) {
+            $query->where('pet_friendly', $request->input('petFriendlyOption'));
+        }
+
+        if ($request->has('location') && $request->input('location')) {
+            $query->where('location', 'like', '%' . $request->input('location') . '%');
         }
 
         if ($request->has('anzahl_zimmer') && $request->input('anzahl_zimmer')) {
@@ -55,6 +69,16 @@ class RealEstateController extends Controller
             }
         }
 
+
+        //    {{-- Year of Construction Filter yearConstraction --}}
+        if ($request->filled('min_year')) {
+            $query->where('year_of_construction', '>=', $request->input('min_year'));
+        }
+        if ($request->filled('max_year')) {
+            $query->where('year_of_construction', '<=', $request->input('max_year'));
+        }
+
+
         // Price range filters
         if ($request->filled('min_price')) {
             $query->where('price', '>=', $request->input('min_price'));
@@ -64,7 +88,7 @@ class RealEstateController extends Controller
         }
 
 
-            // Living space range filters
+        // Living space range filters
         if ($request->filled('min_area')) {
             $query->where('livingSpace', '>=', $request->input('min_area'));
         }
@@ -89,17 +113,20 @@ class RealEstateController extends Controller
         }
 
         $realEstateAds = $query->paginate(12);
-
+        $petFriendlyOptions = ['Yes', 'No'];
         // Fetch unique values for filter dropdowns
+        $conditions = ['New building', 'Renovated', 'Needs renovation', 'Old building'];
         $propertyTypeOptions = ['Apartment', 'House', 'Land', 'Commercial Property', 'Garage', 'Other'];
+        $objekttyps = ['Buy', 'Rent'];
         // $propertyTypeOptions = RealEstate::distinct()->pluck('propertyTypeOptions')->filter()->toArray();
         $objekttypen = RealEstate::distinct()->pluck('objekttyp')->filter()->toArray();
-        $zustaende = RealEstate::distinct()->pluck('zustand')->filter()->toArray();
+        $postcodes = RealEstate::distinct()->pluck('postcode')->filter()->toArray();
+        // $zustaende = RealEstate::distinct()->pluck('zustand')->filter()->toArray();
         $bautypen = RealEstate::distinct()->pluck('bautyp')->filter()->toArray();
-        $orte = RealEstate::distinct()->pluck('ort')->filter()->toArray();
+        $locations = RealEstate::distinct()->pluck('location')->filter()->toArray();
+        $heatingOptions = ['Central heating', 'floor heating', 'underfloor heating', 'district heating', 'gas heating', 'oil heating', 'electric heating', 'fireplace/stove'];
 
-
-        return view('ads.real-estate.index', compact('realEstateAds', 'propertyTypeOptions', 'objekttypen', 'zustaende', 'bautypen', 'orte'));
+        return view('ads.real-estate.index', compact('realEstateAds', 'propertyTypeOptions', 'objekttypen', 'bautypen', 'locations', 'objekttyps', 'petFriendlyOptions', 'heatingOptions', 'postcodes', 'conditions'));
     }
     /**
      * Display a form to create a new real estate listing.
@@ -114,8 +141,8 @@ class RealEstateController extends Controller
         $constructionTypeOptions = ['solid construction', 'prefabricated house', 'timber construction', 'brick construction', 'reinforced concrete'];
         $availabilityOptions = ['Immediately', 'By appointment', 'From [date]'];
         $fixedTermContractOptions = ['Permanent', 'Fixed-term'];
-           $yearOfConstructionOptions = range(date('Y'), 1900);
-             $petFriendlyOptions = ['Yes', 'No'];
+        $yearOfConstructionOptions = range(date('Y'), 1900);
+        $petFriendlyOptions = ['Yes', 'No'];
         $heatingOptions = ['Central heating', 'floor heating', 'underfloor heating', 'district heating', 'gas heating', 'oil heating', 'electric heating', 'fireplace/stove'];
         $equipmentOptions = [
             'Balcony',
@@ -162,116 +189,124 @@ class RealEstateController extends Controller
      * Store a newly created real estate listing in storage.
      * This method processes the form submission and saves data.
      */
-public function store(Request $request)
-{
-    // Validation rules, ταιριάζουν με τα ονόματα στα inputs του Blade
-    $validatedData = $request->validate([
+    public function store(Request $request)
+    {
+        // Validation rules, ταιριάζουν με τα ονόματα στα inputs του Blade
+        $validatedData = $request->validate([
 
-       
-        'category_slug' => ['required', 'string', 'max:255'],
 
-        // Basic Data
-        'propertyTypeOptions' => ['required', 'string'],
-        'title' => ['required', 'string', 'max:255'],
+            'category_slug' => ['required', 'string', 'max:255'],
 
-        'year_of_construction' => ['nullable', 'integer', 'min:1800', 'max:' . date('Y')], // Επιτρεπτά χρόνια από 1800 έως σήμερα
-        'pet_friendly' => ['nullable', 'in:0,1'], // Dropdown με τιμές 0 ή 1
+            // Basic Data
+            'propertyTypeOptions' => ['required', 'string'],
+            'title' => ['required', 'string', 'max:255'],
 
-        'objekttyp' => ['nullable', 'string'],
-        'zustand' => ['nullable', 'string'],
-        'anzahl_zimmer' => ['nullable', 'numeric', 'min:0.5'],
-        'bautyp' => ['nullable', 'string'],
-        'verfugbarkeit' => ['nullable', 'string'],
-        'befristung' => ['nullable', 'string'],
-        'befristung_ende' => ['nullable', 'date'],
+            'year_of_construction' => ['nullable', 'integer', 'min:1800', 'max:' . date('Y')], // Επιτρεπτά χρόνια από 1800 έως σήμερα
+            'pet_friendly' => ['nullable', 'in:Yes,No'],
 
-        // Description
-        'description' => ['required', 'string'],
-        'objektbeschreibung' => ['nullable', 'string'],
-        'lage' => ['nullable', 'string'],
-        'sonstiges' => ['nullable', 'string'],
-        'zusatzinformation' => ['nullable', 'string'],
 
-        // Location
-        'land' => ['required', 'string', 'max:255'],
-        'plz' => ['required', 'string', 'max:10'],
-        'ort' => ['required', 'string', 'max:255'],
-        'strasse' => ['nullable', 'string', 'max:255'],
+            'objekttyp' => ['nullable', 'string'],
+            'zustand' => ['nullable', 'string'],
+            'anzahl_zimmer' => ['nullable', 'numeric', 'min:0.5'],
+            'bautyp' => ['nullable', 'string'],
+            'verfugbarkeit' => ['nullable', 'string'],
+            'befristung' => ['nullable', 'string'],
+            'befristung_ende' => ['nullable', 'date'],
 
-        // Prices & Areas
-        'price' => 'required|numeric|min:0|max:9999999999999.99',
-        'livingSpace' => ['nullable', 'numeric', 'min:0'],
-        'grundflaeche' => ['nullable', 'numeric', 'min:0'],
-        'kaution' => ['nullable', 'numeric', 'min:0'],
-        'maklerprovision' => ['nullable', 'numeric', 'min:0'],
-        'abloese' => ['nullable', 'numeric', 'min:0'],
+            // Description
+            'description' => ['required', 'string'],
+            'objektbeschreibung' => ['nullable', 'string'],
+            'lage' => ['nullable', 'string'],
+            'sonstiges' => ['nullable', 'string'],
+            'zusatzinformation' => ['nullable', 'string'],
 
-        // Features & Heating
-        'ausstattung' => ['nullable', 'array'],
-        'ausstattung.*' => ['string'],
-        'heizung' => ['nullable', 'string', Rule::in([
-           'Central heating', 'floor heating', 'underfloor heating', 'district heating', 'gas heating', 'oil heating', 'electric heating', 'fireplace/stove'
-        ])],
+            // Location
+            'land' => ['required', 'string', 'max:255'],
+            'plz' => ['required', 'string', 'max:10'],
+            'location' => ['required', 'string', 'max:255'],
+            'strasse' => ['nullable', 'string', 'max:255'],
 
-        // Photos & Documents
-        'images.*' => ['nullable', 'image'], // Multiple images
-        'grundriss_path' => ['nullable', 'file', 'mimes:jpg,jpeg,png,pdf', 'max:5120'],
-        'energieausweis_path' => ['nullable', 'file', 'mimes:jpg,jpeg,png,pdf', 'max:5120'],
-        'rundgang_link' => ['nullable', 'url', 'max:2048'],
-        'objektinformationen_link' => ['nullable', 'url', 'max:2048'],
-        'zustandsbericht_link' => ['nullable', 'url', 'max:2048'],
-        'verkaufsbericht_link' => ['nullable', 'url', 'max:2048'],
+            // Prices & Areas
+            'price' => 'required|numeric|min:0|max:9999999999999.99',
+            'livingSpace' => ['nullable', 'numeric', 'min:0'],
+            'grundflaeche' => ['nullable', 'numeric', 'min:0'],
+            'kaution' => ['nullable', 'numeric', 'min:0'],
+            'maklerprovision' => ['nullable', 'numeric', 'min:0'],
+            'abloese' => ['nullable', 'numeric', 'min:0'],
 
-        // Contact
-        'contact_name' => ['required', 'string', 'max:255'],
+            // Features & Heating
+            'ausstattung' => ['nullable', 'array'],
+            'ausstattung.*' => ['string'],
+            'heating' => ['nullable', 'string', Rule::in([
+                'Central heating',
+                'floor heating',
+                'underfloor heating',
+                'district heating',
+                'gas heating',
+                'oil heating',
+                'electric heating',
+                'fireplace/stove'
+            ])],
 
-        'homepage' => ['nullable', 'url', 'max:2048'],
+            // Photos & Documents
+            'images.*' => ['nullable', 'image'], // Multiple images
+            'grundriss_path' => ['nullable', 'file', 'mimes:jpg,jpeg,png,pdf', 'max:5120'],
+            'energieausweis_path' => ['nullable', 'file', 'mimes:jpg,jpeg,png,pdf', 'max:5120'],
+            'rundgang_link' => ['nullable', 'url', 'max:2048'],
+            'objektinformationen_link' => ['nullable', 'url', 'max:2048'],
+            'zustandsbericht_link' => ['nullable', 'url', 'max:2048'],
+            'verkaufsbericht_link' => ['nullable', 'url', 'max:2048'],
 
-        'zusatzkontakt' => ['boolean'],
-    ]);
+            // Contact
+            'contact_name' => ['required', 'string', 'max:255'],
 
-    // Απομονώνουμε αρχεία εικόνων
-    $imageFiles = $request->file('images');
+            'homepage' => ['nullable', 'url', 'max:2048'],
 
-    // Αφαιρούμε 'images' και 'zusatzkontakt' από τα δεδομένα για την αποθήκευση
-    $dataToCreateRealEstate = Arr::except($validatedData, ['images', 'zusatzkontakt']);
+            'zusatzkontakt' => ['boolean'],
+        ]);
 
-    // Χειρισμός checkbox 'zusatzkontakt'
-    $dataToCreateRealEstate['zusatzkontakt'] = $request->has('zusatzkontakt');
+        // Απομονώνουμε αρχεία εικόνων
+        $imageFiles = $request->file('images');
 
-    // File uploads για έγγραφα
-    $grundrissPath = null;
-    if ($request->hasFile('grundriss_path')) {
-        $grundrissPath = $request->file('grundriss_path')->store('real_estate_documents', 'public');
-    }
+        // Αφαιρούμε 'images' και 'zusatzkontakt' από τα δεδομένα για την αποθήκευση
+        $dataToCreateRealEstate = Arr::except($validatedData, ['images', 'zusatzkontakt']);
 
-    $energieausweisPath = null;
-    if ($request->hasFile('energieausweis_path')) {
-        $energieausweisPath = $request->file('energieausweis_path')->store('real_estate_documents', 'public');
-    }
+        // Χειρισμός checkbox 'zusatzkontakt'
+        $dataToCreateRealEstate['zusatzkontakt'] = $request->has('zusatzkontakt');
 
-    // Δημιουργία εγγραφής RealEstate
-    $realEstate = RealEstate::create(array_merge($dataToCreateRealEstate, [
-        'user_id' => Auth::id(),
-        'grundriss_path' => $grundrissPath,
-        'energieausweis_path' => $energieausweisPath,
-    ]));
-
-    // Αποθήκευση εικόνων
-    if ($imageFiles) {
-        foreach ($imageFiles as $index => $image) {
-            $path = $image->store('real_estate_images', 'public');
-            RealEstateImage::create([
-                'real_estate_id' => $realEstate->id,
-                    'propertyTypeOptions' => $validatedData['propertyTypeOptions'],
-                'image_path' => $path,
-                'is_thumbnail' => ($index === 0),
-            ]);
+        // File uploads για έγγραφα
+        $grundrissPath = null;
+        if ($request->hasFile('grundriss_path')) {
+            $grundrissPath = $request->file('grundriss_path')->store('real_estate_documents', 'public');
         }
-    }
 
-    return redirect()->route('dashboard')->with('success', 'Real estate listing created successfully!');
-}
+        $energieausweisPath = null;
+        if ($request->hasFile('energieausweis_path')) {
+            $energieausweisPath = $request->file('energieausweis_path')->store('real_estate_documents', 'public');
+        }
+
+        // Δημιουργία εγγραφής RealEstate
+        $realEstate = RealEstate::create(array_merge($dataToCreateRealEstate, [
+            'user_id' => Auth::id(),
+            'grundriss_path' => $grundrissPath,
+            'energieausweis_path' => $energieausweisPath,
+        ]));
+
+        // Αποθήκευση εικόνων
+        if ($imageFiles) {
+            foreach ($imageFiles as $index => $image) {
+                $path = $image->store('real_estate_images', 'public');
+                RealEstateImage::create([
+                    'real_estate_id' => $realEstate->id,
+                    'propertyTypeOptions' => $validatedData['propertyTypeOptions'],
+                    'image_path' => $path,
+                    'is_thumbnail' => ($index === 0),
+                ]);
+            }
+        }
+
+        return redirect()->route('dashboard')->with('success', 'Real estate listing created successfully!');
+    }
 
 
     /**
@@ -298,6 +333,9 @@ public function store(Request $request)
         }
 
         // Define options for dropdowns and checkboxes, same as in create method
+        $currentYear = date('Y');
+        $yearOptions = range(1900, $currentYear);
+
         $propertyTypeOptions = ['Apartment', 'House', 'Land', 'Commercial Property', 'Garage', 'Other'];
         $objectTypeOptions = ['Buy', 'Rent'];
         $stateOptions = ['New building', 'Renovated', 'Needs renovation', 'Old building'];
@@ -341,6 +379,7 @@ public function store(Request $request)
             $realEstate->ausstattung = json_decode($realEstate->ausstattung, true) ?? [];
         }
 
+
         return view('ads.real-estate.edit', compact(
             'realEstate',
             'propertyTypeOptions',
@@ -350,7 +389,8 @@ public function store(Request $request)
             'availabilityOptions',
             'fixedTermContractOptions',
             'heatingOptions',
-            'equipmentOptions'
+            'equipmentOptions',
+            'yearOptions'
         ));
     }
 
@@ -363,16 +403,12 @@ public function store(Request $request)
      */
     public function update(Request $request, RealEstate $realEstate)
     {
-        // Ensure only the owner can update the listing
         if ($realEstate->user_id !== Auth::id()) {
             return redirect()->route('dashboard')->with('error', 'You are not authorized to update this listing.');
         }
 
-        // Define validation rules, similar to store method
         $validatedData = $request->validate([
             'category_slug' => ['required', 'string', 'max:255', Rule::in(['immobilien'])],
-
-            // Basic Data
             'propertyTypeOptions' => ['required', 'string'],
             'title' => ['required', 'string', 'max:255'],
             'objekttyp' => ['nullable', 'string'],
@@ -382,33 +418,26 @@ public function store(Request $request)
             'verfugbarkeit' => ['nullable', 'string'],
             'befristung' => ['nullable', 'string'],
             'befristung_ende' => ['nullable', 'date'],
-
-            // Description
+            'year_of_construction' => ['nullable', 'integer', 'min:1900', 'max:' . date('Y')],
+            'pet_friendly' => ['nullable', Rule::in(['Yes', 'No'])],
             'description' => ['required', 'string'],
             'objektbeschreibung' => ['nullable', 'string'],
             'lage' => ['nullable', 'string'],
             'sonstiges' => ['nullable', 'string'],
             'zusatzinformation' => ['nullable', 'string'],
-            // Location
             'land' => ['required', 'string', 'max:255'],
             'plz' => ['required', 'string', 'max:10'],
-            'ort' => ['required', 'string', 'max:255'],
+            'location' => ['required', 'string', 'max:255'],
             'strasse' => ['nullable', 'string', 'max:255'],
-
-            // Prices & Areas
             'price' => ['nullable', 'numeric', 'min:0'],
             'livingSpace' => ['nullable', 'numeric', 'min:0'],
             'grundflaeche' => ['nullable', 'numeric', 'min:0'],
             'kaution' => ['nullable', 'numeric', 'min:0'],
             'maklerprovision' => ['nullable', 'numeric', 'min:0'],
             'abloese' => ['nullable', 'numeric', 'min:0'],
-
-            // Features & Heating
             'ausstattung' => ['nullable', 'array'],
             'ausstattung.*' => ['string'],
-            'heizung' => ['nullable', 'string'],
-
-            // Photos & Documents (images can be added, existing ones are handled separately)
+            'heating' => ['nullable', 'string'],
             'images.*' => ['nullable', 'image', 'max:2048'],
             'grundriss_path' => ['nullable', 'file', 'mimes:jpg,jpeg,png,pdf', 'max:5120'],
             'energieausweis_path' => ['nullable', 'file', 'mimes:jpg,jpeg,png,pdf', 'max:5120'],
@@ -416,8 +445,6 @@ public function store(Request $request)
             'objektinformationen_link' => ['nullable', 'url', 'max:2048'],
             'zustandsbericht_link' => ['nullable', 'url', 'max:2048'],
             'verkaufsbericht_link' => ['nullable', 'url', 'max:2048'],
-
-            // Contact
             'contact_name' => ['required', 'string', 'max:255'],
             'homepage' => ['nullable', 'url', 'max:2048'],
             'zusatzkontakt' => ['boolean'],
@@ -426,76 +453,52 @@ public function store(Request $request)
         $imageFiles = $request->file('images');
         $dataToUpdateRealEstate = Arr::except($validatedData, ['images', 'zusatzkontakt']);
         $dataToUpdateRealEstate['zusatzkontakt'] = $request->has('zusatzkontakt');
+        $dataToUpdateRealEstate['pet_friendly'] = $request->input('pet_friendly', null);
 
         // Handle document updates
-        if ($request->hasFile('grundriss_path')) {
-            // Delete old file if it exists
-            if ($realEstate->grundriss_path) {
-                Storage::disk('public')->delete($realEstate->grundriss_path);
-            }
-            $dataToUpdateRealEstate['grundriss_path'] = $request->file('grundriss_path')->store('real_estate_documents', 'public');
-        } elseif ($request->boolean('remove_grundriss_path')) { // Check if checkbox for removal is checked
-            if ($realEstate->grundriss_path) {
-                Storage::disk('public')->delete($realEstate->grundriss_path);
-                $dataToUpdateRealEstate['grundriss_path'] = null;
-            }
-        }
-
-        if ($request->hasFile('energieausweis_path')) {
-            // Delete old file if it exists
-            if ($realEstate->energieausweis_path) {
-                Storage::disk('public')->delete($realEstate->energieausweis_path);
-            }
-            $dataToUpdateRealEstate['energieausweis_path'] = $request->file('energieausweis_path')->store('real_estate_documents', 'public');
-        } elseif ($request->boolean('remove_energieausweis_path')) { // Check if checkbox for removal is checked
-            if ($realEstate->energieausweis_path) {
-                Storage::disk('public')->delete($realEstate->energieausweis_path);
-                $dataToUpdateRealEstate['energieausweis_path'] = null;
+        foreach (['grundriss_path', 'energieausweis_path'] as $doc) {
+            if ($request->hasFile($doc)) {
+                if ($realEstate->$doc) {
+                    Storage::disk('public')->delete($realEstate->$doc);
+                }
+                $dataToUpdateRealEstate[$doc] = $request->file($doc)->store('real_estate_documents', 'public');
+            } elseif ($request->boolean("remove_{$doc}")) {
+                if ($realEstate->$doc) {
+                    Storage::disk('public')->delete($realEstate->$doc);
+                }
+                $dataToUpdateRealEstate[$doc] = null;
             }
         }
 
         $realEstate->update($dataToUpdateRealEstate);
 
-        // Handle image updates
-        // You might have a mechanism in your edit form to remove existing images
-        // For new images, simply add them
-        if ($imageFiles) {
-            foreach ($imageFiles as $index => $image) {
+
+        if (is_array($imageFiles)) {
+            foreach ($imageFiles as $image) {
                 $path = $image->store('real_estate_images', 'public');
                 RealEstateImage::create([
                     'real_estate_id' => $realEstate->id,
                     'image_path' => $path,
-                    // You might want a way to re-assign thumbnails or handle existing thumbnails
-                    // For simplicity, new images are not set as thumbnails here.
-                    // If you allow reordering/setting new thumbnails, that logic would go here.
                     'is_thumbnail' => false,
                 ]);
             }
         }
 
-        // Logic to remove individual images:
-        // Assume you have an array of image IDs to be removed in the request, e.g., 'remove_images_ids'
-        // Διαγραφή επιλεγμένων εικόνων (από hidden input με array IDs)
         if ($request->filled('existing_images_to_delete')) {
             $imageIdsToRemove = explode(',', $request->input('existing_images_to_delete'));
-
             $imagesToDelete = RealEstateImage::where('real_estate_id', $realEstate->id)
                 ->whereIn('id', $imageIdsToRemove)
                 ->get();
 
             foreach ($imagesToDelete as $image) {
-                // Διαγραφή από storage
                 Storage::disk('public')->delete($image->image_path);
-
-                // Διαγραφή από βάση
                 $image->delete();
             }
-            // If the thumbnail was deleted, find a new one
+
             if ($realEstate->images()->where('is_thumbnail', true)->doesntExist() && $realEstate->images()->count() > 0) {
                 $realEstate->images()->first()->update(['is_thumbnail' => true]);
             }
         }
-
 
         return redirect()->route('ads.real-estate.show', $realEstate)->with('success', 'Immobilien Anzeige erfolgreich aktualisiert!');
     }
