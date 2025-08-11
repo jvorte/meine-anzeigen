@@ -31,8 +31,7 @@ Route::get('/dashboard', [DashboardController::class, 'index']); // Added redire
 Route::get('/ads/camper', [App\Http\Controllers\CamperController::class, 'index'])->name('ads.camper.index');
 // Ad Search
 Route::get('/ads/search', [AdController::class, 'search'])->name('ads.search');
-Route::get('ads/real-estate/{realEstate}', [RealEstateController::class, 'show'])
-    ->name('ads.real-estate.show');
+
 
 // Category Listing Pages (showing all ads in a category)
 Route::prefix('categories')->name('categories.')->group(function () {
