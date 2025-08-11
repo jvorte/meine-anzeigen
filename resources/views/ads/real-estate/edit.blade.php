@@ -21,6 +21,19 @@
         </div>
     </div>
 
+    <!-- check form fields -->
+         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+    @if ($errors->any())
+    <div class="mb-4 p-4 bg-red-100 text-red-700 rounded">
+        <ul>
+            @foreach ($errors->all() as $error)
+                <li>- {{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif
+ </div>
+
     <div class="max-w-6xl mx-auto p-6 bg-white rounded-lg shadow-xl my-6">
 
         <form method="POST" action="{{ route('ads.real-estate.update', $realEstate->id) }}" enctype="multipart/form-data" class="space-y-8">
@@ -151,6 +164,42 @@
                             <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                         @enderror
                     </div>
+
+                    {{-- Year of Construction --}}
+<div>
+    <label for="year_of_construction" class="block text-sm font-medium text-gray-700 mb-2">Year of Construction (optional)</label>
+    <input
+        type="number"
+        name="year_of_construction"
+        id="year_of_construction"
+        min="1800"
+        max="{{ date('Y') }}"
+        value="{{ old('year_of_construction', $realEstate->year_of_construction ?? '') }}"
+        class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50"
+        placeholder="e.g. 1995"
+    >
+    @error('year_of_construction')
+        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+    @enderror
+</div>
+
+{{-- Pet Friendly --}}
+<div class="mt-4">
+    <label for="pet_friendly" class="block text-sm font-medium text-gray-700 mb-2">Pet Friendly</label>
+    <select
+        name="pet_friendly"
+        id="pet_friendly"
+        class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50"
+    >
+        <option value="">Please select</option>
+        <option value="1" {{ old('pet_friendly', $realEstate->pet_friendly ?? '') === 1 || old('pet_friendly', $realEstate->pet_friendly ?? '') === '1' ? 'selected' : '' }}>Yes</option>
+        <option value="0" {{ old('pet_friendly', $realEstate->pet_friendly ?? '') === 0 || old('pet_friendly', $realEstate->pet_friendly ?? '') === '0' ? 'selected' : '' }}>No</option>
+    </select>
+    @error('pet_friendly')
+        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+    @enderror
+</div>
+
 
 
                     {{-- Befristung Ende --}}

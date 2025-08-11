@@ -47,6 +47,8 @@ class RealEstate extends Model
         'contact_name',
         'contact_email',
         'homepage',
+         'year_of_construction',
+        'pet_friendly',
 
     ];
 
@@ -54,6 +56,8 @@ class RealEstate extends Model
         'ausstattung' => 'array',
         'befristung_ende' => 'date:Y-m-d',
         'zusatzkontakt' => 'boolean',
+           'pet_friendly' => 'boolean',
+        'year_of_construction' => 'integer',
     ];
 
     public function images()

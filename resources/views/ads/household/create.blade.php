@@ -27,6 +27,23 @@
 </div>
 {{-- --------------------------------------------------------------------------------- --}}
 
+
+    <!-- check form fields -->
+         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+    @if ($errors->any())
+    <div class="mb-4 p-4 bg-red-100 text-red-700 rounded">
+        <ul>
+            @foreach ($errors->all() as $error)
+                <li>- {{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif
+ </div>
+
+
+ 
+
     <div class="max-w-6xl mx-auto p-6 bg-white rounded-lg shadow-xl mt-6">
 
         <form method="POST" action="{{ route('ads.household.store') }}" enctype="multipart/form-data" class="space-y-8">
