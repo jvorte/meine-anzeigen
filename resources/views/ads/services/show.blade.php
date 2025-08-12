@@ -198,10 +198,26 @@
                                 <dt class="inline font-semibold">Name:</dt>
                                 <dd class="inline">{{ $service->user->name }}</dd>
                             </div>
-                            <div>
-                                <dt class="inline font-semibold">E-Mail:</dt>
-                                <dd class="inline">{{ $service->user->email }}</dd>
-                            </div>
+                    <div>
+                            @if($service->show_phone && !empty($service->user->phone))
+                            <dt class="inline font-semibold">Phone:</dt>
+                            <dd class="inline">{{ $service->user->phone }}</dd>
+                            @endif
+
+                            @if($service->show_mobile_phone && !empty($service->user->mobile_phone))
+                            <dt class="inline font-semibold">Mobile:</dt>
+                            <dd class="inline">{{ $service->user->mobile_phone }}</dd>
+                            @endif
+                        </div>
+
+
+                        <div>
+                            @if($service->show_email && !empty($service->user->email))
+                            <dt class="inline font-semibold">E-Mail:</dt>
+                            <dd class="inline">{{ $service->user->email }}</dd>
+                            @endif
+                        </div>
+                        
                             @if($service->user->city)
                                 <div>
                                     <dt class="inline font-semibold">Stadt:</dt>
