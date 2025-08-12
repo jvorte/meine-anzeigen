@@ -153,6 +153,12 @@ class HouseholdItemController extends Controller
             'user_id' => Auth::id(), // Assign the authenticated user's ID
         ]));
 
+
+         $householdItem->show_phone = $request->has('show_phone') ? 1 : 0;
+        $householdItem->show_mobile_phone = $request->has('show_mobile_phone') ? 1 : 0;
+        $householdItem->show_email = $request->has('show_email') ? 1 : 0;
+        $householdItem->save();
+
         // 3. Handle image uploads and save to HouseholdItemImage model
         if ($imageFiles) {
             foreach ($imageFiles as $index => $image) {
@@ -231,6 +237,11 @@ class HouseholdItemController extends Controller
         ])->save();
 
 
+
+         $householdItem->show_phone = $request->has('show_phone') ? 1 : 0;
+        $householdItem->show_mobile_phone = $request->has('show_mobile_phone') ? 1 : 0;
+        $householdItem->show_email = $request->has('show_email') ? 1 : 0;
+        $householdItem->save();
         // 1. Handle deletion of existing images
         if ($request->has('existing_images_to_delete')) {
             $idsToDelete = array_filter(explode(',', $request->input('existing_images_to_delete'))); // Split string by comma and remove empty values
@@ -262,7 +273,7 @@ class HouseholdItemController extends Controller
             }
         }
 
-        return redirect()->route('dashboard')->with('success', 'Anzeige erfolgreich aktualisiert.');
+        return redirect()->route('ads.household.show', $householdItem)->with('success', 'Anzeige erfolgreich aktualisiert!');
     }
 
     public function destroy($id)

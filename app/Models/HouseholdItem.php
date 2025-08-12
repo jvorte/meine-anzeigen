@@ -22,6 +22,10 @@ class HouseholdItem extends Model
         'material',
         'color',
         'dimensions',
+        'show_phone',
+        'show_mobile_phone',
+        'show_email',
+
 
     ];
 

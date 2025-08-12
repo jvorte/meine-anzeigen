@@ -187,10 +187,25 @@
                                 <dt class="inline font-semibold">Name:</dt>
                                 <dd class="inline">{{ $electronic->user->name }}</dd>
                             </div>
-                            <div>
-                                <dt class="inline font-semibold">E-Mail:</dt>
-                                <dd class="inline">{{ $electronic->user->email }}</dd>
-                            </div>
+                                  <div>
+                            @if($electronic->show_phone && !empty($electronic->user->phone))
+                            <dt class="inline font-semibold">Phone:</dt>
+                            <dd class="inline">{{ $electronic->user->phone }}</dd>
+                            @endif
+
+                            @if($electronic->show_mobile_phone && !empty($electronic->user->mobile_phone))
+                            <dt class="inline font-semibold">Mobile:</dt>
+                            <dd class="inline">{{ $electronic->user->mobile_phone }}</dd>
+                            @endif
+                        </div>
+
+
+                        <div>
+                            @if($electronic->show_email && !empty($electronic->user->email))
+                            <dt class="inline font-semibold">E-Mail:</dt>
+                            <dd class="inline">{{ $electronic->user->email }}</dd>
+                            @endif
+                        </div>
                             @if($electronic->user->city)
                                 <div>
                                     <dt class="inline font-semibold">Stadt:</dt>

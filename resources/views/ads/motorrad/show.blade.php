@@ -224,10 +224,26 @@
                 <dt class="inline font-semibold">Name:</dt>
                 <dd class="inline">{{ $motorradAd->user->name }}</dd>
             </div>
-            <div>
-                <dt class="inline font-semibold">E-Mail:</dt>
-                <dd class="inline">{{ $motorradAd->user->email }}</dd>
-            </div>
+       <div>
+                            @if($motorradAd->show_phone && !empty($motorradAd->user->phone))
+                            <dt class="inline font-semibold">Phone:</dt>
+                            <dd class="inline">{{ $motorradAd->user->phone }}</dd>
+                            @endif
+
+                            @if($motorradAd->show_mobile_phone && !empty($motorradAd->user->mobile_phone))
+                            <dt class="inline font-semibold">Mobile:</dt>
+                            <dd class="inline">{{ $motorradAd->user->mobile_phone }}</dd>
+                            @endif
+                        </div>
+
+
+                        <div>
+                            @if($motorradAd->show_email && !empty($motorradAd->user->email))
+                            <dt class="inline font-semibold">E-Mail:</dt>
+                            <dd class="inline">{{ $motorradAd->user->email }}</dd>
+                            @endif
+                        </div>
+                        
             @if($motorradAd->user->city)
                 <div>
                     <dt class="inline font-semibold">Stadt:</dt>

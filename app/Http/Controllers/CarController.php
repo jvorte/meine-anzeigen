@@ -310,8 +310,6 @@ class CarController extends Controller
             'mileage_from' => ['required', 'numeric', 'min:0'],
             'registration_to' => ['required', 'integer', 'min:1900', 'max:' . date('Y')],
 
-  
-
             'vehicle_type' => ['required', 'string', 'max:255'],
             'condition' => ['required', 'string', Rule::in(['new', 'used', 'accident', 'damaged'])],
 
@@ -340,9 +338,9 @@ class CarController extends Controller
         $car->mileage = $validatedData['mileage_from'];
         $car->registration = $validatedData['registration_to'];
 
-           $car->show_phone = $request->has('show_phone') ? 1 : 0;
-    $car->show_mobile_phone = $request->has('show_mobile_phone') ? 1 : 0;
-    $car->show_email = $request->has('show_email') ? 1 : 0;
+        $car->show_phone = $request->has('show_phone') ? 1 : 0;
+        $car->show_mobile_phone = $request->has('show_mobile_phone') ? 1 : 0;
+        $car->show_email = $request->has('show_email') ? 1 : 0;
 
 
         $car->vehicle_type = $validatedData['vehicle_type'];

@@ -29,7 +29,7 @@ class CommercialVehicleController extends Controller
         if ($request->has('model') && $request->input('model')) {
             $query->where('commercial_model_id', $request->input('model'));
         }
-    
+
         if ($request->has('min_price') && $request->input('min_price') !== null) {
             $query->where('price', '>=', (int)$request->input('min_price'));
         }
@@ -52,17 +52,17 @@ class CommercialVehicleController extends Controller
             $query->whereBetween('first_registration', [(int)$registrationRange[0], (int)$registrationRange[1]]);
         }
 
-              $query->when($request->filled('mileage'), function ($q) use ($request) {
+        $query->when($request->filled('mileage'), function ($q) use ($request) {
             list($min, $max) = explode('-', $request->get('mileage'));
             $q->whereBetween('mileage', [(int)$min, (int)$max]);
         });
-        
 
-         // Color filter (case-insensitive)
-    if ($request->filled('color')) {
-        $color = strtolower($request->input('color'));
-        $query->whereRaw('LOWER(`color`) = ?', [$color]);
-    }
+
+        // Color filter (case-insensitive)
+        if ($request->filled('color')) {
+            $color = strtolower($request->input('color'));
+            $query->whereRaw('LOWER(`color`) = ?', [$color]);
+        }
 
         if ($request->has('power') && $request->input('power')) {
             $powerRange = explode('-', $request->input('power'));
@@ -89,7 +89,7 @@ class CommercialVehicleController extends Controller
             $query->where('emission_class', $request->input('emission_class'));
         }
 
-          if ($request->has('seats') && $request->input('seats')) {
+        if ($request->has('seats') && $request->input('seats')) {
             $query->where('seats', $request->input('seats'));
         }
 
@@ -160,10 +160,13 @@ class CommercialVehicleController extends Controller
             'title' => 'required|string|max:255',
             'description' => 'required|string',
 
-            // --- FIX START: Use commercial_brand_id and commercial_model_id ---
-            'commercial_brand_id' => 'required|exists:commercial_brands,id', // Use your new table
-            'commercial_model_id' => 'required|exists:commercial_models,id', // Use your new table
-            // --- FIX END ---
+
+            'commercial_brand_id' => 'required|exists:commercial_brands,id',
+            'commercial_model_id' => 'required|exists:commercial_models,id',
+
+            // 'show_phone' => $request->has('show_phone') ? 1 : 0,
+            // 'show_mobile_phone' => $request->has('show_mobile_phone') ? 1 : 0,
+            // 'show_email' => $request->has('show_email') ? 1 : 0,
 
             'first_registration' => ['required', 'integer', 'min:1990', 'max:' . date('Y')],
             'mileage' => 'required|integer|min:0',
@@ -185,6 +188,9 @@ class CommercialVehicleController extends Controller
 
         $commercialVehicle = new CommercialVehicle();
         $commercialVehicle->user_id = Auth::id(); // Assign the authenticated user's ID
+        $commercialVehicle->show_phone = $request->has('show_phone') ? 1 : 0;
+        $commercialVehicle->show_mobile_phone = $request->has('show_mobile_phone') ? 1 : 0;
+        $commercialVehicle->show_email = $request->has('show_email') ? 1 : 0;
         $commercialVehicle->fill($validatedData); // Fill all validated data
         $commercialVehicle->save();
 
@@ -275,49 +281,53 @@ class CommercialVehicleController extends Controller
 
 
 
-    public function update(Request $request, CommercialVehicle $commercialVehicle)
-    {
-        // The model is already provided by Route Model Binding, so this line is not needed.
-        // $commercialVehicle = CommercialVehicle::findOrFail($id);
-        // dd('fdfd');
-        $validated = $request->validate([
-            'title' => 'required|string|max:255',
-            'description' => 'required|string',
-            'commercial_brand_id' => 'required|exists:commercial_brands,id',
-            'commercial_model_id' => 'required|exists:commercial_models,id',
-            'first_registration' => ['required', 'integer', 'min:1900', 'max:' . date('Y')],
-            'mileage' => 'required|integer|min:0',
-            'power' => 'nullable|integer|min:1',
-            'color' => 'nullable|string|max:50',
-            'condition' => 'required',
-            'string',
-            'price' => 'nullable|numeric|min:0',
-            'commercial_vehicle_type' => 'required|string|max:100',
-            'fuel_type' => 'nullable|string|max:50',
-            'transmission' => 'nullable|string|max:50',
-            'payload_capacity' => 'nullable|integer|min:0',
-            'gross_vehicle_weight' => 'nullable|integer|min:0',
-            'number_of_axles' => 'nullable|integer|min:1',
-            'emission_class' => 'nullable|string|max:50',
-            'seats' => 'nullable|integer|min:1',
-            'images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-        ]);
+public function update(Request $request, CommercialVehicle $commercialVehicle)
+{
+    $validated = $request->validate([
+        'title' => 'required|string|max:255',
+        'description' => 'required|string',
+        'commercial_brand_id' => 'required|exists:commercial_brands,id',
+        'commercial_model_id' => 'required|exists:commercial_models,id',
+        'first_registration' => ['required', 'integer', 'min:1900', 'max:' . date('Y')],
+        'mileage' => 'required|integer|min:0',
+        'power' => 'nullable|integer|min:1',
+        'color' => 'nullable|string|max:50',
+        'condition' => 'required|string', // Combined rules
+        'price' => 'nullable|numeric|min:0',
+        'commercial_vehicle_type' => 'required|string|max:100',
+        'fuel_type' => 'nullable|string|max:50',
+        'transmission' => 'nullable|string|max:50',
+        'payload_capacity' => 'nullable|integer|min:0',
+        'gross_vehicle_weight' => 'nullable|integer|min:0',
+        'number_of_axles' => 'nullable|integer|min:1',
+        'emission_class' => 'nullable|string|max:50',
+        'seats' => 'nullable|integer|min:1',
+        'images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+    ]);
 
-        // Update the existing model instance
-        $commercialVehicle->update($validated);
+    // Update the existing model instance
+    $commercialVehicle->update($validated);
 
-        // Handle new image uploads
-        if ($request->hasFile('images')) {
-            foreach ($request->file('images') as $image) {
-                $path = $image->store('commercial_vehicle_images', 'public');
-                $commercialVehicle->images()->create([
-                    'image_path' => $path,
-                ]);
-            }
+    // Update the checkbox values, which are not in the $validated array
+    $commercialVehicle->show_phone = $request->has('show_phone') ? 1 : 0;
+    $commercialVehicle->show_mobile_phone = $request->has('show_mobile_phone') ? 1 : 0;
+    $commercialVehicle->show_email = $request->has('show_email') ? 1 : 0;
+    
+    // Save these new changes to the database
+    $commercialVehicle->save();
+
+    // Handle new image uploads
+    if ($request->hasFile('images')) {
+        foreach ($request->file('images') as $image) {
+            $path = $image->store('commercial_vehicle_images', 'public');
+            $commercialVehicle->images()->create([
+                'image_path' => $path,
+            ]);
         }
-
-        return redirect()->route('ads.commercial-vehicles.show', $commercialVehicle);
     }
+
+    return redirect()->route('ads.commercial-vehicles.show', $commercialVehicle)->with('success', 'Commercial vehicle updated successfully!');
+}
 
 
     public function destroy($id)

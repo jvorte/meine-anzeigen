@@ -223,10 +223,26 @@
                 <dt class="inline font-semibold">Name:</dt>
                 <dd class="inline">{{ $householdItem->user->name }}</dd>
             </div>
-            <div>
-                <dt class="inline font-semibold">E-Mail:</dt>
-                <dd class="inline">{{ $householdItem->user->email }}</dd>
-            </div>
+       <div>
+                            @if($householdItem->show_phone && !empty($householdItem->user->phone))
+                            <dt class="inline font-semibold">Phone:</dt>
+                            <dd class="inline">{{ $householdItem->user->phone }}</dd>
+                            @endif
+
+                            @if($householdItem->show_mobile_phone && !empty($householdItem->user->mobile_phone))
+                            <dt class="inline font-semibold">Mobile:</dt>
+                            <dd class="inline">{{ $householdItem->user->mobile_phone }}</dd>
+                            @endif
+                        </div>
+
+
+                        <div>
+                            @if($householdItem->show_email && !empty($householdItem->user->email))
+                            <dt class="inline font-semibold">E-Mail:</dt>
+                            <dd class="inline">{{ $householdItem->user->email }}</dd>
+                            @endif
+                        </div>
+                        
             @if($householdItem->user->city)
                 <div>
                     <dt class="inline font-semibold">Stadt:</dt>

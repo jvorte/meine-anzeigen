@@ -16,7 +16,7 @@ class Electronic extends Model
         'description',
         'price',
         'user_id',
-        'brand', 
+        'brand',
         'electronic_model',
         'condition',
         'year_of_purchase',
@@ -33,6 +33,9 @@ class Electronic extends Model
         'screen_size',
         'processor',
         'ram',
+        'show_phone',
+        'show_mobile_phone',
+        'show_email',
     ];
 
     /**

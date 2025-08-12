@@ -29,6 +29,9 @@ class CommercialVehicle extends Model
         'number_of_axles',
         'emission_class',
         'seats',
+           'show_phone',
+    'show_mobile_phone',
+    'show_email',
     ];
     // Define the relationship to CommercialBrand
     public function commercialBrand()

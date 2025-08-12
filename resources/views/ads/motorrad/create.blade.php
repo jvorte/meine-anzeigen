@@ -251,6 +251,34 @@
                 </div>
             </section>
 
+    {{-- conatct Section --}}
+    <section class="bg-gray-50 p-6 rounded-lg shadow-inner">
+        <h4 class="text-xl font-semibold text-gray-700 mb-6">Select if you want to publish your Mobile phone or email</h4>
+        <div class="mt-4">
+            <label class="inline-flex items-center">
+                <input type="checkbox" name="show_phone" value="1" class="rounded border-gray-300">
+                <span class="ml-2">Phone</span>
+            </label>
+        </div>
+
+        <div class="mt-2">
+            <label class="inline-flex items-center">
+                <input type="checkbox" name="show_mobile_phone" value="1" class="rounded border-gray-300">
+                <span class="ml-2">Mobile</span>
+            </label>
+        </div>
+
+
+              <div class="mt-2">
+            <label class="inline-flex items-center">
+                <input type="checkbox" name="show_email" value="1" class="rounded border-gray-300">
+                <span class="ml-2">email</span>
+            </label>
+        </div>
+
+
+    </section>
+
             {{-- Photo Upload Section (with Alpine.js for previews) --}}
             <section class="bg-gray-50 p-6 rounded-lg shadow-inner">
                 <h4 class="text-xl font-semibold text-gray-700 mb-6">Select Photos</h4>

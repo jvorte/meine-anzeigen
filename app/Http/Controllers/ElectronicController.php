@@ -20,7 +20,7 @@ class ElectronicController extends Controller
         // We order by 'created_at' descending by default.
         $query = Electronic::with(['images']);
 
-           if ($request->filled('title')) {
+        if ($request->filled('title')) {
             $query->where('title', 'like', '%' . $request->input('title') . '%');
         }
 
@@ -148,6 +148,8 @@ class ElectronicController extends Controller
             'screen_size' => 'nullable|string|max:100',
             'processor' => 'nullable|string|max:100',
             'ram' => 'nullable|string|max:100',
+
+            
         ];
 
         $validatedData = $request->validate($rules);
@@ -157,7 +159,14 @@ class ElectronicController extends Controller
         $dataToCreateElectronic['user_id'] = Auth::id();
         $dataToCreateElectronic['status'] = 'active';
 
+
+
         $electronic = Electronic::create($dataToCreateElectronic);
+
+        $electronic->show_phone = $request->has('show_phone') ? 1 : 0;
+        $electronic->show_mobile_phone = $request->has('show_mobile_phone') ? 1 : 0;
+        $electronic->show_email = $request->has('show_email') ? 1 : 0;
+        $electronic->save();
 
         if ($imageFiles) {
             foreach ($imageFiles as $index => $image) {
@@ -236,6 +245,12 @@ class ElectronicController extends Controller
 
         $updateData = collect($validatedData)->except(['new_images', 'delete_images'])->toArray();
         $electronic->update($updateData);
+
+          $electronic->show_phone = $request->has('show_phone') ? 1 : 0;
+        $electronic->show_mobile_phone = $request->has('show_mobile_phone') ? 1 : 0;
+        $electronic->show_email = $request->has('show_email') ? 1 : 0;
+        $electronic->save();
+
 
         if ($request->filled('delete_images')) {
             $imagesToDelete = $electronic->images()->whereIn('id', $request->input('delete_images'))->get();

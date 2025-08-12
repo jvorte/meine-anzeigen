@@ -3,7 +3,7 @@
 
     <x-slot name="header">
         <h2 class="text-3xl font-extrabold text-gray-900 leading-tight mb-2">
-            motorcycles 
+            motorcycles
         </h2>
         <p class="text-md text-gray-700 dark:text-gray-500">
             Bearbeite die Details deiner Motorrad Anzeige.
@@ -20,18 +20,18 @@
         </div>
     </div>
 
-        <!-- check form fields -->
-         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-    @if ($errors->any())
-    <div class="mb-4 p-4 bg-red-100 text-red-700 rounded">
-        <ul>
-            @foreach ($errors->all() as $error)
+    <!-- check form fields -->
+    <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+        @if ($errors->any())
+        <div class="mb-4 p-4 bg-red-100 text-red-700 rounded">
+            <ul>
+                @foreach ($errors->all() as $error)
                 <li>- {{ $error }}</li>
-            @endforeach
-        </ul>
+                @endforeach
+            </ul>
+        </div>
+        @endif
     </div>
-@endif
- </div>
 
     <div class="max-w-6xl mx-auto p-6 bg-white rounded-lg shadow-xl mt-6">
 
@@ -50,13 +50,13 @@
                             class="form-select w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
                             <option value="">Bitte wählen</option>
                             @foreach($brands as $id => $name)
-                                <option value="{{ $id }}" {{ (old('motorcycle_brand_id', $motorradAd->motorcycle_brand_id) == $id) ? 'selected' : '' }}>
-                                    {{ $name }}
-                                </option>
+                            <option value="{{ $id }}" {{ (old('motorcycle_brand_id', $motorradAd->motorcycle_brand_id) == $id) ? 'selected' : '' }}>
+                                {{ $name }}
+                            </option>
                             @endforeach
                         </select>
                         @error('motorcycle_brand_id')
-                            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                         @enderror
                     </div>
 
@@ -67,13 +67,13 @@
                             class="form-select w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
                             <option value="">Bitte wählen</option>
                             @foreach($initialModels as $id => $name)
-                                <option value="{{ $id }}" {{ (old('motorcycle_model_id', $motorradAd->motorcycle_model_id) == $id) ? 'selected' : '' }}>
-                                    {{ $name }}
-                                </option>
+                            <option value="{{ $id }}" {{ (old('motorcycle_model_id', $motorradAd->motorcycle_model_id) == $id) ? 'selected' : '' }}>
+                                {{ $name }}
+                            </option>
                             @endforeach
                         </select>
                         @error('motorcycle_model_id')
-                            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                         @enderror
                     </div>
 
@@ -108,8 +108,12 @@
                 }
 
                 document.addEventListener('DOMContentLoaded', function() {
-                    const brandId = '{{ old('motorcycle_brand_id', $motorradAd->motorcycle_brand_id ?? '') }}';
-                    const modelId = '{{ old('motorcycle_model_id', $motorradAd->motorcycle_model_id ?? '') }}';
+                    const brandId = '{{ old('
+                    motorcycle_brand_id ', $motorradAd->motorcycle_brand_id ?? '
+                    ') }}';
+                    const modelId = '{{ old('
+                    motorcycle_model_id ', $motorradAd->motorcycle_model_id ?? '
+                    ') }}';
 
                     if (brandId) {
                         loadModels(brandId, modelId);
@@ -125,24 +129,24 @@
                     <div>
                         <label for="price" class="block text-sm font-medium text-gray-700 mb-2">Preis (€)</label>
                         <input type="number" name="price" id="price" value="{{ old('price', $motorradAd->price ?? '') }}"
-                               placeholder="z.B. 7.500"
-                               class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50"
-                               min="0" step="0.01">
+                            placeholder="z.B. 7.500"
+                            class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50"
+                            min="0" step="0.01">
                         @error('price')
-                            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                         @enderror
                     </div>
 
-             <div>
-    <label for="first_registration" class="block text-sm font-medium text-gray-700 mb-2">Erstzulassung</label>
-    <input type="number" name="first_registration" id="first_registration"
-        min="1900" max="{{ date('Y') }}"
-        value="{{ old('first_registration', $motorradAd->first_registration) }}"
-        class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
-    @error('first_registration')
-        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-    @enderror
-</div>
+                    <div>
+                        <label for="first_registration" class="block text-sm font-medium text-gray-700 mb-2">Erstzulassung</label>
+                        <input type="number" name="first_registration" id="first_registration"
+                            min="1900" max="{{ date('Y') }}"
+                            value="{{ old('first_registration', $motorradAd->first_registration) }}"
+                            class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
+                        @error('first_registration')
+                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                        @enderror
+                    </div>
 
 
                     <div>
@@ -151,7 +155,7 @@
                             value="{{ old('mileage', $motorradAd->mileage) }}" placeholder="z.B. 50.000"
                             class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
                         @error('mileage')
-                            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                         @enderror
                     </div>
 
@@ -161,7 +165,7 @@
                             placeholder="z.B. 150"
                             class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
                         @error('power')
-                            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                         @enderror
                     </div>
 
@@ -177,13 +181,15 @@
                         <label for="color" class="block text-sm font-medium text-gray-700 mb-2">Farbe</label>
                         <select name="color" id="color"
                             class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
-                            <option value="">Bitte wählen</option>
+                        
                             @foreach($colors as $color)
-                                <option value="{{ $color }}" {{ old('color', $motorradAd->color) == $color ? 'selected' : '' }}>{{ $color }}</option>
+                            <option value="{{ $color }}" {{ old('color', $motorradAd->color) == $color ? 'selected' : '' }}>
+                                {{ $color }}
+                            </option>
                             @endforeach
                         </select>
                         @error('color')
-                            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                         @enderror
                     </div>
 
@@ -193,11 +199,11 @@
                             class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
                             <option value="">Bitte wählen</option>
                             @foreach($conditions as $condition)
-                                <option value="{{ $condition }}" {{ old('condition', $motorradAd->condition) == $condition ? 'selected' : '' }}>{{ $condition }}</option>
+                            <option value="{{ $condition }}" {{ old('condition', $motorradAd->condition) == $condition ? 'selected' : '' }}>{{ $condition }}</option>
                             @endforeach
                         </select>
                         @error('condition')
-                            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                         @enderror
                     </div>
 
@@ -212,7 +218,7 @@
                         placeholder="Aussagekräftiger Titel für deine Anzeige"
                         class="w-full p-3 border border-gray-300 rounded-md shadow-sm bg-white text-gray-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 focus:border-blue-600 transition duration-150 ease-in-out">
                     @error('title')
-                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                    <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                     @enderror
                 </div>
 
@@ -222,8 +228,55 @@
                         placeholder="Gib hier alle wichtigen Details zu deinem Motorrad ein. Je mehr Informationen, desto besser!"
                         class="w-full p-3 border border-gray-300 rounded-md shadow-sm bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-600 transition duration-150 ease-in-out">{{ old('description', $motorradAd->description) }}</textarea>
                     @error('description')
-                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                    <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                     @enderror
+                </div>
+            </section>
+
+
+            {{-- Contact Section --}}
+            <section class="bg-gray-50 p-6 rounded-lg shadow-inner">
+                <h4 class="text-xl font-semibold text-gray-700 mb-6">
+                    Select if you want to publish your Mobile phone or email
+                </h4>
+
+                {{-- Phone --}}
+                <div class="mt-4">
+                    <label class="inline-flex items-center">
+                        <input
+                            type="checkbox"
+                            name="show_phone"
+                            value="1"
+                            class="rounded border-gray-300"
+                            {{ old('show_phone', $motorradAd->show_phone) ? 'checked' : '' }}>
+                        <span class="ml-2">Phone</span>
+                    </label>
+                </div>
+
+                {{-- Mobile --}}
+                <div class="mt-2">
+                    <label class="inline-flex items-center">
+                        <input
+                            type="checkbox"
+                            name="show_mobile_phone"
+                            value="1"
+                            class="rounded border-gray-300"
+                            {{ old('show_mobile_phone', $motorradAd->show_mobile_phone) ? 'checked' : '' }}>
+                        <span class="ml-2">Mobile</span>
+                    </label>
+                </div>
+
+                {{-- Email --}}
+                <div class="mt-2">
+                    <label class="inline-flex items-center">
+                        <input
+                            type="checkbox"
+                            name="show_email"
+                            value="1"
+                            class="rounded border-gray-300"
+                            {{ old('show_email', $motorradAd->show_email) ? 'checked' : '' }}>
+                        <span class="ml-2">Email</span>
+                    </label>
                 </div>
             </section>
 
@@ -244,10 +297,10 @@
                     <input type="file" name="images[]" multiple @change="addNewFiles($event)"
                         class="block w-full border p-2 rounded" />
                     @error('images')
-                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                    <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                     @enderror
                     @error('images.*')
-                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                    <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                     @enderror
 
                     <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -331,7 +384,7 @@
                 </script>
             </section>
 
-  
+
 
             {{-- Submit Button --}}
             <div class="pt-6 border-t border-gray-200 flex justify-end">
