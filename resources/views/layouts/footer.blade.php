@@ -6,14 +6,15 @@
 
             <!-- Column 1: Company Info -->
             <div class="col-span-1 md:col-span-1">
-                <h3 class="text-xl font-bold text-white mb-4">Meine Anzeigen</h3>
+                <h3 class="text-xl font-bold text-white mb-4">My Ads</h3>
                 <p class="text-sm leading-relaxed">
-                    Ihre Plattform für Kleinanzeigen in Österreich. Finden Sie alles von Fahrzeugen bis Immobilien,
-                    schnell und einfach.
+                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Et aut corporis temporibus molestiae odio deleniti, consectetur, nam itaque rerum omnis corrupti perferendis hic qui, sed mollitia sit? Tenetur, libero aliquid.
                 </p>
+
+                
                 <div class="flex space-x-4 mt-4">
                     <!-- Social Media Icons (Example - replace with actual links and icons) -->
-                    <a href="#" class="text-gray-400 hover:text-blue-500 transition-colors">
+                    <!-- <a href="#" class="text-gray-400 hover:text-blue-500 transition-colors">
                         <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                             <path fill-rule="evenodd"
                                 d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33V22C17.361 21.257 22 16.991 22 12z"
@@ -32,26 +33,26 @@
                             <path
                                 d="M.052 1.54A.5.5 0 0 1 .5 1h15a.5.5 0 0 1 .448.724l-1.5 8A.5.5 0 0 1 14 10H2a.5.5 0 0 1-.448-.724l1.5-8zM2.26 2l-1.35 7.2H13.79L15.14 2H2.26zM17 10a1 1 0 1 1 0 2 1 1 0 0 1 0-2zm-3 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2zM17 13a1 1 0 1 1 0 2 1 1 0 0 1 0-2zm-3 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2zM17 16a1 1 0 1 1 0 2 1 1 0 0 1 0-2zm-3 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2zM17 19a1 1 0 1 1 0 2 1 1 0 0 1 0-2zm-3 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2z" />
                         </svg>
-                    </a>
+                    </a> -->
                 </div>
             </div>
 
             <!-- Column 2: Categories -->
             <div class="col-span-1 md:col-span-1">
-                <h3 class="text-xl font-bold text-white mb-4">Kategorien</h3>
+                <h3 class="text-xl font-bold text-white mb-4">Categories</h3>
                 <ul class="space-y-2">
                     <li><a href="{{ route('categories.cars.index') }}"
-                            class="text-sm hover:text-blue-400 transition-colors">Fahrzeuge</a></li>
+                            class="text-sm hover:text-blue-400 transition-colors">Cars</a></li>
                     <li><a href="{{ route('categories.real-estate.index') }}"
-                            class="text-sm hover:text-blue-400 transition-colors">Immobilien</a></li>
+                            class="text-sm hover:text-blue-400 transition-colors">Real Estate</a></li>
                     <li><a href="{{ route('categories.electronics.index') }}"
-                            class="text-sm hover:text-blue-400 transition-colors">Elektronik</a></li>
+                            class="text-sm hover:text-blue-400 transition-colors">Electronic</a></li>
                     <li><a href="{{ route('categories.household.index') }}"
-                            class="text-sm hover:text-blue-400 transition-colors">Haushalt</a></li>
+                            class="text-sm hover:text-blue-400 transition-colors">Household</a></li>
                     <li><a href="{{ route('categories.services.index') }}"
-                            class="text-sm hover:text-blue-400 transition-colors">Dienstleistungen</a></li>
+                            class="text-sm hover:text-blue-400 transition-colors">Services</a></li>
                     <li><a href="{{ route('categories.others.index') }}"
-                            class="text-sm hover:text-blue-400 transition-colors">Sonstiges</a></li>
+                            class="text-sm hover:text-blue-400 transition-colors">Others</a></li>
                     <!-- Add more categories as needed -->
                 </ul>
             </div>
@@ -60,11 +61,10 @@
             <div class="col-span-1 md:col-span-1">
                 <h3 class="text-xl font-bold text-white mb-4">Rechtliches</h3>
                 <ul class="space-y-2">
-                    <li><a href="#" class="text-sm hover:text-blue-400 transition-colors">Datenschutz</a></li>
-                    <li><a href="#" class="text-sm hover:text-blue-400 transition-colors">Impressum</a></li>
-                    <li><a href="#" class="text-sm hover:text-blue-400 transition-colors">AGB</a></li>
-                    <li><a href="#" class="text-sm hover:text-blue-400 transition-colors">Kontakt</a></li>
-                    <li><a href="#" class="text-sm hover:text-blue-400 transition-colors">Hilfe & FAQ</a></li>
+                    <li><a href="{{ route('legal.data-protection') }}" class="text-sm hover:text-blue-400 transition-colors">Privacy Policy</a></li>               
+                    <li><a href="{{ route('legal.terms-conditions') }}" class="text-sm hover:text-blue-400 transition-colors">Terms and Conditions</a></li>
+                    <li><a href="{{ route('contact') }}" class="text-sm hover:text-blue-400 transition-colors">Contact</a></li>
+                  
                 </ul>
             </div>
 
@@ -88,7 +88,7 @@
         <div
             class="flex flex-col sm:flex-row justify-between items-center text-center sm:text-left text-sm text-gray-400">
             <div class="mb-2 sm:mb-0">
-                &copy; {{ date('Y') }} Meine Anzeigen. Alle Rechte vorbehalten.
+                &copy; {{ date('Y') }}My Ads. All rights reserved. D.Vortelinas
             </div>
             <div class="flex items-center gap-2">
                 <!-- Language Selector (Placeholder) -->

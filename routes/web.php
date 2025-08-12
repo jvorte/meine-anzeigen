@@ -21,8 +21,24 @@ use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\UsedVehiclePartController;
 
 
+
 // --- PUBLIC ROUTES ---
 //    Route::get('/ads/household/create', )->name('ads.household.create');
+Route::get('/contact', function () {
+    return view('contact');
+})->name('contact');
+
+// In your web.php file
+Route::get('/data-protection', function () {
+    return view('legal.data-protection');
+})->name('legal.data-protection');
+
+Route::get('/terms-conditions', function () {
+    return view('legal.terms-conditions');
+})->name('legal.terms-conditions');
+
+// A POST route to handle the form submission.
+// It directs the request to the invokable ContactController.
 
 // Main Dashboard/Home Page
 Route::get('/', [DashboardController::class, 'index'])->name('dashboard');

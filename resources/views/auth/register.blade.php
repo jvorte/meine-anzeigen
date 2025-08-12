@@ -2,21 +2,18 @@
     <form method="POST" action="{{ route('register') }}">
         @csrf
 
-        <!-- Name -->
         <div>
             <x-input-label for="name" :value="__('Name')" />
             <x-text-input id="name" class="block mt-1 w-full" type="text" name="name" :value="old('name')" required autofocus autocomplete="name" />
             <x-input-error :messages="$errors->get('name')" class="mt-2" />
         </div>
 
-        <!-- Email Address -->
         <div class="mt-4">
             <x-input-label for="email" :value="__('Email')" />
             <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autocomplete="username" />
             <x-input-error :messages="$errors->get('email')" class="mt-2" />
         </div>
 
-        <!-- Password -->
         <div class="mt-4">
             <x-input-label for="password" :value="__('Password')" />
             <x-text-input id="password" class="block mt-1 w-full"
@@ -26,7 +23,6 @@
             <x-input-error :messages="$errors->get('password')" class="mt-2" />
         </div>
 
-        <!-- Confirm Password -->
         <div class="mt-4">
             <x-input-label for="password_confirmation" :value="__('Confirm Password')" />
             <x-text-input id="password_confirmation" class="block mt-1 w-full"
@@ -35,7 +31,6 @@
             <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
         </div>
 
-        <!-- Address Fields -->
         <div class="mt-4">
             <x-input-label for="country" :value="__('Country')" />
             <x-text-input id="country" class="block mt-1 w-full" type="text" name="country" :value="old('country')" autocomplete="country-name" />
@@ -60,18 +55,29 @@
             <x-input-error :messages="$errors->get('street_address')" class="mt-2" />
         </div>
 
-        <!-- Mobile Phone -->
         <div class="mt-4">
             <x-input-label for="mobile_phone" :value="__('Mobile Phone')" />
             <x-text-input id="mobile_phone" class="block mt-1 w-full" type="text" name="mobile_phone" :value="old('mobile_phone')" autocomplete="tel-national" />
             <x-input-error :messages="$errors->get('mobile_phone')" class="mt-2" />
         </div>
         
-        <!-- Phone -->
         <div class="mt-4">
             <x-input-label for="phone" :value="__('Phone')" />
             <x-text-input id="phone" class="block mt-1 w-full" type="text" name="phone" :value="old('phone')" autocomplete="tel" />
             <x-input-error :messages="$errors->get('phone')" class="mt-2" />
+        </div>
+
+        <div class="block mt-4">
+            <label for="terms" class="inline-flex items-center">
+                <input id="terms" type="checkbox" name="terms" required class="rounded dark:bg-gray-900 border-gray-300 dark:border-gray-700 text-indigo-600 shadow-sm focus:ring-indigo-500 dark:focus:ring-indigo-600 dark:focus:ring-offset-gray-800">
+                <span class="ms-2 text-sm text-gray-600 dark:text-gray-400">
+                    I agree to the 
+                    <a href="{{ route('legal.data-protection') }}" class="underline hover:text-gray-900 dark:hover:text-gray-100" target="_blank">Terms and Conditions</a> 
+                    and the 
+                    <a href="{{ route('legal.terms-conditions') }}" class="underline hover:text-gray-900 dark:hover:text-gray-100" target="_blank">Privacy Policy</a>.
+                </span>
+            </label>
+            <x-input-error :messages="$errors->get('terms')" class="mt-2" />
         </div>
 
         <div class="flex items-center justify-end mt-4">
