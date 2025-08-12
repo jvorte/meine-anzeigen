@@ -30,6 +30,9 @@ class Car extends Model
         'title',
         'description',
         'user_id',
+        'show_phone',
+        'show_mobile_phone',
+        'show_email',
         'slug'
     ];
 

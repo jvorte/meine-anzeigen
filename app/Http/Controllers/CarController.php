@@ -85,7 +85,7 @@ class CarController extends Controller
         $query->when($request->filled('color'), function ($q) use ($request) {
             $q->where('color', $request->get('color'));
         });
-        
+
 
         $query->when($request->filled('doors'), function ($q) use ($request) {
             $q->where('doors', $request->get('doors'));
@@ -159,11 +159,12 @@ class CarController extends Controller
 
     public function store(Request $request)
     {
-        //    dd('dd');
+        // Validate the request data.
+        // The checkbox fields are not included in the validation rules
+        // because their presence is checked separately.
         $data = $request->validate([
-
             'category_slug' => ['required', 'string', 'max:255'],
-            'car_brand_id' => ['required', 'exists:car_brands,id'], // Validates input named 'car_brand_id'
+            'car_brand_id' => ['required', 'exists:car_brands,id'],
             'car_model_id' => [
                 'nullable',
                 Rule::exists('car_models', 'id')->where(function ($query) use ($request) {
@@ -173,10 +174,9 @@ class CarController extends Controller
             'price_from' => ['required', 'numeric', 'min:0'],
             'mileage_from' => ['required', 'numeric', 'min:0'],
             'registration_to' => ['required', 'integer', 'digits:4', 'min:1900', 'max:' . date('Y')],
-
             'vehicle_type' => ['required', 'string', 'max:255'],
             'condition' => ['required', 'string', 'max:255'],
-            'warranty' => ['nullable', 'string', 'in:yes,no'], // Corrected validation rule
+            'warranty' => ['nullable', 'string', 'in:yes,no'],
             'power_from' => ['required', 'numeric', 'min:0'],
             'fuel_type' => ['required', 'string', 'max:255'],
             'transmission' => ['required', 'string', 'max:255'],
@@ -187,14 +187,15 @@ class CarController extends Controller
             'seller_type' => ['required', 'string', 'max:255'],
             'title' => ['required', 'string', 'max:255'],
             'description' => ['required', 'string'],
-            'images' => ['nullable', 'array', 'max:10'], // Max 10 images
-            'images.*' => ['image', 'mimes:jpeg,png,jpg,gif,svg'], // Individual image rules
+            'images' => ['nullable', 'array', 'max:10'],
+            'images.*' => ['image', 'mimes:jpeg,png,jpg,gif,svg'],
         ]);
 
+        // Map and transform the validated data for the `Car` model.
         $mappedData = [
             'category_slug' => $data['category_slug'],
-            'car_brand_id'  => $data['car_brand_id'],
-            'car_model_id'  => $data['car_model_id'] ?? null,
+            'car_brand_id' => $data['car_brand_id'],
+            'car_model_id' => $data['car_model_id'] ?? null,
             'price' => $data['price_from'],
             'mileage' => $data['mileage_from'],
             'registration' => $data['registration_to'],
@@ -213,10 +214,17 @@ class CarController extends Controller
             'description' => $data['description'],
             'user_id' => Auth::id(),
             'slug' => Str::slug($data['title'] . '-' . uniqid()),
+
+            // Correctly handle the optional checkbox values and add them to the data array
+            'show_phone' => $request->has('show_phone') ? 1 : 0,
+            'show_mobile_phone' => $request->has('show_mobile_phone') ? 1 : 0,
+            'show_email' => $request->has('show_email') ? 1 : 0,
         ];
 
+        // Create the car in a single database operation
         $car = Car::create($mappedData);
 
+        // Handle image uploads
         if ($request->hasFile('images')) {
             foreach ($request->file('images') as $index => $imageFile) {
                 $path = $imageFile->store('car_images', 'public');
@@ -227,7 +235,7 @@ class CarController extends Controller
             }
         }
 
-        return redirect()->route('dashboard', $car)->with('success', 'Auto Anzeige erfolgreich erstellt!');
+        return redirect()->route('ads.cars.show', $car)->with('success', 'Auto Anzeige erfolgreich erstellt!');
     }
 
 
@@ -302,6 +310,8 @@ class CarController extends Controller
             'mileage_from' => ['required', 'numeric', 'min:0'],
             'registration_to' => ['required', 'integer', 'min:1900', 'max:' . date('Y')],
 
+  
+
             'vehicle_type' => ['required', 'string', 'max:255'],
             'condition' => ['required', 'string', Rule::in(['new', 'used', 'accident', 'damaged'])],
 
@@ -328,7 +338,11 @@ class CarController extends Controller
         $car->car_model_id = $validatedData['car_model_id'] ?? null;
         $car->price = $validatedData['price_from'];
         $car->mileage = $validatedData['mileage_from'];
-       $car->registration = $validatedData['registration_to'];
+        $car->registration = $validatedData['registration_to'];
+
+           $car->show_phone = $request->has('show_phone') ? 1 : 0;
+    $car->show_mobile_phone = $request->has('show_mobile_phone') ? 1 : 0;
+    $car->show_email = $request->has('show_email') ? 1 : 0;
 
 
         $car->vehicle_type = $validatedData['vehicle_type'];

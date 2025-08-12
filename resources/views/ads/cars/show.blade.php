@@ -216,10 +216,32 @@
                 <dt class="inline font-semibold">Name:</dt>
                 <dd class="inline">{{ $car->user->name }}</dd>
             </div>
-            <div>
-                <dt class="inline font-semibold">E-Mail:</dt>
-                <dd class="inline">{{ $car->user->email }}</dd>
-            </div>
+       
+            
+                 <div>
+                            @if($car->show_phone && !empty($car->user->phone))
+                            <dt class="inline font-semibold">Phone:</dt>
+                            <dd class="inline">{{ $car->user->phone }}</dd>
+                            @endif
+
+                            @if($car->show_mobile_phone && !empty($car->user->mobile_phone))
+                            <dt class="inline font-semibold">Mobile:</dt>
+                            <dd class="inline">{{ $car->user->mobile_phone }}</dd>
+                            @endif
+                        </div>
+
+
+                        <div>
+                            @if($car->show_email && !empty($car->user->email))
+                            <dt class="inline font-semibold">E-Mail:</dt>
+                            <dd class="inline">{{ $car->user->email }}</dd>
+                            @endif
+                        </div>
+                        
+
+
+
+
             @if($car->user->city)
                 <div>
                     <dt class="inline font-semibold">Stadt:</dt>
