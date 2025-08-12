@@ -167,6 +167,9 @@ class UsedVehiclePartController extends Controller
         $usedVehiclePart = new UsedVehiclePart();
         $usedVehiclePart->user_id = Auth::id();
         $usedVehiclePart->fill($validatedData);
+        $usedVehiclePart->show_phone = $request->has('show_phone') ? 1 : 0;
+        $usedVehiclePart->show_mobile_phone = $request->has('show_mobile_phone') ? 1 : 0;
+        $usedVehiclePart->show_email = $request->has('show_email') ? 1 : 0;
         $usedVehiclePart->save();
 
         if ($request->hasFile('images')) {
@@ -281,6 +284,12 @@ class UsedVehiclePartController extends Controller
                 }),
             ],
         ]);
+
+
+         $usedVehiclePart->show_phone = $request->has('show_phone') ? 1 : 0;
+        $usedVehiclePart->show_mobile_phone = $request->has('show_mobile_phone') ? 1 : 0;
+        $usedVehiclePart->show_email = $request->has('show_email') ? 1 : 0;
+        $usedVehiclePart->save();
 
         // Update the main UsedVehiclePart data
         $usedVehiclePart->update($validatedData);

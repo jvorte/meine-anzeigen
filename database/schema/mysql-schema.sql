@@ -52,6 +52,9 @@ CREATE TABLE `boats` (
   `engine_type` varchar(255) DEFAULT NULL,
   `engine_power` int(10) unsigned DEFAULT NULL,
   `operating_hours` int(10) unsigned DEFAULT NULL,
+  `show_phone` tinyint(1) NOT NULL DEFAULT 0,
+  `show_mobile_phone` tinyint(1) NOT NULL DEFAULT 1,
+  `show_email` tinyint(1) NOT NULL DEFAULT 0,
   `last_service` date DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
@@ -168,6 +171,9 @@ CREATE TABLE `campers` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   `deleted_at` timestamp NULL DEFAULT NULL,
+  `show_phone` tinyint(1) NOT NULL DEFAULT 0,
+  `show_mobile_phone` tinyint(1) NOT NULL DEFAULT 0,
+  `show_email` tinyint(1) NOT NULL DEFAULT 0,
   PRIMARY KEY (`id`),
   KEY `campers_user_id_foreign` (`user_id`),
   KEY `campers_camper_brand_id_foreign` (`camper_brand_id`),
@@ -248,6 +254,9 @@ CREATE TABLE `cars` (
   `user_id` bigint(20) unsigned NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
+  `show_phone` tinyint(1) NOT NULL DEFAULT 0,
+  `show_mobile_phone` tinyint(1) NOT NULL DEFAULT 0,
+  `show_email` tinyint(1) NOT NULL DEFAULT 0,
   PRIMARY KEY (`id`),
   UNIQUE KEY `vehicles_slug_unique` (`slug`),
   KEY `vehicles_car_brand_id_foreign` (`car_brand_id`),
@@ -337,6 +346,9 @@ CREATE TABLE `commercial_vehicles` (
   `seats` tinyint(3) unsigned DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
+  `show_phone` tinyint(1) NOT NULL DEFAULT 0,
+  `show_mobile_phone` tinyint(1) NOT NULL DEFAULT 0,
+  `show_email` tinyint(1) NOT NULL DEFAULT 0,
   PRIMARY KEY (`id`),
   KEY `commercial_vehicles_user_id_foreign` (`user_id`),
   KEY `commercial_vehicles_commercial_brand_id_foreign` (`commercial_brand_id`),
@@ -439,6 +451,9 @@ CREATE TABLE `electronics` (
   `screen_size` varchar(255) DEFAULT NULL,
   `processor` varchar(255) DEFAULT NULL,
   `ram` varchar(255) DEFAULT NULL,
+  `show_phone` tinyint(1) NOT NULL DEFAULT 0,
+  `show_mobile_phone` tinyint(1) NOT NULL DEFAULT 0,
+  `show_email` tinyint(1) NOT NULL DEFAULT 0,
   PRIMARY KEY (`id`),
   KEY `electronics_user_id_foreign` (`user_id`),
   CONSTRAINT `electronics_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
@@ -492,6 +507,9 @@ CREATE TABLE `household_items` (
   `dimensions` varchar(255) DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
+  `show_phone` tinyint(1) NOT NULL DEFAULT 0,
+  `show_mobile_phone` tinyint(1) NOT NULL DEFAULT 0,
+  `show_email` tinyint(1) NOT NULL DEFAULT 0,
   PRIMARY KEY (`id`),
   KEY `household_items_user_id_foreign` (`user_id`),
   CONSTRAINT `household_items_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
@@ -615,6 +633,9 @@ CREATE TABLE `motorrad_ads` (
   `condition` varchar(255) NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
+  `show_phone` tinyint(1) NOT NULL DEFAULT 0,
+  `show_mobile_phone` tinyint(1) NOT NULL DEFAULT 0,
+  `show_email` tinyint(1) NOT NULL DEFAULT 0,
   PRIMARY KEY (`id`),
   KEY `motorrad_ads_user_id_foreign` (`user_id`),
   KEY `motorrad_ads_motorcycle_brand_id_foreign` (`motorcycle_brand_id`),
@@ -652,6 +673,9 @@ CREATE TABLE `others` (
   `condition` varchar(255) DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
+  `show_phone` tinyint(1) NOT NULL DEFAULT 0,
+  `show_mobile_phone` tinyint(1) NOT NULL DEFAULT 0,
+  `show_email` tinyint(1) NOT NULL DEFAULT 0,
   PRIMARY KEY (`id`),
   KEY `others_user_id_foreign` (`user_id`),
   CONSTRAINT `others_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
@@ -771,6 +795,9 @@ CREATE TABLE `real_estates` (
   `homepage` varchar(255) DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
+  `show_phone` tinyint(1) NOT NULL DEFAULT 0,
+  `show_mobile_phone` tinyint(1) NOT NULL DEFAULT 0,
+  `show_email` tinyint(1) NOT NULL DEFAULT 0,
   PRIMARY KEY (`id`),
   KEY `real_estates_user_id_foreign` (`user_id`),
   CONSTRAINT `real_estates_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
@@ -806,6 +833,9 @@ CREATE TABLE `services` (
   `user_id` bigint(20) unsigned NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
+  `show_phone` tinyint(1) NOT NULL DEFAULT 0,
+  `show_mobile_phone` tinyint(1) NOT NULL DEFAULT 0,
+  `show_email` tinyint(1) NOT NULL DEFAULT 0,
   PRIMARY KEY (`id`),
   KEY `services_user_id_foreign` (`user_id`),
   CONSTRAINT `services_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
@@ -860,6 +890,9 @@ CREATE TABLE `used_vehicle_parts` (
   `compatible_year_to` year(4) DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
+  `show_phone` tinyint(1) NOT NULL DEFAULT 0,
+  `show_mobile_phone` tinyint(1) NOT NULL DEFAULT 0,
+  `show_email` tinyint(1) NOT NULL DEFAULT 0,
   PRIMARY KEY (`id`),
   KEY `used_vehicle_parts_user_id_foreign` (`user_id`),
   CONSTRAINT `used_vehicle_parts_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
@@ -954,3 +987,15 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (55,'2025_08_06_073
 INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (56,'2025_08_08_044952_update_electronics_table_for_brands',12);
 INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (57,'2025_08_11_084329_add_year_and_petfriendly_to_real_estates_table',13);
 INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (58,'2025_08_11_105012_add_year_and_petfriendly_to_real_estates_table',14);
+INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (59,'2025_08_12_061051_add_contact_visibility_to_boats_table',15);
+INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (60,'2025_08_12_062806_add_show_mobile_phone_to_real_estates_table',16);
+INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (61,'2025_08_12_070121_add_show_fields_to_campers_table',17);
+INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (62,'2025_08_12_082559_add_show_fields_to_cars_table',18);
+INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (63,'2025_08_12_085525_add_show_fields_to_commercial_vehicles_table',19);
+INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (64,'2025_08_12_091530_add_show_fields_to_electronics_table',20);
+INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (65,'2025_08_12_093008_add_show_fields_to_household_items_table',21);
+INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (66,'2025_08_12_095141_add_show_fields_to_motorrad_ads_table',22);
+INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (67,'2025_08_12_100603_add_show_fields_to_others_table',23);
+INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (68,'2025_08_12_103606_add_show_fields_to_real_estates_table',24);
+INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (69,'2025_08_12_104326_add_show_fields_to_services_table',25);
+INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (70,'2025_08_12_105244_add_show_fields_to_used_vehicle_parts_table',26);
