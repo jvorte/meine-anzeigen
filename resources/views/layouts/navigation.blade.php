@@ -293,7 +293,7 @@
                                     <path d="M9 17V7H7.8C7.1 7 6.5 7.5 6.5 8.2V10c0 .7.6 1.2 1.3 1.2H10V17" />
                                     <path d="M13 17V7h4" />
                                 </svg>
-                                <span>Autos</span>
+                                <span>Cars</span>
                             </a>
                             {{-- Sub-category links for Fahrzeuge. Only include the actual sub-categories for vehicles. --}}
                             {{-- Make sure your $categories collection passed from the controller includes these slugs --}}
