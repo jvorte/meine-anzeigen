@@ -122,7 +122,7 @@ class RealEstateController extends Controller
         // $propertyTypeOptions = RealEstate::distinct()->pluck('propertyTypeOptions')->filter()->toArray();
         $objekttypen = RealEstate::distinct()->pluck('objekttyp')->filter()->toArray();
         $postcodes = RealEstate::distinct()->pluck('postcode')->filter()->toArray();
-        // $zustaende = RealEstate::distinct()->pluck('zustand')->filter()->toArray();
+        // $zustaende = RealEstate::distinct()->pluck('condition')->filter()->toArray();
         // $bautypen = RealEstate::distinct()->pluck('propertyTypeOptions')->filter()->toArray();
         $locations = RealEstate::distinct()->pluck('location')->filter()->toArray();
         $heatingOptions = ['Central heating', 'floor heating', 'underfloor heating', 'district heating', 'gas heating', 'oil heating', 'electric heating', 'fireplace/stove'];
@@ -207,9 +207,9 @@ class RealEstateController extends Controller
 
 
             'objekttyp' => ['nullable', 'string'],
-            'zustand' => ['nullable', 'string'],
+            'condition' => ['nullable', 'string'],
             'anzahl_zimmer' => ['nullable', 'numeric', 'min:0.5'],
-            'propertyTypeOptions' => ['nullable', 'string'],
+            'propertyTypeOptions' => ['required', 'string'],
             'verfugbarkeit' => ['nullable', 'string'],
             'befristung' => ['nullable', 'string'],
             'befristung_ende' => ['nullable', 'date'],
@@ -223,7 +223,7 @@ class RealEstateController extends Controller
 
             // Location
             'land' => ['required', 'string', 'max:255'],
-            'plz' => ['required', 'string', 'max:10'],
+            'postcode' => ['required', 'string', 'max:10'],
             'location' => ['required', 'string', 'max:255'],
             'strasse' => ['nullable', 'string', 'max:255'],
 
@@ -265,7 +265,7 @@ class RealEstateController extends Controller
 
             'zusatzkontakt' => ['boolean'],
         ]);
-
+    
         // Απομονώνουμε αρχεία εικόνων
         $imageFiles = $request->file('images');
 
@@ -292,6 +292,11 @@ class RealEstateController extends Controller
             'grundriss_path' => $grundrissPath,
             'energieausweis_path' => $energieausweisPath,
         ]));
+
+           $realEstate->show_phone = $request->has('show_phone') ? 1 : 0;
+        $realEstate->show_mobile_phone = $request->has('show_mobile_phone') ? 1 : 0;
+        $realEstate->show_email = $request->has('show_email') ? 1 : 0;
+        $realEstate->save();
 
         // Αποθήκευση εικόνων
         if ($imageFiles) {
@@ -413,7 +418,7 @@ class RealEstateController extends Controller
             'propertyTypeOptions' => ['required', 'string'],
             'title' => ['required', 'string', 'max:255'],
             'objekttyp' => ['nullable', 'string'],
-            'zustand' => ['nullable', 'string'],
+            'condition' => ['nullable', 'string'],
             'anzahl_zimmer' => ['nullable', 'numeric', 'min:0.5'],
             'propertyTypeOptions' => ['nullable', 'string'],
             'verfugbarkeit' => ['nullable', 'string'],
@@ -427,7 +432,7 @@ class RealEstateController extends Controller
             'sonstiges' => ['nullable', 'string'],
             'zusatzinformation' => ['nullable', 'string'],
             'land' => ['required', 'string', 'max:255'],
-            'plz' => ['required', 'string', 'max:10'],
+            'postcode' => ['required', 'string', 'max:10'],
             'location' => ['required', 'string', 'max:255'],
             'strasse' => ['nullable', 'string', 'max:255'],
             'price' => ['nullable', 'numeric', 'min:0'],
@@ -455,6 +460,12 @@ class RealEstateController extends Controller
         $dataToUpdateRealEstate = Arr::except($validatedData, ['images', 'zusatzkontakt']);
         $dataToUpdateRealEstate['zusatzkontakt'] = $request->has('zusatzkontakt');
         $dataToUpdateRealEstate['pet_friendly'] = $request->input('pet_friendly', null);
+
+
+          $realEstate->show_phone = $request->has('show_phone') ? 1 : 0;
+        $realEstate->show_mobile_phone = $request->has('show_mobile_phone') ? 1 : 0;
+        $realEstate->show_email = $request->has('show_email') ? 1 : 0;
+        $realEstate->save();
 
         // Handle document updates
         foreach (['grundriss_path', 'energieausweis_path'] as $doc) {

@@ -15,7 +15,7 @@ class RealEstate extends Model
         'propertyTypeOptions',
         'title',
         'objekttyp',
-        'zustand',
+        'condition',
         'anzahl_zimmer',
         'constructionTypeOption',
         'verfugbarkeit',
@@ -47,8 +47,11 @@ class RealEstate extends Model
         'contact_name',
         'contact_email',
         'homepage',
-         'year_of_construction',
+        'year_of_construction',
         'pet_friendly',
+        'show_phone',
+        'show_mobile_phone',
+        'show_email',
 
     ];
 
@@ -56,7 +59,7 @@ class RealEstate extends Model
         'ausstattung' => 'array',
         'befristung_ende' => 'date:Y-m-d',
         'zusatzkontakt' => 'boolean',
-        
+
         'year_of_construction' => 'integer',
     ];
 
@@ -65,8 +68,8 @@ class RealEstate extends Model
         return $this->hasMany(RealEstateImage::class);
     }
 
-        public function user()
-{
-    return $this->belongsTo(User::class);
-}
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }

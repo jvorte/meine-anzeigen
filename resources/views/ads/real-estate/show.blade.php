@@ -204,9 +204,25 @@
                             <dt class="inline font-semibold">Name:</dt>
                             <dd class="inline">{{ $realEstate->user->name }}</dd>
                         </div>
+                  
                         <div>
+                            @if($realEstate->show_phone && !empty($realEstate->user->phone))
+                            <dt class="inline font-semibold">Phone:</dt>
+                            <dd class="inline">{{ $realEstate->user->phone }}</dd>
+                            @endif
+
+                            @if($realEstate->show_mobile_phone && !empty($realEstate->user->mobile_phone))
+                            <dt class="inline font-semibold">Mobile:</dt>
+                            <dd class="inline">{{ $realEstate->user->mobile_phone }}</dd>
+                            @endif
+                        </div>
+
+
+                        <div>
+                            @if($realEstate->show_email && !empty($realEstate->user->email))
                             <dt class="inline font-semibold">E-Mail:</dt>
                             <dd class="inline">{{ $realEstate->user->email }}</dd>
+                            @endif
                         </div>
                         @if($realEstate->user->city)
                         <div>
@@ -401,10 +417,10 @@
                     <p class="text-gray-700">{{ $realEstate->objekttyp }}</p>
                 </div>
                 @endif
-                @if ($realEstate->zustand)
+                @if ($realEstate->condition)
                 <div>
                     <p class="text-sm font-semibold text-gray-800">Condition:</p>
-                    <p class="text-gray-700">{{ $realEstate->zustand }}</p>
+                    <p class="text-gray-700">{{ $realEstate->condition }}</p>
                 </div>
                 @endif
                 @if ($realEstate->anzahl_zimmer)
