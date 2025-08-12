@@ -13,7 +13,7 @@ use App\Models\BoatImage;
 class BoatController extends Controller
 {
 
-   public function index(Request $request)
+    public function index(Request $request)
     {
         // Start with a base query
         $query = Boat::with(['images']);
@@ -22,7 +22,7 @@ class BoatController extends Controller
         if ($request->has('brand') && $request->input('brand')) {
             $query->where('brand', $request->input('brand'));
         }
-        
+
         if ($request->has('boat_type') && $request->input('boat_type')) {
             $query->where('boat_type', $request->input('boat_type'));
         }
@@ -31,19 +31,19 @@ class BoatController extends Controller
             $query->where('material', $request->input('material'));
         }
 
-         // Price range filters
-    if ($request->filled('min_price')) {
-        $query->where('price', '>=', $request->input('min_price'));
-    }
-    if ($request->filled('max_price')) {
-        $query->where('price', '<=', $request->input('max_price'));
-    }
-        
+        // Price range filters
+        if ($request->filled('min_price')) {
+            $query->where('price', '>=', $request->input('min_price'));
+        }
+        if ($request->filled('max_price')) {
+            $query->where('price', '<=', $request->input('max_price'));
+        }
+
         if ($request->has('year_of_construction') && $request->input('year_of_construction')) {
             $yearRange = explode('-', $request->input('year_of_construction'));
             $query->whereBetween('year_of_construction', [(int)$yearRange[0], (int)$yearRange[1]]);
         }
-        
+
         if ($request->has('condition') && $request->input('condition')) {
             $query->where('condition', $request->input('condition'));
         }
@@ -54,7 +54,7 @@ class BoatController extends Controller
 
         // Apply sorting based on the request, or default to latest
         $sortBy = $request->input('sort_by', 'latest');
-        
+
         switch ($sortBy) {
             case 'price_asc':
                 $query->orderBy('price', 'asc');
@@ -70,16 +70,16 @@ class BoatController extends Controller
 
         $boatAds = $query->paginate(15);
         $brands = Boat::distinct()->pluck('brand')->filter()->toArray();
-         $boatTypes = ['Sailboat', 'Motorboat', 'Inflatable Boat', 'Kayak', 'Canoe', 'Jet ski', 'Houseboat', 'Other'];
-         $conditions = ['new', 'used', 'refurbished', 'broken'];
-         $materials = ['Wood', 'Fiberglass', 'Aluminum', 'Steel'];
-        return view('ads.boats.index', compact('boatAds', 'brands','boatTypes','conditions','materials' ));
+        $boatTypes = ['Sailboat', 'Motorboat', 'Inflatable Boat', 'Kayak', 'Canoe', 'Jet ski', 'Houseboat', 'Other'];
+        $conditions = ['new', 'used', 'refurbished', 'broken'];
+        $materials = ['Wood', 'Fiberglass', 'Aluminum', 'Steel'];
+        return view('ads.boats.index', compact('boatAds', 'brands', 'boatTypes', 'conditions', 'materials'));
     }
 
 
     public function create()
     {
-     
+
         $boatTypes = ['Sailboat', 'Motorboat', 'Inflatable Boat', 'Kayak', 'Canoe', 'Jet ski', 'Houseboat', 'Other'];
         $materials = ['Wood', 'Fiberglass', 'Aluminum', 'Steel'];
         $engineTypes = ['Inboard', 'Outboard', 'Sail', 'Electric', 'No Engine'];
@@ -121,6 +121,11 @@ class BoatController extends Controller
         $boat = new Boat();
         $boat->user_id = Auth::id();
         $boat->fill($validatedData);
+         $boat->show_phone = $request->has('show_phone') ? 1 : 0;
+        $boat->show_mobile_phone = $request->has('show_mobile_phone') ? 1 : 0;
+        $boat->show_email = $request->has('show_email') ? 1 : 0;
+
+
         $boat->save();
 
         // Φόρτωση εικόνων
@@ -144,7 +149,7 @@ class BoatController extends Controller
     {
         $boat = Boat::findOrFail($id);
 
-              $boatTypes = ['Sailboat', 'Motorboat', 'Inflatable Boat', 'Kayak', 'Canoe', 'Jet ski', 'Houseboat', 'Other'];
+        $boatTypes = ['Sailboat', 'Motorboat', 'Inflatable Boat', 'Kayak', 'Canoe', 'Jet ski', 'Houseboat', 'Other'];
         $materials = ['Wood', 'Fiberglass', 'Aluminum', 'Steel'];
         $engineTypes = ['Inboard', 'Outboard', 'Sail', 'Electric', 'No Engine'];
         $conditions = ['new', 'used', 'refurbished', 'broken'];
@@ -167,7 +172,7 @@ class BoatController extends Controller
             'total_length' => 'nullable|numeric|min:0',
             'total_width' => 'nullable|numeric|min:0',
             'berths' => 'nullable|integer|min:0',
-             'engine_type' => 'nullable|string|max:100',
+            'engine_type' => 'nullable|string|max:100',
             'engine_power' => 'nullable|integer|min:0',
             'operating_hours' => 'nullable|integer|min:0',
             'last_service' => 'nullable|date',
@@ -178,12 +183,15 @@ class BoatController extends Controller
             'city' => 'nullable|string|max:255',
             'street' => 'nullable|string|max:255',
             'images.*' => 'nullable|image|max:2048',
-            'deleted_images' => 'nullable|string', 
+            'deleted_images' => 'nullable|string',
         ]);
 
 
         // Ανάθεσε τιμές
         $boat->fill($validated);
+        $boat->show_phone = $request->has('show_phone') ? 1 : 0;
+        $boat->show_mobile_phone = $request->has('show_mobile_phone') ? 1 : 0;
+        $boat->show_email = $request->has('show_email') ? 1 : 0;
 
         $boat->save();
 

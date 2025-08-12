@@ -107,11 +107,11 @@
                 {{-- Thumbnails --}}
                 <div class="flex space-x-4 overflow-x-auto no-scrollbar w-full max-w-xl px-2">
                     @foreach ($boat->images as $image)
-                        <img src="{{ Storage::url($image->path) }}" alt="Thumbnail"
-                            @click="changeImage('{{ $image->path }}')"
-                            class="flex-shrink-0 w-20 h-20 rounded-xl object-cover cursor-pointer shadow-md transform transition duration-300 hover:scale-105 ring-2 focus:ring-4 focus:ring-gray-700 focus:outline-none"
-                            :class="activeImage === '{{ $image->path }}' ? 'ring-gray-700 ring-4' : 'ring-transparent'"
-                            loading="lazy" draggable="false">
+                    <img src="{{ Storage::url($image->path) }}" alt="Thumbnail"
+                        @click="changeImage('{{ $image->path }}')"
+                        class="flex-shrink-0 w-20 h-20 rounded-xl object-cover cursor-pointer shadow-md transform transition duration-300 hover:scale-105 ring-2 focus:ring-4 focus:ring-gray-700 focus:outline-none"
+                        :class="activeImage === '{{ $image->path }}' ? 'ring-gray-700 ring-4' : 'ring-transparent'"
+                        loading="lazy" draggable="false">
                     @endforeach
                 </div>
 
@@ -166,21 +166,21 @@
 
                     <div class="flex items-baseline space-x-3 mb-6">
                         @if ($boat->price)
-                            <p class="text-3xl text-gray-700 font-extrabold [&>span]:text-base [&>span]:font-normal [&>span]:ml-1">
-                                &euro;{{ number_format($boat->price, 2, ',', '.') }}
-                                <span> / Einheit</span>
-                            </p>
+                        <p class="text-3xl text-gray-700 font-extrabold [&>span]:text-base [&>span]:font-normal [&>span]:ml-1">
+                            &euro;{{ number_format($boat->price, 2, ',', '.') }}
+                            <span> / Einheit</span>
+                        </p>
                         @else
-                            <p class="text-xl italic text-gray-500">Preis auf Anfrage</p>
+                        <p class="text-xl italic text-gray-500">Preis auf Anfrage</p>
                         @endif
                     </div>
 
                     <div class="prose prose-lg max-w-none text-gray-700">
                         @if ($boat->description)
-                            {{-- Using nl2br() is good, but for better security, you should escape any user input that is not meant to be HTML --}}
-                            {!! nl2br(e($boat->description)) !!}
+                        {{-- Using nl2br() is good, but for better security, you should escape any user input that is not meant to be HTML --}}
+                        {!! nl2br(e($boat->description)) !!}
                         @else
-                            <p class="italic text-gray-400">Keine Beschreibung verfügbar.</p>
+                        <p class="italic text-gray-400">Keine Beschreibung verfügbar.</p>
                         @endif
                     </div>
                 </div>
@@ -189,71 +189,90 @@
                 <div class="border-t border-gray-300 pt-6">
                     <h3 class="text-xl font-semibold text-gray-700 mb-3">Anbieterinformationen</h3>
                     @if ($boat->user)
-                        <dl class="space-y-2 text-gray-900">
-                            <div>
-                                <dt class="inline font-semibold">Name:</dt>
-                                <dd class="inline">{{ $boat->user->name }}</dd>
-                            </div>
-                            <div>
-                                <dt class="inline font-semibold">E-Mail:</dt>
-                                <dd class="inline">{{ $boat->user->email }}</dd>
-                            </div>
-                            @if ($boat->user->city)
-                                <div>
-                                    <dt class="inline font-semibold">Stadt:</dt>
-                                    <dd class="inline">{{ $boat->user->city }}</dd>
-                                </div>
-                            @endif
-                        </dl>
+                    <dl class="space-y-2 text-gray-900">
+                        <div>
+                            <dt class="inline font-semibold">Name:</dt>
+                            <dd class="inline">{{ $boat->user->name }}</dd>
+                        </div>
 
-                        {{-- Action buttons for owner/admin or contact button for others --}}
-                        <div class="flex flex-wrap justify-start items-center space-x-3 pt-4">
-                            @auth
-                                @if (auth()->id() === $boat->user_id || (auth()->user() && auth()->user()->isAdmin()))
-                                    <a href="{{ route('ads.boats.edit', $boat->id) }}"
-                                        class="px-5 py-2 bg-gray-700 hover:bg-gray-800 text-white rounded-full shadow-lg transition transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2">
-                                        Anzeige bearbeiten
-                                    </a>
-                                    <form action="{{ route('ads.boats.destroy', $boat->id) }}" method="POST"
-                                        onsubmit="return confirm('Sind Sie sicher, dass Sie diese Anzeige löschen möchten? Diese Aktion kann nicht rückgängig gemacht werden.')">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit"
-                                            class="px-5 py-2 bg-red-600 hover:bg-gray-700 text-white rounded-full shadow-lg transition transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 flex items-center space-x-1 mt-2 sm:mt-0">
-                                            <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor"
-                                                viewBox="0 0 20 20" class="w-5 h-5">
-                                                <path
-                                                    d="M6 8a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1z" />
-                                                <path fill-rule="evenodd"
-                                                    d="M4 5a2 2 0 012-2h8a2 2 0 012 2v10a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm2 0v10h8V5H6z"
-                                                    clip-rule="evenodd" />
-                                            </svg>
-                                            <span>Anzeige löschen</span>
-                                        </button>
-                                    </form>
-                                @else
-                                    {{-- Contact button for logged-in non-owners --}}
-                                    <a href="{{ route('messages.start.redirect', [
+
+                        <div>
+                            @if($boat->show_phone && !empty($boat->user->phone))
+                            <dt class="inline font-semibold">Phone:</dt>
+                            <dd class="inline">{{ $boat->user->phone }}</dd>
+                            @endif
+
+                            @if($boat->show_mobile_phone && !empty($boat->user->mobile_phone))
+                            <dt class="inline font-semibold">Mobile:</dt>
+                            <dd class="inline">{{ $boat->user->mobile_phone }}</dd>
+                            @endif
+                        </div>
+
+
+                        <div>
+                            @if($boat->show_email && !empty($boat->user->email))
+                            <dt class="inline font-semibold">E-Mail:</dt>
+                            <dd class="inline">{{ $boat->user->email }}</dd>
+                            @endif
+                        </div>
+                        
+
+                        @if ($boat->user->city)
+                        <div>
+                            <dt class="inline font-semibold">Stadt:</dt>
+                            <dd class="inline">{{ $boat->user->city }}</dd>
+                        </div>
+                        @endif
+                    </dl>
+
+                    {{-- Action buttons for owner/admin or contact button for others --}}
+                    <div class="flex flex-wrap justify-start items-center space-x-3 pt-4">
+                        @auth
+                        @if (auth()->id() === $boat->user_id || (auth()->user() && auth()->user()->isAdmin()))
+                        <a href="{{ route('ads.boats.edit', $boat->id) }}"
+                            class="px-5 py-2 bg-gray-700 hover:bg-gray-800 text-white rounded-full shadow-lg transition transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2">
+                            Anzeige bearbeiten
+                        </a>
+                        <form action="{{ route('ads.boats.destroy', $boat->id) }}" method="POST"
+                            onsubmit="return confirm('Sind Sie sicher, dass Sie diese Anzeige löschen möchten? Diese Aktion kann nicht rückgängig gemacht werden.')">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit"
+                                class="px-5 py-2 bg-red-600 hover:bg-gray-700 text-white rounded-full shadow-lg transition transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 flex items-center space-x-1 mt-2 sm:mt-0">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor"
+                                    viewBox="0 0 20 20" class="w-5 h-5">
+                                    <path
+                                        d="M6 8a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1z" />
+                                    <path fill-rule="evenodd"
+                                        d="M4 5a2 2 0 012-2h8a2 2 0 012 2v10a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm2 0v10h8V5H6z"
+                                        clip-rule="evenodd" />
+                                </svg>
+                                <span>Anzeige löschen</span>
+                            </button>
+                        </form>
+                        @else
+                        {{-- Contact button for logged-in non-owners --}}
+                        <a href="{{ route('messages.start.redirect', [
                                         'ad' => $boat->id,
                                         'receiver' => $boat->user->id,
                                         'category' => 'boats',
                                     ]) }}"
-                                        class="mt-6 block w-full text-center bg-red-700 text-white font-semibold py-3 rounded-full shadow-lg hover:bg-gray-800 transition focus:ring-4 focus:ring-gray-500 focus:ring-opacity-75">
-                                        Contact with seller
-                                    </a>
-                                @endif
-                            @else
-                                {{-- Contact button for guests --}}
-                                <a href="{{ route('login') }}"
-                                    class="mt-6 block w-full text-center bg-blue-600 text-white font-semibold py-3 rounded-full shadow-lg hover:bg-blue-800 transition focus:ring-4 focus:ring-blue-500 focus:ring-opacity-75">
-                                    contact with seller
-                                </a>
-                            @endauth
-                        </div>
+                            class="mt-6 block w-full text-center bg-red-700 text-white font-semibold py-3 rounded-full shadow-lg hover:bg-gray-800 transition focus:ring-4 focus:ring-gray-500 focus:ring-opacity-75">
+                            Contact with seller
+                        </a>
+                        @endif
+                        @else
+                        {{-- Contact button for guests --}}
+                        <a href="{{ route('login') }}"
+                            class="mt-6 block w-full text-center bg-blue-600 text-white font-semibold py-3 rounded-full shadow-lg hover:bg-blue-800 transition focus:ring-4 focus:ring-blue-500 focus:ring-opacity-75">
+                            contact with seller
+                        </a>
+                        @endauth
+                    </div>
 
                     @else
-                        {{-- Display message if no seller user data --}}
-                        <p class="italic text-red-600">Anbieterinformationen nicht verfügbar.</p>
+                    {{-- Display message if no seller user data --}}
+                    <p class="italic text-red-600">Anbieterinformationen nicht verfügbar.</p>
                     @endif
                 </div>
             </section>
@@ -265,96 +284,96 @@
 
                 <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-5 gap-x-8 gap-y-6">
                     @if ($boat->brand)
-                        <dl>
-                            <dt class="text-sm font-semibold text-gray-600 mb-1">Marke</dt>
-                            <dd class="text-base text-gray-900">{{ $boat->brand }}</dd>
-                        </dl>
+                    <dl>
+                        <dt class="text-sm font-semibold text-gray-600 mb-1">Marke</dt>
+                        <dd class="text-base text-gray-900">{{ $boat->brand }}</dd>
+                    </dl>
                     @endif
 
                     @if ($boat->model)
-                        <dl>
-                            <dt class="text-sm font-semibold text-gray-600 mb-1">Modell</dt>
-                            <dd class="text-base text-gray-900">{{ $boat->model }}</dd>
-                        </dl>
+                    <dl>
+                        <dt class="text-sm font-semibold text-gray-600 mb-1">Modell</dt>
+                        <dd class="text-base text-gray-900">{{ $boat->model }}</dd>
+                    </dl>
                     @endif
 
                     @if ($boat->year_of_construction)
-                        <dl>
-                            <dt class="text-sm font-semibold text-gray-600 mb-1">Baujahr</dt>
-                            <dd class="text-base text-gray-900">{{ $boat->year_of_construction }}</dd>
-                        </dl>
+                    <dl>
+                        <dt class="text-sm font-semibold text-gray-600 mb-1">Baujahr</dt>
+                        <dd class="text-base text-gray-900">{{ $boat->year_of_construction }}</dd>
+                    </dl>
                     @endif
 
                     @if ($boat->condition)
-                        <dl>
-                            <dt class="text-sm font-semibold text-gray-600 mb-1">Zustand</dt>
-                            <dd class="text-base text-gray-900">{{ $boat->condition }}</dd>
-                        </dl>
+                    <dl>
+                        <dt class="text-sm font-semibold text-gray-600 mb-1">Zustand</dt>
+                        <dd class="text-base text-gray-900">{{ $boat->condition }}</dd>
+                    </dl>
                     @endif
 
                     @if ($boat->boat_type)
-                        <dl>
-                            <dt class="text-sm font-semibold text-gray-600 mb-1">Boots-Typ</dt>
-                            <dd class="text-base text-gray-900">{{ $boat->boat_type }}</dd>
-                        </dl>
+                    <dl>
+                        <dt class="text-sm font-semibold text-gray-600 mb-1">Boots-Typ</dt>
+                        <dd class="text-base text-gray-900">{{ $boat->boat_type }}</dd>
+                    </dl>
                     @endif
 
                     @if ($boat->material)
-                        <dl>
-                            <dt class="text-sm font-semibold text-gray-600 mb-1">Material</dt>
-                            <dd class="text-base text-gray-900">{{ $boat->material }}</dd>
-                        </dl>
+                    <dl>
+                        <dt class="text-sm font-semibold text-gray-600 mb-1">Material</dt>
+                        <dd class="text-base text-gray-900">{{ $boat->material }}</dd>
+                    </dl>
                     @endif
 
                     @if ($boat->total_length)
-                        <dl>
-                            <dt class="text-sm font-semibold text-gray-600 mb-1">Gesamtlänge</dt>
-                            <dd class="text-base text-gray-900">{{ $boat->total_length }} m</dd>
-                        </dl>
+                    <dl>
+                        <dt class="text-sm font-semibold text-gray-600 mb-1">Gesamtlänge</dt>
+                        <dd class="text-base text-gray-900">{{ $boat->total_length }} m</dd>
+                    </dl>
                     @endif
 
                     @if ($boat->total_width)
-                        <dl>
-                            <dt class="text-sm font-semibold text-gray-600 mb-1">Gesamtbreite</dt>
-                            <dd class="text-base text-gray-900">{{ $boat->total_width }} m</dd>
-                        </dl>
+                    <dl>
+                        <dt class="text-sm font-semibold text-gray-600 mb-1">Gesamtbreite</dt>
+                        <dd class="text-base text-gray-900">{{ $boat->total_width }} m</dd>
+                    </dl>
                     @endif
 
                     @if ($boat->berths)
-                        <dl>
-                            <dt class="text-sm font-semibold text-gray-600 mb-1">Kojen</dt>
-                            <dd class="text-base text-gray-900">{{ $boat->berths }}</dd>
-                        </dl>
+                    <dl>
+                        <dt class="text-sm font-semibold text-gray-600 mb-1">Kojen</dt>
+                        <dd class="text-base text-gray-900">{{ $boat->berths }}</dd>
+                    </dl>
                     @endif
 
                     @if ($boat->engine_type)
-                        <dl>
-                            <dt class="text-sm font-semibold text-gray-600 mb-1">Motortyp</dt>
-                            <dd class="text-base text-gray-900">{{ $boat->engine_type }}</dd>
-                        </dl>
+                    <dl>
+                        <dt class="text-sm font-semibold text-gray-600 mb-1">Motortyp</dt>
+                        <dd class="text-base text-gray-900">{{ $boat->engine_type }}</dd>
+                    </dl>
                     @endif
 
                     @if ($boat->engine_power)
-                        <dl>
-                            <dt class="text-sm font-semibold text-gray-600 mb-1">Motorleistung</dt>
-                            <dd class="text-base text-gray-900">{{ $boat->engine_power }} PS</dd>
-                        </dl>
+                    <dl>
+                        <dt class="text-sm font-semibold text-gray-600 mb-1">Motorleistung</dt>
+                        <dd class="text-base text-gray-900">{{ $boat->engine_power }} PS</dd>
+                    </dl>
                     @endif
 
                     @if ($boat->operating_hours)
-                        <dl>
-                            <dt class="text-sm font-semibold text-gray-600 mb-1">Betriebsstunden</dt>
-                            <dd class="text-base text-gray-900">{{ number_format($boat->operating_hours, 0, ',', '.') }}
-                                Std.</dd>
-                        </dl>
+                    <dl>
+                        <dt class="text-sm font-semibold text-gray-600 mb-1">Betriebsstunden</dt>
+                        <dd class="text-base text-gray-900">{{ number_format($boat->operating_hours, 0, ',', '.') }}
+                            Std.</dd>
+                    </dl>
                     @endif
 
                     @if ($boat->last_service)
-                        <dl>
-                            <dt class="text-sm font-semibold text-gray-600 mb-1">Letzter Service</dt>
-                            <dd class="text-base text-gray-900">{{ \Carbon\Carbon::parse($boat->last_service)->format('d.m.Y') }}
-                            </dd>
-                        </dl>
+                    <dl>
+                        <dt class="text-sm font-semibold text-gray-600 mb-1">Letzter Service</dt>
+                        <dd class="text-base text-gray-900">{{ \Carbon\Carbon::parse($boat->last_service)->format('d.m.Y') }}
+                        </dd>
+                    </dl>
                     @endif
                 </div>
             </div>

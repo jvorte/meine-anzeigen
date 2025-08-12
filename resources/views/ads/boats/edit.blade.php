@@ -249,6 +249,57 @@
                 </div>
             </section>
 
+{{-- Contact Section --}}
+<section class="bg-gray-50 p-6 rounded-lg shadow-inner">
+    <h4 class="text-xl font-semibold text-gray-700 mb-6">
+        Select if you want to publish your Mobile phone or email
+    </h4>
+
+    {{-- Phone --}}
+    <div class="mt-4">
+        <label class="inline-flex items-center">
+            <input 
+                type="checkbox" 
+                name="show_phone" 
+                value="1" 
+                class="rounded border-gray-300"
+                {{ old('show_phone', $boat->show_phone) ? 'checked' : '' }}
+            >
+            <span class="ml-2">Phone</span>
+        </label>
+    </div>
+
+    {{-- Mobile --}}
+    <div class="mt-2">
+        <label class="inline-flex items-center">
+            <input 
+                type="checkbox" 
+                name="show_mobile_phone" 
+                value="1" 
+                class="rounded border-gray-300"
+                {{ old('show_mobile_phone', $boat->show_mobile_phone) ? 'checked' : '' }}
+            >
+            <span class="ml-2">Mobile</span>
+        </label>
+    </div>
+
+    {{-- Email --}}
+    <div class="mt-2">
+        <label class="inline-flex items-center">
+            <input 
+                type="checkbox" 
+                name="show_email" 
+                value="1" 
+                class="rounded border-gray-300"
+                {{ old('show_email', $boat->show_email) ? 'checked' : '' }}
+            >
+            <span class="ml-2">Email</span>
+        </label>
+    </div>
+</section>
+
+
+
        
 
             {{-- Fotos & Dokumente Section --}}
