@@ -11,10 +11,11 @@ use Illuminate\Support\Arr;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\DB; // Import DB facade for transactions
 use Illuminate\View\View;
+
 class OtherController extends Controller
 {
 
-public function index(Request $request): View
+    public function index(Request $request): View
     {
         // Start with a base query
         $query = Other::query();
@@ -28,18 +29,18 @@ public function index(Request $request): View
             $query->where('condition', $request->input('condition'));
         }
 
-  
-    // Price range filters
-    if ($request->filled('min_price')) {
-        $query->where('price', '>=', $request->input('min_price'));
-    }
-    if ($request->filled('max_price')) {
-        $query->where('price', '<=', $request->input('max_price'));
-    }
-        
+
+        // Price range filters
+        if ($request->filled('min_price')) {
+            $query->where('price', '>=', $request->input('min_price'));
+        }
+        if ($request->filled('max_price')) {
+            $query->where('price', '<=', $request->input('max_price'));
+        }
+
         // Apply sorting based on the request, or default to latest
         $sortBy = $request->input('sort_by', 'latest');
-        
+
         switch ($sortBy) {
             case 'price_asc':
                 $query->orderBy('price', 'asc');
@@ -54,9 +55,9 @@ public function index(Request $request): View
         }
 
         $otherAds = $query->paginate(12);
-        
+
         // Fetch unique values for filter dropdowns
-      $conditions = ['New', 'Used', 'Heavily used', 'Defective'];
+        $conditions = ['New', 'Used', 'Heavily used', 'Defective'];
 
         return view('ads.others.index', compact('otherAds', 'conditions'));
     }
@@ -97,7 +98,15 @@ public function index(Request $request): View
             // 2. Create the Other record first
             $other = Other::create(array_merge($dataToCreateOther, [
                 'user_id' => Auth::id(), // Assign the authenticated user's ID
+
+
             ]));
+
+
+            $other->show_phone = $request->has('show_phone') ? 1 : 0;
+            $other->show_mobile_phone = $request->has('show_mobile_phone') ? 1 : 0;
+            $other->show_email = $request->has('show_email') ? 1 : 0;
+            $other->save();
 
             // 3. Handle image uploads and save to OtherImage model
             if ($imageFiles) {
@@ -114,7 +123,6 @@ public function index(Request $request): View
 
             DB::commit(); // Commit the transaction
             return redirect()->route('dashboard')->with('success', 'Sonstiges Anzeige erfolgreich erstellt!');
-
         } catch (\Exception $e) {
             DB::rollBack(); // Rollback on error
             \Log::error('Error creating other ad: ' . $e->getMessage()); // Log the error for debugging
@@ -131,7 +139,7 @@ public function index(Request $request): View
         return view('ads.others.show', compact('other'));
     }
 
-    
+
 
     /**
      * Show the form for editing the specified "other" ad.
@@ -141,9 +149,9 @@ public function index(Request $request): View
      */
     public function edit(Other $other)
     {
-        
 
-         if (Auth::id() !== $other->user_id) {
+
+        if (Auth::id() !== $other->user_id) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -184,6 +192,11 @@ public function index(Request $request): View
             // Update the main 'Other' record
             $other->update(Arr::except($validatedData, ['images', 'existing_image_ids']));
 
+              $other->show_phone = $request->has('show_phone') ? 1 : 0;
+            $other->show_mobile_phone = $request->has('show_mobile_phone') ? 1 : 0;
+            $other->show_email = $request->has('show_email') ? 1 : 0;
+            $other->save();
+
             // Handle existing images (delete unchecked ones)
             $existingImageIdsToKeep = $validatedData['existing_image_ids'] ?? [];
             foreach ($other->images as $image) {
@@ -212,7 +225,6 @@ public function index(Request $request): View
 
             DB::commit(); // Commit the transaction
             return redirect()->route('ads.others.show', $other->id)->with('success', 'Anzeige erfolgreich aktualisiert!');
-
         } catch (\Exception $e) {
             DB::rollBack(); // Rollback on error
             \Log::error('Error updating other ad: ' . $e->getMessage());
@@ -248,7 +260,6 @@ public function index(Request $request): View
 
             DB::commit(); // Commit the transaction
             return redirect()->route('dashboard')->with('success', 'Anzeige erfolgreich gelöscht!');
-
         } catch (\Exception $e) {
             DB::rollBack(); // Rollback on error
             \Log::error('Error deleting other ad: ' . $e->getMessage());

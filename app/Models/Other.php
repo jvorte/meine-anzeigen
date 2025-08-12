@@ -16,11 +16,12 @@ class Other extends Model
         'condition',
         'description',
         'category_slug',
+        'show_phone',
+        'show_mobile_phone',
+        'show_email',
     ];
 
-    protected $casts = [
-  
-    ];
+    protected $casts = [];
 
     /**
      * Get the user that owns the other ad.
@@ -34,6 +35,4 @@ class Other extends Model
     {
         return $this->hasMany(OtherImage::class);
     }
-
-    
 }

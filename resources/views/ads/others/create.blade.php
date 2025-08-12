@@ -1,12 +1,12 @@
 {{-- resources/views/ads/others/create.blade.php --}}
 <x-app-layout>
 
-    
 
-               {{-- -----------------------------------breadcrumbs ---------------------------------------------- --}}
-   <x-slot name="header">
+
+    {{-- -----------------------------------breadcrumbs ---------------------------------------------- --}}
+    <x-slot name="header">
         <h2 class="text-3xl font-extrabold text-gray-900 leading-tight mb-2">
-           New Others
+            New Others
         </h2>
         <p class="text-md text-gray-700 dark:text-gray-500">
             Wähle eine passende Kategorie und fülle die erforderlichen Felder aus, um deine Anzeige zu erstellen.
@@ -14,35 +14,35 @@
 
     </x-slot>
 
- <div class="py-2">
-    <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-        {{-- Breadcrumbs component --}}
-        <x-breadcrumbs :items="[
+    <div class="py-2">
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+            {{-- Breadcrumbs component --}}
+            <x-breadcrumbs :items="[
             {{-- Link to the general Cars category listing --}}
             ['label' => 'Cars Anzeigen', 'url' => route('categories.others.index')],
 
             {{-- The current page (New Car Ad creation) - set URL to null --}}
             ['label' => 'Neue Auto Anzeige', 'url' => null],
         ]" />
+        </div>
     </div>
-</div>
-{{-- --------------------------------------------------------------------------------- --}}
+    {{-- --------------------------------------------------------------------------------- --}}
 
     <!-- check form fields -->
-         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-    @if ($errors->any())
-    <div class="mb-4 p-4 bg-red-100 text-red-700 rounded">
-        <ul>
-            @foreach ($errors->all() as $error)
+    <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+        @if ($errors->any())
+        <div class="mb-4 p-4 bg-red-100 text-red-700 rounded">
+            <ul>
+                @foreach ($errors->all() as $error)
                 <li>- {{ $error }}</li>
-            @endforeach
-        </ul>
+                @endforeach
+            </ul>
+        </div>
+        @endif
     </div>
-@endif
- </div>
 
 
- 
+
     <div class="max-w-6xl mx-auto p-6 bg-white rounded-lg shadow-xl my-6">
 
         <form method="POST" action="{{ route('ads.others.store') }}" enctype="multipart/form-data" class="space-y-8">
@@ -59,10 +59,10 @@
                     <div class="md:col-span-2">
                         <label for="title" class="block text-sm font-medium text-gray-700 mb-2">Anzeigentitel</label>
                         <input type="text" name="title" id="title" value="{{ old('title') }}"
-                               placeholder="Aussagekräftiger Titel für deine Anzeige (z.B. Alte Schallplatten Sammlung)"
-                               class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
+                            placeholder="Aussagekräftiger Titel für deine Anzeige (z.B. Alte Schallplatten Sammlung)"
+                            class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
                         @error('title')
-                            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                         @enderror
                     </div>
 
@@ -70,9 +70,9 @@
                     <div>
                         <label for="price" class="block text-sm font-medium text-gray-700 mb-2">Preis (in €)</label>
                         <input type="number" step="0.01" name="price" id="price" value="{{ old('price') }}" placeholder="z.B. 75.00"
-                               class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
+                            class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
                         @error('price')
-                            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                         @enderror
                     </div>
 
@@ -80,43 +80,77 @@
                     <div>
                         <label for="condition" class="block text-sm font-medium text-gray-700 mb-2">Zustand</label>
                         <select name="condition" id="condition"
-                                class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
+                            class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
                             <option value="">Bitte wählen</option>
-                                 @foreach($conditionOptions as $conditionOption)
-                                <option value="{{ $conditionOption }}" {{ old('condition') == $conditionOption ? 'selected' : '' }}>
-                                    {{ ucfirst($conditionOption) }}
-                                </option>
+                            @foreach($conditionOptions as $conditionOption)
+                            <option value="{{ $conditionOption }}" {{ old('condition') == $conditionOption ? 'selected' : '' }}>
+                                {{ ucfirst($conditionOption) }}
+                            </option>
                             @endforeach
                         </select>
                         @error('condition')
-                            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                         @enderror
                     </div>
 
 
+
+            </section>
+            <section>
                 {{-- Description --}}
                 <div class="mt-6">
                     <label for="description" class="block text-sm font-medium text-gray-700 mb-2">Beschreibung</label>
                     <textarea name="description" id="description" rows="7"
-                              placeholder="Gib hier alle wichtigen Details zu deinem Artikel ein, der nicht in andere Kategorien passt."
-                              class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">{{ old('description') }}</textarea>
+                        placeholder="Gib hier alle wichtigen Details zu deinem Artikel ein, der nicht in andere Kategorien passt."
+                        class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">{{ old('description') }}</textarea>
                     @error('description')
-                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                    <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                     @enderror
                 </div>
             </section>
 
-     {{-- Photo Upload Section (with Alpine.js for previews) --}}
+
+            {{-- conatct Section --}}
+            <section class="bg-gray-50 p-6 rounded-lg shadow-inner">
+                <h4 class="text-xl font-semibold text-gray-700 mb-6">Select if you want to publish your Mobile phone or email</h4>
+                <div class="mt-4">
+                    <label class="inline-flex items-center">
+                        <input type="checkbox" name="show_phone" value="1" class="rounded border-gray-300">
+                        <span class="ml-2">Phone</span>
+                    </label>
+                </div>
+
+                <div class="mt-2">
+                    <label class="inline-flex items-center">
+                        <input type="checkbox" name="show_mobile_phone" value="1" class="rounded border-gray-300">
+                        <span class="ml-2">Mobile</span>
+                    </label>
+                </div>
+
+
+                <div class="mt-2">
+                    <label class="inline-flex items-center">
+                        <input type="checkbox" name="show_email" value="1" class="rounded border-gray-300">
+                        <span class="ml-2">email</span>
+                    </label>
+                </div>
+
+
+            </section>
+
+
+
+            {{-- Photo Upload Section (with Alpine.js for previews) --}}
             <section class="bg-gray-50 p-6 rounded-lg shadow-inner">
                 <h4 class="text-xl font-semibold text-gray-700 mb-6">Fotos hinzufügen</h4>
 
                 <div x-data="multiImageUploader()" class="space-y-4">
                     <input type="file" name="images[]" multiple @change="addFiles($event)" class="block w-full border p-2 rounded" />
                     @error('images')
-                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                    <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                     @enderror
                     @error('images.*')
-                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                    <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                     @enderror
 
                     <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -227,7 +261,7 @@
             {{-- Submit Button --}}
             <div class="pt-6 border-t border-gray-200 flex justify-end">
                 <button type="submit"
-                        class="bg-blue-600 text-white px-8 py-3 rounded-lg font-semibold text-lg hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-300 transition-all duration-300 shadow-lg">
+                    class="bg-blue-600 text-white px-8 py-3 rounded-lg font-semibold text-lg hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-300 transition-all duration-300 shadow-lg">
                     Anzeige erstellen
                 </button>
             </div>

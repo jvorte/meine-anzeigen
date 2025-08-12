@@ -6,42 +6,42 @@
         <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center px-4 py-2">
             <div>
                 <h1 class="text-4xl font-extrabold text-gray-900 leading-tight">
-                 Others
+                    Others
                 </h1>
                 <p class="mt-1 text-gray-600 max-w-xl">
-           Others
+                    Others
                 </p>
             </div>
-                <div class="px-4 py-1 md:py-1 flex justify-end items-center">
-        <a href="{{ route('ads.create') }}" class="c-button">
-            <span class="c-main">
-                <span class="c-ico">
-                    <span class="c-blur"></span>
-                    <span class="ico-text">+</span>
-                </span>
-                New Add
-            </span>
-        </a>
-    </div>
+            <div class="px-4 py-1 md:py-1 flex justify-end items-center">
+                <a href="{{ route('ads.create') }}" class="c-button">
+                    <span class="c-main">
+                        <span class="c-ico">
+                            <span class="c-blur"></span>
+                            <span class="ico-text">+</span>
+                        </span>
+                        New Add
+                    </span>
+                </a>
+            </div>
         </div>
     </x-slot>
 
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 p-10"> 
-          {{-- Breadcrumbs component --}}
-           <x-breadcrumbs :items="[
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 p-10">
+        {{-- Breadcrumbs component --}}
+        <x-breadcrumbs :items="[
                 ['label' => 'Alle Anzeigen', 'url' => route('ads.index')],
                 ['label' => 'Sonstige Anzeigen', 'url' => route('categories.others.index')], {{-- Assuming 'sonstiges' is the slug for others --}}
                 ['label' => $other->title, 'url' => null],
             ]" />
-          {{-- Action Buttons and Back link --}}
-   <div class="flex flex-col sm:flex-row justify-between my-4 gap-4">
-    <a href="javascript:history.back()" 
-        class="inline-flex items-center text-gray-700 hover:text-gray-900 transition duration-300 font-medium space-x-1">
-        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M15 19l-7-7 7-7"></path>
-        </svg>
-        <span>Zurück</span>
-    </a>
+        {{-- Action Buttons and Back link --}}
+        <div class="flex flex-col sm:flex-row justify-between my-4 gap-4">
+            <a href="javascript:history.back()"
+                class="inline-flex items-center text-gray-700 hover:text-gray-900 transition duration-300 font-medium space-x-1">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M15 19l-7-7 7-7"></path>
+                </svg>
+                <span>Zurück</span>
+            </a>
 
 
         </div>
@@ -82,24 +82,22 @@
                         this.changeImage(this.images[--this.currentIndex]);
                     }
                 }
-            }" 
-            x-init="init"
-            @keydown.escape.window="closeModal"
-            class="flex flex-col items-center space-y-6"
-            >
+            }"
+                x-init="init"
+                @keydown.escape.window="closeModal"
+                class="flex flex-col items-center space-y-6">
 
                 {{-- Main Image Container --}}
                 <div class="relative w-full rounded-3xl cursor-pointer shadow-lg overflow-hidden" @click="openModal" style="aspect-ratio: 4 / 3;">
                     <template x-if="activeImage">
-                        <img 
-                            :src="'{{ Storage::url('') }}' + activeImage" 
+                        <img
+                            :src="'{{ Storage::url('') }}' + activeImage"
                             alt="Hauptbild"
                             class="object-cover w-full h-full transition-transform duration-700 ease-in-out rounded-3xl"
                             :class="{ 'scale-105 opacity-100': scaleUp, 'opacity-0': !scaleUp }"
                             @load="scaleUp = true"
                             loading="lazy"
-                            draggable="false"
-                        >
+                            draggable="false">
                     </template>
 
                     {{-- Overlay icon for fullscreen preview (magnifier) --}}
@@ -113,62 +111,57 @@
                 {{-- Thumbnails --}}
                 <div class="flex space-x-4 overflow-x-auto no-scrollbar w-full max-w-xl px-2">
                     @foreach ($other->images as $image)
-                        <img src="{{ Storage::url($image->path) }}" alt="Thumbnail"
-                            @click="changeImage('{{ $image->path }}')" 
-                            class="flex-shrink-0 w-20 h-20 rounded-xl object-cover cursor-pointer shadow-md transform transition duration-300 hover:scale-105 ring-2 focus:ring-4 focus:ring-gray-700 focus:outline-none"
-                            :class="activeImage === '{{ $image->path }}' ? 'ring-gray-700 ring-4' : 'ring-transparent'" 
-                            loading="lazy"
-                            draggable="false"
-                        >
+                    <img src="{{ Storage::url($image->path) }}" alt="Thumbnail"
+                        @click="changeImage('{{ $image->path }}')"
+                        class="flex-shrink-0 w-20 h-20 rounded-xl object-cover cursor-pointer shadow-md transform transition duration-300 hover:scale-105 ring-2 focus:ring-4 focus:ring-gray-700 focus:outline-none"
+                        :class="activeImage === '{{ $image->path }}' ? 'ring-gray-700 ring-4' : 'ring-transparent'"
+                        loading="lazy"
+                        draggable="false">
                     @endforeach
                 </div>
 
                 {{-- Fullscreen Modal --}}
-                <div 
-                    x-show="showModal" 
+                <div
+                    x-show="showModal"
                     x-transition.opacity
                     class="fixed inset-0 z-[60] bg-white bg-opacity-95 flex items-center justify-center p-4"
                     style="display: none;"
-                    aria-modal="true" role="dialog"
-                    >
+                    aria-modal="true" role="dialog">
 
                     {{-- Close Button --}}
-                    <button @click="closeModal" aria-label="Schließen" 
+                    <button @click="closeModal" aria-label="Schließen"
                         class="absolute top-8 right-8 text-gray-700 text-4xl font-extrabold hover:text-gray-900 transition focus:outline-none focus:ring-4 focus:ring-gray-400 rounded">
                         &times;
                     </button>
 
                     {{-- Previous Button --}}
-                    <button 
-                        @click="prevImage" 
+                    <button
+                        @click="prevImage"
                         :disabled="currentIndex === 0"
                         :class="{'opacity-50 cursor-not-allowed': currentIndex === 0}"
                         aria-label="Vorheriges Bild"
-                        class="absolute left-6 top-1/2 -translate-y-1/2 text-gray-700 bg-white rounded-full p-3 shadow-md hover:bg-gray-100 disabled:pointer-events-none transition focus:outline-none focus:ring-4 focus:ring-gray-400"
-                    >
+                        class="absolute left-6 top-1/2 -translate-y-1/2 text-gray-700 bg-white rounded-full p-3 shadow-md hover:bg-gray-100 disabled:pointer-events-none transition focus:outline-none focus:ring-4 focus:ring-gray-400">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" class="w-7 h-7">
-                            <path d="M15 19l-7-7 7-7"/>
+                            <path d="M15 19l-7-7 7-7" />
                         </svg>
                     </button>
 
                     {{-- Image in Modal --}}
-                    <img 
-                        :src="'{{ Storage::url('') }}' + activeImage" 
+                    <img
+                        :src="'{{ Storage::url('') }}' + activeImage"
                         alt="Vergrößertes Bild"
                         class="max-h-[90vh] max-w-full rounded-3xl shadow-xl object-contain select-none"
-                        draggable="false"
-                    >
+                        draggable="false">
 
                     {{-- Next Button --}}
-                    <button 
-                        @click="nextImage" 
+                    <button
+                        @click="nextImage"
                         :disabled="currentIndex === images.length - 1"
                         :class="{'opacity-50 cursor-not-allowed': currentIndex === images.length - 1}"
                         aria-label="Nächstes Bild"
-                        class="absolute right-6 top-1/2 -translate-y-1/2 text-gray-700 bg-white rounded-full p-3 shadow-md hover:bg-gray-100 disabled:pointer-events-none transition focus:outline-none focus:ring-4 focus:ring-gray-400"
-                    >
+                        class="absolute right-6 top-1/2 -translate-y-1/2 text-gray-700 bg-white rounded-full p-3 shadow-md hover:bg-gray-100 disabled:pointer-events-none transition focus:outline-none focus:ring-4 focus:ring-gray-400">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" class="w-7 h-7">
-                            <path d="M9 5l7 7-7 7"/>
+                            <path d="M9 5l7 7-7 7" />
                         </svg>
                     </button>
                 </div>
@@ -178,7 +171,7 @@
 
 
 
-            
+
 
             {{-- Right Column: Details & Seller info --}}
             <section class="flex flex-col justify-between gap-10">
@@ -191,20 +184,20 @@
 
                     <div class="flex items-baseline space-x-3 mb-6">
                         @if ($other->price)
-                            <p class="text-3xl text-gray-700 font-extrabold [&>span]:text-base [&>span]:font-normal [&>span]:ml-1">
-                                &euro;{{ number_format($other->price, 2, ',', '.') }}
-                                <span> / Einheit</span>
-                            </p>
+                        <p class="text-3xl text-gray-700 font-extrabold [&>span]:text-base [&>span]:font-normal [&>span]:ml-1">
+                            &euro;{{ number_format($other->price, 2, ',', '.') }}
+                            <span> / Einheit</span>
+                        </p>
                         @else
-                            <p class="text-xl italic text-gray-500">Preis auf Anfrage</p>
+                        <p class="text-xl italic text-gray-500">Preis auf Anfrage</p>
                         @endif
                     </div>
 
                     <div class="prose prose-lg max-w-none text-gray-700">
                         @if ($other->description)
-                            {!! nl2br(e($other->description)) !!}
+                        {!! nl2br(e($other->description)) !!}
                         @else
-                            <p class="italic text-gray-400">Keine Beschreibung verfügbar.</p>
+                        <p class="italic text-gray-400">Keine Beschreibung verfügbar.</p>
                         @endif
                     </div>
                 </div>
@@ -215,78 +208,94 @@
 
 
 
-               {{-- Seller / Anbieter Info --}}
-<div class="border-t border-gray-300 pt-6 ">
-    <h3 class="text-xl font-semibold text-gray-700 mb-3">Anbieterinformationen</h3>
+                {{-- Seller / Anbieter Info --}}
+                <div class="border-t border-gray-300 pt-6 ">
+                    <h3 class="text-xl font-semibold text-gray-700 mb-3">Anbieterinformationen</h3>
 
-    @if ($other->user)
-        <dl class="space-y-2 text-gray-900">
-            <div>
-                <dt class="inline font-semibold">Name:</dt>
-                <dd class="inline">{{ $other->user->name }}</dd>
-            </div>
-            <div>
-                <dt class="inline font-semibold">E-Mail:</dt>
-                <dd class="inline">{{ $other->user->email }}</dd>
-            </div>
-            @if($other->user->city)
-                <div>
-                    <dt class="inline font-semibold">Stadt:</dt>
-                    <dd class="inline">{{ $other->user->city }}</dd>
-                </div>
-            @endif
-        </dl>
+                    @if ($other->user)
+                    <dl class="space-y-2 text-gray-900">
+                        <div>
+                            <dt class="inline font-semibold">Name:</dt>
+                            <dd class="inline">{{ $other->user->name }}</dd>
+                        </div>
+                        <div>
+                            @if($other->show_phone && !empty($other->user->phone))
+                            <dt class="inline font-semibold">Phone:</dt>
+                            <dd class="inline">{{ $other->user->phone }}</dd>
+                            @endif
 
-        <div class="flex flex-wrap justify-center sm:justify-start items-center space-x-0 sm:space-x-3 pt-4 my-3 sm:pt-0">
-            @auth
-                @if (auth()->id() === $other->user_id || auth()->user()->isAdmin())
-                    {{-- Edit & Delete --}}
-                    <a href="{{ route('ads.others.edit', $other->id) }}" 
-                        class="px-5 py-2 bg-gray-700 hover:bg-gray-800 text-white rounded-full shadow-lg transition transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2">
-                        Anzeige bearbeiten
-                    </a>
-                    <form action="{{ route('ads.others.destroy', $other->id) }}" method="POST"
-                        onsubmit="return confirm('Sind Sie sicher, dass Sie diese Anzeige löschen möchten? Diese Aktion kann nicht rückgängig gemacht werden.')">
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit" 
-                            class="px-5 py-2 bg-red-600 hover:bg-gray-700 text-white rounded-full shadow-lg transition transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 flex items-center space-x-1">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20" class="w-5 h-5">
-                                <path d="M6 8a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1z" />
-                                <path fill-rule="evenodd" d="M4 5a2 2 0 012-2h8a2 2 0 012 2v10a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm2 0v10h8V5H6z" clip-rule="evenodd" />
-                            </svg>
-                            <span>Anzeige löschen</span>
-                        </button>
-                    </form>
-                @else
-                    {{-- Contact button for logged-in non-owners --}}
-   <a href="{{ route('messages.start.redirect', [
+                            @if($other->show_mobile_phone && !empty($other->user->mobile_phone))
+                            <dt class="inline font-semibold">Mobile:</dt>
+                            <dd class="inline">{{ $other->user->mobile_phone }}</dd>
+                            @endif
+                        </div>
+
+
+                        <div>
+                            @if($other->show_email && !empty($other->user->email))
+                            <dt class="inline font-semibold">E-Mail:</dt>
+                            <dd class="inline">{{ $other->user->email }}</dd>
+                            @endif
+                        </div>
+
+                        @if($other->user->city)
+                        <div>
+                            <dt class="inline font-semibold">Stadt:</dt>
+                            <dd class="inline">{{ $other->user->city }}</dd>
+                        </div>
+                        @endif
+                    </dl>
+
+                    <div class="flex flex-wrap justify-center sm:justify-start items-center space-x-0 sm:space-x-3 pt-4 my-3 sm:pt-0">
+                        @auth
+                        @if (auth()->id() === $other->user_id || auth()->user()->isAdmin())
+                        {{-- Edit & Delete --}}
+                        <a href="{{ route('ads.others.edit', $other->id) }}"
+                            class="px-5 py-2 bg-gray-700 hover:bg-gray-800 text-white rounded-full shadow-lg transition transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2">
+                            Anzeige bearbeiten
+                        </a>
+                        <form action="{{ route('ads.others.destroy', $other->id) }}" method="POST"
+                            onsubmit="return confirm('Sind Sie sicher, dass Sie diese Anzeige löschen möchten? Diese Aktion kann nicht rückgängig gemacht werden.')">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit"
+                                class="px-5 py-2 bg-red-600 hover:bg-gray-700 text-white rounded-full shadow-lg transition transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 flex items-center space-x-1">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20" class="w-5 h-5">
+                                    <path d="M6 8a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1z" />
+                                    <path fill-rule="evenodd" d="M4 5a2 2 0 012-2h8a2 2 0 012 2v10a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm2 0v10h8V5H6z" clip-rule="evenodd" />
+                                </svg>
+                                <span>Anzeige löschen</span>
+                            </button>
+                        </form>
+                        @else
+                        {{-- Contact button for logged-in non-owners --}}
+                        <a href="{{ route('messages.start.redirect', [
                                         'ad' => $other->id,
                                         'receiver' => $other->user->id,
                                         'category' => 'others'
                                     ]) }}"
-                                                    class="mt-6 block w-full text-center bg-red-700 text-white font-semibold py-3 rounded-full shadow-lg hover:bg-gray-800 transition focus:ring-4 focus:ring-gray-500 focus:ring-opacity-75">
-                                                    Contact with seller
-                                                </a>
+                            class="mt-6 block w-full text-center bg-red-700 text-white font-semibold py-3 rounded-full shadow-lg hover:bg-gray-800 transition focus:ring-4 focus:ring-gray-500 focus:ring-opacity-75">
+                            Contact with seller
+                        </a>
 
-                @endif
-            @endauth
+                        @endif
+                        @endauth
 
-            @guest
-                {{-- Contact button for guests --}}
-       <a href="{{ route('login') }}" 
-       class="mt-6 block w-full text-center bg-blue-600 text-white font-semibold py-3 rounded-full shadow-lg hover:bg-blue-800 transition focus:ring-4 focus:ring-blue-500 focus:ring-opacity-75">
-       contact with seller
-    </a>
+                        @guest
+                        {{-- Contact button for guests --}}
+                        <a href="{{ route('login') }}"
+                            class="mt-6 block w-full text-center bg-blue-600 text-white font-semibold py-3 rounded-full shadow-lg hover:bg-blue-800 transition focus:ring-4 focus:ring-blue-500 focus:ring-opacity-75">
+                            contact with seller
+                        </a>
 
-            @endguest
-        </div>
+                        @endguest
+                    </div>
 
-    @else
-        {{-- No user data --}}
-        <p class="italic text-red-600">Anbieterinformationen nicht verfügbar.</p>
-    @endif
-</div>
+                    @else
+                    {{-- No user data --}}
+                    <p class="italic text-red-600">Anbieterinformationen nicht verfügbar.</p>
+                    @endif
+                </div>
 
 
 
@@ -302,50 +311,50 @@
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
 
                         @if($other->condition)
-                <div>
-                    <p class="text-sm font-semibold text-gray-800">Zustand:</p>
-                    <p class="text-gray-700">{{ $other->condition }}</p>
-                </div>
-                @endif
-                {{-- Add other specific fields for your 'Other' model here. Examples: --}}
-                @if($other->type)
-                <div>
-                    <p class="text-sm font-semibold text-gray-800">Typ:</p>
-                    <p class="text-gray-700">{{ $other->type }}</p>
-                </div>
-                @endif
-                @if($other->manufacturer)
-                <div>
-                    <p class="text-sm font-semibold text-gray-800">Hersteller:</p>
-                    <p class="text-gray-700">{{ $other->manufacturer }}</p>
-                </div>
-                @endif
-                @if($other->model_name)
-                <div>
-                    <p class="text-sm font-semibold text-gray-800">Modell:</p>
-                    <p class="text-gray-700">{{ $other->model_name }}</p>
-                </div>
-                @endif
-                @if($other->color)
-                <div>
-                    <p class="text-sm font-semibold text-gray-800">Farbe:</p>
-                    <p class="text-gray-700">{{ $other->color }}</p>
-                </div>
-                @endif
-                @if($other->dimensions)
-                <div>
-                    <p class="text-sm font-semibold text-gray-800">Abmessungen:</p>
-                    <p class="text-gray-700">{{ $other->dimensions }}</p>
-                </div>
-                @endif
-                @if($other->weight)
-                <div>
-                    <p class="text-sm font-semibold text-gray-800">Gewicht:</p>
-                    <p class="text-gray-700">{{ $other->weight }}</p>
-                </div>
-                @endif
-                {{-- Add any other relevant 'other' item specific fields here --}}
-            </div>
+                        <div>
+                            <p class="text-sm font-semibold text-gray-800">Zustand:</p>
+                            <p class="text-gray-700">{{ $other->condition }}</p>
+                        </div>
+                        @endif
+                        {{-- Add other specific fields for your 'Other' model here. Examples: --}}
+                        @if($other->type)
+                        <div>
+                            <p class="text-sm font-semibold text-gray-800">Typ:</p>
+                            <p class="text-gray-700">{{ $other->type }}</p>
+                        </div>
+                        @endif
+                        @if($other->manufacturer)
+                        <div>
+                            <p class="text-sm font-semibold text-gray-800">Hersteller:</p>
+                            <p class="text-gray-700">{{ $other->manufacturer }}</p>
+                        </div>
+                        @endif
+                        @if($other->model_name)
+                        <div>
+                            <p class="text-sm font-semibold text-gray-800">Modell:</p>
+                            <p class="text-gray-700">{{ $other->model_name }}</p>
+                        </div>
+                        @endif
+                        @if($other->color)
+                        <div>
+                            <p class="text-sm font-semibold text-gray-800">Farbe:</p>
+                            <p class="text-gray-700">{{ $other->color }}</p>
+                        </div>
+                        @endif
+                        @if($other->dimensions)
+                        <div>
+                            <p class="text-sm font-semibold text-gray-800">Abmessungen:</p>
+                            <p class="text-gray-700">{{ $other->dimensions }}</p>
+                        </div>
+                        @endif
+                        @if($other->weight)
+                        <div>
+                            <p class="text-sm font-semibold text-gray-800">Gewicht:</p>
+                            <p class="text-gray-700">{{ $other->weight }}</p>
+                        </div>
+                        @endif
+                        {{-- Add any other relevant 'other' item specific fields here --}}
+                    </div>
             </section>
         </article>
     </div>
@@ -355,10 +364,10 @@
         .no-scrollbar::-webkit-scrollbar {
             display: none;
         }
+
         .no-scrollbar {
             -ms-overflow-style: none;
             scrollbar-width: none;
         }
     </style>
 </x-app-layout>
-
