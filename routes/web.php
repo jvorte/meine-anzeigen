@@ -19,11 +19,14 @@ use App\Http\Controllers\OtherController;
 use App\Http\Controllers\RealEstateController;
 use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\UsedVehiclePartController;
+use App\Http\Controllers\NewsletterController;
 
 
 
 // --- PUBLIC ROUTES ---
-//    Route::get('/ads/household/create', )->name('ads.household.create');
+Route::post('/newsletter/subscribe', [NewsletterController::class, 'subscribe'])
+    ->name('newsletter.subscribe');
+    
 Route::get('/contact', function () {
     return view('contact');
 })->name('contact');

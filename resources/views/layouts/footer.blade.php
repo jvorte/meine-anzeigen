@@ -11,7 +11,7 @@
                     Lorem ipsum dolor sit amet consectetur adipisicing elit. Et aut corporis temporibus molestiae odio deleniti, consectetur, nam itaque rerum omnis corrupti perferendis hic qui, sed mollitia sit? Tenetur, libero aliquid.
                 </p>
 
-                
+
                 <div class="flex space-x-4 mt-4">
                     <!-- Social Media Icons (Example - replace with actual links and icons) -->
                     <!-- <a href="#" class="text-gray-400 hover:text-blue-500 transition-colors">
@@ -61,10 +61,10 @@
             <div class="col-span-1 md:col-span-1">
                 <h3 class="text-xl font-bold text-white mb-4">Rechtliches</h3>
                 <ul class="space-y-2">
-                    <li><a href="{{ route('legal.data-protection') }}" class="text-sm hover:text-blue-400 transition-colors">Privacy Policy</a></li>               
+                    <li><a href="{{ route('legal.data-protection') }}" class="text-sm hover:text-blue-400 transition-colors">Privacy Policy</a></li>
                     <li><a href="{{ route('legal.terms-conditions') }}" class="text-sm hover:text-blue-400 transition-colors">Terms and Conditions</a></li>
                     <li><a href="{{ route('contact') }}" class="text-sm hover:text-blue-400 transition-colors">Contact</a></li>
-                  
+
                 </ul>
             </div>
 
@@ -72,8 +72,9 @@
             <div class="col-span-1 md:col-span-1">
                 <h3 class="text-xl font-bold text-white mb-4">Newsletter</h3>
                 <p class="text-sm mb-4">Bleiben Sie auf dem Laufenden mit unseren neuesten Angeboten!</p>
-                <form action="#" method="POST" class="flex flex-col sm:flex-row gap-2">
-                    <input type="email" placeholder="Ihre E-Mail-Adresse"
+                <form action="{{ route('newsletter.subscribe') }}" method="POST" class="flex flex-col sm:flex-row gap-2">
+                    @csrf
+                    <input type="email" name="email" placeholder="Ihre E-Mail-Adresse" required
                         class="flex-grow p-2 rounded-md bg-gray-800 border border-gray-700 text-white placeholder-gray-500 focus:outline-none focus:border-blue-500">
                     <button type="submit"
                         class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-md transition-colors">
