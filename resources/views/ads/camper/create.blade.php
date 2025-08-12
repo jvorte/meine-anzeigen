@@ -11,43 +11,43 @@
 
     </x-slot>
 
-     <div class="py-2">
-    <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-        {{-- Breadcrumbs component --}}
-        <x-breadcrumbs :items="[
+    <div class="py-2">
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+            {{-- Breadcrumbs component --}}
+            <x-breadcrumbs :items="[
             {{-- Link to the general Cars category listing --}}
             ['label' => 'camper Anzeigen', 'url' => route('categories.campers.index')],
 
             {{-- The current page (New Car Ad creation) - set URL to null --}}
             ['label' => 'Neue camper Anzeige', 'url' => null],
         ]" />
+        </div>
     </div>
-</div>
-    
+
     {{-- --------------------------------------------------------------------------------- --}}
 
 
-        <!-- check form fields -->
-         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-    @if ($errors->any())
-    <div class="mb-4 p-4 bg-red-100 text-red-700 rounded">
-        <ul>
-            @foreach ($errors->all() as $error)
+    <!-- check form fields -->
+    <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+        @if ($errors->any())
+        <div class="mb-4 p-4 bg-red-100 text-red-700 rounded">
+            <ul>
+                @foreach ($errors->all() as $error)
                 <li>- {{ $error }}</li>
-            @endforeach
-        </ul>
+                @endforeach
+            </ul>
+        </div>
+        @endif
     </div>
-@endif
- </div>
 
- 
+
     <div class="max-w-6xl mx-auto p-6 bg-white rounded-lg shadow-xl mt-6">
 
         <form method="POST" action="{{ route('ads.camper.store') }}" enctype="multipart/form-data" class="space-y-8">
             @csrf
 
-       {{-- Vehicle Details Section (Marke & Modell) --}}
-<section class="bg-gray-50 p-6 rounded-lg shadow-inner" x-data="{
+            {{-- Vehicle Details Section (Marke & Modell) --}}
+            <section class="bg-gray-50 p-6 rounded-lg shadow-inner" x-data="{
     selectedBrand: {{ old('camper_brand_id', $camper->camper_brand_id ?? 'null') }}, // For edit form, pre-select
     models: [],
     fetchModels() {
@@ -75,44 +75,44 @@
         }
     }
 }" x-init="fetchModels()">
-    <h4 class="text-xl font-semibold text-gray-700 mb-6">Fahrzeugdetails</h4>
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div>
-            {{-- Marke (Dropdown from camper_brands table) --}}
-            <label for="camper_brand_id" class="block text-sm font-medium text-gray-700 mb-2">Marke</label>
-            <select name="camper_brand_id" id="camper_brand_id" x-model="selectedBrand" @change="fetchModels()"
-                class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
-                <option value="">Bitte wählen Sie eine Marke</option>
-                @foreach (App\Models\CamperBrand::orderBy('name')->get() as $brand)
-                    <option value="{{ $brand->id }}" {{ old('camper_brand_id', $camper->camper_brand_id ?? '') == $brand->id ? 'selected' : '' }}>
-                        {{ $brand->name }}
-                    </option>
-                @endforeach
-            </select>
-            @error('camper_brand_id')
-                <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-            @enderror
-        </div>
+                <h4 class="text-xl font-semibold text-gray-700 mb-6">Fahrzeugdetails</h4>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        {{-- Marke (Dropdown from camper_brands table) --}}
+                        <label for="camper_brand_id" class="block text-sm font-medium text-gray-700 mb-2">Marke</label>
+                        <select name="camper_brand_id" id="camper_brand_id" x-model="selectedBrand" @change="fetchModels()"
+                            class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
+                            <option value="">Bitte wählen Sie eine Marke</option>
+                            @foreach (App\Models\CamperBrand::orderBy('name')->get() as $brand)
+                            <option value="{{ $brand->id }}" {{ old('camper_brand_id', $camper->camper_brand_id ?? '') == $brand->id ? 'selected' : '' }}>
+                                {{ $brand->name }}
+                            </option>
+                            @endforeach
+                        </select>
+                        @error('camper_brand_id')
+                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                        @enderror
+                    </div>
 
-        <div>
-            {{-- Modell (Dynamic Dropdown) --}}
-            <label for="camper_model_id" class="block text-sm font-medium text-gray-700 mb-2">Modell (optional)</label>
-            <select name="camper_model_id" id="camper_model_id"
-                class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50"
-                :disabled="!selectedBrand"> {{-- Disable until a brand is selected --}}
-                <option value="">Bitte wählen Sie ein Modell</option>
-                <template x-for="model in models" :key="model.id">
-                    <option :value="model.id" x-text="model.name"
-                        :selected="model.id == {{ old('camper_model_id', $camper->camper_model_id ?? 'null') }}">
-                    </option>
-                </template>
-            </select>
-            @error('camper_model_id')
-                <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-            @enderror
-        </div>
-    </div>
-</section>
+                    <div>
+                        {{-- Modell (Dynamic Dropdown) --}}
+                        <label for="camper_model_id" class="block text-sm font-medium text-gray-700 mb-2">Modell (optional)</label>
+                        <select name="camper_model_id" id="camper_model_id"
+                            class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50"
+                            :disabled="!selectedBrand"> {{-- Disable until a brand is selected --}}
+                            <option value="">Bitte wählen Sie ein Modell</option>
+                            <template x-for="model in models" :key="model.id">
+                                <option :value="model.id" x-text="model.name"
+                                    :selected="model.id == {{ old('camper_model_id', $camper->camper_model_id ?? 'null') }}">
+                                </option>
+                            </template>
+                        </select>
+                        @error('camper_model_id')
+                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                        @enderror
+                    </div>
+                </div>
+            </section>
 
             {{-- Basic Data Section --}}
             <section class="bg-gray-50 p-6 rounded-lg shadow-inner">
@@ -125,39 +125,29 @@
                             placeholder="z.B. 45.000"
                             class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
                         @error('price')
-                            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                         @enderror
                     </div>
 
-                    {{-- Erstzulassung --}}
-                    {{-- <div>
-                        <label for="first_registration"
-                            class="block text-sm font-medium text-gray-700 mb-2">Erstzulassung</label>
-                        <input type="date" name="first_registration" id="first_registration"
-                            value="{{ old('first_registration') }}"
-                            class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
-                        @error('first_registration')
-                            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-                        @enderror
-                    </div> --}}
 
-                           {{-- Erstzulassung --}}
-                                        <div>
-                            <label for="first_registration" class="block text-sm font-medium text-gray-700 mb-2">First registration</label>
-                            <select name="first_registration" id="first_registration" class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
-                                <option value="">Επιλέξτε Έτος</option>
-                                @php
-                                    $currentYear = date('Y');
-                                    $startYear = 1990; 
-                                @endphp
-                                @for ($year = $currentYear; $year >= $startYear; $year--)
-                                    <option value="{{ $year }}" {{ old('first_registration') == $year ? 'selected' : '' }}>{{ $year }}</option>
-                                @endfor
-                            </select>
-                            @error('first_registration')
-                                <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-                            @enderror
-                        </div>
+
+                    {{-- First registration --}}
+                    <div>
+                        <label for="first_registration" class="block text-sm font-medium text-gray-700 mb-2">First Registration Year</label>
+                        <input
+                            type="number"
+                            name="first_registration"
+                            id="first_registration"
+                            min="1900"
+                            max="{{ date('Y') }}"
+                            value="{{ old('first_registration', isset($camper) ? $camper->first_registration : '') }}"
+                            class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50"
+                            placeholder="Εισάγετε το έτος πρώτης εγγραφής">
+                        @error('first_registration')
+                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                        @enderror
+                    </div>
+
 
 
                     {{-- Kilometerstand --}}
@@ -168,7 +158,7 @@
                             placeholder="z.B. 75.000"
                             class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
                         @error('mileage')
-                            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                         @enderror
                     </div>
 
@@ -178,7 +168,7 @@
                         <input type="number" name="power" id="power" value="{{ old('power') }}" placeholder="z.B. 130"
                             class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
                         @error('power')
-                            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                         @enderror
                     </div>
 
@@ -189,18 +179,18 @@
                             class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
                             <option value="">Bitte wählen</option>
                             @foreach($colors as $color)
-                                <option value="{{ $color }}" {{ old('color') == $color ? 'selected' : '' }}>{{ $color }}
-                                </option>
+                            <option value="{{ $color }}" {{ old('color') == $color ? 'selected' : '' }}>{{ $color }}
+                            </option>
                             @endforeach
                         </select>
                         @error('color')
-                            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                         @enderror
                     </div>
 
 
 
-                        {{-- Condition --}}
+                    {{-- Condition --}}
                     <div>
                         <label for="condition" class="block text-sm font-medium text-gray-700 mb-2">Condition</label>
                         <select name="condition" id="condition"
@@ -212,7 +202,7 @@
                             <option value="damaged" {{ old('condition') == 'damaged' ? 'selected' : '' }}>Damaged vehicle</option>
                         </select>
                         @error('condition')
-                            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                         @enderror
                     </div>
 
@@ -233,12 +223,12 @@
                             class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
                             <option value="">Bitte wählen</option>
                             @foreach($camperTypes as $type)
-                                <option value="{{ $type }}" {{ old('camper_type') == $type ? 'selected' : '' }}>{{ $type }}
-                                </option>
+                            <option value="{{ $type }}" {{ old('camper_type') == $type ? 'selected' : '' }}>{{ $type }}
+                            </option>
                             @endforeach
                         </select>
                         @error('camper_type')
-                            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                         @enderror
                     </div>
 
@@ -250,7 +240,7 @@
                             min="1"
                             class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
                         @error('berths')
-                            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                         @enderror
                     </div>
 
@@ -262,7 +252,7 @@
                             value="{{ old('total_length') }}" placeholder="z.B. 6.5"
                             class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
                         @error('total_length')
-                            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                         @enderror
                     </div>
 
@@ -274,7 +264,7 @@
                             value="{{ old('total_width') }}" placeholder="z.B. 2.3"
                             class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
                         @error('total_width')
-                            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                         @enderror
                     </div>
 
@@ -286,7 +276,7 @@
                             value="{{ old('total_height') }}" placeholder="z.B. 2.9"
                             class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
                         @error('total_height')
-                            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                         @enderror
                     </div>
 
@@ -298,7 +288,7 @@
                             value="{{ old('gross_vehicle_weight') }}" placeholder="z.B. 3500"
                             class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
                         @error('gross_vehicle_weight')
-                            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                         @enderror
                     </div>
 
@@ -309,12 +299,12 @@
                             class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
                             <option value="">Bitte wählen</option>
                             @foreach($fuelTypes as $type)
-                                <option value="{{ $type }}" {{ old('fuel_type') == $type ? 'selected' : '' }}>{{ $type }}
-                                </option>
+                            <option value="{{ $type }}" {{ old('fuel_type') == $type ? 'selected' : '' }}>{{ $type }}
+                            </option>
                             @endforeach
                         </select>
                         @error('fuel_type')
-                            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                         @enderror
                     </div>
 
@@ -326,12 +316,13 @@
                             class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
                             <option value="">Bitte wählen</option>
                             @foreach($transmissions as $trans)
-                                <option value="{{ $trans }}" {{ old('transmission') == $trans ? 'selected' : '' }}>
-                                    {{ $trans }}</option>
+                            <option value="{{ $trans }}" {{ old('transmission') == $trans ? 'selected' : '' }}>
+                                {{ $trans }}
+                            </option>
                             @endforeach
                         </select>
                         @error('transmission')
-                            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                         @enderror
                     </div>
 
@@ -343,12 +334,13 @@
                             class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
                             <option value="">Bitte wählen</option>
                             @foreach($emissionClasses as $class)
-                                <option value="{{ $class }}" {{ old('emission_class') == $class ? 'selected' : '' }}>
-                                    {{ $class }}</option>
+                            <option value="{{ $class }}" {{ old('emission_class') == $class ? 'selected' : '' }}>
+                                {{ $class }}
+                            </option>
                             @endforeach
                         </select>
                         @error('emission_class')
-                            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                         @enderror
                     </div>
                 </div>
@@ -363,7 +355,7 @@
                         placeholder="Aussagekräftiger Titel für deine Anzeige"
                         class="w-full p-3 border border-gray-300 rounded-md shadow-sm bg-white text-gray-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50">
                     @error('title')
-                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                    <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                     @enderror
                 </div>
 
@@ -374,41 +366,39 @@
                         placeholder="Gib hier alle wichtigen Details zu deinem Wohnmobil ein. Je mehr Informationen, desto besser!"
                         class="w-full p-3 border border-gray-300 rounded-md shadow-sm bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-600 transition duration-150 ease-in-out">{{ old('description') }}</textarea>
                     @error('description')
-                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                    <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                     @enderror
                 </div>
             </section>
 
 
-            {{-- Verkäufer (Seller) --}}
-            {{-- <section class="bg-gray-50 p-6 rounded-lg shadow-inner mt-6">
-                <h4 class="text-xl font-semibold text-gray-700 mb-6">Verkäufer Informationen</h4>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                        <label for="seller_name" class="block text-sm font-medium text-gray-700 mb-2">Name des
-                            Verkäufers</label>
-                        <input type="text" name="seller_name" id="seller_name" value="{{ old('seller_name') }}"
-                            placeholder="Max Mustermann" class="...">
-                        @error('seller_name') <p class="text-red-500 text-sm mt-1">{{ $message }}</p> @enderror
-                    </div>
-                    <div>
-                        <label for="seller_phone"
-                            class="block text-sm font-medium text-gray-700 mb-2">Telefonnummer</label>
-                        <input type="text" name="seller_phone" id="seller_phone" value="{{ old('seller_phone') }}"
-                            placeholder="+49 123 4567890" class="...">
-                        @error('seller_phone') <p class="text-red-500 text-sm mt-1">{{ $message }}</p> @enderror
-                    </div>
-                    <div>
-                        <label for="seller_email" class="block text-sm font-medium text-gray-700 mb-2">E-Mail
-                            Adresse</label>
-                        <input type="email" name="seller_email" id="seller_email" value="{{ old('seller_email') }}"
-                            placeholder="max@example.com" class="...">
-                        @error('seller_email') <p class="text-red-500 text-sm mt-1">{{ $message }}</p> @enderror
-                    </div>
+            {{-- conatct Section --}}
+            <section class="bg-gray-50 p-6 rounded-lg shadow-inner">
+                <h4 class="text-xl font-semibold text-gray-700 mb-6">Select if you want to publish your Mobile phone or email</h4>
+                <div class="mt-4">
+                    <label class="inline-flex items-center">
+                        <input type="checkbox" name="show_phone" value="1" class="rounded border-gray-300">
+                        <span class="ml-2">Phone</span>
+                    </label>
                 </div>
-                
-            </section> --}}
 
+                <div class="mt-2">
+                    <label class="inline-flex items-center">
+                        <input type="checkbox" name="show_mobile_phone" value="1" class="rounded border-gray-300">
+                        <span class="ml-2">Mobile</span>
+                    </label>
+                </div>
+
+
+                <div class="mt-2">
+                    <label class="inline-flex items-center">
+                        <input type="checkbox" name="show_email" value="1" class="rounded border-gray-300">
+                        <span class="ml-2">email</span>
+                    </label>
+                </div>
+
+
+            </section>
 
 
             {{-- Photo Upload Section --}}
@@ -421,10 +411,10 @@
                     <input type="file" name="images[]" multiple @change="addFiles($event)"
                         class="block w-full border p-2 rounded" />
                     @error('images')
-                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                    <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                     @enderror
                     @error('images.*') {{-- For individual image validation errors --}}
-                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                    <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                     @enderror
 
                     <div class="grid grid-cols-2 md:grid-cols-4 gap-4">

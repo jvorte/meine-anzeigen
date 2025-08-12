@@ -6,9 +6,11 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
+
+// SoftDeletes
 class Camper extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory;
 
     /**
      * The attributes that are mass assignable.
@@ -17,10 +19,13 @@ class Camper extends Model
      */
     protected $fillable = [
         'user_id',
-        'camper_brand_id', // New: Foreign key for the brand
-        'camper_model_id', // New: Foreign key for the model
+        'camper_brand_id',
+        'camper_model_id',
         'price',
         'first_registration',
+        'show_phone',
+        'show_mobile_phone',
+        'show_email',
         'mileage',
         'power',
         'color',
@@ -47,10 +52,7 @@ class Camper extends Model
      *
      * @var array<string, string>
      */
-    protected $casts = [
-        'first_registration' => 'date',
-        // 'price' => 'decimal:2', // Uncomment if 'price' is DECIMAL or FLOAT and you want to cast it
-    ];
+    protected $casts = [];
 
     /**
      * Get the images for the camper.

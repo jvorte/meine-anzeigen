@@ -4,13 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Models\Camper;
 use App\Models\CamperImage;
-use App\Models\CamperBrand; // Import the CamperBrand model
-use App\Models\CamperModel; // Import the CamperModel model
-use App\Http\Requests\StoreCamperRequest;
-use App\Http\Requests\UpdateCamperRequest;
+use App\Models\CamperBrand;
+use App\Models\CamperModel;
+
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Http\Request; // Make sure this is imported for getModelsByBrand
+use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
+
 
 class CamperController extends Controller
 {
@@ -126,7 +127,7 @@ class CamperController extends Controller
         $camperBrands = CamperBrand::all();
         $camperModels = CamperModel::all();
         $camperTypes = ['Panel van', 'Alcove', 'Fully integrated', 'Semi-integrated', 'Caravan'];
-        
+
         return view('ads.camper.index', compact('campers', 'camperBrands', 'camperModels', 'camperTypes'));
     }
     /**
@@ -144,6 +145,7 @@ class CamperController extends Controller
      */
     public function create()
     {
+
         // Pass all camper brands to the view for the initial dropdown
         $camperBrands = CamperBrand::orderBy('name')->get();
 
@@ -158,25 +160,58 @@ class CamperController extends Controller
     }
 
 
-    public function store(StoreCamperRequest $request)
-    {
 
-        $validatedData = $request->validated();
 
-        // Create the camper
-        $camper = Auth::user()->campers()->create($validatedData);
+public function store(Request $request)
+{
+    // Validation rules
+    $validatedData = $request->validate([
+        'camper_brand_id' => ['required', 'exists:camper_brands,id'],
+        'camper_model_id' => ['nullable', 'exists:camper_models,id'],
+        'price' => ['required', 'numeric', 'min:0'],
+        'first_registration' => ['required', 'integer', 'min:1900', 'max:' . date('Y')],
+        'mileage' => ['required', 'integer', 'min:0'],
+        'power' => ['required', 'integer', 'min:1'],
+        'color' => ['required', 'string', 'max:255'],
+        'condition' => ['required', 'string', 'max:255'],
+        'camper_type' => ['required', 'string', 'max:255'],
+        'berths' => ['required', 'integer', 'min:1'],
+        'total_length' => ['required', 'numeric', 'min:0'],
+        'total_width' => ['required', 'numeric', 'min:0'],
+        'total_height' => ['required', 'numeric', 'min:0'],
+        'gross_vehicle_weight' => ['required', 'integer', 'min:1'],
+        'fuel_type' => ['required', 'string', 'max:255'],
+        'transmission' => ['required', 'string', 'max:255'],
+        'emission_class' => ['required', 'string', 'max:255'],
+        'title' => ['required', 'string', 'max:255'],
+        'description' => ['required', 'string'],
+        'images' => ['nullable', 'array', 'max:10'],
+        'images.*' => ['image', 'mimes:jpeg,png,jpg,gif,svg', 'max:2048'],
+    ]);
 
-        // Handle image uploads
-        if ($request->hasFile('images')) {
-            foreach ($request->file('images') as $image) {
-                $path = $image->store('camper_images', 'public'); // Store in 'storage/app/public/camper_images'
-                $camper->images()->create(['image_path' => $path]);
-            }
+    // Create the camper with the validated data
+    $camper = Auth::user()->campers()->create($validatedData);
+
+    // Set the new values for the checkboxes
+    $camper->show_phone = $request->has('show_phone') ? 1 : 0;
+    $camper->show_mobile_phone = $request->has('show_mobile_phone') ? 1 : 0;
+    $camper->show_email = $request->has('show_email') ? 1 : 0;
+
+    // Save the changes to the database
+    $camper->save();
+
+    // ... (rest of your image logic)
+    if ($request->hasFile('images')) {
+        foreach ($request->file('images') as $image) {
+            $path = $image->store('camper_images', 'public');
+            $camper->images()->create(['image_path' => $path]);
         }
-
-        return redirect()->route('ads.camper.show', $camper->id)
-            ->with('success', 'Wohnmobil Anzeige erfolgreich erstellt!');
     }
+
+    return redirect()->route('ads.camper.show', $camper->id)
+        ->with('success', 'Wohnmobil Anzeige erfolgreich erstellt!');
+}
+
 
     /**
      * Display the specified camper.
@@ -227,17 +262,46 @@ class CamperController extends Controller
     /**
      * Update the specified camper in storage.
      */
-    public function update(UpdateCamperRequest $request, Camper $camper)
+    public function update(Request $request, Camper $camper)
     {
+        // Validation rules (χωρίς διπλές επαναλήψεις)
+        $validatedData = $request->validate([
+            'camper_brand_id' => ['required', 'exists:camper_brands,id'],
+            'camper_model_id' => ['nullable', 'exists:camper_models,id'],
+            'price' => ['required', 'numeric', 'min:0'],
+            'first_registration' => ['required', 'integer', 'min:1900', 'max:' . date('Y')],
+            'mileage' => ['required', 'integer', 'min:0'],
+            'power' => ['required', 'integer', 'min:1'],
+            'color' => ['required', 'string', 'max:255'],
+            'condition' => ['required', 'string', Rule::in(['new', 'used', 'accident', 'damaged'])],
+            'camper_type' => ['required', 'string', 'max:255'],
+            'berths' => ['required', 'integer', 'min:1'],
+            'total_length' => ['required', 'numeric', 'min:0'],
+            'total_width' => ['required', 'numeric', 'min:0'],
+            'total_height' => ['required', 'numeric', 'min:0'],
+            'gross_vehicle_weight' => ['required', 'integer', 'min:1'],
+            'fuel_type' => ['required', 'string', 'max:255'],
+            'transmission' => ['required', 'string', 'max:255'],
+            'emission_class' => ['required', 'string', 'max:255'],
+            'title' => ['required', 'string', 'max:255'],
+            'description' => ['required', 'string'],
+            'images' => ['nullable', 'array', 'max:10'],
+            'images.*' => ['image', 'mimes:jpeg,png,jpg,gif,svg', 'max:2048'],
+            'delete_images' => ['nullable', 'array'], // αν η φόρμα σου στέλνει delete_images
+            'delete_images.*' => ['integer', 'exists:camper_images,id'],
+        ]);
 
-        $validatedData = $request->validated();
+        // Ορισμός show_* πεδίων ως 0 ή 1
+        $validatedData['show_phone'] = $request->has('show_phone') ? 1 : 0;
+        $validatedData['show_mobile_phone'] = $request->has('show_mobile_phone') ? 1 : 0;
+        $validatedData['show_email'] = $request->has('show_email') ? 1 : 0;
 
-
+        // Ενημέρωση camper με validated data
         $camper->update($validatedData);
 
-        // Delete images that the user checked for deletion
-        if ($request->filled('delete_images')) {
-            $imagesToDelete = $camper->images()->whereIn('id', $request->input('delete_images'))->get();
+        // Διαγραφή επιλεγμένων εικόνων
+        if (!empty($validatedData['delete_images'])) {
+            $imagesToDelete = $camper->images()->whereIn('id', $validatedData['delete_images'])->get();
 
             foreach ($imagesToDelete as $image) {
                 Storage::disk('public')->delete($image->image_path);
@@ -245,7 +309,7 @@ class CamperController extends Controller
             }
         }
 
-        // Add new images
+        // Προσθήκη νέων εικόνων (αν υπάρχουν)
         if ($request->hasFile('images')) {
             foreach ($request->file('images') as $image) {
                 $path = $image->store('camper_images', 'public');
@@ -256,6 +320,8 @@ class CamperController extends Controller
         return redirect()->route('ads.camper.show', $camper->id)
             ->with('success', 'Wohnmobil Anzeige erfolgreich aktualisiert!');
     }
+
+
 
 
 

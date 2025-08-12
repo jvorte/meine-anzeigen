@@ -21,16 +21,17 @@ class StoreCamperRequest extends FormRequest
     public function rules(): array
     {
         return [
-     'camper_brand_id' => ['required', 'exists:camper_brands,id'],
-            'camper_model_id' => ['nullable', 'exists:camper_models,id'], 
+            'camper_brand_id' => ['required', 'exists:camper_brands,id'],
+            'camper_model_id' => ['nullable', 'exists:camper_models,id'],
 
             'price' => ['required', 'numeric', 'min:0'],
-           
-            'first_registration' => ['required', 'integer', 'digits:4', 'min:1900', 'max:' . date('Y')],
+
+            'first_registration' => 'nullable|digits:4|integer|min:1900|max:' . date('Y'),
+
             'mileage' => ['required', 'integer', 'min:0'],
             'power' => ['required', 'integer', 'min:1'],
             'color' => ['required', 'string', 'max:255'],
-           'condition' => ['required', 'string', 'max:255'],
+            'condition' => ['required', 'string', 'max:255'],
             'camper_type' => ['required', 'string', 'max:255'],
             'berths' => ['required', 'integer', 'min:1'],
             'total_length' => ['required', 'numeric', 'min:0'],
@@ -41,7 +42,7 @@ class StoreCamperRequest extends FormRequest
             'transmission' => ['required', 'string', 'max:255'],
             'emission_class' => ['required', 'string', 'max:255'],
             'title' => ['required', 'string', 'max:255'],
-            'description' => ['required', 'string'],       
+            'description' => ['required', 'string'],
             'images' => ['nullable', 'array', 'max:10'], // Max 10 images
             'images.*' => ['image', 'mimes:jpeg,png,jpg,gif,svg', 'max:2048'], // Each image must be valid
         ];

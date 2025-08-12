@@ -202,10 +202,28 @@
                 <dt class="inline font-semibold">Name:</dt>
                 <dd class="inline">{{ $camper->user->name }}</dd>
             </div>
-            <div>
-                <dt class="inline font-semibold">E-Mail:</dt>
-                <dd class="inline">{{ $camper->user->email }}</dd>
-            </div>
+    
+                    <div>
+                            @if($camper->show_phone && !empty($camper->user->phone))
+                            <dt class="inline font-semibold">Phone:</dt>
+                            <dd class="inline">{{ $camper->user->phone }}</dd>
+                            @endif
+
+                            @if($camper->show_mobile_phone && !empty($camper->user->mobile_phone))
+                            <dt class="inline font-semibold">Mobile:</dt>
+                            <dd class="inline">{{ $camper->user->mobile_phone }}</dd>
+                            @endif
+                        </div>
+
+
+                        <div>
+                            @if($camper->show_email && !empty($camper->user->email))
+                            <dt class="inline font-semibold">E-Mail:</dt>
+                            <dd class="inline">{{ $camper->user->email }}</dd>
+                            @endif
+                        </div>
+            
+
             @if($camper->user->city)
                 <div>
                     <dt class="inline font-semibold">Stadt:</dt>
@@ -303,7 +321,7 @@
                         @if ($camper->first_registration)
                             <dl>
                                 <dt class="font-semibold text-gray-700 mb-1">Erstzulassung</dt>
-                                <dd class="text-gray-900">{{ $camper->first_registration->format('Y') }}</dd>
+                                <dd class="text-gray-900">{{ $camper->first_registration }}</dd>
                             </dl>
                         @endif
 
