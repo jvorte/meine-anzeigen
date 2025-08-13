@@ -1,4 +1,4 @@
-{{-- resources/views/ads/used-vehicle-parts/create.blade.php --}}
+{{-- --resources/views/ads/used-vehicle-parts/create.blade.php --}}
 <x-app-layout>
 
     <x-slot name="header">
