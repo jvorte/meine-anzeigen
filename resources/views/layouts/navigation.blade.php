@@ -270,84 +270,79 @@
                     <span>Vehicles</span>
                 </a>
 
-                {{-- The Modal --}}
-                <div x-show="open"
-                    x-transition:enter="ease-out duration-300"
-                    x-transition:enter-start="opacity-0 scale-95"
-                    x-transition:enter-end="opacity-100 scale-100"
-                    x-transition:leave="ease-in duration-200"
-                    x-transition:leave-start="opacity-100 scale-100"
-                    x-transition:leave-end="opacity-0 scale-95"
-                    class="fixed inset-0 bg-gray-600 bg-opacity-75 flex items-center justify-center z-50 p-4"
-                    @click.away="open = false" {{-- Close when clicking outside --}}
-                    x-cloak> {{-- Hides until Alpine processes it --}}
-                    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-xl p-6 w-full max-w-md mx-auto relative" @click.stop> {{-- Prevent closing when clicking inside modal --}}
-                        <h3 class="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-4">Fahrzeugkategorien</h3>
+                <div x-show="open" x-cloak
+                    class="fixed inset-0 bg-black bg-opacity-60 flex justify-center items-center p-4 z-50 overflow-y-auto"
+                    x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0"
+                    x-transition:enter-end="opacity-100" x-transition:leave="transition ease-in duration-200"
+                    x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0">
 
-                        <div class="grid grid-cols-2 gap-4">
-                            {{-- Link to generic Fahrzeuge page, if you still want one for "all vehicles" --}}
-                            <a href="{{ route('categories.cars.index') }}"
-                                class="flex flex-col items-center p-4 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200 text-gray-700 dark:text-gray-200">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-square-parking mb-2">
-                                    <rect width="18" height="18" x="3" y="3" rx="2" />
-                                    <path d="M9 17V7H7.8C7.1 7 6.5 7.5 6.5 8.2V10c0 .7.6 1.2 1.3 1.2H10V17" />
-                                    <path d="M13 17V7h4" />
-                                </svg>
-                                <span>Cars</span>
-                            </a>
-                            {{-- Sub-category links for Fahrzeuge. Only include the actual sub-categories for vehicles. --}}
-                            {{-- Make sure your $categories collection passed from the controller includes these slugs --}}
-                            @foreach ($categories->whereIn('slug', ['motorcycles', 'commercial-vehicles', 'campers']) as $subCat)
-                            <a href="{{ route('categories.' . $subCat->slug . '.index') }}"
-                                class="flex flex-col items-center p-4 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200 text-gray-700 dark:text-gray-200">
-                                @if ($subCat->slug == 'motorcycles')
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-motorbike mb-2">
-                                    <path d="M5 16m-3 0a3 3 0 1 0 6 0a3 3 0 1 0 -6 0" />
-                                    <path d="M17 16m-3 0a3 3 0 1 0 6 0a3 3 0 1 0 -6 0" />
-                                    <path d="M7.5 14h9l4 -2l-1.5 -4.5h-11.5l-4 2z" />
-                                    <path d="M18 5l-1.5 4.5" />
-                                    <path d="M9 6l-2 4" />
-                                    <path d="M12 7v4" />
-                                </svg>
-                                @elseif ($subCat->slug == 'commercial-vehicles')
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucude-truck mb-2">
-                                    <path d="M14 18V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v11a1 1 0 0 0 1 1h2" />
-                                    <path d="M10 18H7" />
-                                    <path d="M18 18h-1" />
-                                    <path d="M19 12h2v3" />
-                                    <path d="M18 11V6a2 2 0 0 0-2-2h-3" />
-                                    <path d="M14 18h6a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2h-3" />
-                                    <path d="M7 18v.001" />
-                                    <circle cx="7" cy="18" r="2" />
-                                    <circle cx="17" cy="18" r="2" />
-                                </svg>
-                                @elseif ($subCat->slug == 'campers')
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-caravan mb-2">
-                                    <path d="M6 10c-1.1 0-2 .9-2 2v6h3" />
-                                    <path d="M15 10h5a2 2 0 0 1 2 2v6h-3" />
-                                    <path d="M11 10V6a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v4h8Z" />
-                                    <path d="M15 18H9a2 2 0 0 1-2-2v-4h10v4a2 2 0 0 1-2 2Z" />
-                                    <path d="M18 20v2" />
-                                    <path d="M14 14h.01" />
-                                    <path d="M12 10h.01" />
-                                    <path d="M20 20v2" />
-                                </svg>
-                                @endif
-                                <span>{{ $subCat->name }}</span>
-                            </a>
-                            @endforeach
+                    <!-- Modal Content Container -->
+                    <div class=" rounded-xl w-full max-w-2xl max-h-[95vh] overflow-y-auto p-8 relative shadow-2xl transform transition-all duration-300"
+                        @click.away="open = false" x-trap.noscroll="open"
+                        x-transition:enter="transition ease-out duration-300 transform"
+                        x-transition:enter-start="opacity-0 scale-95" x-transition:enter-end="opacity-100 scale-100"
+                        x-transition:leave="transition ease-in duration-200 transform"
+                        x-transition:leave-start="opacity-100 scale-100" x-transition:leave-end="opacity-0 scale-95">
 
-                        </div>
-
-                        {{-- Close button --}}
+                        <!-- Close Button -->
                         <button @click="open = false"
-                            class="absolute top-3 right-3 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors duration-200 focus:outline-none">
-                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            class="absolute top-3 right-3 text-gray-200 hover:text-gray-200 dark:hover:text-gray-300 transition-colors duration-200 focus:outline-none">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                                xmlns="http://www.w3.org/2000/svg">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
                             </svg>
                         </button>
+
+                        <!-- Inner Content and Cards -->
+                        <div class="rounded-2xl w-full max-w-md space-y-4 mx-auto">
+                            <!-- <h2 class="text-2xl font-bold text-gray-800 dark:text-gray-100 text-center mb-4">Fahrzeugkategorien</h2> -->
+
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+                                <!-- Card for Cars -->
+                                <a href="{{ route('categories.cars.index') }}"
+                                             class="block bg-gray-100  rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 transform hover:-translate-y-1">
+                                    <div class="flex flex-col items-center text-center">
+                                        <img src="{{ asset('storage/images/car.jpg') }}" alt="Auto" class="h-40 w-full object-cover rounded-md mb-2">
+                                        <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-900">Cars</h3>
+                                        <p class="text-sm text-gray-500 dark:text-gray-800 mb-2">Verkaufe oder suche ein Auto.</p>
+                                    </div>
+                                </a>
+
+                                <!-- Card for Motorcycles -->
+                                <a href="{{ route('categories.motorcycles.index') }}"
+                                           class="block bg-gray-100  rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 transform hover:-translate-y-1">
+                                    <div class="flex flex-col items-center text-center">
+                                        <img src="{{ asset('storage/images/motorcycle.jpg') }}" alt="Motorrad" class="h-40 w-full object-cover rounded-md mb-2">
+                                        <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-900">Motorräder</h3>
+                                        <p class="text-sm text-gray-500 dark:text-gray-800">Finde dein neues Motorrad.</p>
+                                    </div>
+                                </a>
+
+                                <!-- Card for Commercial Vehicles -->
+                                <a href="{{ route('categories.commercial-vehicles.index') }}"
+                                    class="block bg-gray-100 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 transform hover:-translate-y-1">
+                                    <div class="flex flex-col items-center text-center">
+                                        <img src="{{ asset('storage/images/motorcycle.jpg') }}" alt="Motorrad" class="h-40 w-full object-cover rounded-md mb-2">
+                                        <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-900">Nutzfahrzeuge</h3>
+                                        <p class="text-sm text-gray-500 dark:text-gray-800">Anzeigen für Transporter und LKW.</p>
+                                    </div>
+                                </a>
+
+                                <!-- Card for Campers -->
+                                <a href="{{ route('categories.campers.index') }}"
+                                    class="block bg-gray-100  rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 transform hover:-translate-y-1">
+                                    <div class="flex flex-col items-center text-center">
+                                        <img src="{{ asset('storage/images/camper.jpg') }}" alt="Wohnmobile" class="h-40 w-full object-cover rounded-md mb-2">
+                                        <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-900">Wohnmobile</h3>
+                                        <p class="text-sm text-gray-500 dark:text-gray-800 ">Verkaufe oder miete ein Wohnmobil.</p>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
                     </div>
                 </div>
+
             </div>
             @elseif (!in_array($cat->slug, ['motorcycles', 'commercial-vehicles', 'campers']))
             {{-- All other categories (excluding vehicle sub-categories that are now in the modal) remain as direct links --}}
