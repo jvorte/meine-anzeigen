@@ -21,5 +21,30 @@
   "Commercial Vehicles": "Commercial Vehicles",
   "Ads for vans and trucks.": "Ads for vans and trucks.",
   "Campers": "Campers",
-  "Sell or rent a camper.": "Sell or rent a camper."
+  "Sell or rent a camper.": "Sell or rent a camper.",
+
+  "footer.my_ads": "My Ads",
+  "footer.text_ad": "My Ads is your platform for quickly and easily publishing and discovering ads. Connect with buyers and sellers, find what you need, and advertise your listings in just a few clicks.",
+  "footer.categories": "Categories",
+  "footer.cars": "Cars",
+  "footer.real_estate": "Real Estate",
+  "footer.electronic": "Electronics",
+  "footer.household": "Household",
+  "footer.services": "Services",
+  "footer.others": "Other",
+  "footer.legal": "Legal",
+  "footer.privacy_policy": "Privacy Policy",
+  "footer.terms_and_conditions": "Terms and Conditions",
+  "footer.contact": "Contact",
+  "footer.newsletter": "Newsletter",
+  "footer.newsletter_description": "Stay up to date with our latest listings!",
+  "footer.email_placeholder": "Your email address",
+  "footer.subscribe_button": "Subscribe",
+  "footer.copyright": "© :year My Ads. All rights reserved. D.Vortelinas",
+  "footer.language": "Language:",
+  "footer.german_option": "German",
+  "footer.english_option": "English"
+
+
+
 }

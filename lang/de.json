@@ -21,5 +21,27 @@
   "Commercial Vehicles": "Nutzfahrzeuge",
   "Ads for vans and trucks.": "Anzeigen für Transporter und LKW.",
   "Campers": "Wohnmobile",
-  "Sell or rent a camper.": "Verkaufe oder miete ein Wohnmobil."
+  "Sell or rent a camper.": "Verkaufe oder miete ein Wohnmobil.",
+
+  "footer.my_ads": "Meine Anzeigen",
+  "footer.text_ad": "„Meine Anzeigen“ ist Ihre Plattform zum schnellen und einfachen Veröffentlichen und Entdecken von Inseraten. Treten Sie mit Käufern und Verkäufern in Kontakt, finden Sie, was Sie brauchen, und bewerben Sie Ihre Angebote mit nur wenigen Klicks.",
+  "footer.categories": "Kategorien",
+  "footer.cars": "Autos",
+  "footer.real_estate": "Immobilien",
+  "footer.electronic": "Elektronik",
+  "footer.household": "Haushalt",
+  "footer.services": "Dienstleistungen",
+  "footer.others": "Sonstiges",
+  "footer.legal": "Rechtliches",
+  "footer.privacy_policy": "Datenschutzerklärung",
+  "footer.terms_and_conditions": "Allgemeine Geschäftsbedingungen",
+  "footer.contact": "Kontakt",
+  "footer.newsletter": "Newsletter",
+  "footer.newsletter_description": "Bleiben Sie auf dem Laufenden mit unseren neuesten Angeboten!",
+  "footer.email_placeholder": "Ihre E-Mail-Adresse",
+  "footer.subscribe_button": "Abonnieren",
+  "footer.copyright": "© :year Meine Anzeigen. Alle Rechte vorbehalten. D.Vortelinas",
+  "footer.language": "Sprache:",
+  "footer.german_option": "Deutsch",
+  "footer.english_option": "Englisch"
 }
