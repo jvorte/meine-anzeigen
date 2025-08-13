@@ -247,157 +247,71 @@
             </div>
         </div>
 
-        {{-- Category Navigation Links --}}
-        <nav
-            class="p-4 mt-4 pb-2 border-b border-gray-200 dark:border-gray-700
-                grid grid-cols-2 gap-x-4 gap-y-3 justify-center md:flex md:flex-wrap md:justify-start">
-            @foreach ($categories as $cat)
-            {{-- Check if it's the "Vehicles" category --}}
-            @if ($cat->slug == 'cars')
-            {{-- Alpine.js for modal --}}
-            <div x-data="{ open: false }" class="relative">
-                <a @click.prevent="open = true"
-                    href="#"
-                    class="flex items-center space-x-1 text-gray-700 hover:text-indigo-600 transition-colors duration-200 px-3 py-1 rounded-full dark:hover:bg-gray-400 dark:text-gray-700 dark:hover:text-white cursor-pointer">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                        class="lucide lucide-car-icon lucide-car">
-                        <path
-                            d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.4 2.9A3.7 3.7 0 0 0 2 12v4c0 .6.4 1 1 1h2" />
-                        <circle cx="7" cy="17" r="2" />
-                        <path d="M9 17h6" />
-                        <circle cx="17" cy="17" r="2" />
-                    </svg>
-                    <span>{{ __('Vehicles') }}</span>
-                </a>
 
-                <div x-show="open" x-cloak
-                    class="fixed inset-0 bg-black bg-opacity-60 flex justify-center items-center p-4 z-50 overflow-y-auto"
-                    x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0"
-                    x-transition:enter-end="opacity-100" x-transition:leave="transition ease-in duration-200"
-                    x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0">
+        
 
-                    <div class=" rounded-xl w-full max-w-2xl max-h-[95vh] overflow-y-auto p-8 relative shadow-2xl transform transition-all duration-300"
-                        @click.away="open = false" x-trap.noscroll="open"
-                        x-transition:enter="transition ease-out duration-300 transform"
-                        x-transition:enter-start="opacity-0 scale-95" x-transition:enter-end="opacity-100 scale-100"
-                        x-transition:leave="transition ease-in duration-200 transform"
-                        x-transition:leave-start="opacity-100 scale-100" x-transition:leave-end="opacity-0 scale-95">
+   
+{{-- Category Navigation Links --}}
+<nav class="p-2 mt-4 pb-2 border-b border-gray-200 dark:border-gray-700
+            flex flex-wrap gap-3 justify-center md:justify-start">
 
-                        <button @click="open = false"
-                            class="absolute top-3 right-3 text-gray-200 hover:text-gray-200 dark:hover:text-gray-300 transition-colors duration-200 focus:outline-none">
-                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                                xmlns="http://www.w3.org/2000/svg">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-                            </svg>
-                        </button>
+    <a href="{{ route('categories.cars.index') }}"
+       class="px-3 py-1 rounded-full bg-gray-100 hover:bg-indigo-100 text-gray-800 hover:text-indigo-600 transition-colors duration-200">
+        {{ __('Cars') }}
+    </a>
 
-                        <div class="rounded-2xl w-full max-w-md space-y-4 mx-auto">
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <a href="{{ route('categories.motorcycles.index') }}"
+       class="px-3 py-1 rounded-full bg-gray-100 hover:bg-indigo-100 text-gray-800 hover:text-indigo-600 transition-colors duration-200">
+        {{ __('Motorcycles') }}
+    </a>
 
-                                <a href="{{ route('categories.cars.index') }}"
-                                    class="block bg-gray-100  rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 transform hover:-translate-y-1">
-                                    <div class="flex flex-col items-center text-center">
-                                        <img src="{{ asset('storage/images/car.jpg') }}" alt="Auto" class="h-40 w-full object-cover rounded-md mb-2">
-                                        <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-900">{{ __('Cars') }}</h3>
-                                        <p class="text-sm text-gray-500 dark:text-gray-800 mb-2">{{ __('Sell or search for a car.') }}</p>
-                                    </div>
-                                </a>
+    <a href="{{ route('categories.commercial-vehicles.index') }}"
+       class="px-3 py-1 rounded-full bg-gray-100 hover:bg-indigo-100 text-gray-800 hover:text-indigo-600 transition-colors duration-200">
+        {{ __('Commercial Vehicles') }}
+    </a>
 
-                                <a href="{{ route('categories.motorcycles.index') }}"
-                                    class="block bg-gray-100  rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 transform hover:-translate-y-1">
-                                    <div class="flex flex-col items-center text-center">
-                                        <img src="{{ asset('storage/images/motorcycle.jpg') }}" alt="Motorrad" class="h-40 w-full object-cover rounded-md mb-2">
-                                        <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-900">{{ __('Motorcycles') }}</h3>
-                                        <p class="text-sm text-gray-500 dark:text-gray-800">{{ __('Find your new motorcycle.') }}</p>
-                                    </div>
-                                </a>
+    <a href="{{ route('categories.campers.index') }}"
+       class="px-3 py-1 rounded-full bg-gray-100 hover:bg-indigo-100 text-gray-800 hover:text-indigo-600 transition-colors duration-200">
+        {{ __('Campers') }}
+    </a>
 
-                                <a href="{{ route('categories.commercial-vehicles.index') }}"
-                                    class="block bg-gray-100 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 transform hover:-translate-y-1">
-                                    <div class="flex flex-col items-center text-center">
-                                        <img src="{{ asset('storage/images/motorcycle.jpg') }}" alt="Motorrad" class="h-40 w-full object-cover rounded-md mb-2">
-                                        <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-900">{{ __('Commercial Vehicles') }}</h3>
-                                        <p class="text-sm text-gray-500 dark:text-gray-800">{{ __('Ads for vans and trucks.') }}</p>
-                                    </div>
-                                </a>
+    <a href="{{ route('categories.vehicles-parts.index') }}"
+       class="px-3 py-1 rounded-full bg-gray-100 hover:bg-indigo-100 text-gray-800 hover:text-indigo-600 transition-colors duration-200">
+        {{ __('Vehicle Parts') }}
+    </a>
 
-                                <a href="{{ route('categories.campers.index') }}"
-                                    class="block bg-gray-100  rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 transform hover:-translate-y-1">
-                                    <div class="flex flex-col items-center text-center">
-                                        <img src="{{ asset('storage/images/camper.jpg') }}" alt="Wohnmobile" class="h-40 w-full object-cover rounded-md mb-2">
-                                        <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-900">{{ __('Campers') }}</h3>
-                                        <p class="text-sm text-gray-500 dark:text-gray-800">{{ __('Sell or rent a camper.') }}</p>
-                                    </div>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+    <a href="{{ route('categories.boats.index') }}"
+       class="px-3 py-1 rounded-full bg-gray-100 hover:bg-indigo-100 text-gray-800 hover:text-indigo-600 transition-colors duration-200">
+        {{ __('Boats') }}
+    </a>
 
-            </div>
-            @elseif (!in_array($cat->slug, ['motorcycles', 'commercial-vehicles', 'campers']))
-            <a href="{{ route('categories.' . $cat->slug . '.index') }}"
-                class="flex items-center space-x-1 text-gray-700 hover:text-indigo-600 transition-colors duration-200 px-3 py-1 rounded-full dark:hover:bg-gray-400 dark:text-gray-700 dark:hover:text-white">
-                @if ($cat->slug == 'vehicles-parts')
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-wrench-icon lucide-wrench">
-                    <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.106-3.105c.32-.322.863-.22.983.218a6 6 0 0 1-8.259 7.057l-7.91 7.91a1 1 0 0 1-2.999-3l7.91-7.91a6 6 0 0 1 7.057-8.259c.438.12.54.662.219.984z" />
-                </svg>
-                @elseif ($cat->slug == 'boats')
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-sailboat-icon lucide-sailboat">
-                    <path d="M10 2v15" />
-                    <path d="M7 22a4 4 0 0 1-4-4 1 1 0 0 1 1-1h16a1 1 0 0 1 1 1 4 4 0 0 1-4 4z" />
-                    <path d="M9.159 2.46a1 1 0 0 1 1.521-.193l9.977 8.98A1 1 0 0 1 20 13H4a1 1 0 0 1-.824-1.567z" />
-                </svg>
-                @elseif ($cat->slug == 'electronics')
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-cable-icon lucide-cable">
-                    <path d="M17 19a1 1 0 0 1-1-1v-2a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2a1 1 0 0 1-1 1z" />
-                    <path d="M17 21v-2" />
-                    <path d="M19 14V6.5a1 1 0 0 0-7 0v11a1 1 0 0 1-7 0V10" />
-                    <path d="M21 21v-2" />
-                    <path d="M3 5V3" />
-                    <path d="M4 10a2 2 0 0 1-2-2V6a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2a2 2 0 0 1-2 2z" />
-                    <path d="M7 5V3" />
-                </svg>
-                @elseif ($cat->slug == 'household')
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-couch">
-                    <path d="M21 9V6a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v3" />
-                    <path d="M2 11v5a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-5a2 2 0 0 0-4 0v1.5a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5V11a2 2 0 0 0-4 0z" />
-                    <path d="M4 18v2" />
-                    <path d="M20 18v2" />
-                    <path d="M12 4v9" />
-                </svg>
-                @elseif ($cat->slug == 'real-estate')
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-house">
-                    <path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8" />
-                    <path d="M3 10a2 2 0 0 1 .709-1.528l7-5.999a2 2 0 0 1 2.582 0l7 5.999A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
-                </svg>
-                @elseif ($cat->slug == 'services')
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-hand-platter">
-                    <path d="M12 3V2" />
-                    <path d="m15.4 17.4 3.2-2.8a2 2 0 1 1 2.8 2.9l-3.6 3.3c-.7.8-1.7 1.2-2.8 1.2h-4c-1.1 0-2.1-.4-2.8-1.2l-1.302-1.464A1 1 0 0 0 6.151 19H5" />
-                    <path d="M2 14h12a2 2 0 0 1 0 4h-2" />
-                    <path d="M4 10h16" />
-                    <path d="M5 10a7 7 0 0 1 14 0" />
-                    <path d="M5 14v6a1 1 0 0 1-1 1H2" />
-                </svg>
-                @elseif ($cat->slug == 'others')
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-package-open-icon lucide-package-open">
-                    <path d="M12 22v-9" />
-                    <path d="M15.17 2.21a1.67 1.67 0 0 1 1.63 0L21 4.57a1.93 1.93 0 0 1 0 3.36L8.82 14.79a1.655 1.655 0 0 1-1.64 0L3 12.43a1.93 1.93 0 0 1 0-3.36z" />
-                    <path d="M20 13v3.87a2.06 2.06 0 0 1-1.11 1.83l-6 3.08a1.93 1.93 0 0 1-1.78 0l-6-3.08A2.06 2.06 0 0 1 4 16.87V13" />
-                    <path d="M21 12.43a1.93 1.93 0 0 0 0-3.36L8.83 2.2a1.64 1.64 0 0 0-1.63 0L3 4.57a1.93 1.93 0 0 0 0 3.36l12.18 6.86a1.636 1.636 0 0 0 1.63 0z" />
-                </svg>
-                @else
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-tag">
-                    <path d="M12.586 2.586A2 2 0 0 0 11.172 2H4a2 2 0 0 0-2 2v7.172a2 2 0 0 0 .586 1.414L19 21l3.5-7.5L12.586 2.586z" />
-                    <circle cx="7" cy="7" r="1" />
-                </svg>
-                @endif
-                <span>{{ $cat->name }}</span>
-            </a>
-            @endif
-            @endforeach
-        </nav>
+    <a href="{{ route('categories.electronics.index') }}"
+       class="px-3 py-1 rounded-full bg-gray-100 hover:bg-indigo-100 text-gray-800 hover:text-indigo-600 transition-colors duration-200">
+        {{ __('Electronics') }}
+    </a>
+
+    <a href="{{ route('categories.household.index') }}"
+       class="px-3 py-1 rounded-full bg-gray-100 hover:bg-indigo-100 text-gray-800 hover:text-indigo-600 transition-colors duration-200">
+        {{ __('Household') }}
+    </a>
+
+    <a href="{{ route('categories.real-estate.index') }}"
+       class="px-3 py-1 rounded-full bg-gray-100 hover:bg-indigo-100 text-gray-800 hover:text-indigo-600 transition-colors duration-200">
+        {{ __('Real Estate') }}
+    </a>
+
+    <a href="{{ route('categories.services.index') }}"
+       class="px-3 py-1 rounded-full bg-gray-100 hover:bg-indigo-100 text-gray-800 hover:text-indigo-600 transition-colors duration-200">
+        {{ __('Services') }}
+    </a>
+
+    <a href="{{ route('categories.others.index') }}"
+       class="px-3 py-1 rounded-full bg-gray-100 hover:bg-indigo-100 text-gray-800 hover:text-indigo-600 transition-colors duration-200">
+        {{ __('Others') }}
+    </a>
+
+</nav>
+
+
     </div>
 </nav>

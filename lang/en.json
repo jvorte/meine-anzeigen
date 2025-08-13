@@ -43,7 +43,16 @@
   "footer.copyright": "© :year My Ads. All rights reserved. D.Vortelinas",
   "footer.language": "Language:",
   "footer.german_option": "German",
-  "footer.english_option": "English"
+  "footer.english_option": "English",
+
+
+    "latest_ads_by_category": "Latest ads by category",
+    "discover_latest_offers": "Discover the latest offers, neatly organized by category.",
+    "new_ad": "New Ad",
+    "view_all": "View all",
+    "price_on_request": "Price on request",
+    "unknown_location": "Unknown location",
+    "no_ads_available": "No ads available yet."
 
 
 

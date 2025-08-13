@@ -43,5 +43,15 @@
   "footer.copyright": "© :year Meine Anzeigen. Alle Rechte vorbehalten. D.Vortelinas",
   "footer.language": "Sprache:",
   "footer.german_option": "Deutsch",
-  "footer.english_option": "Englisch"
+  "footer.english_option": "Englisch",
+
+  "latest_ads_by_category": "Neueste Anzeigen nach Kategorie",
+    "discover_latest_offers": "Entdecke die neuesten Angebote, übersichtlich nach Kategorien geordnet.",
+    "new_ad": "Neue Anzeige",
+    "view_all": "Alle anzeigen",
+    "price_on_request": "Preis auf Anfrage",
+    "unknown_location": "Unbekannter Ort",
+    "no_ads_available": "Es sind noch keine Anzeigen verfügbar."
+
+    
 }
