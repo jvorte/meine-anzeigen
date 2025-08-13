@@ -37,7 +37,7 @@
     {{-- Main container for the form --}}
     <div class="max-w-6xl mx-auto p-6 bg-white rounded-lg shadow-xl mt-6">
 
-        <form method="POST" action="{{ route('ads.motorrad.store') }}" enctype="multipart/form-data" class="space-y-8">
+        <form method="POST" action="{{ route('ads.motorcycles.store') }}" enctype="multipart/form-data" class="space-y-8">
             @csrf
 
             {{-- Vehicle Details Section (Marke & Modell) --}}

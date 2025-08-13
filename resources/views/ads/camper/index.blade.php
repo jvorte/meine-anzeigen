@@ -11,7 +11,7 @@
             </div>
 
             <div class="px-4 py-1 md:py-1 flex justify-end items-center">
-                <a href="{{ route('ads.camper.create') }}" class="c-button">
+                <a href="{{ route('ads.campers.create') }}" class="c-button">
                     <span class="c-main">
                         <span class="c-ico">
                             <span class="c-blur"></span>
@@ -29,11 +29,11 @@
         {{-- Breadcrumbs --}}
         <x-breadcrumbs :items="[
         ['label' => 'Όλες οι Αγγελίες', 'url' => route('ads.index')],
-        ['label' => 'Campers', 'url' => route('ads.camper.index')],
+        ['label' => 'Campers', 'url' => route('ads.campers.index')],
     ]" class="mb-8" />
 
         {{-- Filters Section --}}
-        <form action="{{ route('ads.camper.index') }}" method="GET" x-data="{
+        <form action="{{ route('ads.campers.index') }}" method="GET" x-data="{
             camperBrands: {{ json_encode($camperBrands) }},
             camperModels: {{ json_encode($camperModels) }},
             selectedBrand: '{{ request('brand') }}',
@@ -102,7 +102,7 @@
                                     d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                             </svg>
                         </button>
-                        <a href="{{ route('ads.camper.index') }}"
+                        <a href="{{ route('ads.campers.index') }}"
                             class="inline-flex items-center justify-center rounded-lg border border-gray-300 shadow-sm px-4 py-2 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
                                 stroke="currentColor" stroke-width="2">

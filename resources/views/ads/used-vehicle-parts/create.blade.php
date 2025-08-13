@@ -37,7 +37,7 @@
 
     <div class="max-w-6xl mx-auto p-6 bg-white rounded-lg shadow-xl mt-6">
 
-        <form method="POST" action="{{ route('ads.used-vehicle-parts.store') }}" enctype="multipart/form-data" class="space-y-8">
+        <form method="POST" action="{{ route('ads.vehicles-parts.store') }}" enctype="multipart/form-data" class="space-y-8">
             @csrf
 
             {{-- Part Details Section --}}
