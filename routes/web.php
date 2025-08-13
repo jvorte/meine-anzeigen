@@ -20,6 +20,7 @@ use App\Http\Controllers\OtherController;
 use App\Http\Controllers\RealEstateController;
 use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\UsedVehiclePartController;
+use Illuminate\Support\Facades\Session;
 
 /*
 |--------------------------------------------------------------------------
@@ -31,6 +32,17 @@ use App\Http\Controllers\UsedVehiclePartController;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
+
+Route::get('/lang/{locale}', function (string $locale) {
+    if (! in_array($locale, ['en', 'de'])) {
+        abort(400); // Invalid locale provided
+    }
+
+    // Put the selected locale in the session
+    Session::put('locale', $locale);
+
+    return redirect()->back();
+})->name('lang.switch');
 
 // --- PUBLIC ROUTES ---
 Route::get('/', [DashboardController::class, 'index'])->name('dashboard');

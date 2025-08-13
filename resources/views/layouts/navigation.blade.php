@@ -8,7 +8,7 @@
                     </a>
                 </div>
 
-                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex text-gray-500">
+                <div class="hidden space-x-3 sm:-my-px sm:ms-10 sm:flex text-gray-500">
                     <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 28 26" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-house-icon lucide-house">
                             <path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8" />
@@ -46,7 +46,8 @@
                             <path d="M14 13h2" />
                             <path d="M8 17h2" />
                             <path d="M14 17h2" />
-                        </svg> {{ __('My Ads') }}
+                        </svg>
+                        {{ __('My Ads') }}
                     </x-nav-link>
 
                     <x-nav-link :href="route('messages.index')" :active="request()->routeIs('messages.index')" class="relative flex items-center space-x-1">
@@ -55,7 +56,7 @@
                             <path d="M13 8H7" />
                             <path d="M17 12H7" />
                         </svg>
-                        <span>{{ __('Nachrichten') }}</span>
+                        <span>{{ __('Messages') }}</span>
                         @if (isset($unreadMessagesCount) && $unreadMessagesCount > 0)
                         <span class="inline-flex items-center justify-center w-5 h-5 text-xs font-bold text-white bg-red-600 rounded-full">
                             {{ $unreadMessagesCount }}
@@ -93,7 +94,7 @@
                     <x-slot name="trigger">
                         <button class="inline-flex items-center px-3 py-2 border border-transparent text-sm font-medium rounded-md text-gray-500 dark:text-gray-400 bg-white hover:text-gray-700 dark:hover:text-gray-300 focus:outline-none transition ease-in-out duration-150">
                             <img src="{{ Auth::user()->profile_photo_url }}" alt="Profile Photo" class="w-8 h-8 mr-2 rounded-full object-cover">
-                            <div>Willkommen, {{ Auth::user()->name }}</div>
+                            <div>{{ __('Welcome, :name', ['name' => Auth::user()->name]) }}</div>
                             <div class="ms-1">
                                 <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
                                     <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
@@ -123,7 +124,7 @@
                             <circle cx="5" cy="19" r="2" />
                             <path d="M8 19h3m5-17v17h6M6 12V7c0-1.1.9-2 2-2h3l5 5" />
                         </svg>
-                        Login
+                        {{ __('Login') }}
                     </a>
 
                     <a href="{{ route('register') }}" class="flex items-center text-sm text-gray-600 hover:text-blue-600 transition">
@@ -132,7 +133,7 @@
                             <path d="M21.378 16.626a1 1 0 0 0-3.004-3.004l-4.01 4.012a2 2 0 0 0-.506.854l-.837 2.87a.5.5 0 0 0 .62.62l2.87-.837a2 2 0 0 0 .854-.506z" />
                             <circle cx="10" cy="8" r="5" />
                         </svg>
-                        Registrieren
+                        {{ __('Register') }}
                     </a>
                 </div>
                 @endauth
@@ -163,7 +164,7 @@
                 {{ __('My Ads') }}
             </x-responsive-nav-link>
             <x-responsive-nav-link :href="route('messages.index')" :active="request()->routeIs('messages.index')" class="flex items-center">
-                {{ __('Nachrichten') }}
+                {{ __('Messages') }}
                 @if (isset($unreadMessagesCount) && $unreadMessagesCount > 0)
                 <span class="ms-2 inline-flex items-center justify-center w-5 h-5 text-xs font-bold text-white bg-red-600 rounded-full">
                     {{ $unreadMessagesCount }}
@@ -199,12 +200,12 @@
         @else
         <div class="pt-4 pb-1 border-t border-gray-200 dark:border-gray-600 px-4 space-y-1">
             <x-responsive-nav-link :href="route('login')">{{ __('Login') }}</x-responsive-nav-link>
-            <x-responsive-nav-link :href="route('register')">{{ __('Registrieren') }}</x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('register')">{{ __('Register') }}</x-responsive-nav-link>
         </div>
         @endauth
 
         <div class="pt-4 pb-1 border-t border-gray-200 dark:border-gray-600 px-4 space-y-1">
-            <h3 class="text-gray-500 font-medium">{{ __('Sprache') }}</h3>
+            <h3 class="text-gray-500 font-medium">{{ __('Language') }}</h3>
             <div class="flex space-x-2">
                 <a href="{{ url('lang/en') }}" class="text-sm text-gray-700 hover:text-blue-600">English</a>
                 <a href="{{ url('lang/de') }}" class="text-sm text-gray-700 hover:text-blue-600">Deutsch</a>
@@ -215,17 +216,17 @@
     <div class="max-w-7xl mx-auto py-2 px-4 sm:px-6 lg:px-8">
         {{-- Updated Header Section with Gradient and Prominent CTA --}}
         <div class="relative flex flex-col md:flex-row items-center justify-between space-y-4 md:space-y-0 md:space-x-4 p-6 bg-cover bg-center shadow-lg rounded-lg"
-            style="background-image: url('/storage/images/real-estate.jpg');"> {{-- Replaced with a stable placeholder image --}}
+            style="background-image: url('/storage/images/real-estate.jpg');">
             {{-- Overlay for better text readability --}}
-            <div class="absolute inset-0 bg-black opacity-20 rounded-lg"></div> {{-- Adjust opacity (e.g., 10 to 40) --}}
+            <div class="absolute inset-0 bg-black opacity-20 rounded-lg"></div>
 
             {{-- Main Heading and Description (ensure z-index to be above overlay) --}}
             <div class="relative z-10 text-center md:text-left flex-grow">
                 <h2 class="text-3xl font-extrabold text-gray-900 dark:text-gray-100 leading-tight mb-2">
-                    Finde deine nächste Anzeige
+                    {{ __('Find your next ad') }}
                 </h2>
                 <p class="text-md text-gray-600 dark:text-gray-100">
-                    Durchsuche Tausende von Anzeigen oder erstelle deine eigene.
+                    {{ __('Browse thousands of ads or create your own.') }}
                 </p>
             </div>
 
@@ -233,7 +234,7 @@
             <div class="relative z-10 w-full md:w-1/2 lg:w-2/5">
                 <form action="{{ route('ads.search') }}" method="GET">
 
-                    <input type="text" name="query" placeholder="Was suchst du? z.B. iPhone, Wohnung, Fahrrad..."
+                    <input type="text" name="query" placeholder="{{ __('What are you looking for? e.g. iPhone, apartment, bike...') }}"
                         class="w-full p-3 pl-10 border border-gray-300 rounded-full shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 transition-all duration-200 text-black dark:bg-gray-100 dark:text-gray-900 dark:border-gray-600"
                         aria-label="Search ads">
                     <svg xmlns="http://www.w3.org/2000/svg"
@@ -251,12 +252,12 @@
             class="p-4 mt-4 pb-2 border-b border-gray-200 dark:border-gray-700
                 grid grid-cols-2 gap-x-4 gap-y-3 justify-center md:flex md:flex-wrap md:justify-start">
             @foreach ($categories as $cat)
-            {{-- Check if it's the "Fahrzeuge" category --}}
+            {{-- Check if it's the "Vehicles" category --}}
             @if ($cat->slug == 'cars')
             {{-- Alpine.js for modal --}}
             <div x-data="{ open: false }" class="relative">
-                <a @click.prevent="open = true" {{-- Prevent default link behavior --}}
-                    href="#" {{-- No direct href, managed by modal --}}
+                <a @click.prevent="open = true"
+                    href="#"
                     class="flex items-center space-x-1 text-gray-700 hover:text-indigo-600 transition-colors duration-200 px-3 py-1 rounded-full dark:hover:bg-gray-400 dark:text-gray-700 dark:hover:text-white cursor-pointer">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
                         stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
@@ -267,7 +268,7 @@
                         <path d="M9 17h6" />
                         <circle cx="17" cy="17" r="2" />
                     </svg>
-                    <span>Vehicles</span>
+                    <span>{{ __('Vehicles') }}</span>
                 </a>
 
                 <div x-show="open" x-cloak
@@ -276,7 +277,6 @@
                     x-transition:enter-end="opacity-100" x-transition:leave="transition ease-in duration-200"
                     x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0">
 
-                    <!-- Modal Content Container -->
                     <div class=" rounded-xl w-full max-w-2xl max-h-[95vh] overflow-y-auto p-8 relative shadow-2xl transform transition-all duration-300"
                         @click.away="open = false" x-trap.noscroll="open"
                         x-transition:enter="transition ease-out duration-300 transform"
@@ -284,7 +284,6 @@
                         x-transition:leave="transition ease-in duration-200 transform"
                         x-transition:leave-start="opacity-100 scale-100" x-transition:leave-end="opacity-0 scale-95">
 
-                        <!-- Close Button -->
                         <button @click="open = false"
                             class="absolute top-3 right-3 text-gray-200 hover:text-gray-200 dark:hover:text-gray-300 transition-colors duration-200 focus:outline-none">
                             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"
@@ -293,49 +292,42 @@
                             </svg>
                         </button>
 
-                        <!-- Inner Content and Cards -->
                         <div class="rounded-2xl w-full max-w-md space-y-4 mx-auto">
-                            <!-- <h2 class="text-2xl font-bold text-gray-800 dark:text-gray-100 text-center mb-4">Fahrzeugkategorien</h2> -->
-
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
 
-                                <!-- Card for Cars -->
                                 <a href="{{ route('categories.cars.index') }}"
-                                             class="block bg-gray-100  rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 transform hover:-translate-y-1">
+                                    class="block bg-gray-100  rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 transform hover:-translate-y-1">
                                     <div class="flex flex-col items-center text-center">
                                         <img src="{{ asset('storage/images/car.jpg') }}" alt="Auto" class="h-40 w-full object-cover rounded-md mb-2">
-                                        <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-900">Cars</h3>
-                                        <p class="text-sm text-gray-500 dark:text-gray-800 mb-2">Verkaufe oder suche ein Auto.</p>
+                                        <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-900">{{ __('Cars') }}</h3>
+                                        <p class="text-sm text-gray-500 dark:text-gray-800 mb-2">{{ __('Sell or search for a car.') }}</p>
                                     </div>
                                 </a>
 
-                                <!-- Card for Motorcycles -->
                                 <a href="{{ route('categories.motorcycles.index') }}"
-                                           class="block bg-gray-100  rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 transform hover:-translate-y-1">
+                                    class="block bg-gray-100  rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 transform hover:-translate-y-1">
                                     <div class="flex flex-col items-center text-center">
                                         <img src="{{ asset('storage/images/motorcycle.jpg') }}" alt="Motorrad" class="h-40 w-full object-cover rounded-md mb-2">
-                                        <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-900">Motorräder</h3>
-                                        <p class="text-sm text-gray-500 dark:text-gray-800">Finde dein neues Motorrad.</p>
+                                        <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-900">{{ __('Motorcycles') }}</h3>
+                                        <p class="text-sm text-gray-500 dark:text-gray-800">{{ __('Find your new motorcycle.') }}</p>
                                     </div>
                                 </a>
 
-                                <!-- Card for Commercial Vehicles -->
                                 <a href="{{ route('categories.commercial-vehicles.index') }}"
                                     class="block bg-gray-100 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 transform hover:-translate-y-1">
                                     <div class="flex flex-col items-center text-center">
                                         <img src="{{ asset('storage/images/motorcycle.jpg') }}" alt="Motorrad" class="h-40 w-full object-cover rounded-md mb-2">
-                                        <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-900">Nutzfahrzeuge</h3>
-                                        <p class="text-sm text-gray-500 dark:text-gray-800">Anzeigen für Transporter und LKW.</p>
+                                        <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-900">{{ __('Commercial Vehicles') }}</h3>
+                                        <p class="text-sm text-gray-500 dark:text-gray-800">{{ __('Ads for vans and trucks.') }}</p>
                                     </div>
                                 </a>
 
-                                <!-- Card for Campers -->
                                 <a href="{{ route('categories.campers.index') }}"
                                     class="block bg-gray-100  rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 transform hover:-translate-y-1">
                                     <div class="flex flex-col items-center text-center">
                                         <img src="{{ asset('storage/images/camper.jpg') }}" alt="Wohnmobile" class="h-40 w-full object-cover rounded-md mb-2">
-                                        <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-900">Wohnmobile</h3>
-                                        <p class="text-sm text-gray-500 dark:text-gray-800 ">Verkaufe oder miete ein Wohnmobil.</p>
+                                        <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-900">{{ __('Campers') }}</h3>
+                                        <p class="text-sm text-gray-500 dark:text-gray-800">{{ __('Sell or rent a camper.') }}</p>
                                     </div>
                                 </a>
                             </div>
@@ -345,10 +337,8 @@
 
             </div>
             @elseif (!in_array($cat->slug, ['motorcycles', 'commercial-vehicles', 'campers']))
-            {{-- All other categories (excluding vehicle sub-categories that are now in the modal) remain as direct links --}}
             <a href="{{ route('categories.' . $cat->slug . '.index') }}"
                 class="flex items-center space-x-1 text-gray-700 hover:text-indigo-600 transition-colors duration-200 px-3 py-1 rounded-full dark:hover:bg-gray-400 dark:text-gray-700 dark:hover:text-white">
-                {{-- Original SVG Icon Logic here for other categories --}}
                 @if ($cat->slug == 'vehicles-parts')
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-wrench-icon lucide-wrench">
                     <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.106-3.105c.32-.322.863-.22.983.218a6 6 0 0 1-8.259 7.057l-7.91 7.91a1 1 0 0 1-2.999-3l7.91-7.91a6 6 0 0 1 7.057-8.259c.438.12.54.662.219.984z" />
@@ -399,7 +389,6 @@
                     <path d="M21 12.43a1.93 1.93 0 0 0 0-3.36L8.83 2.2a1.64 1.64 0 0 0-1.63 0L3 4.57a1.93 1.93 0 0 0 0 3.36l12.18 6.86a1.636 1.636 0 0 0 1.63 0z" />
                 </svg>
                 @else
-                {{-- Default icon if no match --}}
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-tag">
                     <path d="M12.586 2.586A2 2 0 0 0 11.172 2H4a2 2 0 0 0-2 2v7.172a2 2 0 0 0 .586 1.414L19 21l3.5-7.5L12.586 2.586z" />
                     <circle cx="7" cy="7" r="1" />
