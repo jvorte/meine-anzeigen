@@ -22,6 +22,16 @@
   "Ads for vans and trucks.": "Anzeigen für Transporter und LKW.",
   "Campers": "Wohnmobile",
   "Sell or rent a camper.": "Verkaufe oder miete ein Wohnmobil.",
+  "Others": "Sonstige",
+  "Real Estate": "Immobilie",
+  "Household": "Haushalt",
+  "Electronics": "Elektronik",
+  "Services": "Dienstleistungen",
+  "Vehicle Parts": "Fahrzeugteile",
+  "Boats": "Boote",
+  "New Add": "Neu hinzufügen",
+
+
 
   "footer.my_ads": "Meine Anzeigen",
   "footer.text_ad": "„Meine Anzeigen“ ist Ihre Plattform zum schnellen und einfachen Veröffentlichen und Entdecken von Inseraten. Treten Sie mit Käufern und Verkäufern in Kontakt, finden Sie, was Sie brauchen, und bewerben Sie Ihre Angebote mit nur wenigen Klicks.",
@@ -44,14 +54,93 @@
   "footer.language": "Sprache:",
   "footer.german_option": "Deutsch",
   "footer.english_option": "Englisch",
-
+  "price_on_request": "Preis auf Anfrage",
   "latest_ads_by_category": "Neueste Anzeigen nach Kategorie",
-    "discover_latest_offers": "Entdecke die neuesten Angebote, übersichtlich nach Kategorien geordnet.",
-    "new_ad": "Neue Anzeige",
-    "view_all": "Alle anzeigen",
-    "price_on_request": "Preis auf Anfrage",
+    "discover_latest_offers": "Entdecken Sie die neuesten Angebote",
     "unknown_location": "Unbekannter Ort",
-    "no_ads_available": "Es sind noch keine Anzeigen verfügbar."
+
+
+
+   "contact_us": "Kontaktieren Sie uns",
+    "contact_intro_text": "Verbinden Sie die Punkte für Reviewer, indem Sie PRs mit zugehörigen Tickets verknüpfen und abrufen",
+    "full_name": "Vollständiger Name",
+    "name_placeholder": "Max Mustermann",
+    "email_address": "E-Mail-Adresse",
+    "email_placeholder": "you@example.com",
+    "subject": "Betreff",
+    "subject_placeholder": "Frage zu Ihren Dienstleistungen",
+    "message": "Nachricht",
+    "message_placeholder": "Ihre Nachricht hier...",
+    "send_message": "Nachricht senden",
+    "sending": "Wird gesendet...",
+    "contact_error": "Ups! Etwas ist schief gelaufen. Bitte überprüfen Sie Ihre Verbindung und versuchen Sie es erneut.",
+
+   "update_password": "Passwort aktualisieren",
+  "update_password_intro": "Stellen Sie sicher, dass Ihr Konto ein langes, zufälliges Passwort verwendet, um sicher zu bleiben.",
+  "current_password": "Aktuelles Passwort",
+  "new_password": "Neues Passwort",
+  "confirm_password": "Passwort bestätigen",
+  "save": "Speichern",
+  "saved": "Gespeichert.",
+    "my_profile": "Mein Profil",
+  "update_profile_intro": "Aktualisieren Sie die Profildaten und E-Mail-Adresse Ihres Kontos.",
+
+    "profile_information": "Profilinformationen",
+ 
+  "profile_photo": "Profilfoto",
+  "no_profile_photo_uploaded": "Kein Profilfoto hochgeladen.",
+  "accepted_formats": "Akzeptierte Formate: JPG, PNG, GIF. Max. Größe: 2MB.",
+  "remove_photo": "Foto entfernen",
+  "name": "Name",
+  "email": "E-Mail",
+  "your_email_unverified": "Ihre E-Mail-Adresse ist nicht verifiziert.",
+  "click_here_resend_verification": "Klicken Sie hier, um die Bestätigungs-E-Mail erneut zu senden.",
+  "verification_link_sent": "Ein neuer Bestätigungslink wurde an Ihre E-Mail-Adresse gesendet.",
+  "country": "Land",
+  "city": "Stadt",
+  "postal_code": "Postleitzahl",
+  "street_address": "Straße und Hausnummer",
+  "mobile_phone": "Mobiltelefon",
+  "phone": "Telefon",
+ 
+  "delete_profile_photo_confirmation": "Sind Sie sicher, dass Sie Ihr Profilfoto löschen möchten?",
+  "delete_photo_warning": "Sobald Ihr Profilfoto gelöscht wurde, kann es nicht wiederhergestellt werden. Stattdessen wird ein Standardbild verwendet.",
+
+  "delete_photo": "Foto löschen",
+
+
+    "delete_account": "Konto löschen",
+  "delete_account_intro": "Sobald Ihr Konto gelöscht wird, werden alle Ressourcen und Daten dauerhaft gelöscht. Bitte laden Sie alle Daten oder Informationen herunter, die Sie behalten möchten, bevor Sie Ihr Konto löschen.",
+  "confirm_delete_account": "Sind Sie sicher, dass Sie Ihr Konto löschen möchten?",
+  "delete_account_warning": "Sobald Ihr Konto gelöscht wird, werden alle Ressourcen und Daten dauerhaft gelöscht. Bitte geben Sie Ihr Passwort ein, um zu bestätigen, dass Sie Ihr Konto dauerhaft löschen möchten.",
+  "password": "Passwort",
+  "cancel": "Abbrechen",
+
+ "my_ads": "Meine Anzeigen",
+  "my_ads_intro": "Verbinden Sie die Punkte für Prüfer, indem Sie PRs mit verwandten Tickets verknüpfen und abrufen",
+ "new_ad": "Neue Anzeige",
+ "view_all": "Alle Anzeige",
+  "sections.cars": "Autos",
+  "sections.boats": "Boote",
+  "sections.electronics": "Elektronik",
+  "sections.household": "Haushalt",
+  "sections.real_estate": "Immobilien",
+  "sections.services": "Dienstleistungen",
+  "sections.others": "Andere",
+  "sections.motorcycles": "Motorräder",
+  "sections.commercial_vehicles": "Nutzfahrzeuge",
+  "sections.campers": "Wohnmobile",
+  "sections.used_vehicle_parts": "Gebrauchte Fahrzeugteile",
+
+
+   "my_messages": "Meine Nachrichten",
+  "intro_text": "Verbinden Sie die Punkte für Prüfer, indem Sie PRs mit verwandten Tickets verknüpfen und abrufen",
+  "no_conversations": "Sie haben noch keine Unterhaltung.",
+  "no_title": "Kein Titel",
+  "no_messages": "Keine Nachrichten",
+  "confirm_delete": "Sind Sie sicher, dass Sie diese Unterhaltung löschen möchten?",
+  "delete": "Löschen"
+
 
     
 }

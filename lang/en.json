@@ -45,15 +45,99 @@
   "footer.german_option": "German",
   "footer.english_option": "English",
 
+  
 
-    "latest_ads_by_category": "Latest ads by category",
+
+   "new_ad": "New Ad",
+    "latest_ads_by_category": "Latest Ads by Category",
     "discover_latest_offers": "Discover the latest offers, neatly organized by category.",
-    "new_ad": "New Ad",
-    "view_all": "View all",
-    "price_on_request": "Price on request",
-    "unknown_location": "Unknown location",
-    "no_ads_available": "No ads available yet."
+    "view_all": "View All",
+    "on_request": "On request",
+    "location_unknown": "Location unknown",
+    "no_ads_available": "No ads available yet.",
+    "currently_no_ads": "There are currently no ads available.",
+
+     "contact_us": "Contact Us",
+  "contact_intro_text": "Connect the dots for reviewers by linking PRs to related tickets and retrieving",
+  "full_name": "Full Name",
+  "name_placeholder": "John Doe",
+  "email_address": "Email Address",
+  "email_placeholder": "you@example.com",
+  "subject": "Subject",
+  "subject_placeholder": "Question about your services",
+  "message": "Message",
+  "message_placeholder": "Your message here...",
+  "send_message": "Send Message",
+  "sending": "Sending...",
+  "contact_error": "Oops! Something went wrong. Please check your connection and try again.",
 
 
+    "update_password": "Update Password",
+    "update_password_intro": "Ensure your account is using a long, random password to stay secure.",
+    "current_password": "Current Password",
+    "new_password": "New Password",
+    "confirm_password": "Confirm Password",
+    "save": "Save",
+    "saved": "Saved.",
+      "my_profile": "My Profile",
+
+
+
+   "profile_information": "Profile Information",
+  "update_profile_intro": "Update your account's profile information and email address.",
+  "profile_photo": "Profile Photo",
+  "no_profile_photo_uploaded": "No profile photo uploaded.",
+  "accepted_formats": "Accepted formats: JPG, PNG, GIF. Max size: 2MB.",
+  "remove_photo": "Remove Photo",
+  "name": "Name",
+  "email": "Email",
+  "your_email_unverified": "Your email address is unverified.",
+  "click_here_resend_verification": "Click here to re-send the verification email.",
+  "verification_link_sent": "A new verification link has been sent to your email address.",
+  "country": "Country",
+  "city": "City",
+  "postal_code": "Postal Code",
+  "street_address": "Street Address",
+  "mobile_phone": "Mobile Phone",
+  "phone": "Phone",
+
+  "delete_profile_photo_confirmation": "Are you sure you want to delete your profile photo?",
+  "delete_photo_warning": "Once your profile photo is deleted, you will not be able to recover it. A default image will be used instead.",
+ 
+  "delete_photo": "Delete Photo",
+
+
+    "delete_account": "Delete Account",
+  "delete_account_intro": "Once your account is deleted, all of its resources and data will be permanently deleted. Before deleting your account, please download any data or information that you wish to retain.",
+  "confirm_delete_account": "Are you sure you want to delete your account?",
+  "delete_account_warning": "Once your account is deleted, all of its resources and data will be permanently deleted. Please enter your password to confirm you would like to permanently delete your account.",
+  "password": "Password",
+  "cancel": "Cancel",
+
+
+    "my_ads": "My Ads",
+  "my_ads_intro": "Connect the dots for reviewers by linking PRs to related tickets and retrieving",
+
+  "sections.cars": "Cars",
+  "sections.boats": "Boats",
+  "sections.electronics": "Electronics",
+  "sections.household": "Household",
+  "sections.real_estate": "Real Estate",
+  "sections.services": "Services",
+  "sections.others": "Others",
+  "sections.motorcycles": "Motorcycles",
+  "sections.commercial_vehicles": "Commercial Vehicles",
+  "sections.campers": "Campers",
+  "sections.used_vehicle_parts": "Used Vehicle Parts",
+  "price_on_request": "Price on request",
+
+
+    "my_messages": "My Messages",
+  "intro_text": "Connect the dots for reviewers by linking PRs to related tickets and retrieving",
+  "no_conversations": "You have no conversations yet.",
+  "no_title": "No title",
+  "no_messages": "No messages",
+  "confirm_delete": "Are you sure you want to delete this conversation?",
+  "delete": "Delete"
 
 }

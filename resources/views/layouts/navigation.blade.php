@@ -253,7 +253,7 @@
    
 {{-- Category Navigation Links --}}
 <nav class="p-2 mt-4 pb-2 border-b border-gray-200 dark:border-gray-700
-            flex flex-wrap gap-3 justify-center md:justify-start">
+            flex flex-wrap gap-2 justify-center md:justify-start">
 
     <a href="{{ route('categories.cars.index') }}"
        class="px-3 py-1 rounded-full bg-gray-100 hover:bg-indigo-100 text-gray-800 hover:text-indigo-600 transition-colors duration-200">

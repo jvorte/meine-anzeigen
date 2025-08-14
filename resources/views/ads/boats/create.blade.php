@@ -71,20 +71,6 @@
                 </div>
             </section>
 
-            {{-- Preise Section --}}
-            {{-- <section class="bg-gray-50 p-6 rounded-lg shadow-inner">
-                <h4 class="text-xl font-semibold text-gray-700 mb-6">Preise</h4>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">              
-                    <div>
-                        <label for="price" class="block text-sm font-medium text-gray-700 mb-2">Preis (in €)</label>
-                        <input type="number" step="0.01" name="price" id="price" value="" placeholder="z.B. 15000.00"
-                               class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
-                        @error('price')
-                            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-            @enderror
-    </div>
-    </div>
-    </section> --}}
 
 
 
@@ -308,7 +294,7 @@
         </div>
 
 
-              <div class="mt-2">
+        <div class="mt-2">
             <label class="inline-flex items-center">
                 <input type="checkbox" name="show_email" value="1" class="rounded border-gray-300">
                 <span class="ml-2">email</span>
@@ -317,9 +303,6 @@
 
 
     </section>
-
-
-
 
 
 
@@ -371,10 +354,6 @@
                         this.files.forEach(file => dataTransfer.items.add(file));
                         event.target.files = dataTransfer.files;
 
-                        // No need to clear event.target.value = '' if you're managing `event.target.files` directly.
-                        // It can sometimes interfere with re-selecting the *same* file if you clear it.
-                        // If you want to allow selecting the same file multiple times, you might need
-                        // to rethink the preview logic or clear it but rely on the `files` array.
                     },
 
                     remove(index) {

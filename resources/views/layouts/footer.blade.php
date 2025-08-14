@@ -1,7 +1,7 @@
 <!-- resources/views/layouts/partials/footer.blade.php -->
 
 <footer class="bg-gray-900 text-gray-300 py-12 mt-auto">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="grid grid-cols-1 md:grid-cols-4 gap-8 border-b border-gray-700 pb-8 mb-8">
 
             <!-- Column 1: Company Info -->
