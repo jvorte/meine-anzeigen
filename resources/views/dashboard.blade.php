@@ -14,7 +14,7 @@
     </x-slot>
 
     {{-- Main Content --}}
-    <div class="py-2 bg-white min-h-screen">
+    <div class="py-2 bg-white  min-h-screen  ">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white dark:bg-gray-100 overflow-hidden shadow-xl sm:rounded-2xl p-6 md:p-8">
                 <div class="mb-10 text-center">
