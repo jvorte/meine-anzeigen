@@ -30,8 +30,7 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 p-10">
         {{-- Breadcrumbs --}}
         <x-breadcrumbs :items="[
-            ['label' =>     __('New Add') , 'url' => route('ads.index')],
-            ['label' =>  __('Boote'), 'url' => route('categories.boats.index')],
+            ['label' => __('all_boats'), 'url' => route('categories.boats.index')],
             ['label' => $boat->title, 'url' => null],
         ]" class="mb-8" />
 

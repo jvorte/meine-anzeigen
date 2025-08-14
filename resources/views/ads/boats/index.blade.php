@@ -28,7 +28,7 @@
         {{-- Breadcrumbs --}}
         <x-breadcrumbs :items="[
         ['label' => __('all_boats'), 'url' => route('ads.index')],
-        ['label' => __('boats'), 'url' => route('ads.boats.index')],
+       
     ]" class="mb-6" />
 
         {{-- Filters Section --}}
