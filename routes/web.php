@@ -45,6 +45,9 @@ Route::get('/lang/{locale}', function (string $locale) {
 })->name('lang.switch');
 
 // --- PUBLIC ROUTES ---
+
+Route::delete('/conversations/{conversation}', [MessageController::class, 'delete'])
+    ->name('conversations.delete');
 Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
 Route::get('/dashboard', fn () => redirect()->route('dashboard'));
 
