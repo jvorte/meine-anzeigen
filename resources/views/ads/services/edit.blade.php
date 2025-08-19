@@ -3,11 +3,10 @@
 
     <x-slot name="header">
         <h2 class="text-3xl font-extrabold text-gray-900 leading-tight mb-3">
-            Dienstleistung Anzeige bearbeiten
+      {{ __('Edit Ad') }}
         </h2>
         <p class="text-md text-gray-700 max-w-3xl">
-            Passe die Details deiner Dienstleistung Anzeige an oder lösche sie. Nutze das folgende Formular, um alle
-            Angaben übersichtlich und einfach zu bearbeiten.
+          {{ __('Edit the details of your ad or add new photos') }}
         </p>
     </x-slot>
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -68,8 +67,7 @@
 
                     {{-- Titel der Dienstleistung --}}
                     <div class="md:col-span-2">
-                        <label for="title" class="block text-sm font-semibold text-gray-700 mb-3">Titel der
-                            Dienstleistung</label>
+                        <label for="title" class="block text-sm font-semibold text-gray-700 mb-3">{{ __('title') }}</label>
                         <input type="text" name="title" id="title" value="{{ old('title', $service->title) }}"
                             placeholder="z.B. Professionelle Fensterreinigung"
                             class="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-opacity-50 transition duration-200">
@@ -116,8 +114,7 @@
 
                 {{-- Beschreibung --}}
                 <div class="mt-8">
-                    <label for="description" class="block text-sm font-semibold text-gray-700 mb-3">Beschreibung der
-                        Dienstleistung</label>
+                    <label for="description" class="block text-sm font-semibold text-gray-700 mb-3">{{ __('description') }}</label>
                     <textarea name="description" id="description" rows="7"
                         placeholder="Beschreibe hier deine Dienstleistung detailliert. Was bietest du an? Welche Erfahrungen hast du?"
                         class="w-full p-4 border border-gray-300 rounded-lg shadow-sm resize-none focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-opacity-50 transition duration-200">{{ old('description', $service->description) }}</textarea>
@@ -129,7 +126,7 @@
             {{-- Contact Section --}}
 <section class="bg-gray-50 p-6 rounded-lg shadow-inner">
     <h4 class="text-xl font-semibold text-gray-700 mb-6">
-        Select if you want to publish your Mobile phone or email
+     {{ __('publish_contact_select') }}
     </h4>
 
     {{-- Phone --}}
@@ -180,7 +177,7 @@
 
             {{-- Photos --}}
                     <section class="bg-gray-50 p-6 rounded-lg shadow-inner">
-                <h4 class="text-xl font-semibold text-gray-700 mb-6">Fotos verwalten und hinzufügen</h4>
+                <h4 class="text-xl font-semibold text-gray-700 mb-6">{{ __('section_photos') }}</h4>
 
                 {{-- Unified Alpine.js component for both existing and new images --}}
                 <div x-data="multiImageUploader(
@@ -287,7 +284,7 @@
             <div class="pt-8 border-t border-gray-300 flex justify-end">
                 <button type="submit"
                     class="bg-gray-700 text-white px-12 py-4 rounded-full font-semibold text-lg shadow-lg hover:bg-gray-800 focus:outline-none focus:ring-4 focus:ring-gray-500 focus:ring-opacity-75 transition transform hover:scale-105">
-                    Anzeige aktualisieren
+                 {{ __('update_listing') }}
                 </button>
             </div>
         </form>

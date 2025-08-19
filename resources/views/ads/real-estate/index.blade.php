@@ -19,7 +19,7 @@
                             <span class="c-blur"></span>
                             <span class="ico-text">+</span>
                         </span>
-                        New Ad
+               {{ __('create_ad') }}
 
                     </span>
                 </a>
@@ -41,8 +41,8 @@
 
 
                     <div class="flex-grow min-w-[200px]">
-                        <label for="title" class="sr-only">Search with title</label>
-                        <input type="text" name="title" id="title" value="{{ request('title') }}" placeholder="Search with title..." class="w-full rounded-lg border-gray-300 shadow-sm text-sm focus:ring-indigo-500 focus:border-indigo-500 p-1">
+                        <label for="title" class="sr-only">{{ __('search') }}</label>
+                        <input type="text" name="title" id="title" value="{{ request('title') }}" placeholder="{{ __('search') }}..." class="w-full rounded-lg border-gray-300 shadow-sm text-sm focus:ring-indigo-500 focus:border-indigo-500 p-1">
                     </div>
 
 
@@ -72,18 +72,18 @@
 
                     {{-- Price Range with Input Fields --}}
                     <div class="flex-grow min-w-[150px] relative">
-                        <label for="min_price" class="sr-only">min Price</label>
-                        <input type="number" name="min_price" value="{{ request('min_price') }}" placeholder="min Price" class="w-full rounded-l-lg border-gray-300 shadow-sm text-sm focus:ring-indigo-500 focus:border-indigo-500" />
+                        <label for="min_price" class="sr-only">{{ __('min_price') }}</label>
+                        <input type="number" name="min_price" value="{{ request('min_price') }}" placeholder="{{ __('min_price') }}" class="w-full rounded-l-lg border-gray-300 shadow-sm text-sm focus:ring-indigo-500 focus:border-indigo-500" />
                     </div>
                     <div class="flex-grow min-w-[150px] relative">
-                        <label for="max_price" class="sr-only">max Price</label>
-                        <input type="number" name="max_price" value="{{ request('max_price') }}" placeholder="max Price" class="w-full rounded-r-lg border-gray-300 shadow-sm text-sm focus:ring-indigo-500 focus:border-indigo-500" />
+                        <label for="max_price" class="sr-only">{{ __('max_price') }}</label>
+                        <input type="number" name="max_price" value="{{ request('max_price') }}" placeholder="{{ __('max_price') }}" class="w-full rounded-r-lg border-gray-300 shadow-sm text-sm focus:ring-indigo-500 focus:border-indigo-500" />
                     </div>
 
                     {{-- Submit and Reset Buttons --}}
                     <div class="flex items-center gap-2">
                         <button type="submit" class="inline-flex items-center justify-center rounded-lg border border-transparent shadow-sm px-4 py-2 bg-indigo-600 text-sm font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                            <span class="hidden sm:inline">Search</span>
+                            <span class="hidden sm:inline">{{ __('search') }}</span>
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 sm:ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                             </svg>
@@ -99,7 +99,7 @@
                 {{-- More Filters Toggle Button --}}
                 <div class="flex justify-start">
                     <button type="button" @click="showMoreFilters = !showMoreFilters" class="text-sm text-indigo-600 hover:text-indigo-800 transition duration-150 ease-in-out font-medium inline-flex items-center">
-                        <span x-text="showMoreFilters ? 'Λιγότερα Φίλτρα' : 'Περισσότερα Φίλτρα'"></span>
+                        <span x-text="showMoreFilters ? '{{ __('less_filters') }}' : '{{ __('more_filters') }}'"></span>
                         <svg x-show="!showMoreFilters" class="ml-1 h-4 w-4 transform transition-transform duration-200" fill="currentColor" viewBox="0 0 20 20">
                             <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
                         </svg>
@@ -123,7 +123,7 @@
                         <div class="flex-grow min-w-[150px]">
                             <label for="location" class="block text-sm font-medium text-gray-700">Location</label>
                             <select name="location" id="location" class="w-full rounded-lg border-gray-300 shadow-sm text-sm focus:ring-indigo-500 focus:border-indigo-500">
-                                <option value="">select</option>
+                                <option value="">{{ __('select') }}</option>
                                 @foreach($locations as $location)
                                 <option value="{{ $location }}" {{ request('petFriendlyOption') == $location ? 'selected' : '' }}>
                                     {{ $location }}
@@ -136,7 +136,7 @@
                         <div class="flex-grow min-w-[150px]">
                             <label for="postcode" class="block text-sm font-medium text-gray-700">Postcode</label>
                             <select name="postcode" id="postcode" class="w-full rounded-lg border-gray-300 shadow-sm text-sm focus:ring-indigo-500 focus:border-indigo-500">
-                                <option value="">select</option>
+                                <option value="">{{ __('select') }}</option>
                                 @foreach($postcodes as $postcode)
                                 <option value="{{ $postcode }}" {{ request('postcode') == $postcode ? 'selected' : '' }}>
                                     {{ $postcode }}
@@ -150,7 +150,7 @@
                         <div class="flex-grow min-w-[150px]">
                             <label for="condition" class="block text-sm font-medium text-gray-700">Condition</label>
                             <select name="condition" id="condition" class="w-full rounded-lg border-gray-300 shadow-sm text-sm focus:ring-indigo-500 focus:border-indigo-500">
-                                <option value="">select</option>
+                                <option value="">{{ __('select') }}</option>
                                 @foreach($conditions as $condition)
                                 <option value="{{ $condition }}" {{ request('condition') == $condition ? 'selected' : '' }}>
                                     {{ $condition }}
@@ -165,7 +165,7 @@
                         <div class="flex-grow min-w-[150px]">
                             <label for="constructionTypeOption" class="block text-sm font-medium text-gray-700">Construction Type</label>
                             <select name="constructionTypeOption" id="condition" class="w-full rounded-lg border-gray-300 shadow-sm text-sm focus:ring-indigo-500 focus:border-indigo-500">
-                                <option value="">select</option>
+                                <option value="">{{ __('select') }}</option>
                                 @foreach($constructionTypeOptions as $constructionTypeOption)
                                 <option value="{{ $constructionTypeOption }}" {{ request('constructionTypeOption') == $condition ? 'selected' : '' }}>
                                     {{ $constructionTypeOption }}
@@ -180,7 +180,7 @@
                         <div>
                             <label for="anzahl_zimmer" class="block text-sm font-medium text-gray-700">Number of Rooms</label>
                             <select name="anzahl_zimmer" id="anzahl_zimmer" class="mt-1 w-full rounded-lg border-gray-300 shadow-sm text-sm focus:ring-indigo-500 focus:border-indigo-500">
-                                <option value="">Select</option>
+                                <option value="">{{ __('select') }}</option>
                                 <option value="1" {{ request('anzahl_zimmer') == '1' ? 'selected' : '' }}>1</option>
                                 <option value="2" {{ request('anzahl_zimmer') == '2' ? 'selected' : '' }}>2</option>
                                 <option value="3" {{ request('anzahl_zimmer') == '3' ? 'selected' : '' }}>3</option>
@@ -194,7 +194,7 @@
                         <div class="flex-grow min-w-[150px]">
                             <label for="heatingOptions" class="block text-sm font-medium text-gray-700">Ηeating</label>
                             <select name="heatingOptions" id="heatingOptions" class="w-full rounded-lg border-gray-300 shadow-sm text-sm focus:ring-indigo-500 focus:border-indigo-500">
-                                <option value="">Select</option>
+                                <option value="">{{ __('select') }}</option>
                                 @foreach($heatingOptions as $heatingOption)
                                 <option value="{{ $heatingOption }}" {{ request('heatingOptions') == $heatingOption ? 'selected' : '' }}>
                                     {{ $heatingOption }}
@@ -209,7 +209,7 @@
                         <div class="flex-grow min-w-[150px]">
                             <label for="petFriendlyOption" class="block text-sm font-medium text-gray-700">Pet Friendly</label>
                             <select name="petFriendlyOption" id="petFriendlyOption" class="w-full rounded-lg border-gray-300 shadow-sm text-sm focus:ring-indigo-500 focus:border-indigo-500">
-                                <option value="">select</option>
+                                <option value="">{{ __('select') }}</option>
                                 @foreach($petFriendlyOptions as $petFriendlyOption)
                                 <option value="{{ $petFriendlyOption }}" {{ request('petFriendlyOption') == $petFriendlyOption ? 'selected' : '' }}>
                                     {{ $petFriendlyOption }}
@@ -244,7 +244,7 @@
                         <div>
                             <label for="sort_by" class="block text-sm font-medium text-gray-700">Ταξινόμηση</label>
                             <select name="sort_by" id="sort_by" class="mt-1 w-full rounded-lg border-gray-300 shadow-sm text-sm focus:ring-indigo-500 focus:border-indigo-500">
-                                <option value="">Επιλέξτε</option>
+                                <option value="">{{ __('select') }}</option>
                                 <option value="latest" {{ request('sort_by') == 'latest' ? 'selected' : '' }}>Τελευταία</option>
                                 <option value="price_asc" {{ request('sort_by') == 'price_asc' ? 'selected' : '' }}>Τιμή: Φθηνότερο πρώτα</option>
                                 <option value="price_desc" {{ request('sort_by') == 'price_desc' ? 'selected' : '' }}>Τιμή: Ακριβότερο πρώτα</option>

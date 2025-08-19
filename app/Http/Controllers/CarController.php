@@ -132,24 +132,12 @@ class CarController extends Controller
 
         $initialModels = []; // No models initially selected
 
-        $colors = ['Black', 'White', 'Red', 'Blue', 'Green', 'Yellow', 'Orange', 'Silver', 'Grey', 'Brown', 'Other'];
-        $conditions = ['new', 'used', 'accident', 'damaged'];
-        $vehicleTypes = ['sedan', 'station', 'SUV/Off-road', 'coupe', 'convertible', 'minivan', 'pickup'];
-        $fuelTypes = ['Petrol', 'Diesel', 'Electric', 'Hybrid', 'LPG', 'CNG'];
-        $transmissions = ['manual', 'automatic'];
-        $drives = ['front', 'rear', 'all'];
-        $sellerTypes = ['Private', 'Handler'];
+
 
         return view('ads.cars.create', compact(
             'brands',
             'initialModels',
-            'colors',
-            'conditions',
-            'vehicleTypes',
-            'fuelTypes',
-            'transmissions',
-            'drives',
-            'sellerTypes'
+         
         ));
     }
 

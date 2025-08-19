@@ -5,10 +5,10 @@
     {{-- ----------------------------------breadcrumbs --------------------------------------------------- --}}
     <x-slot name="header">
         <h2 class="text-3xl font-extrabold text-gray-900 leading-tight mb-2">
-            Auto Anzeige bearbeiten
+       {{ __('Edit Ad') }}: {{ $commercialVehicle->title }}
         </h2>
         <p class="text-md text-gray-700 dark:text-gray-500">
-            Bearbeite die Details deiner Anzeige oder füge neue Fotos hinzu.
+      {{ __('Edit the details of your ad or add new photos') }}
         </p>
     </x-slot>
 
@@ -59,7 +59,7 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
 
                     <div>
-                        <label for="title" class="block text-sm font-medium text-gray-700 mb-1">Titel</label>
+                        <label for="title" class="block text-sm font-medium text-gray-700 mb-1">{{ __('title') }}</label>
                         <input type="text" name="title" id="title" value="{{ old('title', $commercialVehicle->title) }}"
                                class="w-full border border-gray-300 rounded-md shadow-sm px-3 py-2 focus:ring-indigo-500 focus:border-indigo-500" />
                     </div>
@@ -71,7 +71,7 @@
                     </div>
 
                     <div>
-                        <label for="commercial_brand_id" class="block text-sm font-medium text-gray-700 mb-1">Marke</label>
+                        <label for="commercial_brand_id" class="block text-sm font-medium text-gray-700 mb-1">{{ __('brand') }}</label>
                         <select name="commercial_brand_id" id="commercial_brand_id" {{-- Changed name and id --}}
                                 class="w-full border border-gray-300 rounded-md shadow-sm px-3 py-2 focus:ring-indigo-500 focus:border-indigo-500">
                             <option value="">-- Bitte wählen --</option>
@@ -82,7 +82,7 @@
                     </div>
 
                <div>
-                        <label for="commercial_model_id" class="block text-sm font-medium text-gray-700 mb-1">Modell</label>
+                        <label for="commercial_model_id" class="block text-sm font-medium text-gray-700 mb-1">{{ __('model') }}</label>
                         <select name="commercial_model_id" id="commercial_model_id"
                                 class="w-full border border-gray-300 rounded-md shadow-sm px-3 py-2 focus:ring-indigo-500 focus:border-indigo-500">
                             <option value="">-- Bitte wählen --</option>
@@ -96,7 +96,7 @@
                 {{-- Erstzulassung --}}
 
 <div>
-    <label for="first_registration" class="block text-sm font-medium text-gray-700 mb-2">Erstzulassung (Year)</label>
+    <label for="first_registration" class="block text-sm font-medium text-gray-700 mb-2">{{ __('year_of_construction') }}</label>
     <select name="first_registration" id="first_registration"
         class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
         <option value="">Bitte wählen</option>
@@ -137,13 +137,13 @@
 
 
                     <div>
-                        <label for="mileage" class="block text-sm font-medium text-gray-700 mb-1">Kilometerstand (km)</label>
+                        <label for="mileage" class="block text-sm font-medium text-gray-700 mb-1">{{ __('Mileage') }} (km)</label>
                         <input type="number" name="mileage" id="mileage" value="{{ old('mileage', $commercialVehicle->mileage) }}"
                                class="w-full border border-gray-300 rounded-md shadow-sm px-3 py-2 focus:ring-indigo-500 focus:border-indigo-500" />
                     </div>
 
                     <div>
-                        <label for="power" class="block text-sm font-medium text-gray-700 mb-1">Leistung (PS)</label>
+                        <label for="power" class="block text-sm font-medium text-gray-700 mb-1">{{ __('Power') }} (PS)</label>
                         <input type="number" name="power" id="power" value="{{ old('power', $commercialVehicle->power) }}"
                                class="w-full border border-gray-300 rounded-md shadow-sm px-3 py-2 focus:ring-indigo-500 focus:border-indigo-500" />
                     </div>
@@ -277,14 +277,14 @@
                 </div>
 
              <div class="my-6">
-    <label for="description" class="block text-sm font-semibold text-gray-700 mb-2">Beschreibung</label>
+    <label for="description" class="block text-sm font-semibold text-gray-700 mb-2">{{ __('description') }}</label>
     <textarea name="description" id="description" rows="6" class="w-full border border-gray-300 rounded-md shadow-sm px-4 py-2 focus:ring-indigo-500 focus:border-indigo-500">{{ old('description', $commercialVehicle->description) }}</textarea>
   </div>
 
 {{-- Contact Section --}}
 <section class="bg-gray-50 p-6 rounded-lg shadow-inner">
     <h4 class="text-xl font-semibold text-gray-700 mb-6">
-        Select if you want to publish your Mobile phone or email
+         {{ __('publish_contact_select') }}
     </h4>
 
     {{-- Phone --}}
@@ -333,7 +333,7 @@
             {{-- Existing Photos Section --}}
             @if ($commercialVehicle->images->count() > 0)
                 <section class="bg-gray-50 p-6 rounded-lg shadow-inner">
-                    <h4 class="text-xl font-semibold text-gray-700 mb-6">Vorhandene Fotos</h4>
+                    <h4 class="text-xl font-semibold text-gray-700 mb-6">{{ __('photos') }}</h4>
                     <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                         @foreach ($commercialVehicle->images as $image)
                             <div class="relative group">
@@ -354,7 +354,7 @@
                   {{-- Photo Upload Section --}}
             {{-- The x-data="multiImageUploader()" is placed on a div wrapping the input and previews --}}
             <section class="bg-gray-50 p-6 rounded-lg shadow-inner">
-                <h4 class="text-xl font-semibold text-gray-700 mb-6">Fotos hinzufügen</h4>
+                <h4 class="text-xl font-semibold text-gray-700 mb-6">{{ __('section_photos') }}</h4>
 
                 <div x-data="multiImageUploader()" class="space-y-4">
                     {{-- The file input field. Laravel will pick up files from here. --}}
@@ -439,7 +439,7 @@
               
 
                     <button type="submit" class="bg-blue-600 text-white px-8 py-3 rounded-lg hover:bg-blue-700 shadow transition">
-                        Aktualisieren
+                       {{ __('update_listing') }}
                     </button>
                 </div>
             </form>

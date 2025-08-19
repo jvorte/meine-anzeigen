@@ -3,10 +3,10 @@
 
     <x-slot name="header">
         <h2 class="text-3xl font-extrabold text-gray-900 leading-tight mb-2">
-            Anzeige Bearbeiten: {{ $usedVehiclePart->title }}
+          {{ __('Edit Ad') }}: {{ $usedVehiclePart->title }}
         </h2>
         <p class="text-md text-gray-700 dark:text-gray-500">
-            Passe die Details deiner Anzeige an und speichere deine Änderungen.
+      {{ __('Edit the details of your ad or add new photos') }}
         </p>
     </x-slot>
 
@@ -175,7 +175,7 @@
             <section class="bg-white p-6 rounded-lg shadow">
                 {{-- Titel --}}
                 <div class="mb-6">
-                    <label for="title" class="block text-sm font-semibold text-gray-800 mb-2">Anzeigentitel</label>
+                    <label for="title" class="block text-sm font-semibold text-gray-800 mb-2">{{ __('title') }}</label>
                     <input type="text" name="title" id="title" value="{{ old('title', $usedVehiclePart->title) }}"
                            placeholder="Aussagekräftiger Titel für deine Anzeige (z.B. Scheinwerfer für Golf 7)"
                            class="w-full p-3 border border-gray-300 rounded-md shadow-sm bg-white text-gray-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 focus:border-blue-600 transition duration-150 ease-in-out">
@@ -186,7 +186,7 @@
 
                 {{-- Beschreibung --}}
                 <div>
-                    <label for="description" class="block text-sm font-semibold text-gray-800 mb-2">Beschreibung</label>
+                    <label for="description" class="block text-sm font-semibold text-gray-800 mb-2">{{ __('description') }}</label>
                     <textarea name="description" id="description" rows="7"
                               placeholder="Gib hier alle wichtigen Details zu deinem Fahrzeugteil ein. Zustand, Gebrauchsspuren, Besonderheiten."
                               class="w-full p-3 border border-gray-300 rounded-md shadow-sm bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-600 transition duration-150 ease-in-out">{{ old('description', $usedVehiclePart->description) }}</textarea>
@@ -200,7 +200,7 @@
             {{-- Contact Section --}}
 <section class="bg-gray-50 p-6 rounded-lg shadow-inner">
     <h4 class="text-xl font-semibold text-gray-700 mb-6">
-        Select if you want to publish your Mobile phone or email
+     {{ __('publish_contact_select') }}
     </h4>
 
     {{-- Phone --}}
@@ -250,14 +250,14 @@
             {{-- Fotoverwaltung --}}
             <section class="bg-gray-50 p-8 rounded-xl shadow-inner border border-gray-300">
                 <h4 class="text-2xl font-semibold text-gray-800 mb-8 tracking-wide border-b border-gray-300 pb-2">
-                    Fotos verwalten
+                   {{ __('photos') }}
                 </h4>
                 <div x-data="multiImageUploader(
                     {{ $usedVehiclePart->images->map(fn($image) => ['id' => $image->id, 'url' => asset('storage/' . $image->image_path)])->toJson() }}
                 )" class="space-y-6">
 
                     <label for="images" class="block text-sm font-semibold text-gray-700 mb-4">
-                        Neue Fotos hinzufügen
+                     {{ __('section_photos') }}
                     </label>
                     {{-- ADD x-ref="newFilesInput" HERE --}}
                     <input type="file" name="images[]" id="images" multiple x-ref="newFilesInput" @change="addNewFiles($event)"
@@ -361,7 +361,7 @@
             <div class="pt-6 border-t border-gray-200 flex justify-end">
                 <button type="submit"
                         class="bg-blue-600 text-white px-8 py-3 rounded-lg font-semibold text-lg hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-300 transition-all duration-300 shadow-lg">
-                    Anzeige aktualisieren
+                 {{ __('update_listing') }}
                 </button>
             </div>
 

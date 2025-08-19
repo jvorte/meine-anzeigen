@@ -19,7 +19,7 @@
                             <span class="c-blur"></span>
                             <span class="ico-text">+</span>
                         </span>
-                        New Add
+                {{ __('new_ad') }}
                     </span>
                 </a>
             </div>
@@ -40,7 +40,7 @@
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M15 19l-7-7 7-7"></path>
                 </svg>
-                <span>Zurück</span>
+                <span>{{ __('back') }}</span>
             </a>
 
 
@@ -189,7 +189,7 @@
                             <span> / Einheit</span>
                         </p>
                         @else
-                        <p class="text-xl italic text-gray-500">Preis auf Anfrage</p>
+                        <p class="text-xl italic text-gray-500">{{ __('price_on_request') }}</p>
                         @endif
                     </div>
 
@@ -197,7 +197,7 @@
                         @if ($other->description)
                         {!! nl2br(e($other->description)) !!}
                         @else
-                        <p class="italic text-gray-400">Keine Beschreibung verfügbar.</p>
+                        <p class="italic text-gray-400">{{ __('No description available') }}</p>
                         @endif
                     </div>
                 </div>
@@ -210,7 +210,7 @@
 
                 {{-- Seller / Anbieter Info --}}
                 <div class="border-t border-gray-300 pt-6 ">
-                    <h3 class="text-xl font-semibold text-gray-700 mb-3">Anbieterinformationen</h3>
+                    <h3 class="text-xl font-semibold text-gray-700 mb-3">{{ __('Seller details')}}</h3>
 
                     @if ($other->user)
                     <dl class="space-y-2 text-gray-900">
@@ -240,7 +240,7 @@
 
                         @if($other->user->city)
                         <div>
-                            <dt class="inline font-semibold">Stadt:</dt>
+                            <dt class="inline font-semibold">{{ __('location') }}:</dt>
                             <dd class="inline">{{ $other->user->city }}</dd>
                         </div>
                         @endif
@@ -252,7 +252,7 @@
                         {{-- Edit & Delete --}}
                         <a href="{{ route('ads.others.edit', $other->id) }}"
                             class="px-5 py-2 bg-gray-700 hover:bg-gray-800 text-white rounded-full shadow-lg transition transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2">
-                            Anzeige bearbeiten
+                     {{ __('Edit Ad') }}
                         </a>
                         <form action="{{ route('ads.others.destroy', $other->id) }}" method="POST"
                             onsubmit="return confirm('Sind Sie sicher, dass Sie diese Anzeige löschen möchten? Diese Aktion kann nicht rückgängig gemacht werden.')">
@@ -264,7 +264,7 @@
                                     <path d="M6 8a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1z" />
                                     <path fill-rule="evenodd" d="M4 5a2 2 0 012-2h8a2 2 0 012 2v10a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm2 0v10h8V5H6z" clip-rule="evenodd" />
                                 </svg>
-                                <span>Anzeige löschen</span>
+                                <span>{{ __('Delete Ad') }}</span>
                             </button>
                         </form>
                         @else
@@ -275,7 +275,7 @@
                                         'category' => 'others'
                                     ]) }}"
                             class="mt-6 block w-full text-center bg-red-700 text-white font-semibold py-3 rounded-full shadow-lg hover:bg-gray-800 transition focus:ring-4 focus:ring-gray-500 focus:ring-opacity-75">
-                            Contact with seller
+                        {{ __('Contact with seller') }}
                         </a>
 
                         @endif
@@ -285,7 +285,7 @@
                         {{-- Contact button for guests --}}
                         <a href="{{ route('login') }}"
                             class="mt-6 block w-full text-center bg-blue-600 text-white font-semibold py-3 rounded-full shadow-lg hover:bg-blue-800 transition focus:ring-4 focus:ring-blue-500 focus:ring-opacity-75">
-                            contact with seller
+                          {{ __('Contact with seller') }}
                         </a>
 
                         @endguest
@@ -293,7 +293,7 @@
 
                     @else
                     {{-- No user data --}}
-                    <p class="italic text-red-600">Anbieterinformationen nicht verfügbar.</p>
+               <p class="italic text-red-600">{{ __('Seller information not available') }}</p>
                     @endif
                 </div>
 

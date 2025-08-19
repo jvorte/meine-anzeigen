@@ -3,7 +3,7 @@
     {{-- -----------------------------------breadcrumbs ---------------------------------------------- --}}
     <x-slot name="header">
         <h2 class="text-3xl font-extrabold text-gray-900 leading-tight mb-2">
-            {{__('edit_boat_listing')}}
+              {{ __('Edit Ad') }}: {{ $boat->title }}
         </h2>
         <p class="text-md text-gray-700 dark:text-gray-500">
            {{__('update_boat_info') }}

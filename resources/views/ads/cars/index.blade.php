@@ -3,10 +3,10 @@
         <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center px-4 py-2">
             <div>
                 <h1 class="text-4xl font-extrabold text-gray-900 leading-tight">
-                    All Cars
+                  {{ __('Cars Ads') }}
                 </h1>
                 <p class="mt-1 text-gray-600 max-w-xl">
-                    Browse all available camper listings.
+                 {{ __('Browse all available cars listings') }}
                 </p>
             </div>
 
@@ -17,7 +17,7 @@
                             <span class="c-blur"></span>
                             <span class="ico-text">+</span>
                         </span>
-                        New Add
+                     {{ __('new_ad') }}
                     </span>
                 </a>
             </div>
@@ -28,8 +28,7 @@
 
         {{-- Breadcrumbs --}}
         <x-breadcrumbs :items="[
-        ['label' => 'All Ads', 'url' => route('ads.index')],
-        ['label' => 'Cars', 'url' => route('ads.cars.index')],
+        ['label' => __('Cars Ads'), 'url' => route('ads.index')],        
     ]" class="mb-8" />
 
         {{-- Filters Section --}}
@@ -57,7 +56,7 @@
                 <div class="flex flex-wrap items-center gap-4 mb-4">
                     {{-- Brand and Model --}}
                     <div class="flex-grow min-w-[150px]">
-                        <label for="brand" class="sr-only">Brand</label>
+                        <label for="brand" class="sr-only">{{ __('brand') }}</label>
                         <select name="brand" x-model="selectedBrand" @change="filterModels"
                             class="w-full rounded-lg border-gray-300 shadow-sm text-sm focus:ring-indigo-500 focus:border-indigo-500">
                             <option value="">Brand</option>
@@ -68,7 +67,7 @@
                     </div>
 
                     <div class="flex-grow min-w-[150px]">
-                        <label for="model" class="sr-only">Model</label>
+                        <label for="model" class="sr-only">{{ __('model') }}</label>
                         <select name="model" x-model="selectedModel"
                             class="w-full rounded-lg border-gray-300 shadow-sm text-sm focus:ring-indigo-500 focus:border-indigo-500"
                             :disabled="!selectedBrand">
@@ -81,13 +80,13 @@
 
                     {{-- Price Range with Input Fields --}}
                     <div class="flex-grow min-w-[150px] relative">
-                        <label for="min_price" class="sr-only">min Price</label>
-                        <input type="number" name="min_price" value="{{ request('min_price') }}" placeholder="min price"
+                        <label for="min_price" class="sr-only">{{ __('min_price') }}</label>
+                        <input type="number" name="min_price" value="{{ request('min_price') }}" placeholder="{{ __('min_price') }}"
                             class="w-full rounded-l-lg border-gray-300 shadow-sm text-sm focus:ring-indigo-500 focus:border-indigo-500" />
                     </div>
                     <div class="flex-grow min-w-[150px] relative">
-                        <label for="max_price" class="sr-only">max Price</label>
-                        <input type="number" name="max_price" value="{{ request('max_price') }}" placeholder="max price"
+                        <label for="max_price" class="sr-only">{{ __('max_price') }}</label>
+                        <input type="number" name="max_price" value="{{ request('max_price') }}" placeholder="{{ __('max_price') }}"
                             class="w-full rounded-r-lg border-gray-300 shadow-sm text-sm focus:ring-indigo-500 focus:border-indigo-500" />
                     </div>
 
@@ -95,7 +94,7 @@
                     <div class="flex items-center gap-2">
                         <button type="submit"
                             class="inline-flex items-center justify-center rounded-lg border border-transparent shadow-sm px-4 py-2 bg-indigo-600 text-sm font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                            <span class="hidden sm:inline">Search</span>
+                            <span class="hidden sm:inline">{{ __('search') }}</span>
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 sm:ml-1" fill="none"
                                 viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                 <path stroke-linecap="round" stroke-linejoin="round"
@@ -116,7 +115,7 @@
                 <div class="flex justify-start">
                     <button type="button" @click="showMoreFilters = !showMoreFilters"
                         class="text-sm text-indigo-600 hover:text-indigo-800 transition duration-150 ease-in-out font-medium inline-flex items-center">
-                        <span x-text="showMoreFilters ? 'Less Filter' : 'More Filters'"></span>
+                        <span x-text="showMoreFilters ? '{{ __('less_filters') }}' : '{{ __('more_filters') }}'"></span>
                         <svg x-show="!showMoreFilters" class="ml-1 h-4 w-4 transform transition-transform duration-200"
                             fill="currentColor" viewBox="0 0 20 20">
                             <path fill-rule="evenodd"
@@ -137,10 +136,10 @@
                     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                         {{-- Mileage Filter --}}
                         <div>
-                            <label for="mileage" class="block text-sm font-medium text-gray-700">Mileage</label>
+                            <label for="mileage" class="block text-sm font-medium text-gray-700">{{ __('Mileage') }}</label>
                             <select name="mileage" id="mileage"
                                 class="mt-1 w-full rounded-lg border-gray-300 shadow-sm text-sm focus:ring-indigo-500 focus:border-indigo-500">
-                                <option value="">select</option>
+                                <option value="">{{ __('select') }}</option>
                                 <option value="0-50000" {{ request('mileage') == '0-50000' ? 'selected' : '' }}>0 - 50.000
                                     km</option>
                                 <option value="50001-100000" {{ request('mileage') == '50001-100000' ? 'selected' : '' }}>
@@ -157,14 +156,13 @@
 
                             {{-- Year of Registration with Input Fields --}}
                             <div class="flex-grow min-w-[150px] relative">
-                                <label for="min_year" class="block text-sm font-medium text-gray-700">Year of
-                                    manufacture</label>
+                                <label for="min_year" class="block text-sm font-medium text-gray-700">{{ __('year_of_construction') }}</label>
                                 <div class="flex items-center mt-1">
                                     <input type="number" name="min_year" id="min_year" value="{{ request('min_year') }}"
-                                        placeholder="Από" min="1920" max="{{ date('Y') }}"
+                                        placeholder="{{ __('from') }}" min="1920" max="{{ date('Y') }}"
                                         class="w-1/2 rounded-l-lg border-gray-300 shadow-sm text-sm focus:ring-indigo-500 focus:border-indigo-500" />
                                     <input type="number" name="max_year" id="max_year" value="{{ request('max_year') }}"
-                                        placeholder="Έως" min="1920" max="{{ date('Y') }}"
+                                        placeholder="{{ __('to') }}" min="1920" max="{{ date('Y') }}"
                                         class="w-1/2 rounded-r-lg border-gray-300 shadow-sm text-sm focus:ring-indigo-500 focus:border-indigo-500" />
                                 </div>
                             </div>
@@ -172,62 +170,59 @@
                             {{-- ...Submit and Reset Buttons (rest of your form) --}}
                         </div>
 
-                        {{-- Vehicle Type Filter --}}
-                        <div>
-                            <label for="vehicle_type" class="block text-sm font-medium text-gray-700">Vehicle
-                                Type</label>
-                            <select name="vehicle_type" id="vehicle_type"
-                                class="mt-1 w-full rounded-lg border-gray-300 shadow-sm text-sm focus:ring-indigo-500 focus:border-indigo-500">
-                                <option value="">select</option>
-                                <option value="sedan" {{ request('vehicle_type') == 'sedan' ? 'selected' : '' }}>Sedan
-                                </option>
-                                <option value="station wagon" {{ request('vehicle_type') == 'station wagon' ? 'selected' : '' }}>Station Wagon</option>
-                                <option value="SUV/Off-road vehicle" {{ request('vehicle_type') == 'SUV/Off-road vehicle' ? 'selected' : '' }}>SUV/Off-road vehicle</option>
-                                <option value="coupe" {{ request('vehicle_type') == 'coupe' ? 'selected' : '' }}>Coupe
-                                </option>
-                                <option value="convertible" {{ request('vehicle_type') == 'convertible' ? 'selected' : '' }}>Convertible</option>
-                                <option value="minivan" {{ request('vehicle_type') == 'minivan' ? 'selected' : '' }}>
-                                    Minivan</option>
-                                <option value="pickup" {{ request('vehicle_type') == 'pickup' ? 'selected' : '' }}>Pickup
-                                </option>
-                            </select>
-                        </div>
+                    {{-- Vehicle Type Filter --}}
+<div>
+    <label for="vehicle_type" class="block text-sm font-medium text-gray-700">{{ __('Vehicle Type') }}</label>
+    <select name="vehicle_type" id="vehicle_type"
+        class="mt-1 w-full rounded-lg border-gray-300 shadow-sm text-sm focus:ring-indigo-500 focus:border-indigo-500">
+        
+        <option value="">{{ __('Select type') }}</option>
+        <option value="sedan" {{ request('vehicle_type') == 'sedan' ? 'selected' : '' }}>{{ __('Sedan') }}</option>
+        <option value="station wagon" {{ request('vehicle_type') == 'station wagon' ? 'selected' : '' }}>{{ __('Station Wagon') }}</option>
+        <option value="SUV/Off-road vehicle" {{ request('vehicle_type') == 'SUV/Off-road vehicle' ? 'selected' : '' }}>{{ __('SUV/Off-road vehicle') }}</option>
+        <option value="coupe" {{ request('vehicle_type') == 'coupe' ? 'selected' : '' }}>{{ __('Coupe') }}</option>
+        <option value="convertible" {{ request('vehicle_type') == 'convertible' ? 'selected' : '' }}>{{ __('Convertible') }}</option>
+        <option value="minivan" {{ request('vehicle_type') == 'minivan' ? 'selected' : '' }}>{{ __('Minivan') }}</option>
+        <option value="pickup" {{ request('vehicle_type') == 'pickup' ? 'selected' : '' }}>{{ __('Pickup') }}</option>
+    </select>
+</div>
 
-                        {{-- Condition Filter --}}
-                        <div>
-                            <label for="condition" class="block text-sm font-medium text-gray-700">Condition</label>
-                            <select name="condition" id="condition"
-                                class="mt-1 w-full rounded-lg border-gray-300 shadow-sm text-sm focus:ring-indigo-500 focus:border-indigo-500">
-                                <option value="">Select</option>
-                                <option value="new" {{ request('condition') == 'new' ? 'selected' : '' }}>New</option>
-                                <option value="used" {{ request('condition') == 'used' ? 'selected' : '' }}>Used</option>
-                                <option value="accident" {{ request('condition') == 'accident' ? 'selected' : '' }}>
-                                    Accident</option>
-                                <option value="damaged" {{ request('condition') == 'damaged' ? 'selected' : '' }}>Damaged
-                                </option>
-                            </select>
-                        </div>
+
+                  {{-- Condition Filter --}}
+<div>
+    <label for="condition" class="block text-sm font-medium text-gray-700">{{ __('Condition') }}</label>
+    <select name="condition" id="condition"
+        class="mt-1 w-full rounded-lg border-gray-300 shadow-sm text-sm focus:ring-indigo-500 focus:border-indigo-500">
+        
+        <option value="">{{ __('Select condition') }}</option>
+        <option value="new"      {{ request('condition') == 'new' ? 'selected' : '' }}>{{ __('New') }}</option>
+        <option value="used"     {{ request('condition') == 'used' ? 'selected' : '' }}>{{ __('Used') }}</option>
+        <option value="accident" {{ request('condition') == 'accident' ? 'selected' : '' }}>{{ __('Accident vehicle') }}</option>
+        <option value="damaged"  {{ request('condition') == 'damaged' ? 'selected' : '' }}>{{ __('Damaged vehicle') }}</option>
+    </select>
+</div>
+
 
 
                         {{-- Warranty Filter --}}
                         <div>
-                            <label for="warranty" class="block text-sm font-medium text-gray-700">Guarantee</label>
+                            <label for="warranty" class="block text-sm font-medium text-gray-700">{{ __('Warranty') }}</label>
                             <select name="warranty" id="warranty"
                                 class="mt-1 w-full rounded-lg border-gray-300 shadow-sm text-sm focus:ring-indigo-500 focus:border-indigo-500">
                                 <option value="">select</option>
-                                <option value="yes" {{ request('warranty') == 'yes' ? 'selected' : '' }}>Yes
+                                <option value="yes" {{ request('warranty') == 'yes' ? 'selected' : '' }}>{{ __('yes') }}
                                 </option>
-                                <option value="no" {{ request('warranty') == 'no' ? 'selected' : '' }}>No
+                                <option value="no" {{ request('warranty') == 'no' ? 'selected' : '' }}>{{ __('no') }}
                                 </option>
                             </select>
                         </div>
 
                         {{-- Power (HP) Filter --}}
                         <div>
-                            <label for="power" class="block text-sm font-medium text-gray-700">Horse Power(HP)</label>
+                            <label for="power" class="block text-sm font-medium text-gray-700">{{ __('Power') }}(HP)</label>
                             <select name="power" id="power"
                                 class="mt-1 w-full rounded-lg border-gray-300 shadow-sm text-sm focus:ring-indigo-500 focus:border-indigo-500">
-                                <option value="">select</option>
+                                <option value="">{{ __('select') }}</option>
                                 <option value="0-100" {{ request('power') == '0-100' ? 'selected' : '' }}>0 - 100 HP
                                 </option>
                                 <option value="101-200" {{ request('power') == '101-200' ? 'selected' : '' }}>101 - 200 HP
@@ -239,11 +234,11 @@
 
                         {{-- Fuel Type Filter --}}
                         <div>
-                            <label for="fuel_type" class="block text-sm font-medium text-gray-700">Fuel Type</label>
+                            <label for="fuel_type" class="block text-sm font-medium text-gray-700">{{ __('fuel') }}</label>
                             <select name="fuel_type" id="fuel_type"
                                 class="mt-1 w-full rounded-lg border-gray-300 shadow-sm text-sm focus:ring-indigo-500 focus:border-indigo-500">
-                                <option value="">select</option>
-                                <option value="petrol" {{ request('fuel_type') == 'petrol' ? 'selected' : '' }}>Petrol
+                                <option value="">{{ __('select') }}</option>
+                                <option value="petrol" {{ request('fuel_type') == 'petrol' ? 'selected' : '' }}>{{ __('Petrol') }}
                                 </option>
                                 <option value="diesel" {{ request('fuel_type') == 'diesel' ? 'selected' : '' }}>Diesel
                                 </option>
@@ -263,7 +258,7 @@
                                 class="block text-sm font-medium text-gray-700">Transmission</label>
                             <select name="transmission" id="transmission"
                                 class="mt-1 w-full rounded-lg border-gray-300 shadow-sm text-sm focus:ring-indigo-500 focus:border-indigo-500">
-                                <option value="">select</option>
+                                <option value="">{{ __('select') }}</option>
                                 <option value="automatic" {{ request('transmission') == 'automatic' ? 'selected' : '' }}>
                                     Automatic</option>
                                 <option value="manual" {{ request('transmission') == 'manual' ? 'selected' : '' }}>Manual
@@ -277,7 +272,7 @@
                             <label for="drive" class="block text-sm font-medium text-gray-700">Wheel drive</label>
                             <select name="drive" id="drive"
                                 class="mt-1 w-full rounded-lg border-gray-300 shadow-sm text-sm focus:ring-indigo-500 focus:border-indigo-500">
-                                <option value="">select</option>
+                                <option value="">{{ __('select') }}</option>
                                 <option value="front" {{ old('drive') == 'front' ? 'selected' : '' }}>Front wheel drive
                                 </option>
                                 <option value="rear" {{ old('drive') == 'rear' ? 'selected' : '' }}>Rear wheel drive
@@ -291,7 +286,7 @@
                             <label for="color" class="block text-sm font-medium text-gray-700">Color</label>
                             <select name="color" id="color"
                                 class="mt-1 w-full rounded-lg border-gray-300 shadow-sm text-sm focus:ring-indigo-500 focus:border-indigo-500">
-                                <option value="">select</option>
+                                <option value="">{{ __('select') }}</option>
                                 <option value="black" {{ request('color') == 'black' ? 'selected' : '' }}>Black</option>
                                 <option value="white" {{ request('color') == 'white' ? 'selected' : '' }}>White</option>
                                 <option value="red" {{ request('color') == 'red' ? 'selected' : '' }}>Red</option>
@@ -314,7 +309,7 @@
                             <label for="doors" class="block text-sm font-medium text-gray-700">Doors</label>
                             <select name="doors" id="doors"
                                 class="mt-1 w-full rounded-lg border-gray-300 shadow-sm text-sm focus:ring-indigo-500 focus:border-indigo-500">
-                                <option value="">select</option>
+                                <option value="">{{ __('select') }}</option>
                                 <option value="2" {{ request('doors') == '2' ? 'selected' : '' }}>2</option>
                                 <option value="3" {{ request('doors') == '3' ? 'selected' : '' }}>3</option>
                                 <option value="4" {{ request('doors') == '4' ? 'selected' : '' }}>4</option>
@@ -327,7 +322,7 @@
                             <label for="seats" class="block text-sm font-medium text-gray-700">Seats</label>
                             <select name="seats" id="seats"
                                 class="mt-1 w-full rounded-lg border-gray-300 shadow-sm text-sm focus:ring-indigo-500 focus:border-indigo-500">
-                                <option value="">select</option>
+                                <option value="">{{ __('select') }}</option>
                                 <option value="2" {{ request('seats') == '2' ? 'selected' : '' }}>2</option>
                                 <option value="4" {{ request('seats') == '4' ? 'selected' : '' }}>4</option>
                                 <option value="5" {{ request('seats') == '5' ? 'selected' : '' }}>5</option>

@@ -3,10 +3,10 @@
 
     <x-slot name="header">
         <h2 class="text-3xl font-extrabold text-gray-900 leading-tight mb-2">
-            Anzeige Immobilie bearbeiten: {{ $realEstate->title }}
+         {{ __('Edit Ad') }}: {{ $realEstate->title }}
         </h2>
         <p class="text-md text-gray-700 dark:text-gray-500">
-            Passe die Details deiner Immobilienanzeige an und speichere die Änderungen.
+      {{ __('Edit the details of your ad or add new photos') }}
         </p>
     </x-slot>
 
@@ -49,7 +49,7 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     {{-- Titel --}}
                     <div class="lg:col-span-3">
-                        <label for="title" class="block text-sm font-semibold text-gray-800 mb-2">Anzeigentitel</label>
+                        <label for="title" class="block text-sm font-semibold text-gray-800 mb-2">{{ __('title') }}</label>
                         <input type="text" name="title" id="title" value="{{ old('title', $realEstate->title) }}"
                             placeholder="Aussagekräftiger Titel für deine Anzeige"
                             class="w-full p-3 border border-gray-300 rounded-md shadow-sm bg-white text-gray-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50">
@@ -575,7 +575,7 @@
 {{-- Contact Section --}}
 <section class="bg-gray-50 p-6 rounded-lg shadow-inner">
     <h4 class="text-xl font-semibold text-gray-700 mb-6">
-        Select if you want to publish your Mobile phone or email
+      {{ __('publish_contact_select') }}
     </h4>
 
     {{-- Phone --}}
@@ -625,7 +625,7 @@
 
 
             <section class="bg-gray-50 p-6 rounded-lg shadow-inner">
-                <h4 class="text-xl font-semibold text-gray-700 mb-6">Fotos hinzufügen</h4>
+                <h4 class="text-xl font-semibold text-gray-700 mb-6">{{ __('section_photos') }}</h4>
 
                 {{-- Initial Alpine.js data with existing images --}}
                 <div x-data="multiImageUploader( {{ json_encode($realEstate->images->map(fn($image) => ['id' => $image->id, 'url' => Storage::url($image->image_path)])) }} )" class="space-y-4">
@@ -725,7 +725,7 @@
             <div class="pt-6 border-t border-gray-200 flex justify-end">
                 <button type="submit"
                     class="bg-blue-600 text-white px-8 py-3 rounded-lg font-semibold text-lg hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-300 transition-all duration-300 shadow-lg">
-                    Änderungen speichern
+                {{ __('update_listing') }}
                 </button>
             </div>
         </form>

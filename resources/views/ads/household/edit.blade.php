@@ -3,10 +3,10 @@
   
     <x-slot name="header">
         <h2 class="text-3xl font-extrabold text-gray-900 leading-tight mb-2">
-           Anzeige Haushaltsartikel bearbeiten
+          {{ __('Edit Ad') }}: {{ $householdItem->title }}
         </h2>
         <p class="text-md text-gray-700 dark:text-gray-500">
-            Bearbeite deine Anzeige und passe die Informationen an.
+        {{ __('Edit the details of your ad or add new photos') }}
         </p>
     </x-slot>
 
@@ -64,7 +64,7 @@
 
                     {{-- Brand --}}
                     <div>
-                        <label for="brand" class="block text-sm font-medium text-gray-700 mb-2">Marke (optional)</label>
+                        <label for="brand" class="block text-sm font-medium text-gray-700 mb-2">{{ __('brand') }} (optional)</label>
                         <input type="text" name="brand" id="brand" value="{{ old('brand', $householdItem->brand) }}" placeholder="z.B. Ektorp Sofa, Serie 7 Stuhl"
                                class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
                         @error('brand')
@@ -74,7 +74,7 @@
 
                     {{-- Model Name --}}
                     <div>
-                        <label for="model_name" class="block text-sm font-medium text-gray-700 mb-2">Modellbezeichnung (optional)</label>
+                        <label for="model_name" class="block text-sm font-medium text-gray-700 mb-2">{{ __('model') }} (optional)</label>
                         <input type="text" name="model_name" id="model_name" value="{{ old('model_name', $householdItem->model_name) }}" placeholder="z.B. Ektorp Sofa, Serie 7 Stuhl"
                                class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
                         @error('model_name')
@@ -143,7 +143,7 @@
             <section class="bg-white p-6 rounded-lg shadow">
                 {{-- Title --}}
                 <div class="mb-6">
-                    <label for="title" class="block text-sm font-semibold text-gray-800 mb-2">Anzeigentitel</label>
+                    <label for="title" class="block text-sm font-semibold text-gray-800 mb-2">{{ __('title') }}</label>
                     <input type="text" name="title" id="title" value="{{ old('title', $householdItem->title) }}"
                            placeholder="Aussagekräftiger Titel für deine Anzeige (z.B. Modernes 3-Sitzer Sofa)"
                            class="w-full p-3 border border-gray-300 rounded-md shadow-sm bg-white text-gray-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 focus:border-blue-600 transition duration-150 ease-in-out">
@@ -154,7 +154,7 @@
 
                 {{-- Description --}}
                 <div>
-                    <label for="description" class="block text-sm font-semibold text-gray-800 mb-2">Beschreibung</label>
+                    <label for="description" class="block text-sm font-semibold text-gray-800 mb-2">{{ __('description') }}</label>
                     <textarea name="description" id="description" rows="7"
                               placeholder="Gib hier alle wichtigen Details zu deinem Haushaltsartikel ein. Zustand, Alter, Besonderheiten, Abholbedingungen."
                               class="w-full p-3 border border-gray-300 rounded-md shadow-sm bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-600 transition duration-150 ease-in-out">{{ old('description', $householdItem->description) }}</textarea>
@@ -167,7 +167,7 @@
 {{-- Contact Section --}}
 <section class="bg-gray-50 p-6 rounded-lg shadow-inner">
     <h4 class="text-xl font-semibold text-gray-700 mb-6">
-        Select if you want to publish your Mobile phone or email
+         {{ __('publish_contact_select') }}
     </h4>
 
     {{-- Phone --}}
@@ -217,7 +217,7 @@
 
 
     <section class="bg-gray-50 p-6 rounded-lg shadow-inner">
-    <h4 class="text-xl font-semibold text-gray-700 mb-6">Fotos hinzufügen</h4>
+    <h4 class="text-xl font-semibold text-gray-700 mb-6">{{ __('section_photos') }}</h4>
 
     {{-- Initial Alpine.js data with existing images --}}
     <div x-data="multiImageUploader( {{ json_encode($householdItem->images->map(fn($image) => ['id' => $image->id, 'url' => Storage::url($image->image_path)])) }} )" class="space-y-4">
@@ -316,7 +316,7 @@
             <div class="pt-6 border-t border-gray-200 flex justify-end">
                 <button type="submit"
                         class="bg-blue-600 text-white px-8 py-3 rounded-lg font-semibold text-lg hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-300 transition-all duration-300 shadow-lg">
-                    Anzeige aktualisieren
+                   {{ __('update_listing') }}
                 </button>
             </div>
 

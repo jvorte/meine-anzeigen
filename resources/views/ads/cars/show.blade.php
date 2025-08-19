@@ -6,10 +6,10 @@
         <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center px-4 py-2">
             <div>
                 <h1 class="text-4xl font-extrabold text-gray-900 leading-tight">
-                       Auto Anzeigen
+                       {{ __('Cars Ads') }}
                 </h1>
                 <p class="mt-1 text-gray-600 max-w-xl">
-                  Detaillierte Ansicht Ihrer Auto-Anzeige.
+               {{ __('Browse all available cars listings') }}
                 </p>
             </div>
           <div class="px-4 py-1 md:py-1 flex justify-end items-center">
@@ -19,7 +19,7 @@
                     <span class="c-blur"></span>
                     <span class="ico-text">+</span>
                 </span>
-                New Add
+         {{ __('new_ad') }}
             </span>
         </a>
     </div>
@@ -29,7 +29,7 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 p-10"> 
         {{-- Breadcrumbs --}}
        <x-breadcrumbs :items="[
-                ['label' => 'Cars Anzeigen', 'url' => route('categories.cars.index')], {{-- Adjusted URL to category show --}}
+                ['label' => __('Cars Ads'), 'url' => route('categories.cars.index')], {{-- Adjusted URL to category show --}}
                 ['label' => $car->title, 'url' => null], {{-- Dynamic label using car title --}}
             ]" />
 
@@ -40,7 +40,7 @@
         <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
             <path d="M15 19l-7-7 7-7"></path>
         </svg>
-        <span>Zurück</span>
+        <span>{{ __('back') }}</span>
     </a>
 
 
@@ -190,10 +190,10 @@
                         @if ($car->price)
                             <p class="text-3xl text-gray-700 font-extrabold [&>span]:text-base [&>span]:font-normal [&>span]:ml-1">
                                 &euro;{{ number_format($car->price, 2, ',', '.') }}
-                                <span> / Einheit</span>
+                                <span> </span>
                             </p>
                         @else
-                            <p class="text-xl italic text-gray-500">Preis auf Anfrage</p>
+                            <p class="text-xl italic text-gray-500">{{ __('price_on_request') }}</p>
                         @endif
                     </div>
 
@@ -201,14 +201,14 @@
                         @if ($car->description)
                             {!! nl2br(e($car->description)) !!}
                         @else
-                            <p class="italic text-gray-400">Keine Beschreibung verfügbar.</p>
+                            <p class="italic text-gray-400">{{ __('No description available') }}.</p>
                         @endif
                     </div>
                 </div>
 
           {{-- Seller / Anbieter Info --}}
 <div class="border-t border-gray-300 pt-6 mt-3">
-    <h3 class="text-xl font-semibold text-gray-700 mb-3">Anbieterinformationen</h3>
+    <h3 class="text-xl font-semibold text-gray-700 mb-3">{{ __('Seller details')}}</h3>
 
     @if ($car->user)
         <dl class="space-y-2 text-gray-900">
@@ -244,7 +244,7 @@
 
             @if($car->user->city)
                 <div>
-                    <dt class="inline font-semibold">Stadt:</dt>
+                    <dt class="inline font-semibold">{{ __('location') }}:</dt>
                     <dd class="inline">{{ $car->user->city }}</dd>
                 </div>
             @endif
@@ -256,7 +256,7 @@
                     {{-- Edit & Delete --}}
                     <a href="{{ route('ads.cars.edit', $car->id) }}" 
                         class="px-5 py-2 bg-gray-700 hover:bg-gray-800 text-white rounded-full shadow-lg transition transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2">
-                        Anzeige bearbeiten
+                       {{ __('Edit Ad') }}
                     </a>
                     <form action="{{ route('ads.cars.destroy', $car->id) }}" method="POST"
                         onsubmit="return confirm('Sind Sie sicher, dass Sie diese Anzeige löschen möchten? Diese Aktion kann nicht rückgängig gemacht werden.')">
@@ -268,7 +268,7 @@
                                 <path d="M6 8a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1z" />
                                 <path fill-rule="evenodd" d="M4 5a2 2 0 012-2h8a2 2 0 012 2v10a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm2 0v10h8V5H6z" clip-rule="evenodd" />
                             </svg>
-                            <span>Anzeige löschen</span>
+                            <span>{{ __('Delete Ad') }}</span>
                         </button>
                     </form>
                 @else
@@ -279,7 +279,7 @@
                                                     'category' => 'cars'
                                                 ]) }}"
                         class="mt-6 block w-full text-center bg-red-700 text-white font-semibold py-3 rounded-full shadow-lg hover:bg-gray-800 transition focus:ring-4 focus:ring-gray-500 focus:ring-opacity-75">
-                        Contact with seller
+                   {{ __('Contact with seller') }}
                     </a>
 
                 @endif
@@ -289,7 +289,7 @@
                 {{-- Contact button for guests --}}
         <a href="{{ route('login') }}" 
        class="mt-6 block w-full text-center bg-blue-600 text-white font-semibold py-3 rounded-full shadow-lg hover:bg-blue-800 transition focus:ring-4 focus:ring-blue-500 focus:ring-opacity-75">
-       contact with seller
+       {{ __('Contact with seller') }}
     </a>
 
             @endguest
@@ -297,7 +297,7 @@
 
     @else
         {{-- No user data --}}
-        <p class="italic text-red-600">Anbieterinformationen nicht verfügbar.</p>
+        <p class="italic text-red-600">{{ __('Seller information not available') }}</p>
     @endif
 </div>
 
@@ -305,93 +305,93 @@
 
         {{-- Vehicle Details Section --}}
         <section class="bg-gray-50 p-6 rounded-lg shadow-inner mb-8">
-            <h4 class="text-xl font-semibold text-gray-700 mb-6">Fahrzeugdetails</h4>
+            <h4 class="text-xl font-semibold text-gray-700 mb-6">{{ __('Vehicle details') }}</h4>
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 @if($car->carBrand)
                 <div>
-                    <p class="text-sm font-semibold text-gray-800">Marke:</p>
+                    <p class="text-sm font-semibold text-gray-800">{{ __('brand') }}:</p>
                     <p class="text-gray-700">{{ $car->carBrand->name }}</p>
                 </div>
                 @endif
                 @if($car->carModel)
                 <div>
-                    <p class="text-sm font-semibold text-gray-800">Modell:</p>
+                    <p class="text-sm font-semibold text-gray-800">{{ __('model') }}:</p>
                     <p class="text-gray-700">{{ $car->carModel->name }}</p>
                 </div>
                 @endif
                 @if($car->registration)
                 <div>
-                    <p class="text-sm font-semibold text-gray-800">Baujahr:</p>
+                    <p class="text-sm font-semibold text-gray-800">{{ __('year_of_construction') }}:</p>
                     <p class="text-gray-700">{{ $car->registration }}</p>
                 </div>
                 @endif
                 @if($car->mileage)
                 <div>
-                    <p class="text-sm font-semibold text-gray-800">Kilometerstand:</p>
+                    <p class="text-sm font-semibold text-gray-800">{{ __('Mileage') }}:</p>
                     <p class="text-gray-700">{{ number_format($car->mileage, 0, ',', '.') }} km</p>
                 </div>
                 @endif
                 @if($car->vehicle_type)
                 <div>
-                    <p class="text-sm font-semibold text-gray-800">Fahrzeugtyp:</p>
+                    <p class="text-sm font-semibold text-gray-800">{{ __('Τype') }}:</p>
                     <p class="text-gray-700">{{ $car->vehicle_type }}</p>
                 </div>
                 @endif
                 @if($car->condition)
                 <div>
-                    <p class="text-sm font-semibold text-gray-800">Zustand:</p>
+                    <p class="text-sm font-semibold text-gray-800">{{ __('condition') }}:</p>
                     <p class="text-gray-700">{{ $car->condition }}</p>
                 </div>
                 @endif
                 <div>
-                    <p class="text-sm font-semibold text-gray-800">Garantie:</p>
+                    <p class="text-sm font-semibold text-gray-800">{{ __('Warranty') }}:</p>
                     <p class="text-gray-700">{{ $car->warranty ? 'Ja' : 'Nein' }}</p>
                 </div>
                 @if($car->power)
                 <div>
-                    <p class="text-sm font-semibold text-gray-800">Leistung:</p>
+                    <p class="text-sm font-semibold text-gray-800">{{ __('Power') }}:</p>
                     <p class="text-gray-700">{{ $car->power }} PS</p>
                 </div>
                 @endif
                 @if($car->fuel_type)
                 <div>
-                    <p class="text-sm font-semibold text-gray-800">Kraftstoffart:</p>
+                    <p class="text-sm font-semibold text-gray-800">{{ __('fuel') }}:</p>
                     <p class="text-gray-700">{{ $car->fuel_type }}</p>
                 </div>
                 @endif
                 @if($car->transmission)
                 <div>
-                    <p class="text-sm font-semibold text-gray-800">Getriebe:</p>
+                    <p class="text-sm font-semibold text-gray-800">{{ __('gearbox') }}:</p>
                     <p class="text-gray-700">{{ $car->transmission }}</p>
                 </div>
                 @endif
                 @if($car->drive)
                 <div>
-                    <p class="text-sm font-semibold text-gray-800">Antrieb:</p>
+                    <p class="text-sm font-semibold text-gray-800">{{ __('Wheel drive') }}:</p>
                     <p class="text-gray-700">{{ $car->drive }}</p>
                 </div>
                 @endif
                 @if($car->color)
                 <div>
-                    <p class="text-sm font-semibold text-gray-800">Farbe:</p>
+                    <p class="text-sm font-semibold text-gray-800">{{ __('Color') }}:</p>
                     <p class="text-gray-700">{{ $car->color }}</p>
                 </div>
                 @endif
                 @if($car->doors)
                 <div>
-                    <p class="text-sm font-semibold text-gray-800">Türen:</p>
+                    <p class="text-sm font-semibold text-gray-800">{{ __('Doors') }}:</p>
                     <p class="text-gray-700">{{ $car->doors }}</p>
                 </div>
                 @endif
                 @if($car->seats)
                 <div>
-                    <p class="text-sm font-semibold text-gray-800">Sitze:</p>
+                    <p class="text-sm font-semibold text-gray-800">{{ __('Seats') }}:</p>
                     <p class="text-gray-700">{{ $car->seats }}</p>
                 </div>
                 @endif
                 @if($car->seller_type)
                 <div>
-                    <p class="text-sm font-semibold text-gray-800">Verkäufertyp:</p>
+                    <p class="text-sm font-semibold text-gray-800">{{ __('Provider') }}:</p>
                     <p class="text-gray-700">{{ $car->seller_type }}</p>
                 </div>
                 @endif

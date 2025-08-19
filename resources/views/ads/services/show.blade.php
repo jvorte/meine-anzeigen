@@ -19,7 +19,7 @@
                             <span class="c-blur"></span>
                             <span class="ico-text">+</span>
                         </span>
-                        New Add
+                        {{ __('new_ad') }}
                     </span>
                 </a>
             </div>
@@ -42,7 +42,7 @@
                     stroke-linecap="round" stroke-linejoin="round">
                     <path d="M15 19l-7-7 7-7"></path>
                 </svg>
-                <span>Zurück</span>
+                <span>{{ __('back') }}</span>
             </a>
 
 
@@ -110,11 +110,11 @@
                 {{-- Thumbnails --}}
                 <div class="flex space-x-4 overflow-x-auto no-scrollbar w-full max-w-xl px-2">
                     @foreach ($service->images as $image)
-                        <img src="{{ Storage::url($image->path) }}" alt="Thumbnail"
-                            @click="changeImage('{{ $image->path }}')"
-                            class="flex-shrink-0 w-20 h-20 rounded-xl object-cover cursor-pointer shadow-md transform transition duration-300 hover:scale-105 ring-2 focus:ring-4 focus:ring-gray-700 focus:outline-none"
-                            :class="activeImage === '{{ $image->path }}' ? 'ring-gray-700 ring-4' : 'ring-transparent'"
-                            loading="lazy" draggable="false">
+                    <img src="{{ Storage::url($image->path) }}" alt="Thumbnail"
+                        @click="changeImage('{{ $image->path }}')"
+                        class="flex-shrink-0 w-20 h-20 rounded-xl object-cover cursor-pointer shadow-md transform transition duration-300 hover:scale-105 ring-2 focus:ring-4 focus:ring-gray-700 focus:outline-none"
+                        :class="activeImage === '{{ $image->path }}' ? 'ring-gray-700 ring-4' : 'ring-transparent'"
+                        loading="lazy" draggable="false">
                     @endforeach
                 </div>
 
@@ -169,36 +169,36 @@
 
                     <div class="flex items-baseline space-x-3 mb-6">
                         @if ($service->price)
-                            <p
-                                class="text-3xl text-gray-700 font-extrabold [&>span]:text-base [&>span]:font-normal [&>span]:ml-1">
-                                &euro;{{ number_format($service->price, 2, ',', '.') }}
-                                <span> / Einheit</span>
-                            </p>
+                        <p
+                            class="text-3xl text-gray-700 font-extrabold [&>span]:text-base [&>span]:font-normal [&>span]:ml-1">
+                            &euro;{{ number_format($service->price, 2, ',', '.') }}
+                            <span> / Einheit</span>
+                        </p>
                         @else
-                            <p class="text-xl italic text-gray-500">Preis auf Anfrage</p>
+                        <p class="text-xl italic text-gray-500">{{ __('price_on_request') }}</p>
                         @endif
                     </div>
 
                     <div class="prose prose-lg max-w-none text-gray-700">
                         @if ($service->description)
-                            {!! nl2br(e($service->description)) !!}
+                        {!! nl2br(e($service->description)) !!}
                         @else
-                            <p class="italic text-gray-400">Keine Beschreibung verfügbar.</p>
+                        <p class="italic text-gray-400">{{ __('No description available') }}</p>
                         @endif
                     </div>
                 </div>
 
                 {{-- Seller / Anbieter Info --}}
                 <div class="border-t border-gray-300 pt-6">
-                    <h3 class="text-xl font-semibold text-gray-700 mb-3">Anbieterinformationen</h3>
+                    <h3 class="text-xl font-semibold text-gray-700 mb-3">{{ __('Seller details')}}</h3>
 
                     @if ($service->user)
-                        <dl class="space-y-2 text-gray-900">
-                            <div>
-                                <dt class="inline font-semibold">Name:</dt>
-                                <dd class="inline">{{ $service->user->name }}</dd>
-                            </div>
-                    <div>
+                    <dl class="space-y-2 text-gray-900">
+                        <div>
+                            <dt class="inline font-semibold">Name:</dt>
+                            <dd class="inline">{{ $service->user->name }}</dd>
+                        </div>
+                        <div>
                             @if($service->show_phone && !empty($service->user->phone))
                             <dt class="inline font-semibold">Phone:</dt>
                             <dd class="inline">{{ $service->user->phone }}</dd>
@@ -217,70 +217,70 @@
                             <dd class="inline">{{ $service->user->email }}</dd>
                             @endif
                         </div>
-                        
-                            @if($service->user->city)
-                                <div>
-                                    <dt class="inline font-semibold">Stadt:</dt>
-                                    <dd class="inline">{{ $service->user->city }}</dd>
-                                </div>
-                            @endif
-                        </dl>
 
-                        <div
-                            class="flex flex-wrap justify-center sm:justify-start items-center space-x-0 sm:space-x-3 pt-4 my-3 sm:pt-0">
-                            @auth
-                                @if (auth()->id() === $service->user_id || auth()->user()->isAdmin())
-                                    {{-- Edit & Delete --}}
-                                    <a href="{{ route('ads.services.edit', $service->id) }}"
-                                        class="px-5 py-2 bg-gray-700 hover:bg-gray-800 text-white rounded-full shadow-lg transition transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2">
-                                        Anzeige bearbeiten
-                                    </a>
-                                    <form action="{{ route('ads.services.destroy', $service->id) }}" method="POST"
-                                        onsubmit="return confirm('Sind Sie sicher, dass Sie diese Anzeige löschen möchten? Diese Aktion kann nicht rückgängig gemacht werden.')">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit"
-                                            class="px-5 py-2 bg-red-600 hover:bg-gray-700 text-white rounded-full shadow-lg transition transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 flex items-center space-x-1">
-                                            <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20"
-                                                class="w-5 h-5">
-                                                <path d="M6 8a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1z" />
-                                                <path fill-rule="evenodd"
-                                                    d="M4 5a2 2 0 012-2h8a2 2 0 012 2v10a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm2 0v10h8V5H6z"
-                                                    clip-rule="evenodd" />
-                                            </svg>
-                                            <span>Anzeige löschen</span>
-                                        </button>
-                                    </form>
-                                @else
-                       
+                        @if($service->user->city)
+                        <div>
+                            <dt class="inline font-semibold">{{ __('location') }}:</dt>
+                            <dd class="inline">{{ $service->user->city }}</dd>
+                        </div>
+                        @endif
+                    </dl>
 
-                                                {{-- Contact button for logged-in non-owners --}}
-                                                <a href="{{ route('messages.start.redirect', [
+                    <div
+                        class="flex flex-wrap justify-center sm:justify-start items-center space-x-0 sm:space-x-3 pt-4 my-3 sm:pt-0">
+                        @auth
+                        @if (auth()->id() === $service->user_id || auth()->user()->isAdmin())
+                        {{-- Edit & Delete --}}
+                        <a href="{{ route('ads.services.edit', $service->id) }}"
+                            class="px-5 py-2 bg-gray-700 hover:bg-gray-800 text-white rounded-full shadow-lg transition transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2">
+                            {{ __('Edit Ad') }}
+                        </a>
+                        <form action="{{ route('ads.services.destroy', $service->id) }}" method="POST"
+                            onsubmit="return confirm('Sind Sie sicher, dass Sie diese Anzeige löschen möchten? Diese Aktion kann nicht rückgängig gemacht werden.')">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit"
+                                class="px-5 py-2 bg-red-600 hover:bg-gray-700 text-white rounded-full shadow-lg transition transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 flex items-center space-x-1">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20"
+                                    class="w-5 h-5">
+                                    <path d="M6 8a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1z" />
+                                    <path fill-rule="evenodd"
+                                        d="M4 5a2 2 0 012-2h8a2 2 0 012 2v10a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm2 0v10h8V5H6z"
+                                        clip-rule="evenodd" />
+                                </svg>
+                                <span>{{ __('Delete Ad') }}</span>
+                            </button>
+                        </form>
+                        @else
+
+
+                        {{-- Contact button for logged-in non-owners --}}
+                        <a href="{{ route('messages.start.redirect', [
                                         'ad' => $service->id,
                                         'receiver' => $service->user->id,
                                         'category' => 'services'
                                     ]) }}"
-                                                    class="mt-6 block w-full text-center bg-red-700 text-white font-semibold py-3 rounded-full shadow-lg hover:bg-gray-800 transition focus:ring-4 focus:ring-gray-500 focus:ring-opacity-75">
-                                                    Kontakt aufnehmen
-                                                </a>
+                            class="mt-6 block w-full text-center bg-red-700 text-white font-semibold py-3 rounded-full shadow-lg hover:bg-gray-800 transition focus:ring-4 focus:ring-gray-500 focus:ring-opacity-75">
+                            {{ __('Contact with seller') }}
+                        </a>
 
 
-                                @endif
-                            @endauth
+                        @endif
+                        @endauth
 
-                            @guest
-                                {{-- Contact button for guests --}}
-                                <a href="{{ route('login') }}"
-                                    class="mt-6 block w-full text-center bg-blue-600 text-white font-semibold py-3 rounded-full shadow-lg hover:bg-blue-800 transition focus:ring-4 focus:ring-blue-500 focus:ring-opacity-75">
-                                    contact with seller
-                                </a>
+                        @guest
+                        {{-- Contact button for guests --}}
+                        <a href="{{ route('login') }}"
+                            class="mt-6 block w-full text-center bg-blue-600 text-white font-semibold py-3 rounded-full shadow-lg hover:bg-blue-800 transition focus:ring-4 focus:ring-blue-500 focus:ring-opacity-75">
+                            {{ __('Contact with seller') }}
+                        </a>
 
-                            @endguest
-                        </div>
+                        @endguest
+                    </div>
 
                     @else
-                        {{-- No user data --}}
-                        <p class="italic text-red-600">Anbieterinformationen nicht verfügbar.</p>
+                    {{-- No user data --}}
+                <p class="italic text-red-600">{{ __('Seller information not available') }}</p>
                     @endif
                 </div>
 
@@ -291,24 +291,24 @@
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
 
                         @if ($service->service_type)
-                            <dl>
-                                <dt class="font-semibold text-gray-700 mb-1">Art der Dienstleistung</dt>
-                                <dd class="text-gray-900">{{ $service->service_type }}</dd>
-                            </dl>
+                        <dl>
+                            <dt class="font-semibold text-gray-700 mb-1">Art der Dienstleistung</dt>
+                            <dd class="text-gray-900">{{ $service->service_type }}</dd>
+                        </dl>
                         @endif
 
                         @if ($service->availability)
-                            <dl>
-                                <dt class="font-semibold text-gray-700 mb-1">Verfügbarkeit</dt>
-                                <dd class="text-gray-900">{{ $service->availability }}</dd>
-                            </dl>
+                        <dl>
+                            <dt class="font-semibold text-gray-700 mb-1">Verfügbarkeit</dt>
+                            <dd class="text-gray-900">{{ $service->availability }}</dd>
+                        </dl>
                         @endif
 
                         @if ($service->location)
-                            <dl>
-                                <dt class="font-semibold text-gray-700 mb-1">Standort / Region</dt>
-                                <dd class="text-gray-900">{{ $service->location }}</dd>
-                            </dl>
+                        <dl>
+                            <dt class="font-semibold text-gray-700 mb-1">Standort / Region</dt>
+                            <dd class="text-gray-900">{{ $service->location }}</dd>
+                        </dl>
                         @endif
                     </div>
 

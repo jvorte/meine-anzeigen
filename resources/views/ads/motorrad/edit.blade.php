@@ -3,10 +3,10 @@
 
     <x-slot name="header">
         <h2 class="text-3xl font-extrabold text-gray-900 leading-tight mb-2">
-            motorcycles
+        {{ __('Edit Ad') }}: {{ $motorradAd->title }}
         </h2>
         <p class="text-md text-gray-700 dark:text-gray-500">
-            Bearbeite die Details deiner Motorrad Anzeige.
+           {{ __('Edit the details of your ad or add new photos') }}
         </p>
     </x-slot>
 
@@ -40,12 +40,12 @@
             @method('PUT')
 
             <section class="bg-gray-50 p-6 rounded-lg shadow-inner">
-                <h4 class="text-xl font-semibold text-gray-700 mb-6">Fahrzeugdetails</h4>
+                <h4 class="text-xl font-semibold text-gray-700 mb-6">{{ __('Vehicle details') }}</h4>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
 
                     {{-- Marke --}}
                     <div>
-                        <label for="motorcycle_brand_id" class="block text-sm font-medium text-gray-700 mb-2">Brand</label>
+                        <label for="motorcycle_brand_id" class="block text-sm font-medium text-gray-700 mb-2">{{ __('brand') }}</label>
                         <select name="motorcycle_brand_id" id="motorcycle_brand_id" onchange="loadModels(this.value)"
                             class="form-select w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
                             <option value="">Bitte wählen</option>
@@ -62,7 +62,7 @@
 
                     {{-- Modell --}}
                     <div>
-                        <label for="motorcycle_model_id" class="block text-sm font-medium text-gray-700 mb-2">Modell</label>
+                        <label for="motorcycle_model_id" class="block text-sm font-medium text-gray-700 mb-2">{{ __('model') }}</label>
                         <select name="motorcycle_model_id" id="motorcycle_model_id"
                             class="form-select w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
                             <option value="">Bitte wählen</option>
@@ -123,7 +123,7 @@
 
             {{-- Basic Data Section --}}
             <section class="bg-gray-50 p-6 rounded-lg shadow-inner">
-                <h4 class="text-xl font-semibold text-gray-700 mb-6">Basisdaten</h4>
+                <h4 class="text-xl font-semibold text-gray-700 mb-6">{{ __('section_basic_data') }}</h4>
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
 
                     <div>
@@ -138,7 +138,7 @@
                     </div>
 
                     <div>
-                        <label for="first_registration" class="block text-sm font-medium text-gray-700 mb-2">Erstzulassung</label>
+                        <label for="first_registration" class="block text-sm font-medium text-gray-700 mb-2">{{ __('year_of_construction') }}</label>
                         <input type="number" name="first_registration" id="first_registration"
                             min="1900" max="{{ date('Y') }}"
                             value="{{ old('first_registration', $motorradAd->first_registration) }}"
@@ -150,7 +150,7 @@
 
 
                     <div>
-                        <label for="mileage" class="block text-sm font-medium text-gray-700 mb-2">Kilometerstand (in km)</label>
+                        <label for="mileage" class="block text-sm font-medium text-gray-700 mb-2">{{ __('Mileage') }} (in km)</label>
                         <input type="number" name="mileage" id="mileage"
                             value="{{ old('mileage', $motorradAd->mileage) }}" placeholder="z.B. 50.000"
                             class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
@@ -160,7 +160,7 @@
                     </div>
 
                     <div>
-                        <label for="power" class="block text-sm font-medium text-gray-700 mb-2">Leistung (PS)</label>
+                        <label for="power" class="block text-sm font-medium text-gray-700 mb-2">{{ __('Power') }} (PS)</label>
                         <input type="number" name="power" id="power" value="{{ old('power', $motorradAd->power) }}"
                             placeholder="z.B. 150"
                             class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
@@ -213,7 +213,7 @@
             {{-- Title & Description Section --}}
             <section class="bg-white p-6 rounded-lg shadow">
                 <div class="mb-6">
-                    <label for="title" class="block text-sm font-semibold text-gray-800 mb-2">Anzeigentitel</label>
+                    <label for="title" class="block text-sm font-semibold text-gray-800 mb-2">{{ __('title') }}</label>
                     <input type="text" name="title" id="title" value="{{ old('title', $motorradAd->title) }}"
                         placeholder="Aussagekräftiger Titel für deine Anzeige"
                         class="w-full p-3 border border-gray-300 rounded-md shadow-sm bg-white text-gray-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 focus:border-blue-600 transition duration-150 ease-in-out">
@@ -223,7 +223,7 @@
                 </div>
 
                 <div>
-                    <label for="description" class="block text-sm font-medium text-gray-800 mb-2">Beschreibung</label>
+                    <label for="description" class="block text-sm font-medium text-gray-800 mb-2">{{ __('description') }}</label>
                     <textarea name="description" id="description" rows="7"
                         placeholder="Gib hier alle wichtigen Details zu deinem Motorrad ein. Je mehr Informationen, desto besser!"
                         class="w-full p-3 border border-gray-300 rounded-md shadow-sm bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-600 transition duration-150 ease-in-out">{{ old('description', $motorradAd->description) }}</textarea>
@@ -237,7 +237,7 @@
             {{-- Contact Section --}}
             <section class="bg-gray-50 p-6 rounded-lg shadow-inner">
                 <h4 class="text-xl font-semibold text-gray-700 mb-6">
-                    Select if you want to publish your Mobile phone or email
+                    {{ __('publish_contact_select') }}
                 </h4>
 
                 {{-- Phone --}}
@@ -282,7 +282,7 @@
 
 
             <section class="bg-gray-50 p-6 rounded-lg shadow-inner">
-                <h4 class="text-xl font-semibold text-gray-700 mb-6">Fotos verwalten und hinzufügen</h4>
+                <h4 class="text-xl font-semibold text-gray-700 mb-6">{{ __('section_photos') }}</h4>
 
                 {{-- Unified Alpine.js component for both existing and new images --}}
                 <div x-data="multiImageUploader(
@@ -390,7 +390,7 @@
             <div class="pt-6 border-t border-gray-200 flex justify-end">
                 <button type="submit"
                     class="bg-blue-600 text-white px-8 py-3 rounded-lg font-semibold text-lg hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-300 transition-all duration-300 shadow-lg">
-                    Anzeige aktualisieren
+                {{ __('update_listing') }}
                 </button>
             </div>
 

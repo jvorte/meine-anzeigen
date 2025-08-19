@@ -340,7 +340,7 @@
         </div>
         @else
         <div class="text-gray-600 text-center py-20">
-            Δεν βρέθηκαν campers με τα συγκεκριμένα κριτήρια.
+       {{ __('No campers were found with the specified criteria.') }}
         </div>
         @endif
     </div>

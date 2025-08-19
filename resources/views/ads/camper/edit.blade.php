@@ -3,7 +3,7 @@
     {{-- --------------------------------------------------------------------------------- --}}
     <x-slot name="header">
         <h2 class="text-3xl font-extrabold text-gray-900 leading-tight mb-2">
-            {{ __('edit_motorhome_ad') }}
+          {{ __('Edit Ad') }}: {{ $camper->title }}
         </h2>
         <p class="text-md text-gray-700 dark:text-gray-500">
             {{ __('Customize the details of your motorhome ad') }}
@@ -451,7 +451,7 @@
             {{-- Photo Upload Section --}}
             {{-- The x-data="multiImageUploader()" is placed on a div wrapping the input and previews --}}
             <section class="bg-gray-50 p-6 rounded-lg shadow-inner">
-                <h4 class="text-xl font-semibold text-gray-700 mb-6">{{ __('photos') }}</h4>
+                <h4 class="text-xl font-semibold text-gray-700 mb-6">{{ __('section_photos') }}</h4>
 
                 <div x-data="multiImageUploader()" class="space-y-4">
                     {{-- The file input field. Laravel will pick up files from here. --}}

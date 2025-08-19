@@ -2,10 +2,10 @@
 
     <x-slot name="header">
         <h2 class="text-3xl font-extrabold text-gray-900 leading-tight mb-2">
-            Electronics Anzeige bearbeiten
+          {{ __('Edit Ad') }}: {{ $electronic->title }}
         </h2>
         <p class="text-md text-gray-700 dark:text-gray-500">
-            Bearbeite die Details und Fotos deiner Anzeige.
+     {{ __('Edit the details of your ad or add new photos') }}
         </p>
     </x-slot>
 
@@ -81,7 +81,7 @@
 
                     {{-- Brand (Free Input) --}}
                     <div>
-                        <label for="brand" class="block text-sm font-medium text-gray-700 mb-2">Marke</label>
+                        <label for="brand" class="block text-sm font-medium text-gray-700 mb-2">{{ __('brand') }}</label>
                         <input type="text" name="brand" id="brand" value="{{ old('brand', $electronic->brand) }}"
                             placeholder="z.B. Apple"
                             class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
@@ -93,7 +93,7 @@
                     {{-- Electronic Model (Free Input) --}}
                     <div>
                         <label for="electronic_model"
-                            class="block text-sm font-medium text-gray-700 mb-2">Modell</label>
+                            class="block text-sm font-medium text-gray-700 mb-2">{{ __('model') }}</label>
                         <input type="text" name="electronic_model" id="electronic_model"
                             value="{{ old('electronic_model', $electronic->electronic_model) }}"
                             placeholder="z.B. iPhone 15 Pro Max"
@@ -263,7 +263,7 @@
             {{-- Title & Description Section (always visible) --}}
             <section class="bg-white p-6 rounded-lg shadow">
                 <div class="mb-6">
-                    <label for="title" class="block text-sm font-semibold text-gray-800 mb-2">Anzeigentitel</label>
+                    <label for="title" class="block text-sm font-semibold text-gray-800 mb-2">{{ __('title') }}</label>
                     <input type="text" name="title" id="title" value="{{ old('title', $electronic->title) }}"
                         placeholder="Aussagekräftiger Titel für deine Anzeige (z.B. iPhone 15 Pro Max 256GB)"
                         class="w-full p-3 border border-gray-300 rounded-md shadow-sm bg-white text-gray-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 focus:border-blue-600 transition duration-150 ease-in-out">
@@ -273,7 +273,7 @@
                 </div>
 
                 <div>
-                    <label for="description" class="block text-sm font-semibold text-gray-800 mb-2">Beschreibung</label>
+                    <label for="description" class="block text-sm font-semibold text-gray-800 mb-2">{{ __('description') }}</label>
                     <textarea name="description" id="description" rows="7"
                         placeholder="Gib hier alle wichtigen Details zu deinem Elektronikartikel ein. Zustand, Funktionen, Mängel."
                         class="w-full p-3 border border-gray-300 rounded-md shadow-sm bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-600 transition duration-150 ease-in-out">{{ old('description', $electronic->description) }}</textarea>
@@ -287,7 +287,7 @@
             {{-- Contact Section --}}
 <section class="bg-gray-50 p-6 rounded-lg shadow-inner">
     <h4 class="text-xl font-semibold text-gray-700 mb-6">
-        Select if you want to publish your Mobile phone or email
+        {{ __('publish_contact_select') }}
     </h4>
 
     {{-- Phone --}}
@@ -344,7 +344,7 @@
 
                     @if ($electronic->images->count() > 0)
                         <section class="bg-gray-50 p-6 rounded-lg shadow-inner">
-                            <h4 class="text-xl font-semibold text-gray-700 mb-6">Vorhandene Fotos</h4>
+                            <h4 class="text-xl font-semibold text-gray-700 mb-6">{{ __('photos') }}</h4>
                             <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                                 @foreach ($electronic->images as $image)
                                     <div class="relative group">
@@ -369,7 +369,7 @@
 
                     {{-- New Photo Upload --}}
                     <div class="space-y-2">
-                        <label for="new_images" class="block text-sm font-medium text-gray-700">Neue Fotos hinzufügen
+                        <label for="new_images" class="block text-sm font-medium text-gray-700">{{ __('section_photos') }}
                             (optional)</label>
                         <input type="file" name="new_images[]" id="new_images" multiple @change="addNewFiles($event)"
                             class="block w-full border p-2 rounded" />
@@ -434,7 +434,7 @@
             <div class="pt-6 border-t border-gray-200 flex justify-end">
                 <button type="submit"
                     class="bg-blue-600 text-white px-8 py-3 rounded-lg font-semibold text-lg hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-300 transition-all duration-300 shadow-lg">
-                    Anzeige aktualisieren
+                {{ __('update_listing') }}
                 </button>
             </div>
 
