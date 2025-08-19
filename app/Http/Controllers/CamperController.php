@@ -208,7 +208,7 @@ public function store(Request $request)
         }
     }
 
-    return redirect()->route('ads.camper.show', $camper->id)
+    return redirect()->route('ads.campers.show', $camper->id)
         ->with('success', 'Wohnmobil Anzeige erfolgreich erstellt!');
 }
 
@@ -317,7 +317,7 @@ public function store(Request $request)
             }
         }
 
-        return redirect()->route('ads.camper.show', $camper->id)
+        return redirect()->route('ads.campers.show', $camper->id)
             ->with('success', 'Wohnmobil Anzeige erfolgreich aktualisiert!');
     }
 

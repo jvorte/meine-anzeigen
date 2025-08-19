@@ -1,26 +1,22 @@
 {{-- resources/views/ads/camper/create.blade.php --}}
 <x-app-layout>
     {{-- --------------------------------------------------------------------------------- --}}
-    <x-slot name="header">
-        <h2 class="text-3xl font-extrabold text-gray-900 leading-tight mb-2">
-            Neue Camper Anzeige erstellen
-        </h2>
-        <p class="text-md text-gray-700 dark:text-gray-500">
-            Wähle eine passende Kategorie und fülle die erforderlichen Felder aus, um deine Anzeige zu erstellen.
-        </p>
-
-    </x-slot>
+<x-slot name="header">
+    <h2 class="text-3xl font-extrabold text-gray-900 leading-tight mb-2">
+        {{ __('camper.create.title') }}
+    </h2>
+    <p class="text-md text-gray-700 dark:text-gray-500">
+        {{ __('camper.create.subtitle') }}
+    </p>
+</x-slot>
 
     <div class="py-2">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             {{-- Breadcrumbs component --}}
-            <x-breadcrumbs :items="[
-            {{-- Link to the general Cars category listing --}}
-            ['label' => 'camper Anzeigen', 'url' => route('categories.campers.index')],
-
-            {{-- The current page (New Car Ad creation) - set URL to null --}}
-            ['label' => 'Neue camper Anzeige', 'url' => null],
-        ]" />
+    <x-breadcrumbs :items="[
+    ['label' => __('camper.create.breadcrumb.index'), 'url' => route('categories.campers.index')],
+    ['label' => __('camper.create.breadcrumb.new'), 'url' => null],
+]" />
         </div>
     </div>
 
@@ -43,7 +39,7 @@
 
     <div class="max-w-6xl mx-auto p-6 bg-white rounded-lg shadow-xl mt-6">
 
-        <form method="POST" action="{{ route('ads.camper.store') }}" enctype="multipart/form-data" class="space-y-8">
+        <form method="POST" action="{{ route('ads.campers.store') }}" enctype="multipart/form-data" class="space-y-8">
             @csrf
 
             {{-- Vehicle Details Section (Marke & Modell) --}}
@@ -75,11 +71,11 @@
         }
     }
 }" x-init="fetchModels()">
-                <h4 class="text-xl font-semibold text-gray-700 mb-6">Fahrzeugdetails</h4>
+                <h4 class="text-xl font-semibold text-gray-700 mb-6">{{ __('camper.sections.vehicle_details') }}</h4>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
                         {{-- Marke (Dropdown from camper_brands table) --}}
-                        <label for="camper_brand_id" class="block text-sm font-medium text-gray-700 mb-2">Marke</label>
+                        <label for="camper_brand_id" class="block text-sm font-medium text-gray-700 mb-2">{{ __('brand') }}</label>
                         <select name="camper_brand_id" id="camper_brand_id" x-model="selectedBrand" @change="fetchModels()"
                             class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
                             <option value="">Bitte wählen Sie eine Marke</option>
@@ -96,7 +92,7 @@
 
                     <div>
                         {{-- Modell (Dynamic Dropdown) --}}
-                        <label for="camper_model_id" class="block text-sm font-medium text-gray-700 mb-2">Modell (optional)</label>
+                        <label for="camper_model_id" class="block text-sm font-medium text-gray-700 mb-2">{{ __('model') }} (optional)</label>
                         <select name="camper_model_id" id="camper_model_id"
                             class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50"
                             :disabled="!selectedBrand"> {{-- Disable until a brand is selected --}}
@@ -116,11 +112,11 @@
 
             {{-- Basic Data Section --}}
             <section class="bg-gray-50 p-6 rounded-lg shadow-inner">
-                <h4 class="text-xl font-semibold text-gray-700 mb-6">Basisdaten</h4>
+                <h4 class="text-xl font-semibold text-gray-700 mb-6">{{ __('section_basic_data') }}</h4>
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     {{-- Price --}}
                     <div>
-                        <label for="price" class="block text-sm font-medium text-gray-700 mb-2">Preis (in €)</label>
+                        <label for="price" class="block text-sm font-medium text-gray-700 mb-2">{{ __('price') }} </label>
                         <input type="number" name="price" id="price" value="{{ old('price') }}"
                             placeholder="z.B. 45.000"
                             class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
@@ -133,7 +129,7 @@
 
                     {{-- First registration --}}
                     <div>
-                        <label for="first_registration" class="block text-sm font-medium text-gray-700 mb-2">First Registration Year</label>
+                        <label for="first_registration" class="block text-sm font-medium text-gray-700 mb-2">{{ __('year_of_construction') }}</label>
                         <input
                             type="number"
                             name="first_registration"
@@ -152,7 +148,7 @@
 
                     {{-- Kilometerstand --}}
                     <div>
-                        <label for="mileage" class="block text-sm font-medium text-gray-700 mb-2">Kilometerstand (in
+                        <label for="mileage" class="block text-sm font-medium text-gray-700 mb-2">{{ __('Mileage') }} (in
                             km)</label>
                         <input type="number" name="mileage" id="mileage" value="{{ old('mileage') }}"
                             placeholder="z.B. 75.000"
@@ -164,7 +160,7 @@
 
                     {{-- Leistung (PS) --}}
                     <div>
-                        <label for="power" class="block text-sm font-medium text-gray-700 mb-2">Leistung (PS)</label>
+                        <label for="power" class="block text-sm font-medium text-gray-700 mb-2">{{ __('Power') }} (PS)</label>
                         <input type="number" name="power" id="power" value="{{ old('power') }}" placeholder="z.B. 130"
                             class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
                         @error('power')
@@ -174,10 +170,10 @@
 
                     {{-- Farbe --}}
                     <div>
-                        <label for="color" class="block text-sm font-medium text-gray-700 mb-2">Farbe</label>
+                        <label for="color" class="block text-sm font-medium text-gray-700 mb-2">{{ __('Color') }}</label>
                         <select name="color" id="color"
                             class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
-                            <option value="">Bitte wählen</option>
+                            <option value="">{{ __('select') }}</option>
                             @foreach($colors as $color)
                             <option value="{{ $color }}" {{ old('color') == $color ? 'selected' : '' }}>{{ $color }}
                             </option>
@@ -192,10 +188,10 @@
 
                     {{-- Condition --}}
                     <div>
-                        <label for="condition" class="block text-sm font-medium text-gray-700 mb-2">Condition</label>
+                        <label for="condition" class="block text-sm font-medium text-gray-700 mb-2">{{ __('condition_label') }}</label>
                         <select name="condition" id="condition"
                             class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
-                            <option value="">Bitte wählen</option>
+                            <option value="">{{ __('select') }}</option>
                             <option value="new" {{ old('condition') == 'new' ? 'selected' : '' }}>New</option>
                             <option value="used" {{ old('condition') == 'used' ? 'selected' : '' }}>Used</option>
                             <option value="accident" {{ old('condition') == 'accident' ? 'selected' : '' }}>Accident vehicle</option>
@@ -213,15 +209,15 @@
 
             {{-- Camper Specific Data --}}
             <section class="bg-gray-50 p-6 rounded-lg shadow-inner">
-                <h4 class="text-xl font-semibold text-gray-700 mb-6">Wohnmobil-Spezifikationen</h4>
+                <h4 class="text-xl font-semibold text-gray-700 mb-6">{{ __('Type') }}</h4>
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     {{-- Camper Type --}}
                     <div>
                         <label for="camper_type"
-                            class="block text-sm font-medium text-gray-700 mb-2">Wohnmobil-Typ</label>
+                            class="block text-sm font-medium text-gray-700 mb-2">{{ __('Type') }}</label>
                         <select name="camper_type" id="camper_type"
                             class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
-                            <option value="">Bitte wählen</option>
+                            <option value="">{{ __('select') }}</option>
                             @foreach($camperTypes as $type)
                             <option value="{{ $type }}" {{ old('camper_type') == $type ? 'selected' : '' }}>{{ $type }}
                             </option>
@@ -234,8 +230,7 @@
 
                     {{-- Berths --}}
                     <div>
-                        <label for="berths" class="block text-sm font-medium text-gray-700 mb-2">Anzahl
-                            Schlafplätze</label>
+                        <label for="berths" class="block text-sm font-medium text-gray-700 mb-2">{{ __('beds') }}</label>
                         <input type="number" name="berths" id="berths" value="{{ old('berths') }}" placeholder="z.B. 4"
                             min="1"
                             class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
@@ -246,7 +241,7 @@
 
                     {{-- Total Length --}}
                     <div>
-                        <label for="total_length" class="block text-sm font-medium text-gray-700 mb-2">Gesamtlänge (in
+                        <label for="total_length" class="block text-sm font-medium text-gray-700 mb-2">{{ __('length') }} (in
                             m)</label>
                         <input type="number" step="0.1" name="total_length" id="total_length"
                             value="{{ old('total_length') }}" placeholder="z.B. 6.5"
@@ -258,7 +253,7 @@
 
                     {{-- Total Width --}}
                     <div>
-                        <label for="total_width" class="block text-sm font-medium text-gray-700 mb-2">Gesamtbreite (in
+                        <label for="total_width" class="block text-sm font-medium text-gray-700 mb-2">{{ __('width') }} (in
                             m)</label>
                         <input type="number" step="0.1" name="total_width" id="total_width"
                             value="{{ old('total_width') }}" placeholder="z.B. 2.3"
@@ -270,7 +265,7 @@
 
                     {{-- Total Height --}}
                     <div>
-                        <label for="total_height" class="block text-sm font-medium text-gray-700 mb-2">Gesamthöhe (in
+                        <label for="total_height" class="block text-sm font-medium text-gray-700 mb-2">{{ __('height') }} (in
                             m)</label>
                         <input type="number" step="0.1" name="total_height" id="total_height"
                             value="{{ old('total_height') }}" placeholder="z.B. 2.9"
@@ -283,7 +278,7 @@
                     {{-- Gross Vehicle Weight --}}
                     <div>
                         <label for="gross_vehicle_weight"
-                            class="block text-sm font-medium text-gray-700 mb-2">Gesamtgewicht (in kg)</label>
+                            class="block text-sm font-medium text-gray-700 mb-2">{{ __('weight') }} (in kg)</label>
                         <input type="number" name="gross_vehicle_weight" id="gross_vehicle_weight"
                             value="{{ old('gross_vehicle_weight') }}" placeholder="z.B. 3500"
                             class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
@@ -294,10 +289,10 @@
 
                     {{-- Fuel Type --}}
                     <div>
-                        <label for="fuel_type" class="block text-sm font-medium text-gray-700 mb-2">Treibstoff</label>
+                        <label for="fuel_type" class="block text-sm font-medium text-gray-700 mb-2">{{ __('fuel') }}</label>
                         <select name="fuel_type" id="fuel_type"
                             class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
-                            <option value="">Bitte wählen</option>
+                            <option value="">{{ __('select') }}</option>
                             @foreach($fuelTypes as $type)
                             <option value="{{ $type }}" {{ old('fuel_type') == $type ? 'selected' : '' }}>{{ $type }}
                             </option>
@@ -311,10 +306,10 @@
                     {{-- Transmission --}}
                     <div>
                         <label for="transmission"
-                            class="block text-sm font-medium text-gray-700 mb-2">Getriebeart</label>
+                            class="block text-sm font-medium text-gray-700 mb-2">{{ __('gearbox') }}</label>
                         <select name="transmission" id="transmission"
                             class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
-                            <option value="">Bitte wählen</option>
+                            <option value="">{{ __('select') }}</option>
                             @foreach($transmissions as $trans)
                             <option value="{{ $trans }}" {{ old('transmission') == $trans ? 'selected' : '' }}>
                                 {{ $trans }}
@@ -329,10 +324,10 @@
                     {{-- Emission Class --}}
                     <div>
                         <label for="emission_class"
-                            class="block text-sm font-medium text-gray-700 mb-2">Emissionsklasse</label>
+                            class="block text-sm font-medium text-gray-700 mb-2">{{ __('Emission') }}</label>
                         <select name="emission_class" id="emission_class"
                             class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
-                            <option value="">Bitte wählen</option>
+                            <option value="">{{ __('select') }}</option>
                             @foreach($emissionClasses as $class)
                             <option value="{{ $class }}" {{ old('emission_class') == $class ? 'selected' : '' }}>
                                 {{ $class }}
@@ -350,7 +345,7 @@
             <section class="bg-white p-6 rounded-lg shadow">
                 {{-- Titel --}}
                 <div class="mb-6">
-                    <label for="title" class="block text-sm font-semibold text-gray-800 mb-2">Anzeigentitel</label>
+                    <label for="title" class="block text-sm font-semibold text-gray-800 mb-2">{{ __('title') }}</label>
                     <input type="text" name="title" id="title" value="{{ old('title') }}"
                         placeholder="Aussagekräftiger Titel für deine Anzeige"
                         class="w-full p-3 border border-gray-300 rounded-md shadow-sm bg-white text-gray-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50">
@@ -361,7 +356,7 @@
 
                 {{-- Beschreibung --}}
                 <div>
-                    <label for="description" class="block text-sm font-semibold text-gray-800 mb-2">Beschreibung</label>
+                    <label for="description" class="block text-sm font-semibold text-gray-800 mb-2">{{ __('description') }}</label>
                     <textarea name="description" id="description" rows="7"
                         placeholder="Gib hier alle wichtigen Details zu deinem Wohnmobil ein. Je mehr Informationen, desto besser!"
                         class="w-full p-3 border border-gray-300 rounded-md shadow-sm bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-600 transition duration-150 ease-in-out">{{ old('description') }}</textarea>
@@ -374,7 +369,7 @@
 
             {{-- conatct Section --}}
             <section class="bg-gray-50 p-6 rounded-lg shadow-inner">
-                <h4 class="text-xl font-semibold text-gray-700 mb-6">Select if you want to publish your Mobile phone or email</h4>
+                <h4 class="text-xl font-semibold text-gray-700 mb-6">{{ __('publish_contact_select') }}</h4>
                 <div class="mt-4">
                     <label class="inline-flex items-center">
                         <input type="checkbox" name="show_phone" value="1" class="rounded border-gray-300">
@@ -404,7 +399,7 @@
             {{-- Photo Upload Section --}}
             {{-- The x-data="multiImageUploader()" is placed on a div wrapping the input and previews --}}
             <section class="bg-gray-50 p-6 rounded-lg shadow-inner">
-                <h4 class="text-xl font-semibold text-gray-700 mb-6">Fotos hinzufügen</h4>
+                <h4 class="text-xl font-semibold text-gray-700 mb-6">{{ __('photos') }}</h4>
 
                 <div x-data="multiImageUploader()" class="space-y-4">
                     {{-- The file input field. Laravel will pick up files from here. --}}
@@ -470,10 +465,10 @@
 
 
             {{-- Submit Button --}}
-            <div class="pt-6 border-t border-gray-200 flex justify-end">
+            <div class="pt-4 border-t border-gray-200 flex justify-end">
                 <button type="submit"
-                    class="bg-blue-600 text-white px-8 py-3 rounded-lg font-semibold text-lg hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-300 transition-all duration-300 shadow-lg">
-                    Anzeige erstellen
+                    class="bg-blue-600 text-white px-6 py-2 rounded-lg font-semibold text-lg hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-300 transition-all duration-300 shadow-lg">
+                   {{ __('create_ad') }}
                 </button>
             </div>
 

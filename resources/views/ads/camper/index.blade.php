@@ -3,10 +3,10 @@
         <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center px-4 py-2">
             <div>
                 <h1 class="text-4xl font-extrabold text-gray-900 leading-tight">
-                    Όλοι οι Campers
+                    {{ __('All the campers') }}
                 </h1>
                 <p class="mt-1 text-gray-600 max-w-xl">
-                    Περιηγηθείτε σε όλες τις διαθέσιμες αγγελίες campers.
+                    {{ __('Browse all available motorhome listings.') }}
                 </p>
             </div>
 
@@ -17,7 +17,7 @@
                             <span class="c-blur"></span>
                             <span class="ico-text">+</span>
                         </span>
-                        Νέα Αγγελία
+                        {{ __('create_ad') }}
                     </span>
                 </a>
             </div>
@@ -28,8 +28,8 @@
 
         {{-- Breadcrumbs --}}
         <x-breadcrumbs :items="[
-        ['label' => 'Όλες οι Αγγελίες', 'url' => route('ads.index')],
-        ['label' => 'Campers', 'url' => route('ads.campers.index')],
+        ['label' => __('Campers Ads'), 'url' => route('ads.index')],
+       
     ]" class="mb-8" />
 
         {{-- Filters Section --}}
@@ -55,10 +55,10 @@
                 <div class="flex flex-wrap items-center gap-4 mb-4">
                     {{-- Brand and Model --}}
                     <div class="flex-grow min-w-[150px]">
-                        <label for="brand" class="sr-only">Μάρκα</label>
+                        <label for="brand" class="sr-only">{{ __('brand') }}</label>
                         <select name="brand" x-model="selectedBrand" @change="filterModels"
                             class="w-full rounded-lg border-gray-300 shadow-sm text-sm focus:ring-indigo-500 focus:border-indigo-500">
-                            <option value="">Μάρκα</option>
+                            <option value="">{{ __('brand') }}</option>
                             <template x-for="brand in camperBrands" :key="brand.id">
                                 <option :value="brand.id" x-text="brand.name"></option>
                             </template>
@@ -66,11 +66,11 @@
                     </div>
 
                     <div class="flex-grow min-w-[150px]">
-                        <label for="model" class="sr-only">Μοντέλο</label>
+                        <label for="model" class="sr-only">{{ __('model') }}</label>
                         <select name="model" x-model="selectedModel"
                             class="w-full rounded-lg border-gray-300 shadow-sm text-sm focus:ring-indigo-500 focus:border-indigo-500"
                             :disabled="!selectedBrand">
-                            <option value="">Μοντέλο</option>
+                            <option value="">{{ __('model') }}</option>
                             <template x-for="model in filteredModels" :key="model.id">
                                 <option :value="model.id" x-text="model.name"></option>
                             </template>
@@ -79,15 +79,15 @@
 
                     {{-- Price Range with Input Fields --}}
                     <div class="flex-grow min-w-[150px] relative">
-                        <label for="min_price" class="sr-only">Ελάχιστη Τιμή</label>
+                        <label for="min_price" class="sr-only">{{ __('min_price') }}</label>
                         <input type="number" name="min_price" value="{{ request('min_price') }}"
-                            placeholder="Ελάχιστη τιμή"
+                            placeholder="{{ __('min_price') }}"
                             class="w-full rounded-l-lg border-gray-300 shadow-sm text-sm focus:ring-indigo-500 focus:border-indigo-500" />
                     </div>
                     <div class="flex-grow min-w-[150px] relative">
-                        <label for="max_price" class="sr-only">Μέγιστη Τιμή</label>
+                        <label for="max_price" class="sr-only">{{ __('max_price') }}</label>
                         <input type="number" name="max_price" value="{{ request('max_price') }}"
-                            placeholder="Μέγιστη τιμή"
+                            placeholder="{{ __('max_price') }}"
                             class="w-full rounded-r-lg border-gray-300 shadow-sm text-sm focus:ring-indigo-500 focus:border-indigo-500" />
                     </div>
 
@@ -95,7 +95,7 @@
                     <div class="flex items-center gap-2">
                         <button type="submit"
                             class="inline-flex items-center justify-center rounded-lg border border-transparent shadow-sm px-4 py-2 bg-indigo-600 text-sm font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                            <span class="hidden sm:inline">Αναζήτηση</span>
+                            <span class="hidden sm:inline">{{ __('search') }}</span>
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 sm:ml-1" fill="none"
                                 viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                 <path stroke-linecap="round" stroke-linejoin="round"
@@ -116,7 +116,7 @@
                 <div class="flex justify-start">
                     <button type="button" @click="showMoreFilters = !showMoreFilters"
                         class="text-sm text-indigo-600 hover:text-indigo-800 transition duration-150 ease-in-out font-medium inline-flex items-center">
-                        <span x-text="showMoreFilters ? 'Λιγότερα Φίλτρα' : 'Περισσότερα Φίλτρα'"></span>
+                        <span x-text="showMoreFilters ? '{{ __('less_filters') }}' : '{{ __('more_filters') }}'"></span>
                         <svg x-show="!showMoreFilters" class="ml-1 h-4 w-4 transform transition-transform duration-200"
                             fill="currentColor" viewBox="0 0 20 20">
                             <path fill-rule="evenodd"
@@ -138,134 +138,137 @@
 
                         {{-- Year of Registration Filter --}}
                         <div class="flex-grow min-w-[150px] relative">
-                            <label for="first_registration" class="block text-sm font-medium text-gray-700">Έτος
-                                Κυκλοφορίας</label>
+                            <label for="first_registration" class="block text-sm font-medium text-gray-700">{{ __('year_of_construction') }}</label>
                             <div class="flex items-center mt-1">
                                 <input type="number" name="min_year" id="min_year" value="{{ request('min_year') }}"
-                                    placeholder="Από" min="1920" max="{{ date('Y') }}"
+                                    placeholder="{{ __('from') }}" min="1920" max="{{ date('Y') }}"
                                     class="w-1/2 rounded-l-lg border-gray-300 shadow-sm text-sm focus:ring-indigo-500 focus:border-indigo-500" />
                                 <input type="number" name="max_year" id="max_year" value="{{ request('max_year') }}"
-                                    placeholder="Έως" min="1920" max="{{ date('Y') }}"
+                                    placeholder="{{ __('to') }}" min="1920" max="{{ date('Y') }}"
                                     class="w-1/2 rounded-r-lg border-gray-300 shadow-sm text-sm focus:ring-indigo-500 focus:border-indigo-500" />
                             </div>
                         </div>
 
                         {{-- Mileage Range with Input Fields --}}
                         <div class="flex-grow min-w-[150px] relative">
-                            <label for="min_mileage" class="block text-sm font-medium text-gray-700">Χιλιόμετρα</label>
+                            <label for="min_mileage" class="block text-sm font-medium text-gray-700">{{ __('Mileage') }}</label>
                             <div class="flex items-center mt-1">
                                 <input type="number" name="min_mileage" value="{{ request('min_mileage') }}"
-                                    placeholder="Από"
+                                    placeholder="{{ __('from') }}"
                                     class="w-1/2 rounded-l-lg border-gray-300 shadow-sm text-sm focus:ring-indigo-500 focus:border-indigo-500" />
                                 <input type="number" name="max_mileage" value="{{ request('max_mileage') }}"
-                                    placeholder="Έως"
+                                    placeholder="{{ __('to') }}"
                                     class="w-1/2 rounded-r-lg border-gray-300 shadow-sm text-sm focus:ring-indigo-500 focus:border-indigo-500" />
                             </div>
                         </div>
 
                         {{-- Power Range with Input Fields --}}
                         <div class="flex-grow min-w-[150px] relative">
-                            <label for="min_power" class="block text-sm font-medium text-gray-700">Ισχύς (HP)</label>
+                            <label for="min_power" class="block text-sm font-medium text-gray-700">{{ __('Power') }} (HP)</label>
                             <div class="flex items-center mt-1">
                                 <input type="number" name="min_power" value="{{ request('min_power') }}"
-                                    placeholder="Από"
+                                    placeholder="{{ __('from') }}"
                                     class="w-1/2 rounded-l-lg border-gray-300 shadow-sm text-sm focus:ring-indigo-500 focus:border-indigo-500" />
                                 <input type="number" name="max_power" value="{{ request('max_power') }}"
-                                    placeholder="Έως"
+                                    placeholder="{{ __('to') }}"
                                     class="w-1/2 rounded-r-lg border-gray-300 shadow-sm text-sm focus:ring-indigo-500 focus:border-indigo-500" />
                             </div>
                         </div>
 
                         {{-- Fuel Type Filter --}}
                         <div>
-                            <label for="fuel_type" class="block text-sm font-medium text-gray-700">Τύπος
-                                Καυσίμου</label>
+                            <label for="fuel_type" class="block text-sm font-medium text-gray-700">{{ __('fuel') }}
+                            </label>
                             <select name="fuel_type" id="fuel_type"
                                 class="mt-1 w-full rounded-lg border-gray-300 shadow-sm text-sm focus:ring-indigo-500 focus:border-indigo-500">
-                                <option value="">Επιλέξτε</option>
-                                <option value="petrol" {{ request('fuel_type') == 'petrol' ? 'selected' : '' }}>Βενζίνη
+                                <option value="">{{ __('select') }}</option>
+                                <option value="petrol" {{ request('fuel_type') == 'petrol' ? 'selected' : '' }}>{{ __('Petrol') }}
                                 </option>
-                                <option value="diesel" {{ request('fuel_type') == 'diesel' ? 'selected' : '' }}>Πετρέλαιο
+                                <option value="diesel" {{ request('fuel_type') == 'diesel' ? 'selected' : '' }}>{{ __('Diesel') }}
                                 </option>
                                 <option value="electric" {{ request('fuel_type') == 'electric' ? 'selected' : '' }}>
-                                    Ηλεκτρικό</option>
-                                <option value="hybrid" {{ request('fuel_type') == 'hybrid' ? 'selected' : '' }}>Υβριδικό
+                                    {{ __('Electric') }}
+                                </option>
+                                <option value="hybrid" {{ request('fuel_type') == 'hybrid' ? 'selected' : '' }}>{{ __('Hybrid') }}
                                 </option>
                             </select>
                         </div>
 
                         {{-- Color Filter --}}
                         <div>
-                            <label for="color" class="block text-sm font-medium text-gray-700">Χρώμα</label>
+                            <label for="color" class="block text-sm font-medium text-gray-700">{{ __('Color') }}</label>
                             <select name="color" id="color"
                                 class="mt-1 w-full rounded-lg border-gray-300 shadow-sm text-sm focus:ring-indigo-500 focus:border-indigo-500">
-                                <option value="">Επιλέξτε</option>
-                                <option value="black" {{ request('color') == 'black' ? 'selected' : '' }}>Μαύρο</option>
-                                <option value="white" {{ request('color') == 'white' ? 'selected' : '' }}>Άσπρο</option>
-                                <option value="red" {{ request('color') == 'red' ? 'selected' : '' }}>Κόκκινο</option>
-                                <option value="blue" {{ request('color') == 'blue' ? 'selected' : '' }}>Μπλε</option>
-                                <option value="green" {{ request('color') == 'green' ? 'selected' : '' }}>Πράσινο</option>
-                                <option value="yellow" {{ request('color') == 'yellow' ? 'selected' : '' }}>Κίτρινο
-                                </option>
-                                <option value="orange" {{ request('color') == 'orange' ? 'selected' : '' }}>Πορτοκαλί
-                                </option>
-                                <option value="silver" {{ request('color') == 'silver' ? 'selected' : '' }}>Ασημί</option>
-                                <option value="grey" {{ request('color') == 'grey' ? 'selected' : '' }}>Γκρι</option>
-                                <option value="brown" {{ request('color') == 'brown' ? 'selected' : '' }}>Καφέ</option>
-                                <option value="other" {{ request('color') == 'other' ? 'selected' : '' }}>Άλλο</option>
+                                <option value="">{{ __('select') }}</option>
+                                <option value="black" {{ request('color') == 'black' ? 'selected' : '' }}>{{ __('Black') }}</option>
+                                <option value="white" {{ request('color') == 'white' ? 'selected' : '' }}>{{ __('White') }}</option>
+                                <option value="red" {{ request('color') == 'red' ? 'selected' : '' }}>{{ __('Red') }}</option>
+                                <option value="blue" {{ request('color') == 'blue' ? 'selected' : '' }}>{{ __('Blue') }}</option>
+                                <option value="green" {{ request('color') == 'green' ? 'selected' : '' }}>{{ __('Green') }}</option>
+                                <option value="yellow" {{ request('color') == 'yellow' ? 'selected' : '' }}>{{ __('Yellow') }}</option>
+                                <option value="orange" {{ request('color') == 'orange' ? 'selected' : '' }}>{{ __('Orange') }}</option>
+                                <option value="silver" {{ request('color') == 'silver' ? 'selected' : '' }}>{{ __('Silver') }}</option>
+                                <option value="gray" {{ request('color') == 'gray' ? 'selected' : '' }}>{{ __('Gray') }}</option>
+                                <option value="brown" {{ request('color') == 'brown' ? 'selected' : '' }}>{{ __('Brown') }}</option>
+                                <option value="beige" {{ request('color') == 'beige' ? 'selected' : '' }}>{{ __('Beige') }}</option>
+                                <option value="purple" {{ request('color') == 'purple' ? 'selected' : '' }}>{{ __('Purple') }}</option>
+                                <option value="pink" {{ request('color') == 'pink' ? 'selected' : '' }}>{{ __('Pink') }}</option>
+                                <option value="gold" {{ request('color') == 'gold' ? 'selected' : '' }}>{{ __('Gold') }}</option>
+                                <option value="bronze" {{ request('color') == 'bronze' ? 'selected' : '' }}>{{ __('Bronze') }}</option>
+                                <option value="turquoise" {{ request('color') == 'turquoise' ? 'selected' : '' }}>{{ __('Turquoise') }}</option>
+                                <option value="other" {{ request('color') == 'other' ? 'selected' : '' }}>{{ __('Other') }}</option>
+
                             </select>
                         </div>
 
                         {{-- Camper Type Filter --}}
                         <div>
-                            <label for="camper_type" class="block text-sm font-medium text-gray-700">Τύπος
-                                Camper</label>
+                            <label for="camper_type" class="block text-sm font-medium text-gray-700">{{ __('Τype') }}</label>
                             <select name="camper_type" id="camper_type"
                                 class="mt-1 w-full rounded-lg border-gray-300 shadow-sm text-sm focus:ring-indigo-500 focus:border-indigo-500">
-                                <option value="">Επιλέξτε</option>
+                                <option value="">{{ __('select') }}</option>
                                 @foreach($camperTypes as $type)
-                                    <option value="{{ $type }}" {{ request('camper_type') === $type ? 'selected' : '' }}>
-                                        {{ $type }}
-                                    </option>
+                                <option value="{{ $type }}" {{ request('camper_type') === $type ? 'selected' : '' }}>
+                                    {{ $type }}
+                                </option>
                                 @endforeach
                             </select>
                         </div>
 
                         {{-- Transmission Filter --}}
                         <div>
-                            <label for="transmission" class="block text-sm font-medium text-gray-700">Μετάδοση</label>
+                            <label for="transmission" class="block text-sm font-medium text-gray-700">{{ __('gearbox') }}</label>
                             <select name="transmission" id="transmission"
                                 class="mt-1 w-full rounded-lg border-gray-300 shadow-sm text-sm focus:ring-indigo-500 focus:border-indigo-500">
-                                <option value="">Επιλέξτε</option>
+                                <option value="">{{ __('select') }}</option>
                                 @foreach(['manual' => 'Manual', 'automatic' => 'Automatic'] as $value => $label)
-                                    <option value="{{ $value }}" {{ request('transmission') == $value ? 'selected' : '' }}>
-                                        {{ $label }}
-                                    </option>
+                                <option value="{{ $value }}" {{ request('transmission') == $value ? 'selected' : '' }}>
+                                    {{ $label }}
+                                </option>
                                 @endforeach
                             </select>
                         </div>
 
                         {{-- Emission Class Filter --}}
                         <div>
-                            <label for="emission_class" class="block text-sm font-medium text-gray-700">Κατηγορία
-                                Εκπομπών</label>
+                            <label for="emission_class" class="block text-sm font-medium text-gray-700">{{ __('Emission') }}</label>
                             <select name="emission_class" id="emission_class"
                                 class="mt-1 w-full rounded-lg border-gray-300 shadow-sm text-sm focus:ring-indigo-500 focus:border-indigo-500">
-                                <option value="">Επιλέξτε</option>
+                                <option value="">{{ __('select') }}</option>
                                 @foreach(['Euro 1', 'Euro 2', 'Euro 3', 'Euro 4', 'Euro 5', 'Euro 6', 'Euro 6d-TEMP', 'Euro 6d'] as $value)
-                                    <option value="{{ $value }}" {{ request('emission_class') == $value ? 'selected' : '' }}>
-                                        {{ $value }}
-                                    </option>
+                                <option value="{{ $value }}" {{ request('emission_class') == $value ? 'selected' : '' }}>
+                                    {{ $value }}
+                                </option>
                                 @endforeach
                             </select>
                         </div>
 
                         {{-- Berths Filter --}}
                         <div>
-                            <label for="berths" class="block text-sm font-medium text-gray-700">Αριθμός Κλινών</label>
+                            <label for="berths" class="block text-sm font-medium text-gray-700">{{ __('beds') }}</label>
                             <select name="berths" id="berths"
                                 class="mt-1 w-full rounded-lg border-gray-300 shadow-sm text-sm focus:ring-indigo-500 focus:border-indigo-500">
-                                <option value="">Επιλέξτε</option>
+                                <option value="">{{ __('select') }}</option>
                                 <option value="1-2" {{ request('berths') == '1-2' ? 'selected' : '' }}>1-2</option>
                                 <option value="3-4" {{ request('berths') == '3-4' ? 'selected' : '' }}>3-4</option>
                                 <option value="5-9" {{ request('berths') == '5-9' ? 'selected' : '' }}>5+</option>
@@ -274,31 +277,27 @@
 
                         {{-- Condition Filter --}}
                         <div>
-                            <label for="condition" class="block text-sm font-medium text-gray-700">Κατάσταση</label>
+                            <label for="condition" class="block text-sm font-medium text-gray-700">{{ __('condition') }}</label>
                             <select name="condition" id="condition"
                                 class="mt-1 w-full rounded-lg border-gray-300 shadow-sm text-sm focus:ring-indigo-500 focus:border-indigo-500">
-                                <option value="">Bitte wählen</option>
-                                <option value="new" {{ old('condition') == 'new' ? 'selected' : '' }}>New</option>
-                                <option value="used" {{ old('condition') == 'used' ? 'selected' : '' }}>Used</option>
-                                <option value="accident" {{ old('condition') == 'accident' ? 'selected' : '' }}>Accident
-                                    vehicle</option>
-                                <option value="damaged" {{ old('condition') == 'damaged' ? 'selected' : '' }}>Damaged
-                                    vehicle</option>
+                                <option value="">{{ __('select') }}</option>
+                                <option value="new" {{ old('condition') == 'new' ? 'selected' : '' }}>{{ __('new') }}</option>
+                                <option value="used" {{ old('condition') == 'used' ? 'selected' : '' }}>{{ __('used') }}</option>
+                                <option value="accident" {{ old('condition') == 'accident' ? 'selected' : '' }}>{{ __('Accident vehicle') }}</option>
+                                <option value="damaged" {{ old('condition') == 'damaged' ? 'selected' : '' }}>{{ __('Damaged vehicle') }}</option>
                             </select>
                         </div>
 
                         {{-- Sort By Dropdown --}}
                         <div>
-                            <label for="sort_by" class="block text-sm font-medium text-gray-700">Ταξινόμηση</label>
+                            <label for="sort_by" class="block text-sm font-medium text-gray-700">{{ __('year_of_construction') }}</label>
                             <select name="sort_by" id="sort_by"
                                 class="mt-1 w-full rounded-lg border-gray-300 shadow-sm text-sm focus:ring-indigo-500 focus:border-indigo-500">
-                                <option value="">Επιλέξτε</option>
-                                <option value="latest" {{ request('sort_by') == 'latest' ? 'selected' : '' }}>Τελευταία
+                                <option value="">{{ __('select') }}</option>
+                                <option value="latest" {{ request('sort_by') == 'latest' ? 'selected' : '' }}>{{ __('Last') }}
                                 </option>
-                                <option value="price_asc" {{ request('sort_by') == 'price_asc' ? 'selected' : '' }}>Τιμή:
-                                    Φθηνότερο πρώτα</option>
-                                <option value="price_desc" {{ request('sort_by') == 'price_desc' ? 'selected' : '' }}>
-                                    Τιμή: Ακριβότερο πρώτα</option>
+                                <option value="price_asc" {{ request('sort_by') == 'price_asc' ? 'selected' : '' }}>{{ __('Price: Cheapest first') }}</option>
+                                <option value="price_desc" {{ request('sort_by') == 'price_desc' ? 'selected' : '' }}>{{ __('Price: Most expensive first') }}</option>
                             </select>
                         </div>
                     </div>
@@ -307,42 +306,42 @@
         </form>
 
         @if ($campers->count())
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 my-5 gap-6">
-                @foreach ($campers as $camper)
-                    <div class="bg-white rounded-2xl shadow hover:shadow-lg transition duration-300 overflow-hidden">
-                        <a href="{{ route('ads.camper.show', $camper->id) }}">
-                            <div class="aspect-w-4 aspect-h-3 bg-gray-100">
-                                @if ($camper->images->isNotEmpty())
-                                    <img src="{{ asset('storage/' . $camper->images->first()->image_path) }}"
-                                        alt="{{ $camper->title }}" class="w-full h-full object-cover">
-                                @else
-                                    <div class="w-full h-full flex items-center justify-center text-gray-400">No Image</div>
-                                @endif
-                            </div>
-
-                            <div class="p-4">
-                                <h3 class="text-lg font-semibold text-gray-900 truncate">
-                                    {{ $camper->title }}
-                                </h3>
-                                <p class="text-sm text-gray-600 truncate">
-                                    {{ $camper->camperBrand->name ?? '' }} {{ $camper->camperModel->name ?? '' }}
-                                </p>
-                                <div class="mt-2 text-blue-600 font-bold">
-                                    € {{ number_format($camper->price, 2) }}
-                                </div>
-                            </div>
-                        </a>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 my-5 gap-6">
+            @foreach ($campers as $camper)
+            <div class="bg-white rounded-2xl shadow hover:shadow-lg transition duration-300 overflow-hidden">
+                <a href="{{ route('ads.campers.show', $camper->id) }}">
+                    <div class="aspect-w-4 aspect-h-3 bg-gray-100">
+                        @if ($camper->images->isNotEmpty())
+                        <img src="{{ asset('storage/' . $camper->images->first()->image_path) }}"
+                            alt="{{ $camper->title }}" class="w-full h-full object-cover">
+                        @else
+                        <div class="w-full h-full flex items-center justify-center text-gray-400">No Image</div>
+                        @endif
                     </div>
-                @endforeach
-            </div>
 
-            <div class="mt-8">
-                {{ $campers->links() }}
+                    <div class="p-4">
+                        <h3 class="text-lg font-semibold text-gray-900 truncate">
+                            {{ $camper->title }}
+                        </h3>
+                        <p class="text-sm text-gray-600 truncate">
+                            {{ $camper->camperBrand->name ?? '' }} {{ $camper->camperModel->name ?? '' }}
+                        </p>
+                        <div class="mt-2 text-blue-600 font-bold">
+                            € {{ number_format($camper->price, 2) }}
+                        </div>
+                    </div>
+                </a>
             </div>
+            @endforeach
+        </div>
+
+        <div class="mt-8">
+            {{ $campers->links() }}
+        </div>
         @else
-            <div class="text-gray-600 text-center py-20">
-                Δεν βρέθηκαν campers με τα συγκεκριμένα κριτήρια.
-            </div>
+        <div class="text-gray-600 text-center py-20">
+            Δεν βρέθηκαν campers με τα συγκεκριμένα κριτήρια.
+        </div>
         @endif
     </div>
 </x-app-layout>

@@ -128,6 +128,7 @@
   "index": "Boote",
   "new_boats_ad": "Neue Bootsanzeige",
   "title": "Titel",
+  "height": "Gesamthöhe",
   "title_placeholder": "Geben Sie einen klaren Titel für Ihre Anzeige ein",
   "description": "Beschreibung",
   "description_placeholder": "Beschreiben Sie Ihr Boot, den Zustand und die Ausstattung",
@@ -220,7 +221,7 @@
   "Alle Boots-Anzeigen": "Alle Boots-Anzeigen",
   "Boote": "Boote",
   "Preis auf Anfrage": "Preis auf Anfrage",
-  "Keine Beschreibung verfügbar.": "Keine Beschreibung verfügbar.",
+  "No description available": "Keine Beschreibung verfügbar.",
   "Technische Details": "Technische Details",
   "Marke": "Marke",
   "Modell": "Modell",
@@ -235,7 +236,7 @@
   "Engine power": "Motorleistung",
   "Operating hours": "Betriebsstunden",
   "Last service": "Letzter Service",
-  "Anbieterinformationen": "Anbieterinformationen",
+  "Seller": "Anbieterinformationen",
   "Name:": "Name:",
   "Phone:": "Telefon:",
   "Mobile:": "Mobil:",
@@ -243,12 +244,12 @@
   "Stadt:": "Stadt:",
   "Contact with seller": "Kontakt zum Verkäufer",
   "Seller information not available": "Anbieterinformationen nicht verfügbar.",
-  "Anzeige bearbeiten": "Anzeige bearbeiten",
-  "Anzeige löschen": "Anzeige löschen",
-  "Sind Sie sicher, dass Sie diese Anzeige löschen möchten? Diese Aktion kann nicht rückgängig gemacht werden.": "Sind Sie sicher, dass Sie diese Anzeige löschen möchten? Diese Aktion kann nicht rückgängig gemacht werden.",
-  "City": "Stadt",
   "Edit Ad": "Anzeige bearbeiten",
   "Delete Ad": "Anzeige löschen",
+  "Sind Sie sicher, dass Sie diese Anzeige löschen möchten? Diese Aktion kann nicht rückgängig gemacht werden.": "Sind Sie sicher, dass Sie diese Anzeige löschen möchten? Diese Aktion kann nicht rückgängig gemacht werden.",
+  "City": "Stadt",
+
+
 
 
    "edit_boat_listing": "Bootsanzeige bearbeiten",
@@ -288,8 +289,8 @@
   "update_listing": "Anzeige aktualisieren",
   "more_filters": "Weitere Filter",
   "less_filters": "Weniger Filter",
-  "year_from": "Baujahr ab",
-  "year_to": "Baujahr bis",
+  "from": "ab",
+  "to": "bis",
   "select_engine_type": "Motortyp auswählen",
   "fuel_type": "Kraftstoffart",
   "select_fuel_type": "Kraftstoffart auswählen",
@@ -302,8 +303,121 @@
    "sort_by": "Sortieren nach",
     "latest": "Letzte",
       "price_asc": "Preis: Niedrig bis Hoch",
-  "price_desc": "Preis: Absteigend"
+  "price_desc": "Preis: Absteigend",
+
+   "camper.create.title": "Neue Camper Anzeige erstellen",
+    "camper.create.subtitle": "Wähle eine passende Kategorie und fülle die erforderlichen Felder aus, um deine Anzeige zu erstellen.",
+    "camper.create.breadcrumb.index": "Camper Anzeigen",
+    "camper.create.breadcrumb.new": "Neue Camper Anzeige",
+    "camper.title": "Camper Anzeige",
+         "camper.subtitle": "Detailansicht der Wohnmobilanzeige.",
+    "camper.sections.vehicle_details": "Fahrzeugdetails",
+    "camper.fields.brand": "Marke",
+    "camper.fields.model": "Modell (optional)",
+    "camper.placeholders.select_brand": "Bitte wählen Sie eine Marke",
+    "camper.placeholders.select_model": "Bitte wählen Sie ein Modell",
+        "Power": "Leistung",
+        "Color": "Farbe",
+         "select": "Bitte wählen",
 
 
+         
+    "Type": "Typ",
+      "beds": "Anzahl Schlafplätze",
+        "length": "Gesamtlänge",
+
+
+          "width": "Gesamtbreite",
+
+            "weight": "Gesamtgewicht",
+             "fuel": "Treibstoff",
+
+            "gearbox": "Getriebeart",
+
+             "Emission": "Emissionsklasse",
+
+
+
+            "back": "Zurück",
+
+
+
+
+
+             "edit_motorhome_ad":  "Wohnmobil Anzeige bearbeiten",
+
+
+
+            "Customize the details of your motorhome ad": " Passe die Details deiner Wohnmobil Anzeige an.",
+  "Campers Ads": "Campers Anzeigen",
+  "Camper ad": "Camper Anzeige",
+    "Edit ad": "Anzeige bearbeiten",
+  "Accident vehicle": "Unfallfahrzeug",
+  "Damaged vehicle": "Beschädigtes Fahrzeug",
+    
+  "All the campers": "Alle Camper",
+  "Browse all available motorhome listings.": "Durchsuchen Sie alle verfügbaren Wohnmobilanzeigen.",
+  
+  
+  "Petrol": "Benzin",
+  "Diesel": "Diesel",
+  "Electric": "Elektrisch",
+    "Hybrid": "Hybrid",
+
+
+ "Black": "Schwarz",
+  "White": "Weiß",
+  "Gray": "Grau",
+  "Silver": "Silber",
+  "Red": "Rot",
+  "Blue": "Blau",
+  "Green": "Grün",
+  "Yellow": "Gelb",
+  "Orange": "Orange",
+  "Brown": "Braun",
+  "Beige": "Beige",
+  "Purple": "Lila",
+  "Pink": "Rosa",
+  "Gold": "Gold",
+  "Turquoise": "Türkis",
+  "Bronze": "Bronze",
+
+
+  "Last": "Zuletzt",
+ 
+  "Price: Cheapest first": "Preis: Günstigster zuerst",
+  "Price: Most expensive first": "Preis: Teuerste zuerst",
+    "": "",
+  "": "",
+  "": "", 
+   "": "",
+     "": "",
+  "": "",
+    "": "",
+  "": "",
+  "": "",
+    "": "",
+  "": "",
+  "": "",
+    "": "",
+  "": "",
+  "": "", 
+   "": "",
+     "": "",
+  "": "",
+    "": "",
+  "": "",
+  "": "",
+    "": "",
+  "": "",
+  "": "",
+    "": "",
+  "": "",
+  "": "", 
+   "": "",
+  "": "",
+  "": ""
+
+   
 
 }
