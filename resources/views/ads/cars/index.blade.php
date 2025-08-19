@@ -243,7 +243,7 @@
                                 <option value="diesel" {{ request('fuel_type') == 'diesel' ? 'selected' : '' }}>Diesel
                                 </option>
                                 <option value="electric" {{ request('fuel_type') == 'electric' ? 'selected' : '' }}>
-                                    Electric</option>
+                                    {{ __('Electric') }}</option>
                                 <option value="hybrid" {{ request('fuel_type') == 'hybrid' ? 'selected' : '' }}>Hybrid
                                 </option>
                                 <option value="lpg" {{ request('fuel_type') == 'lpg' ? 'selected' : '' }}>LPG</option>
@@ -255,13 +255,12 @@
                         {{-- Transmission Filter --}}
                         <div>
                             <label for="transmission"
-                                class="block text-sm font-medium text-gray-700">Transmission</label>
+                                class="block text-sm font-medium text-gray-700">{{ __('gearbox') }}</label>
                             <select name="transmission" id="transmission"
                                 class="mt-1 w-full rounded-lg border-gray-300 shadow-sm text-sm focus:ring-indigo-500 focus:border-indigo-500">
                                 <option value="">{{ __('select') }}</option>
-                                <option value="automatic" {{ request('transmission') == 'automatic' ? 'selected' : '' }}>
-                                    Automatic</option>
-                                <option value="manual" {{ request('transmission') == 'manual' ? 'selected' : '' }}>Manual
+                                <option value="automatic" {{ request('transmission') == 'automatic' ? 'selected' : '' }}>{{ __('Automatic') }}</option>
+                                <option value="manual" {{ request('transmission') == 'manual' ? 'selected' : '' }}>{{ __('Manual') }}
                                 </option>
                             </select>
                         </div>
@@ -269,44 +268,45 @@
 
                         {{-- Drive Filter --}}
                         <div>
-                            <label for="drive" class="block text-sm font-medium text-gray-700">Wheel drive</label>
+                            <label for="drive" class="block text-sm font-medium text-gray-700">{{ __('Wheel drive') }}</label>
                             <select name="drive" id="drive"
                                 class="mt-1 w-full rounded-lg border-gray-300 shadow-sm text-sm focus:ring-indigo-500 focus:border-indigo-500">
                                 <option value="">{{ __('select') }}</option>
-                                <option value="front" {{ old('drive') == 'front' ? 'selected' : '' }}>Front wheel drive
+                                <option value="front" {{ old('drive') == 'front' ? 'selected' : '' }}>{{ __('Front-wheel drive') }}
                                 </option>
-                                <option value="rear" {{ old('drive') == 'rear' ? 'selected' : '' }}>Rear wheel drive
+                                <option value="rear" {{ old('drive') == 'rear' ? 'selected' : '' }}>{{ __('Rear-wheel drive') }}
                                 </option>
-                                <option value="all" {{ old('drive') == 'all' ? 'selected' : '' }}>All wheels</option>
+                                <option value="all" {{ old('drive') == 'all' ? 'selected' : '' }}>{{ __('All-wheel drive') }}</option>
                             </select>
                         </div>
 
                         {{-- Color Filter --}}
                         <div>
-                            <label for="color" class="block text-sm font-medium text-gray-700">Color</label>
+                            <label for="color" class="block text-sm font-medium text-gray-700">{{ __('Color') }}</label>
                             <select name="color" id="color"
                                 class="mt-1 w-full rounded-lg border-gray-300 shadow-sm text-sm focus:ring-indigo-500 focus:border-indigo-500">
-                                <option value="">{{ __('select') }}</option>
-                                <option value="black" {{ request('color') == 'black' ? 'selected' : '' }}>Black</option>
-                                <option value="white" {{ request('color') == 'white' ? 'selected' : '' }}>White</option>
-                                <option value="red" {{ request('color') == 'red' ? 'selected' : '' }}>Red</option>
-                                <option value="blue" {{ request('color') == 'blue' ? 'selected' : '' }}>Blue</option>
-                                <option value="green" {{ request('color') == 'green' ? 'selected' : '' }}>Green</option>
-                                <option value="yellow" {{ request('color') == 'yellow' ? 'selected' : '' }}>Yellow
-                                </option>
-                                <option value="orange" {{ request('color') == 'orange' ? 'selected' : '' }}>Orange
-                                </option>
-                                <option value="silver" {{ request('color') == 'silver' ? 'selected' : '' }}>Silver
-                                </option>
-                                <option value="grey" {{ request('color') == 'grey' ? 'selected' : '' }}>Grey</option>
-                                <option value="brown" {{ request('color') == 'brown' ? 'selected' : '' }}>Brown</option>
-                                <option value="other" {{ request('color') == 'other' ? 'selected' : '' }}>Other</option>
-                            </select>
+                           <option value="" disabled selected>{{ __('Select Color') }}</option>
+    <option value="black" {{ request('color') == 'black' ? 'selected' : '' }}>{{ __('Black') }}</option>
+    <option value="white" {{ request('color') == 'white' ? 'selected' : '' }}>{{ __('White') }}</option>
+    <option value="gray" {{ request('color') == 'gray' ? 'selected' : '' }}>{{ __('Gray') }}</option>
+    <option value="silver" {{ request('color') == 'silver' ? 'selected' : '' }}>{{ __('Silver') }}</option>
+    <option value="blue" {{ request('color') == 'blue' ? 'selected' : '' }}>{{ __('Blue') }}</option>
+    <option value="red" {{ request('color') == 'red' ? 'selected' : '' }}>{{ __('Red') }}</option>
+    <option value="green" {{ request('color') == 'green' ? 'selected' : '' }}>{{ __('Green') }}</option>
+    <option value="yellow" {{ request('color') == 'yellow' ? 'selected' : '' }}>{{ __('Yellow') }}</option>
+    <option value="orange" {{ request('color') == 'orange' ? 'selected' : '' }}>{{ __('Orange') }}</option>
+    <option value="brown" {{ request('color') == 'brown' ? 'selected' : '' }}>{{ __('Brown') }}</option>
+    <option value="beige" {{ request('color') == 'beige' ? 'selected' : '' }}>{{ __('Beige') }}</option>
+    <option value="gold" {{ request('color') == 'gold' ? 'selected' : '' }}>{{ __('Gold') }}</option>
+    <option value="purple" {{ request('color') == 'purple' ? 'selected' : '' }}>{{ __('Purple') }}</option>
+    <option value="pink" {{ request('color') == 'pink' ? 'selected' : '' }}>{{ __('Pink') }}</option>
+    <option value="other" {{ request('color') == 'other' ? 'selected' : '' }}>{{ __('Other') }}</option>
+ </select>
                         </div>
 
                         {{-- Doors Filter --}}
                         <div>
-                            <label for="doors" class="block text-sm font-medium text-gray-700">Doors</label>
+                            <label for="doors" class="block text-sm font-medium text-gray-700">{{ __('Doors') }}</label>
                             <select name="doors" id="doors"
                                 class="mt-1 w-full rounded-lg border-gray-300 shadow-sm text-sm focus:ring-indigo-500 focus:border-indigo-500">
                                 <option value="">{{ __('select') }}</option>
@@ -319,7 +319,7 @@
 
                         {{-- Seats Filter --}}
                         <div>
-                            <label for="seats" class="block text-sm font-medium text-gray-700">Seats</label>
+                            <label for="seats" class="block text-sm font-medium text-gray-700">{{ __('Seats') }}</label>
                             <select name="seats" id="seats"
                                 class="mt-1 w-full rounded-lg border-gray-300 shadow-sm text-sm focus:ring-indigo-500 focus:border-indigo-500">
                                 <option value="">{{ __('select') }}</option>
