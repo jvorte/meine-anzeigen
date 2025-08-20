@@ -12,8 +12,8 @@
     <div class="py-2">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <x-breadcrumbs :items="[
-        ['label' => 'Electronics Anzeigen', 'url' => route('categories.electronics.index')],
-        ['label' => 'Anzeige bearbeiten', 'url' => null],
+        ['label' => __('Electronics Ads') , 'url' => route('categories.electronics.index')],
+        ['label' => __('Edit Ad') , 'url' => null],
     ]" />
         </div>
     </div>
@@ -44,7 +44,7 @@
 
             {{-- Electronic Details Section --}}
             <section class="bg-gray-50 p-6 rounded-lg shadow-inner">
-                <h4 class="text-xl font-semibold text-gray-700 mb-6">Electronics-Details</h4>
+                <h4 class="text-xl font-semibold text-gray-700 mb-6">{{ __('description') }}</h4>
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" x-data="{
                          selectedCategory: @json(old('category', $electronic->category)),
                          categoryFields: {
@@ -60,12 +60,10 @@
 
                     {{-- Category --}}
                     <div>
-                        <label for="category" class="block text-sm font-medium text-gray-700 mb-2">Kategorie</label>
+                        <label for="category" class="block text-sm font-medium text-gray-700 mb-2">{{ __('Category') }}</label>
                         <select name="category" id="category"
                             class="form-select w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
 
-                            class="form-select w-full p-2 border border-gray-300 rounded-md shadow-sm
-                            focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
                             <option value="">Bitte wählen</option>
                             @foreach($categories as $cat)
                                 <option value="{{ $cat }}" {{ strtolower(old('category', $electronic->category ?? '')) == strtolower($cat) ? 'selected' : '' }}>
@@ -105,7 +103,7 @@
 
                     {{-- Price --}}
                     <div>
-                        <label for="price" class="block text-sm font-medium text-gray-700 mb-2">Preis (in €)</label>
+                        <label for="price" class="block text-sm font-medium text-gray-700 mb-2">{{ __('price') }}</label>
                         <input type="number" name="price" id="price" value="{{ old('price', $electronic->price) }}"
                             placeholder="z.B. 750"
                             class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
@@ -116,7 +114,7 @@
 
                     {{-- Condition --}}
                     <div>
-                        <label for="condition" class="block text-sm font-medium text-gray-700 mb-2">Zustand</label>
+                        <label for="condition" class="block text-sm font-medium text-gray-700 mb-2">{{ __('description') }}</label>
                         <select name="condition" id="condition"
                             class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
                            
@@ -134,7 +132,7 @@
 
                     {{-- Year of Purchase --}}
                     <div>
-                        <label for="year_of_purchase" class="block text-sm font-medium text-gray-700 mb-2">Kaufjahr
+                        <label for="year_of_purchase" class="block text-sm font-medium text-gray-700 mb-2">{{ __('Year of purchase') }}
                             (optional)</label>
                         <input type="number" name="year_of_purchase" id="year_of_purchase"
                             value="{{ old('year_of_purchase', $electronic->year_of_purchase) }}" placeholder="z.B. 2023"
@@ -148,7 +146,7 @@
                     {{-- Warranty Status --}}
                     <div>
                         <label for="warranty_status"
-                            class="block text-sm font-medium text-gray-700 mb-2">Garantie-Status</label>
+                            class="block text-sm font-medium text-gray-700 mb-2">{{ __('Warranty') }}</label>
                         <select name="warranty_status" id="warranty_status"
                             class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
                             <option value="">Bitte wählen</option>
@@ -164,7 +162,7 @@
                     {{-- Specific fields that show based on category selection --}}
                     <div x-show="shouldShowField('color')" x-transition:enter.duration.500ms
                         x-transition:leave.duration.400ms>
-                        <label for="color" class="block text-sm font-medium text-gray-700 mb-2">Farbe (optional)</label>
+                        <label for="color" class="block text-sm font-medium text-gray-700 mb-2">{{ __('Color') }} (optional)</label>
                         <input type="text" name="color" id="color" value="{{ old('color', $electronic->color) }}"
                             placeholder="z.B. Schwarz"
                             class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
@@ -175,7 +173,7 @@
 
                     <div x-show="shouldShowField('usage_time')" x-transition:enter.duration.500ms
                         x-transition:leave.duration.400ms>
-                        <label for="usage_time" class="block text-sm font-medium text-gray-700 mb-2">Nutzungszeit
+                        <label for="usage_time" class="block text-sm font-medium text-gray-700 mb-2">{{ __('Usage time') }}
                             (optional)</label>
                         <input type="text" name="usage_time" id="usage_time"
                             value="{{ old('usage_time', $electronic->usage_time) }}" placeholder="z.B. 1 Jahr"
@@ -188,7 +186,7 @@
                     <div x-show="shouldShowField('operating_system')" x-transition:enter.duration.500ms
                         x-transition:leave.duration.400ms>
                         <label for="operating_system"
-                            class="block text-sm font-medium text-gray-700 mb-2">Betriebssystem (optional)</label>
+                            class="block text-sm font-medium text-gray-700 mb-2">{{ __('Operating system') }} (optional)</label>
                         <input type="text" name="operating_system" id="operating_system"
                             value="{{ old('operating_system', $electronic->operating_system) }}"
                             placeholder="z.B. iOS 17"
@@ -201,7 +199,7 @@
                     <div x-show="shouldShowField('storage_capacity')" x-transition:enter.duration.500ms
                         x-transition:leave.duration.400ms>
                         <label for="storage_capacity"
-                            class="block text-sm font-medium text-gray-700 mb-2">Speicherkapazität (optional)</label>
+                            class="block text-sm font-medium text-gray-700 mb-2">{{ __('Storage capacity') }} (optional)</label>
                         <input type="text" name="storage_capacity" id="storage_capacity"
                             value="{{ old('storage_capacity', $electronic->storage_capacity) }}"
                             placeholder="z.B. 256GB"
@@ -213,7 +211,7 @@
 
                     <div x-show="shouldShowField('screen_size')" x-transition:enter.duration.500ms
                         x-transition:leave.duration.400ms>
-                        <label for="screen_size" class="block text-sm font-medium text-gray-700 mb-2">Bildschirmgröße
+                        <label for="screen_size" class="block text-sm font-medium text-gray-700 mb-2">{{ __('Screen size') }}
                             (optional)</label>
                         <input type="text" name="screen_size" id="screen_size"
                             value="{{ old('screen_size', $electronic->screen_size) }}" placeholder="z.B. 6.7 Zoll"
@@ -225,7 +223,7 @@
 
                     <div x-show="shouldShowField('processor')" x-transition:enter.duration.500ms
                         x-transition:leave.duration.400ms>
-                        <label for="processor" class="block text-sm font-medium text-gray-700 mb-2">Prozessor
+                        <label for="processor" class="block text-sm font-medium text-gray-700 mb-2">{{ __('Processor') }}
                             (optional)</label>
                         <input type="text" name="processor" id="processor"
                             value="{{ old('processor', $electronic->processor) }}" placeholder="z.B. Apple A17 Bionic"
@@ -248,7 +246,7 @@
 
                     {{-- Accessories (always visible) --}}
                     <div class="md:col-span-2 lg:col-span-3">
-                        <label for="accessories" class="block text-sm font-medium text-gray-700 mb-2">Zubehör (optional,
+                        <label for="accessories" class="block text-sm font-medium text-gray-700 mb-2">{{ __('Accesories') }} (optional,
                             z.B. Ladekabel, Fernbedienung)</label>
                         <textarea name="accessories" id="accessories" rows="3"
                             placeholder="Liste hier enthaltenes Zubehör auf."
@@ -338,7 +336,7 @@
 
             {{-- Photo Upload Section --}}
             <section class="bg-gray-50 p-6 rounded-lg shadow-inner">
-                <h4 class="text-xl font-semibold text-gray-700 mb-6">Fotos bearbeiten</h4>
+                <h4 class="text-xl font-semibold text-gray-700 mb-6">{{ __('section_photos') }}</h4>
 
                 <div x-data="editImageUploader(@json($electronic->images))" class="space-y-4">
 
@@ -353,12 +351,12 @@
                                         <label
                                             class="absolute top-2 right-2 bg-red-600 text-white text-xs px-2 py-1 rounded-full cursor-pointer opacity-0 group-hover:opacity-100 transition-opacity duration-200">
                                             <input type="checkbox" name="delete_images[]" value="{{ $image->id }}" class="mr-1">
-                                            Löschen
+                                          {{ __('delete_photo') }}
                                         </label>
                                     </div>
                                 @endforeach
                             </div>
-                            <p class="text-sm text-gray-600 mt-4">Wähle Fotos zum Löschen aus.</p>
+                            <p class="text-sm text-gray-600 mt-4">{{ __('delete_photo') }}</p>
                         </section>
                     @endif
 
@@ -433,7 +431,7 @@
             {{-- Submit Button --}}
             <div class="pt-6 border-t border-gray-200 flex justify-end">
                 <button type="submit"
-                    class="bg-blue-600 text-white px-8 py-3 rounded-lg font-semibold text-lg hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-300 transition-all duration-300 shadow-lg">
+                    class="bg-blue-600 text-white px-8 py-1 rounded-lg font-semibold text-lg hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-300 transition-all duration-300 shadow-lg">
                 {{ __('update_listing') }}
                 </button>
             </div>

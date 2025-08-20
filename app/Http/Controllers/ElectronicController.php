@@ -130,7 +130,7 @@ class ElectronicController extends Controller
     public function store(Request $request): RedirectResponse
     {
         $rules = [
-            'images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg',
             'title' => 'required|string|max:255',
             'description' => 'required|string',
             'price' => 'nullable|numeric|min:0',

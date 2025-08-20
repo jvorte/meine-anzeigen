@@ -5,10 +5,10 @@
         <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center px-4 py-2">
             <div>
                 <h1 class="text-4xl font-extrabold text-gray-900 leading-tight">
-                  All Electronics
+               {{ __('Electronics Ads') }}
                 </h1>
                 <p class="mt-1 text-gray-600 max-w-xl">
-                    Περιηγηθείτε σε όλες τις διαθέσιμες αγγελίες για ηλεκτρονικές συσκευές.
+                  {{ __('Browse the latest electronics ads and find your perfect device today') }}
                 </p>
             </div>
 
@@ -28,8 +28,8 @@
 
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <x-breadcrumbs :items="[
-            ['label' => 'Όλες οι Αγγελίες', 'url' => route('ads.index')],
-            ['label' => 'Ηλεκτρονικά', 'url' => route('ads.electronics.index')],
+            ['label' => __('Electronics Ads'), 'url' => route('ads.index')],
+ 
         ]" class="mb-6" />
 
         {{-- Filters Section --}}
@@ -40,15 +40,15 @@
         <div class="flex flex-wrap items-center gap-4 mb-4">
 
                  <div class="flex-grow min-w-[200px]">
-                <label for="title" class="sr-only">Αναζήτηση με τίτλο</label>
-                <input type="text" name="title" id="title" value="{{ request('title') }}" placeholder="Αναζήτηση με τίτλο..." class="w-full rounded-lg border-gray-300 shadow-sm text-sm focus:ring-indigo-500 focus:border-indigo-500">
+                <label for="title" class="sr-only">{{ __('Search by title') }}</label>
+                <input type="text" name="title" id="title" value="{{ request('title') }}" placeholder="{{ __('Search by title') }}..." class="w-full rounded-lg border-gray-300 shadow-sm text-sm focus:ring-indigo-500 focus:border-indigo-500">
             </div>
 
             {{-- Category Dropdown --}}
             <div class="flex-grow min-w-[150px]">
-                <label for="category" class="sr-only">Κατηγορία</label>
+                <label for="category" class="sr-only">{{ __('Category') }}</label>
                 <select name="category" id="category" class="w-full rounded-lg border-gray-300 shadow-sm text-sm focus:ring-indigo-500 focus:border-indigo-500">
-                    <option value="">Κατηγορία</option>
+                    <option value="">{{ __('Category') }}</option>
                    @foreach($categories as $categorie)
                         <option value="{{ $categorie }}" {{ request('brand') == $categorie ? 'selected' : '' }}>{{ $categorie }}</option>
                     @endforeach
@@ -59,7 +59,7 @@
             <div class="flex-grow min-w-[150px]">
                 <label for="brand" class="sr-only">{{ __('brand') }}</label>
                 <select name="brand" id="brand" class="w-full rounded-lg border-gray-300 shadow-sm text-sm focus:ring-indigo-500 focus:border-indigo-500">
-                    <option value="">Μάρκα</option>
+                    <option value="">{{ __('brand') }}</option>
                     @foreach($brands as $brand)
                         <option value="{{ $brand }}" {{ request('brand') == $brand ? 'selected' : '' }}>{{ $brand }}</option>
                     @endforeach
@@ -68,11 +68,11 @@
             
             {{-- Price Range with Input Fields --}}
             <div class="flex-grow min-w-[150px] relative">
-                <label for="min_price" class="sr-only">Ελάχιστη Τιμή</label>
+                <label for="min_price" class="sr-only">{{ __('Price: Cheapest first') }}</label>
                 <input type="number" name="min_price" value="{{ request('min_price') }}" placeholder="{{ __('min_price') }}" class="w-full rounded-l-lg border-gray-300 shadow-sm text-sm focus:ring-indigo-500 focus:border-indigo-500" />
             </div>
             <div class="flex-grow min-w-[150px] relative">
-                <label for="max_price" class="sr-only">Μέγιστη Τιμή</label>
+                <label for="max_price" class="sr-only">{{ __('Price: Most expensive first') }}</label>
                 <input type="number" name="max_price" value="{{ request('max_price') }}" placeholder="{{ __('max_price') }}" class="w-full rounded-r-lg border-gray-300 shadow-sm text-sm focus:ring-indigo-500 focus:border-indigo-500" />
             </div>
 
@@ -110,7 +110,7 @@
             <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                 {{-- Condition Filter --}}
                 <div>
-                    <label for="condition" class="block text-sm font-medium text-gray-700">Κατάσταση</label>
+                    <label for="condition" class="block text-sm font-medium text-gray-700">{{ __('condition') }}</label>
                     <select name="condition" id="condition" class="mt-1 w-full rounded-lg border-gray-300 shadow-sm text-sm focus:ring-indigo-500 focus:border-indigo-500">
                         <option value="">{{ __('select') }}</option>
                            @foreach($conditions as $condition)
@@ -121,12 +121,12 @@
 
                 {{-- Sort By Dropdown --}}
                 <div>
-                    <label for="sort_by" class="block text-sm font-medium text-gray-700">Ταξινόμηση</label>
+                    <label for="sort_by" class="block text-sm font-medium text-gray-700">{{ __('Sort by') }}</label>
                     <select name="sort_by" id="sort_by" class="mt-1 w-full rounded-lg border-gray-300 shadow-sm text-sm focus:ring-indigo-500 focus:border-indigo-500">
                         <option value="">{{ __('select') }}</option>
-                        <option value="latest" {{ request('sort_by') == 'latest' ? 'selected' : '' }}>Τελευταία</option>
-                        <option value="price_asc" {{ request('sort_by') == 'price_asc' ? 'selected' : '' }}>Τιμή: Φθηνότερο πρώτα</option>
-                        <option value="price_desc" {{ request('sort_by') == 'price_desc' ? 'selected' : '' }}>Τιμή: Ακριβότερο πρώτα</option>
+                        <option value="latest" {{ request('sort_by') == 'latest' ? 'selected' : '' }}>{{ __('Last') }}</option>
+                        <option value="price_asc" {{ request('sort_by') == 'price_asc' ? 'selected' : '' }}>{{ __('Price: Cheapest first') }}</option>
+                        <option value="price_desc" {{ request('sort_by') == 'price_desc' ? 'selected' : '' }}>{{ __('Price: Most expensive first') }}</option>
                     </select>
                 </div>
             </div>

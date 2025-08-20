@@ -6,10 +6,10 @@
         <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center px-4 py-2">
             <div>
                 <h1 class="text-4xl font-extrabold text-gray-900 leading-tight">
-                    Household Anzeige
+                    {{ __('Haushaltsanzeige') }}
                 </h1>
                 <p class="mt-1 text-gray-600 max-w-xl">
-                    Household Anzeige
+                   {{ __('Everything about household and living – simply advertise and browse.') }}
                 </p>
             </div>
 
@@ -31,8 +31,7 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 p-10">
         {{-- Breadcrumbs --}}
         <x-breadcrumbs :items="[
-                ['label' => 'Alle Anzeigen', 'url' => route('ads.index')],
-                ['label' => 'Haushaltsartikel Anzeigen', 'url' => route('categories.household.index')], {{-- Assuming 'household' is the slug for household items --}}
+                ['label' => __('Haushaltsanzeige'), 'url' => route('ads.index')],
                 ['label' => $householdItem->title, 'url' => null],
             ]" />
         {{-- Action Buttons and Back link --}}
@@ -172,9 +171,6 @@
 
 
 
-
-
-
             {{-- Right Column: Details & Seller info --}}
             <section class="flex flex-col justify-between gap-10">
 
@@ -188,7 +184,7 @@
                         @if ($householdItem->price)
                         <p class="text-3xl text-gray-700 font-extrabold [&>span]:text-base [&>span]:font-normal [&>span]:ml-1">
                             &euro;{{ number_format($householdItem->price, 2, ',', '.') }}
-                            <span> / Einheit</span>
+                     
                         </p>
                         @else
                         <p class="text-xl italic text-gray-500">{{ __('price_on_request') }}</p>
@@ -248,11 +244,11 @@
                         @auth
                         @if (auth()->id() === $householdItem->user_id || auth()->user()->isAdmin())
                         {{-- Edit & Delete --}}
-                        <a href="{{ route('ads.household-items.edit', $householdItem->id) }}"
+                        <a href="{{ route('ads.household.edit', $householdItem->id) }}"
                             class="px-5 py-2 bg-gray-700 hover:bg-gray-800 text-white rounded-full shadow-lg transition transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2">
                             {{ __('Edit Ad') }}
                         </a>
-                        <form action="{{ route('ads.household-items.destroy', $householdItem->id) }}" method="POST"
+                        <form action="{{ route('ads.household.destroy', $householdItem->id) }}" method="POST"
                             onsubmit="return confirm('Sind Sie sicher, dass Sie diese Anzeige löschen möchten? Diese Aktion kann nicht rückgängig gemacht werden.')">
                             @csrf
                             @method('DELETE')
@@ -291,7 +287,7 @@
 
                     @else
                     {{-- No user data --}}
-                 <p class="italic text-red-600">{{ __('Seller information not available') }}</p>
+                    <p class="italic text-red-600">{{ __('Seller information not available') }}</p>
                     @endif
                 </div>
 
@@ -305,53 +301,47 @@
 
                         @if($householdItem->condition)
                         <div>
-                            <p class="text-sm font-semibold text-gray-800">Zustand:</p>
+                            <p class="text-sm font-semibold text-gray-800">{{ __('condition') }}:</p>
                             <p class="text-gray-700">{{ $householdItem->condition }}</p>
                         </div>
                         @endif
                         @if($householdItem->category)
                         <div>
-                            <p class="text-sm font-semibold text-gray-800">Kategorie:</p>
+                            <p class="text-sm font-semibold text-gray-800">{{ __('Category') }}:</p>
                             <p class="text-gray-700">{{ $householdItem->category }}</p>
                         </div>
                         @endif
                         @if($householdItem->brand)
                         <div>
-                            <p class="text-sm font-semibold text-gray-800">Marke:</p>
+                            <p class="text-sm font-semibold text-gray-800">{{ __('brand') }}:</p>
                             <p class="text-gray-700">{{ $householdItem->brand }}</p>
                         </div>
                         @endif
                         @if($householdItem->model_name)
                         <div>
-                            <p class="text-sm font-semibold text-gray-800">Modell:</p>
+                            <p class="text-sm font-semibold text-gray-800">{{ __('model') }}:</p>
                             <p class="text-gray-700">{{ $householdItem->model_name }}</p>
                         </div>
                         @endif
                         @if($householdItem->material)
                         <div>
-                            <p class="text-sm font-semibold text-gray-800">Material:</p>
+                            <p class="text-sm font-semibold text-gray-800">{{ __('Material') }}:</p>
                             <p class="text-gray-700">{{ $householdItem->material }}</p>
                         </div>
                         @endif
                         @if($householdItem->color)
                         <div>
-                            <p class="text-sm font-semibold text-gray-800">Farbe:</p>
+                            <p class="text-sm font-semibold text-gray-800">{{ __('Color') }}:</p>
                             <p class="text-gray-700">{{ $householdItem->color }}</p>
                         </div>
                         @endif
                         @if($householdItem->dimensions)
                         <div>
-                            <p class="text-sm font-semibold text-gray-800">Abmessungen:</p>
+                            <p class="text-sm font-semibold text-gray-800">{{ __('Dimensions') }}:</p>
                             <p class="text-gray-700">{{ $householdItem->dimensions }}</p>
                         </div>
                         @endif
-                        {{-- If you re-add 'age' to your model, uncomment this --}}
-                        {{-- @if($householdItem->age)
-                <div>
-                    <p class="text-sm font-semibold text-gray-800">Alter:</p>
-                    <p class="text-gray-700">{{ $householdItem->age }}</p>
-                    </div>
-                    @endif --}}
+              
                 </div>
             </section>
         </article>

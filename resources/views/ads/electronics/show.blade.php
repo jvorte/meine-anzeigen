@@ -3,10 +3,10 @@
         <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center px-4 py-2">
             <div>
                 <h1 class="text-4xl font-extrabold text-gray-900 leading-tight">
-                    Elektronik Anzeige
+                 {{ __('Electronics Ads') }}
                 </h1>
                 <p class="mt-1 text-gray-600 max-w-xl">
-                    Details zur Elektronik Anzeige
+                 {{ __('Browse the latest electronics ads and find your perfect device today') }}
                 </p>
             </div>
             <div class="px-4 py-1 md:py-1 flex justify-end items-center">
@@ -26,7 +26,7 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 p-10">
         {{-- Breadcrumbs --}}
         <x-breadcrumbs :items="[
-            ['label' => 'Elektronik Anzeigen', 'url' => route('categories.electronics.index')],
+            ['label' =>  __('Electronics Ads'), 'url' => route('categories.electronics.index')],
             ['label' => $electronic->title, 'url' => null],
         ]" />
 
@@ -163,7 +163,7 @@
                             <p
                                 class="text-3xl text-gray-700 font-extrabold [&>span]:text-base [&>span]:font-normal [&>span]:ml-1">
                                 &euro;{{ number_format($electronic->price, 2, ',', '.') }}
-                                <span> / Einheit</span>
+                              
                             </p>
                         @else
                             <p class="text-xl italic text-gray-500">{{ __('price_on_request') }}</p>
@@ -270,67 +270,67 @@
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         @if($electronic->brand)
                             <div>
-                                <p class="text-sm font-semibold text-gray-800">Marke:</p>
+                                <p class="text-sm font-semibold text-gray-800">{{ __('brand') }}:</p>
                                 <p class="text-gray-700">{{ $electronic->brand }}</p>
                             </div>
                         @endif
                         @if($electronic->electronic_model)
                             <div>
-                                <p class="text-sm font-semibold text-gray-800">Modell:</p>
+                                <p class="text-sm font-semibold text-gray-800">{{ __('model') }}:</p>
                                 <p class="text-gray-700">{{ $electronic->electronic_model }}</p>
                             </div>
                         @endif
                         @if($electronic->condition)
                             <div>
-                                <p class="text-sm font-semibold text-gray-800">Zustand:</p>
+                                <p class="text-sm font-semibold text-gray-800">{{ __('description') }}:</p>
                                 <p class="text-gray-700">{{ $electronic->condition }}</p>
                             </div>
                         @endif
                         @if($electronic->year_of_purchase)
                             <div>
-                                <p class="text-sm font-semibold text-gray-800">Kaufjahr:</p>
+                                <p class="text-sm font-semibold text-gray-800">{{ __('Year of purchase') }}:</p>
                                 <p class="text-gray-700">{{ $electronic->year_of_purchase }}</p>
                             </div>
                         @endif
                         @if($electronic->warranty_status)
                             <div>
-                                <p class="text-sm font-semibold text-gray-800">Garantie-Status:</p>
+                                <p class="text-sm font-semibold text-gray-800">{{ __('Warranty') }}:</p>
                                 <p class="text-gray-700">{{ $electronic->warranty_status }}</p>
                             </div>
                         @endif
                         @if($electronic->color)
                             <div>
-                                <p class="text-sm font-semibold text-gray-800">Farbe:</p>
+                                <p class="text-sm font-semibold text-gray-800">{{ __('Color') }}:</p>
                                 <p class="text-gray-700">{{ $electronic->color }}</p>
                             </div>
                         @endif
                         @if($electronic->usage_time)
                             <div>
-                                <p class="text-sm font-semibold text-gray-800">Nutzungsdauer:</p>
+                                <p class="text-sm font-semibold text-gray-800">{{ __('Usage time') }}:</p>
                                 <p class="text-gray-700">{{ $electronic->usage_time }}</p>
                             </div>
                         @endif
                         @if($electronic->operating_system)
                             <div>
-                                <p class="text-sm font-semibold text-gray-800">Betriebssystem:</p>
+                                <p class="text-sm font-semibold text-gray-800">{{ __('Operating system') }}:</p>
                                 <p class="text-gray-700">{{ $electronic->operating_system }}</p>
                             </div>
                         @endif
                         @if($electronic->storage_capacity)
                             <div>
-                                <p class="text-sm font-semibold text-gray-800">Speicherkapazität:</p>
+                                <p class="text-sm font-semibold text-gray-800">{{ __('Storage capacity') }}:</p>
                                 <p class="text-gray-700">{{ $electronic->storage_capacity }}</p>
                             </div>
                         @endif
                         @if($electronic->screen_size)
                             <div>
-                                <p class="text-sm font-semibold text-gray-800">Bildschirmgröße:</p>
+                                <p class="text-sm font-semibold text-gray-800">{{ __('Screen size') }}:</p>
                                 <p class="text-gray-700">{{ $electronic->screen_size }}</p>
                             </div>
                         @endif
                         @if($electronic->processor)
                             <div>
-                                <p class="text-sm font-semibold text-gray-800">Prozessor:</p>
+                                <p class="text-sm font-semibold text-gray-800">{{ __('Processor') }}:</p>
                                 <p class="text-gray-700">{{ $electronic->processor }}</p>
                             </div>
                         @endif
@@ -341,8 +341,7 @@
                             </div>
                         @endif
                         @if($electronic->accessories)
-                            <div class="lg:col-span-3">
-                                <p class="text-sm font-semibold text-gray-800">Zubehör:</p>
+                                <p class="text-sm font-semibold text-gray-800">{{ __('Accesories') }}:</p>
                                 <p class="text-gray-700">{{ $electronic->accessories }}</p>
                             </div>
                         @endif

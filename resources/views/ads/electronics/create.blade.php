@@ -59,8 +59,7 @@
                              return this.categoryFields[category] && this.categoryFields[category].includes(field);
                          }
                      }">
-
-                    {{-- Category --}}
+           {{-- Category --}}
                     <div>
                         <label for="category" class="block text-sm font-medium text-gray-700 mb-2">{{ __('Category') }}</label>
                         <select name="category" id="category" x-model="selectedCategory"
@@ -109,12 +108,16 @@
 
                     {{-- Condition --}}
                     <div>
-                        <label for="condition" class="block text-sm font-medium text-gray-700 mb-2">{{ __('condition') }}</label>
+                        <label for="condition" class="block text-sm font-medium text-gray-700 mb-2">
+                            {{ __('condition') }}
+                        </label>
                         <select name="condition" id="condition"
                             class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
                             <option value="">{{ __('select') }}</option>
                             @foreach($conditions as $condition)
-                            <option value="{{ $condition }}">{{ $condition }}</option>
+                            <option value="{{ $condition }}" {{ old('condition') == $condition ? 'selected' : '' }}>
+                                {{ __($condition) }}
+                            </option>
                             @endforeach
                         </select>
                         @error('condition')
@@ -144,7 +147,7 @@
                             <option value="">{{ __('select') }}</option>
                             @foreach($warrantyStatuses as $status)
                             <option value="{{ $status }}" {{ old('warranty_status') == $status ? 'selected' : '' }}>
-                                {{ $status }}
+                                {{ __($status) }}
                             </option>
                             @endforeach
                         </select>
