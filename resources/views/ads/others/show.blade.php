@@ -6,10 +6,10 @@
         <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center px-4 py-2">
             <div>
                 <h1 class="text-4xl font-extrabold text-gray-900 leading-tight">
-                    Others
+                {{ __('Others Ads') }}
                 </h1>
                 <p class="mt-1 text-gray-600 max-w-xl">
-                    Others
+                 {{ __('Explore our complete selection of listings and connect with the right offers') }}
                 </p>
             </div>
             <div class="px-4 py-1 md:py-1 flex justify-end items-center">
@@ -29,8 +29,7 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 p-10">
         {{-- Breadcrumbs component --}}
         <x-breadcrumbs :items="[
-                ['label' => 'Alle Anzeigen', 'url' => route('ads.index')],
-                ['label' => 'Sonstige Anzeigen', 'url' => route('categories.others.index')], {{-- Assuming 'sonstiges' is the slug for others --}}
+                ['label' => __('Others Ads'), 'url' => route('categories.others.index')],           
                 ['label' => $other->title, 'url' => null],
             ]" />
         {{-- Action Buttons and Back link --}}
@@ -186,7 +185,7 @@
                         @if ($other->price)
                         <p class="text-3xl text-gray-700 font-extrabold [&>span]:text-base [&>span]:font-normal [&>span]:ml-1">
                             &euro;{{ number_format($other->price, 2, ',', '.') }}
-                            <span> / Einheit</span>
+                      
                         </p>
                         @else
                         <p class="text-xl italic text-gray-500">{{ __('price_on_request') }}</p>
@@ -312,44 +311,44 @@
 
                         @if($other->condition)
                         <div>
-                            <p class="text-sm font-semibold text-gray-800">Zustand:</p>
+                            <p class="text-sm font-semibold text-gray-800">{{ __('condition') }}:</p>
                             <p class="text-gray-700">{{ $other->condition }}</p>
                         </div>
                         @endif
                         {{-- Add other specific fields for your 'Other' model here. Examples: --}}
                         @if($other->type)
                         <div>
-                            <p class="text-sm font-semibold text-gray-800">Typ:</p>
+                            <p class="text-sm font-semibold text-gray-800">{{ __('Τype') }}:</p>
                             <p class="text-gray-700">{{ $other->type }}</p>
                         </div>
                         @endif
                         @if($other->manufacturer)
                         <div>
-                            <p class="text-sm font-semibold text-gray-800">Hersteller:</p>
+                            <p class="text-sm font-semibold text-gray-800">{{ __('brand') }}:</p>
                             <p class="text-gray-700">{{ $other->manufacturer }}</p>
                         </div>
                         @endif
                         @if($other->model_name)
                         <div>
-                            <p class="text-sm font-semibold text-gray-800">Modell:</p>
+                            <p class="text-sm font-semibold text-gray-800">{{ __('model') }}:</p>
                             <p class="text-gray-700">{{ $other->model_name }}</p>
                         </div>
                         @endif
                         @if($other->color)
                         <div>
-                            <p class="text-sm font-semibold text-gray-800">Farbe:</p>
+                            <p class="text-sm font-semibold text-gray-800">{{ __('Color') }}:</p>
                             <p class="text-gray-700">{{ $other->color }}</p>
                         </div>
                         @endif
                         @if($other->dimensions)
                         <div>
-                            <p class="text-sm font-semibold text-gray-800">Abmessungen:</p>
+                            <p class="text-sm font-semibold text-gray-800">{{ __('Dimensions') }}:</p>
                             <p class="text-gray-700">{{ $other->dimensions }}</p>
                         </div>
                         @endif
                         @if($other->weight)
                         <div>
-                            <p class="text-sm font-semibold text-gray-800">Gewicht:</p>
+                            <p class="text-sm font-semibold text-gray-800">{{ __('weight') }}:</p>
                             <p class="text-gray-700">{{ $other->weight }}</p>
                         </div>
                         @endif

@@ -125,28 +125,13 @@ class CommercialVehicleController extends Controller
         // --- FIX START: Define $commercialBrands here ---
         $commercialBrands = CommercialBrand::orderBy('name')->get(); // Fetch commercial brands
 
-
-        $colors = ['Black', 'White', 'Red', 'Blue', 'Green', 'Yellow', 'Orange', 'Silver', 'Grey', 'Brown', 'Purple', 'Other'];
-        $commercialVehicleTypes = ['Small van', 'Minibus', 'Panel van', 'Station wagon', 'Pick-up', 'Special conversion', 'Other'];
-        $fuelTypes = ['Diesel', 'Petrol', 'Electric', 'Hybrid', 'Gas'];
-        $transmissions = ['Manual', 'Automatic'];
-        $emissionClasses = ['Euro 1', 'Euro 2', 'Euro 3', 'Euro 4', 'Euro 5', 'Euro 6', 'Euro 6d-TEMP', 'Euro 6d'];
-        $conditions = ['new', 'used', 'accident', 'damaged'];
+           $emissionClasses = ['Euro 1', 'Euro 2', 'Euro 3', 'Euro 4', 'Euro 5', 'Euro 6', 'Euro 6d-TEMP', 'Euro 6d'];
+   
         return view('ads.commercial-vehicles.create', compact(
-            'commercialBrands', // Now correctly defined
-            // Removed the duplicate 'commercialBrands'
-            'colors',
-            'commercialVehicleTypes',
-            'fuelTypes',
-            'transmissions',
-            'emissionClasses',
-            'conditions'
-
+            'commercialBrands',   
+               'emissionClasses',
         ));
     }
-
-
-
 
 
     /**
@@ -156,23 +141,17 @@ class CommercialVehicleController extends Controller
     {
         // 1. Validation
         $validatedData = $request->validate([
-            'images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048', // Validate each image
+
+            'images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg',
             'title' => 'required|string|max:255',
             'description' => 'required|string',
-
-
             'commercial_brand_id' => 'required|exists:commercial_brands,id',
             'commercial_model_id' => 'required|exists:commercial_models,id',
-
-            // 'show_phone' => $request->has('show_phone') ? 1 : 0,
-            // 'show_mobile_phone' => $request->has('show_mobile_phone') ? 1 : 0,
-            // 'show_email' => $request->has('show_email') ? 1 : 0,
-
             'first_registration' => ['required', 'integer', 'min:1990', 'max:' . date('Y')],
             'mileage' => 'required|integer|min:0',
             'power' => 'nullable|integer|min:1',
             'color' => 'nullable|string|max:50',
-            'condition' => 'required|in:neu,used,accident,damaged',
+            'condition' => 'required|string',
             'price' => 'nullable|numeric|min:0',
             'commercial_vehicle_type' => 'required|string|max:100',
             'fuel_type' => 'nullable|string|max:50',
@@ -183,9 +162,9 @@ class CommercialVehicleController extends Controller
             'emission_class' => 'nullable|string|max:50',
             'seats' => 'nullable|integer|min:1',
         ]);
-        // dd($validatedData); // For debugging, uncomment if needed
+      
 
-
+// dd($validatedData);
         $commercialVehicle = new CommercialVehicle();
         $commercialVehicle->user_id = Auth::id(); // Assign the authenticated user's ID
         $commercialVehicle->show_phone = $request->has('show_phone') ? 1 : 0;

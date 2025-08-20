@@ -560,7 +560,7 @@
 
                 {{-- conatct Section --}}
     <section class="bg-gray-50 p-6 rounded-lg shadow-inner">
-        <h4 class="text-xl font-semibold text-gray-700 mb-6">Select if you want to publish your Mobile phone or email</h4>
+        <h4 class="text-xl font-semibold text-gray-700 mb-6">{{ __('publish_contact_select') }}</h4>
         <div class="mt-4">
             <label class="inline-flex items-center">
                 <input type="checkbox" name="show_phone" value="1" class="rounded border-gray-300">
@@ -588,7 +588,7 @@
 
             {{-- Photo Upload Section (with Alpine.js for previews) --}}
             <section class="bg-gray-50 p-6 rounded-lg shadow-inner">
-                <h4 class="text-xl font-semibold text-gray-700 mb-6">Fotos hinzufügen</h4>
+                <h4 class="text-xl font-semibold text-gray-700 mb-6">{{ __('section_photos') }}</h4>
 
                 <div x-data="multiImageUploader()" class="space-y-4">
                     <input type="file" name="images[]" multiple @change="addFiles($event)" class="block w-full border p-2 rounded" />
@@ -616,7 +616,7 @@
 
             <div class="mt-8 flex justify-end">
                 <button type="submit" class="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
-                    Anzeige erstellen
+                  {{ __('create_ad') }}
                 </button>
             </div>
         </form>

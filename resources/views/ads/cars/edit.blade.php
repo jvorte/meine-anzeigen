@@ -352,7 +352,7 @@
                     </div>
 
                     {{-- Vehicle Type --}}
-                    {{-- Vehicle Type --}}
+                
                     <div>
                         <label for="vehicle_type" class="block text-sm font-medium text-gray-700 mb-2">
                             {{ __('Type') }}

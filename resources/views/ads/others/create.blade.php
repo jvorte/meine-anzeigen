@@ -17,12 +17,9 @@
     <div class="py-2">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             {{-- Breadcrumbs component --}}
-            <x-breadcrumbs :items="[
-            {{-- Link to the general Cars category listing --}}
-            ['label' => 'Cars Anzeigen', 'url' => route('categories.others.index')],
-
-            {{-- The current page (New Car Ad creation) - set URL to null --}}
-            ['label' => 'Neue Auto Anzeige', 'url' => null],
+            <x-breadcrumbs :items="[        
+            ['label' =>  __('Others Ads'), 'url' => route('categories.others.index')],          
+            ['label' =>  __('New Ad in Others'), 'url' => null],
         ]" />
         </div>
     </div>
@@ -53,11 +50,11 @@
 
             {{-- General Details Section --}}
             <section class="bg-gray-50 p-6 rounded-lg shadow-inner">
-                <h4 class="text-xl font-semibold text-gray-700 mb-6">Artikel-Details</h4>
+                <h4 class="text-xl font-semibold text-gray-700 mb-6">{{ __('description') }}</h4>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     {{-- Title --}}
                     <div class="md:col-span-2">
-                        <label for="title" class="block text-sm font-medium text-gray-700 mb-2">Anzeigentitel</label>
+                        <label for="title" class="block text-sm font-medium text-gray-700 mb-2">{{ __('title') }}</label>
                         <input type="text" name="title" id="title" value="{{ old('title') }}"
                             placeholder="Aussagekräftiger Titel für deine Anzeige (z.B. Alte Schallplatten Sammlung)"
                             class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
@@ -68,7 +65,7 @@
 
                     {{-- Price --}}
                     <div>
-                        <label for="price" class="block text-sm font-medium text-gray-700 mb-2">Preis (in €)</label>
+                        <label for="price" class="block text-sm font-medium text-gray-700 mb-2">{{ __('price') }}</label>
                         <input type="number" step="0.01" name="price" id="price" value="{{ old('price') }}" placeholder="z.B. 75.00"
                             class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
                         @error('price')
@@ -78,7 +75,7 @@
 
                     {{-- Condition --}}
                     <div>
-                        <label for="condition" class="block text-sm font-medium text-gray-700 mb-2">Zustand</label>
+                        <label for="condition" class="block text-sm font-medium text-gray-700 mb-2">{{ __('condition_label') }}</label>
                         <select name="condition" id="condition"
                             class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
                             <option value="">Bitte wählen</option>
@@ -99,7 +96,7 @@
             <section>
                 {{-- Description --}}
                 <div class="mt-6">
-                    <label for="description" class="block text-sm font-medium text-gray-700 mb-2">Beschreibung</label>
+                    <label for="description" class="block text-sm font-medium text-gray-700 mb-2">{{ __('description') }}</label>
                     <textarea name="description" id="description" rows="7"
                         placeholder="Gib hier alle wichtigen Details zu deinem Artikel ein, der nicht in andere Kategorien passt."
                         class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">{{ old('description') }}</textarea>
@@ -112,7 +109,7 @@
 
             {{-- conatct Section --}}
             <section class="bg-gray-50 p-6 rounded-lg shadow-inner">
-                <h4 class="text-xl font-semibold text-gray-700 mb-6">Select if you want to publish your Mobile phone or email</h4>
+                <h4 class="text-xl font-semibold text-gray-700 mb-6">{{ __('publish_contact_select') }}</h4>
                 <div class="mt-4">
                     <label class="inline-flex items-center">
                         <input type="checkbox" name="show_phone" value="1" class="rounded border-gray-300">
@@ -142,7 +139,7 @@
 
             {{-- Photo Upload Section (with Alpine.js for previews) --}}
             <section class="bg-gray-50 p-6 rounded-lg shadow-inner">
-                <h4 class="text-xl font-semibold text-gray-700 mb-6">Fotos hinzufügen</h4>
+                <h4 class="text-xl font-semibold text-gray-700 mb-6">{{ __('section_photos') }}</h4>
 
                 <div x-data="multiImageUploader()" class="space-y-4">
                     <input type="file" name="images[]" multiple @change="addFiles($event)" class="block w-full border p-2 rounded" />
@@ -262,7 +259,7 @@
             <div class="pt-6 border-t border-gray-200 flex justify-end">
                 <button type="submit"
                     class="bg-blue-600 text-white px-8 py-3 rounded-lg font-semibold text-lg hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-300 transition-all duration-300 shadow-lg">
-                    Anzeige erstellen
+                  {{ __('create_ad') }}
                 </button>
             </div>
 

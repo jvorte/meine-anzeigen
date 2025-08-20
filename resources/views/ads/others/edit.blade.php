@@ -13,9 +13,9 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             {{-- Breadcrumbs component --}}
             <x-breadcrumbs :items="[
-        ['label' => 'Sonstiges Anzeigen', 'url' => route('categories.others.index')],
+        ['label' =>  __('Others Ads'), 'url' => route('categories.others.index')],
         ['label' => $other->title, 'url' => route('ads.others.show', $other->id)],
-        ['label' => 'Bearbeiten', 'url' => null],
+        ['label' => __('Edit Ad'), 'url' => null],
     ]" />
         </div>
     </div>
@@ -46,7 +46,7 @@
 
             {{-- General Details Section --}}
             <section class="bg-gray-50 p-6 rounded-lg shadow-inner">
-                <h4 class="text-xl font-semibold text-gray-700 mb-6">Artikel-Details</h4>
+                <h4 class="text-xl font-semibold text-gray-700 mb-6">{{ __('description') }}</h4>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     {{-- Title --}}
                     <div class="md:col-span-2">
@@ -61,7 +61,7 @@
 
                     {{-- Price --}}
                     <div>
-                        <label for="price" class="block text-sm font-medium text-gray-700 mb-2">Preis (in €)</label>
+                        <label for="price" class="block text-sm font-medium text-gray-700 mb-2">{{ __('price') }}</label>
                         <input type="number" step="0.01" name="price" id="price"
                             value="{{ old('price', $other->price) }}" placeholder="z.B. 75.00"
                             class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
@@ -72,7 +72,7 @@
 
                     {{-- Condition --}}
                     <div>
-                        <label for="condition" class="block text-sm font-medium text-gray-700 mb-2">Zustand</label>
+                        <label for="condition" class="block text-sm font-medium text-gray-700 mb-2">{{ __('condition_label') }}</label>
                         <select name="condition" id="condition"
                             class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
                             @foreach($conditionOptions as $conditionOption)

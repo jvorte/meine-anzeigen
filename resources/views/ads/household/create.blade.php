@@ -176,7 +176,7 @@
 
                 {{-- conatct Section --}}
     <section class="bg-gray-50 p-6 rounded-lg shadow-inner">
-        <h4 class="text-xl font-semibold text-gray-700 mb-6">Select if you want to publish your Mobile phone or email</h4>
+        <h4 class="text-xl font-semibold text-gray-700 mb-6">{{ __('publish_contact_select') }}</h4>
         <div class="mt-4">
             <label class="inline-flex items-center">
                 <input type="checkbox" name="show_phone" value="1" class="rounded border-gray-300">
@@ -207,7 +207,7 @@
          {{-- Photo Upload Section --}}
             {{-- The x-data="multiImageUploader()" is placed on a div wrapping the input and previews --}}
             <section class="bg-gray-50 p-6 rounded-lg shadow-inner">
-                <h4 class="text-xl font-semibold text-gray-700 mb-6">Fotos hinzufügen</h4>
+                <h4 class="text-xl font-semibold text-gray-700 mb-6">{{ __('section_photos') }}</h4>
 
                 <div x-data="multiImageUploader()" class="space-y-4">
                     {{-- The file input field. Laravel will pick up files from here. --}}
@@ -280,7 +280,7 @@
             <div class="pt-6 border-t border-gray-200 flex justify-end">
                 <button type="submit"
                         class="bg-blue-600 text-white px-8 py-3 rounded-lg font-semibold text-lg hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-300 transition-all duration-300 shadow-lg">
-                    Anzeige erstellen
+                 {{ __('create_ad') }}
                 </button>
             </div>
 

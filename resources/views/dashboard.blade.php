@@ -2,15 +2,18 @@
 
     {{-- Header Section --}}
     <x-slot name="header">
-        <div class="px-4 py-2 flex justify-end items-center">
-            <a href="{{ route('ads.create') }}"
-               class="inline-flex items-center justify-center px-5 py-3 text-base font-medium text-center text-white bg-blue-600 rounded-lg hover:bg-blue-700 focus:ring-4 focus:ring-blue-300 dark:focus:ring-blue-900 shadow-lg transform transition-transform hover:scale-105">
-                <svg class="w-5 h-5 mr-2 -ml-1" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                    <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd"></path>
-                </svg>
-                {{ __('new_ad') }}
-            </a>
-        </div>
+   
+              <div class="px-4 py-1 md:py-1 flex justify-end items-center">
+                <a href="{{ route('ads.create') }}" class="c-button">
+                    <span class="c-main">
+                        <span class="c-ico">
+                            <span class="c-blur"></span>
+                            <span class="ico-text">+</span>
+                        </span>
+                        {{  __('new_ad') }}
+                    </span>
+                </a>
+            </div>
     </x-slot>
 
     {{-- Main Content --}}

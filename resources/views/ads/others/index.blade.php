@@ -5,10 +5,10 @@
         <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center px-4 py-2">
             <div>
                 <h1 class="text-4xl font-extrabold text-gray-900 leading-tight">
-                    Λοιπές Αγγελίες
+                   {{ __('Others Ads') }}
                 </h1>
                 <p class="mt-1 text-gray-600 max-w-xl">
-                    Περιηγηθείτε σε όλες τις διαθέσιμες λοιπές αγγελίες.
+      {{ __('Explore our complete selection of listings and connect with the right offers') }}
                 </p>
             </div>
 
@@ -28,8 +28,8 @@
 
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <x-breadcrumbs :items="[
-            ['label' => 'Όλες οι Αγγελίες', 'url' => route('ads.index')],
-            ['label' => 'Λοιπές', 'url' => route('ads.others.index')],
+                      ['label' =>  __('Others Ads'), 'url' => route('categories.others.index')],   
+ 
         ]" class="mb-6" />
 
         {{-- Filters Section --}}
@@ -39,8 +39,8 @@
         <div class="flex flex-wrap items-center gap-4 mb-4">
             {{-- Text Input for 'Τίτλος' --}}
             <div class="flex-grow min-w-[200px]">
-                <label for="title" class="sr-only">Αναζήτηση με τίτλο</label>
-                <input type="text" name="title" id="title" value="{{ request('title') }}" placeholder="Αναζήτηση με τίτλο..." class="w-full rounded-lg border-gray-300 shadow-sm text-sm focus:ring-indigo-500 focus:border-indigo-500">
+                <label for="title" class="sr-only">{{ __('Search by title') }}</label>
+                <input type="text" name="title" id="title" value="{{ request('title') }}" placeholder="{{ __('Search by title') }}..." class="w-full rounded-lg border-gray-300 shadow-sm text-sm focus:ring-indigo-500 focus:border-indigo-500 p-1">
             </div>
 
             {{-- Price Range with Input Fields --}}
@@ -87,7 +87,7 @@
             <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                 {{-- Condition Filter --}}
                 <div>
-                    <label for="condition" class="block text-sm font-medium text-gray-700">Κατάσταση</label>
+                    <label for="condition" class="block text-sm font-medium text-gray-700">{{ __('condition_label') }}</label>
                     <select name="condition" id="condition" class="mt-1 w-full rounded-lg border-gray-300 shadow-sm text-sm focus:ring-indigo-500 focus:border-indigo-500">
                         <option value="">{{ __('select') }}</option>
                         @foreach($conditions as $condition)
@@ -98,12 +98,12 @@
 
                 {{-- Sort By Dropdown --}}
                 <div>
-                    <label for="sort_by" class="block text-sm font-medium text-gray-700">Ταξινόμηση</label>
+                    <label for="sort_by" class="block text-sm font-medium text-gray-700">{{ __('Sort by') }}</label>
                     <select name="sort_by" id="sort_by" class="mt-1 w-full rounded-lg border-gray-300 shadow-sm text-sm focus:ring-indigo-500 focus:border-indigo-500">
                         <option value="">{{ __('select') }}</option>
-                        <option value="latest" {{ request('sort_by') == 'latest' ? 'selected' : '' }}>Τελευταία</option>
-                        <option value="price_asc" {{ request('sort_by') == 'price_asc' ? 'selected' : '' }}>Τιμή: Φθηνότερο πρώτα</option>
-                        <option value="price_desc" {{ request('sort_by') == 'price_desc' ? 'selected' : '' }}>Τιμή: Ακριβότερο πρώτα</option>
+                        <option value="latest" {{ request('sort_by') == 'latest' ? 'selected' : '' }}>{{ __('Last') }}</option>
+                        <option value="price_asc" {{ request('sort_by') == 'price_asc' ? 'selected' : '' }}>{{ __('Price: Cheapest first') }}</option>
+                        <option value="price_desc" {{ request('sort_by') == 'price_desc' ? 'selected' : '' }}>{{ __('Price: Most expensive first') }}</option>
                     </select>
                 </div>
             </div>
