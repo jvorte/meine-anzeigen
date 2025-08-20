@@ -6,10 +6,10 @@
         <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center px-4 py-2">
             <div>
                 <h1 class="text-4xl font-extrabold text-gray-900 leading-tight">
-                    Dienstleistung Anzeige
+                       {{ __('Service Advertisement') }}
                 </h1>
                 <p class="mt-1 text-gray-600 max-w-xl">
-                    Detaillierte Ansicht Ihrer Dienstleistungsanzeige
+                 {{ __('Connect with skilled experts quickly and easily') }}
                 </p>
             </div>
             <div class="px-4 py-1 md:py-1 flex justify-end items-center">
@@ -29,8 +29,7 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 p-10">
         {{-- Breadcrumbs --}}
         <x-breadcrumbs :items="[
-        ['label' => 'Alle Anzeigen', 'url' => route('ads.index')],
-        ['label' => 'Dienstleistungen', 'url' => route('categories.services.index')],
+        ['label' => __('All ads'), 'url' => route('categories.services.index')],
         ['label' => $service->title, 'url' => null],
     ]" class="mb-8" />
 
@@ -292,21 +291,21 @@
 
                         @if ($service->service_type)
                         <dl>
-                            <dt class="font-semibold text-gray-700 mb-1">Art der Dienstleistung</dt>
+                            <dt class="font-semibold text-gray-700 mb-1">{{ __('description') }}</dt>
                             <dd class="text-gray-900">{{ $service->service_type }}</dd>
                         </dl>
                         @endif
 
                         @if ($service->availability)
                         <dl>
-                            <dt class="font-semibold text-gray-700 mb-1">Verfügbarkeit</dt>
+                            <dt class="font-semibold text-gray-700 mb-1">{{ __('Availability') }}</dt>
                             <dd class="text-gray-900">{{ $service->availability }}</dd>
                         </dl>
                         @endif
 
                         @if ($service->location)
                         <dl>
-                            <dt class="font-semibold text-gray-700 mb-1">Standort / Region</dt>
+                            <dt class="font-semibold text-gray-700 mb-1">{{ __('location') }}</dt>
                             <dd class="text-gray-900">{{ $service->location }}</dd>
                         </dl>
                         @endif

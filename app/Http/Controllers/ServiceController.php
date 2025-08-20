@@ -68,7 +68,31 @@ class ServiceController extends Controller
     {
 
 
-        $serviceCategoryOptions = ['cleaning', 'crafts', 'it', 'consulting', 'transport', 'other'];
+       $serviceCategoryOptions = [
+    'cleaning',
+    'crafts',
+    'it',
+    'consulting',
+    'transport',
+    'other',
+    'home_services',
+    'health_and_wellness',
+    'education',
+    'events',
+    'creative_services',
+    'legal_and_finance',
+    'add',
+    'project_management',
+    'software_development',
+    'sales_and_customer_relations',
+    'design_and_diagramming',
+    'security_and_compliance',
+    'it_support_and_service',
+    'data_and_analytics',
+    'hr_and_team_building',
+    'content_and_communication',
+    'administrative_tools'
+];
         $availabilityOptions = ['immediately', 'by appointment', 'during weekdays', 'weekends'];
 
         return view('ads.services.create', compact(
@@ -87,17 +111,18 @@ class ServiceController extends Controller
             'service_type' => ['required', 'string', 'max:255'],
             'title' => ['required', 'string', 'max:255'],
             'description' => ['required', 'string'],
-            'images.*' => ['nullable', 'image', 'max:2048'],
+            'images.*' => ['nullable', 'image'],
             'location' => ['required', 'string', 'max:255'],
             'price' => ['nullable', 'numeric', 'min:0'],
             'availability' => ['nullable', 'string'],
 
         ]);
-        // dd($validatedData);
+
         // Separate image files from other validated data
         $imageFiles = $request->file('images'); // Get the uploaded image files
         // Remove 'bilder' (the file objects) from $validatedData before creating the Service record
-        $dataToCreateService = Arr::except($validatedData, ['images']); // Changed from 'images' to 'bilder'
+        $dataToCreateService = Arr::except($validatedData, ['images']); 
+        
 
         // 2. Create the Service record first
         $service = Service::create(array_merge($dataToCreateService, [
@@ -147,7 +172,31 @@ class ServiceController extends Controller
             abort(403, 'Unauthorized action.');
         }
 
-        $serviceCategoryOptions = ['cleaning', 'crafts', 'it', 'consulting', 'transport', 'other'];
+    $serviceCategoryOptions = [
+    'cleaning',
+    'crafts',
+    'it',
+    'consulting',
+    'transport',
+    'other',
+    'home_services',
+    'health_and_wellness',
+    'education',
+    'events',
+    'creative_services',
+    'legal_and_finance',
+    'add',
+    'project_management',
+    'software_development',
+    'sales_and_customer_relations',
+    'design_and_diagramming',
+    'security_and_compliance',
+    'it_support_and_service',
+    'data_and_analytics',
+    'hr_and_team_building',
+    'content_and_communication',
+    'administrative_tools'
+];
         $availabilityOptions = ['immediately', 'by appointment', 'during weekdays', 'weekends'];
 
         return view('ads.services.edit', compact('service', 'serviceCategoryOptions', 'availabilityOptions'));
