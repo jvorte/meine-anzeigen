@@ -6,7 +6,7 @@
         <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center px-4 py-2">
             <div>
                 <h1 class="text-4xl font-extrabold text-gray-900 leading-tight">
-                    {{ __('Haushaltsanzeige') }}
+                    {{ __('Household ads') }}
                 </h1>
                 <p class="mt-1 text-gray-600 max-w-xl">
                    {{ __('Everything about household and living – simply advertise and browse.') }}
@@ -31,7 +31,7 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 p-10">
         {{-- Breadcrumbs --}}
         <x-breadcrumbs :items="[
-                ['label' => __('Haushaltsanzeige'), 'url' => route('ads.index')],
+                ['label' => __('Household ads'), 'url' => route('categories.household.index')],
                 ['label' => $householdItem->title, 'url' => null],
             ]" />
         {{-- Action Buttons and Back link --}}

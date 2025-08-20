@@ -123,7 +123,7 @@ Route::middleware(['auth'])->group(function () {
         Route::resource('campers', CamperController::class);
         Route::resource('commercial-vehicles', CommercialVehicleController::class);
         Route::resource('electronics', ElectronicController::class);
-        Route::resource('household', HouseholdItemController::class)->except(['show']); // show is handled by public categories group
+        Route::resource('household', HouseholdItemController::class)->except(['show']); 
         Route::resource('motorcycles', MotorradAdController::class);
         Route::resource('others', OtherController::class);
         Route::resource('real-estate', RealEstateController::class);

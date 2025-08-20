@@ -184,9 +184,9 @@ class HouseholdItemController extends Controller
         return view('ads.household.show', compact('householdItem'));
     }
 
-    public function edit(HouseholdItem $householdItem)
-    {
-        // Φόρτωσε τις κατηγορίες για το dropdown (αν χρειάζεται)
+public function edit(HouseholdItem $household)
+{
+        
          $categories = [
             'Furniture',
             'Kitchen Appliances',
@@ -201,12 +201,12 @@ class HouseholdItemController extends Controller
         ];
         $conditions = ['New', 'Used', 'Heavily used', 'Broken'];
 
-        return view('ads.household.edit', compact('householdItem', 'categories', 'conditions'));
+        return view('ads.household.edit', compact('household', 'categories', 'conditions'));
     }
 
 
-    public function update(Request $request, HouseholdItem $householdItem)
-    {
+  public function update(Request $request, HouseholdItem $household)
+{
         $validated = $request->validate([
             'images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'title' => 'required|string|max:255',
@@ -223,7 +223,7 @@ class HouseholdItemController extends Controller
         ]);
 
         // Update main HouseholdItem fields
-        $householdItem->fill([
+        $household->fill([
             'category' => $validated['category'],
             'brand' => $validated['brand'] ?? null,
             'model_name' => $validated['model_name'] ?? null,
@@ -238,17 +238,17 @@ class HouseholdItemController extends Controller
 
 
 
-         $householdItem->show_phone = $request->has('show_phone') ? 1 : 0;
-        $householdItem->show_mobile_phone = $request->has('show_mobile_phone') ? 1 : 0;
-        $householdItem->show_email = $request->has('show_email') ? 1 : 0;
-        $householdItem->save();
+         $household->show_phone = $request->has('show_phone') ? 1 : 0;
+        $household->show_mobile_phone = $request->has('show_mobile_phone') ? 1 : 0;
+        $household->show_email = $request->has('show_email') ? 1 : 0;
+        $household->save();
         // 1. Handle deletion of existing images
         if ($request->has('existing_images_to_delete')) {
             $idsToDelete = array_filter(explode(',', $request->input('existing_images_to_delete'))); // Split string by comma and remove empty values
 
             if (!empty($idsToDelete)) {
                 // Get the image records that belong to THIS householdItem AND are in the $idsToDelete array
-                $imagesToDelete = $householdItem->images()->whereIn('id', $idsToDelete)->get();
+                $imagesToDelete = $household->images()->whereIn('id', $idsToDelete)->get();
 
                 foreach ($imagesToDelete as $image) {
                     // Delete the file from storage
@@ -266,14 +266,14 @@ class HouseholdItemController extends Controller
             foreach ($request->file('images') as $imageFile) {
                 $path = $imageFile->store('household_images', 'public');
 
-                $householdItem->images()->create([
+                $household->images()->create([
                     'image_path' => $path,
                     'is_thumbnail' => false, // Set appropriately, perhaps based on original order
                 ]);
             }
         }
 
-        return redirect()->route('ads.household.show', $householdItem)->with('success', 'Anzeige erfolgreich aktualisiert!');
+      return redirect()->route('categories.household.show', $household)->with('success', 'Anzeige erfolgreich aktualisiert!');
     }
 
     public function destroy($id)

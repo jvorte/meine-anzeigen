@@ -104,22 +104,22 @@
                     </div>
 
                     {{-- Condition --}}
-             <div>
-    <label for="condition" class="block text-sm font-medium text-gray-700 mb-2">{{ __('condition') }}</label>
-    <select name="condition" id="condition"
-        class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
-        <option value="">{{ __('select') }}</option>
-        @foreach($conditions as $condition)
-            {{-- Corrected 'old' helper to check for 'condition' and 'category' --}}
-            <option value="{{ $condition }}" {{ old('condition') == $condition ? 'selected' : '' }}>
-                {{ __($condition) }}
-            </option>
-        @endforeach
-    </select>
-    @error('condition')
-        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-    @enderror
-</div>
+                    <div>
+                        <label for="condition" class="block text-sm font-medium text-gray-700 mb-2">{{ __('condition') }}</label>
+                        <select name="condition" id="condition"
+                            class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
+                            <option value="">{{ __('select') }}</option>
+                            @foreach($conditions as $condition)
+                            {{-- Corrected 'old' helper to check for 'condition' and 'category' --}}
+                            <option value="{{ $condition }}" {{ old('condition') == $condition ? 'selected' : '' }}>
+                                {{ __($condition) }}
+                            </option>
+                            @endforeach
+                        </select>
+                        @error('condition')
+                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                        @enderror
+                    </div>
 
                     {{-- Material (for furniture) --}}
                     <div>
