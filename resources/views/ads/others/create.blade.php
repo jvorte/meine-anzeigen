@@ -6,10 +6,10 @@
     {{-- -----------------------------------breadcrumbs ---------------------------------------------- --}}
     <x-slot name="header">
         <h2 class="text-3xl font-extrabold text-gray-900 leading-tight mb-2">
-            New Others
+           {{ __('New Ad in Others') }}
         </h2>
         <p class="text-md text-gray-700 dark:text-gray-500">
-            Wähle eine passende Kategorie und fülle die erforderlichen Felder aus, um deine Anzeige zu erstellen.
+       {{ __('Select a suitable category and fill in the required fields to create your ad') }}
         </p>
 
     </x-slot>
