@@ -6,10 +6,10 @@
         <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center px-4 py-2">
             <div>
                 <h1 class="text-4xl font-extrabold text-gray-900 leading-tight">
-                    Motorrad Anzeige
+                   {{ __('New Motorcycle Ad') }}
                 </h1>
                 <p class="mt-1 text-gray-600 max-w-xl">
-                    Motorrad Anzeige
+                {{ __('Select a suitable category and fill in the required fields to create your ad') }}
                 </p>
             </div>
             <div class="px-4 py-1 md:py-1 flex justify-end items-center">
@@ -28,9 +28,8 @@
 
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 p-10">
         {{-- Breadcrumbs component --}}
-        <x-breadcrumbs :items="[
-                ['label' => 'Alle Anzeigen', 'url' => route('ads.index')],
-                ['label' => 'Motorrad Anzeigen', 'url' => route('categories.motorcycles.index')],
+        <x-breadcrumbs :items="[            
+                ['label' => __('All ads'), 'url' => route('categories.motorcycles.index')],
                 ['label' => $motorradAd->title, 'url' => null],
             ]" />
         {{-- Action Buttons and Back link --}}
@@ -185,7 +184,7 @@
                         @if ($motorradAd->price)
                         <p class="text-3xl text-gray-700 font-extrabold [&>span]:text-base [&>span]:font-normal [&>span]:ml-1">
                             &euro;{{ number_format($motorradAd->price, 2, ',', '.') }}
-                            <span> / Einheit</span>
+                           
                         </p>
                         @else
                         <p class="text-xl italic text-gray-500">{{ __('price_on_request') }}</p>
@@ -244,11 +243,11 @@
                         @auth
                         @if (auth()->id() === $motorradAd->user_id || auth()->user()->isAdmin())
                         {{-- Edit & Delete --}}
-                        <a href="{{ route('ads.motorrad.edit', $motorradAd->id) }}"
+                        <a href="{{ route('ads.motorcycles.edit', $motorradAd->id) }}"
                             class="px-5 py-2 bg-gray-700 hover:bg-gray-800 text-white rounded-full shadow-lg transition transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2">
                           {{ __('Edit Ad') }}
                         </a>
-                        <form action="{{ route('ads.motorrad.destroy', $motorradAd->id) }}" method="POST"
+                        <form action="{{ route('ads.motorcycles.destroy', $motorradAd->id) }}" method="POST"
                             onsubmit="return confirm('Sind Sie sicher, dass Sie diese Anzeige löschen möchten? Diese Aktion kann nicht rückgängig gemacht werden.')">
                             @csrf
                             @method('DELETE')
@@ -306,44 +305,44 @@
 
                         @if($motorradAd->motorcycleBrand)
                         <div>
-                            <p class="text-sm font-semibold text-gray-800">Marke:</p>
+                            <p class="text-sm font-semibold text-gray-800">{{ __('brand') }}:</p>
                             <p class="text-gray-700">{{ $motorradAd->motorcycleBrand->name }}</p>
                         </div>
                         @endif
                         @if($motorradAd->motorcycleModel)
                         <div>
-                            <p class="text-sm font-semibold text-gray-800">Modell:</p>
+                            <p class="text-sm font-semibold text-gray-800">{{ __('model') }}:</p>
                             <p class="text-gray-700">{{ $motorradAd->motorcycleModel->name }}</p>
                         </div>
                         @endif
                         @if($motorradAd->first_registration)
                         <div>
-                            <p class="text-sm font-semibold text-gray-800">Erstzulassung:</p>
+                            <p class="text-sm font-semibold text-gray-800">{{ __('year_of_construction') }}:</p>
                             <p class="text-gray-700">{{ $motorradAd->first_registration }}</p>
 
                         </div>
                         @endif
                         @if(isset($motorradAd->mileage))
                         <div>
-                            <p class="text-sm font-semibold text-gray-800">Kilometerstand:</p>
+                            <p class="text-sm font-semibold text-gray-800">{{ __('Mileage') }}:</p>
                             <p class="text-gray-700">{{ number_format($motorradAd->mileage, 0, ',', '.') }} km</p>
                         </div>
                         @endif
                         @if($motorradAd->power)
                         <div>
-                            <p class="text-sm font-semibold text-gray-800">Leistung:</p>
+                            <p class="text-sm font-semibold text-gray-800">{{ __('Power') }}:</p>
                             <p class="text-gray-700">{{ $motorradAd->power }} PS</p>
                         </div>
                         @endif
                         @if($motorradAd->color)
                         <div>
-                            <p class="text-sm font-semibold text-gray-800">Farbe:</p>
+                            <p class="text-sm font-semibold text-gray-800">{{ __('Color') }}:</p>
                             <p class="text-gray-700">{{ $motorradAd->color }}</p>
                         </div>
                         @endif
                         @if($motorradAd->condition)
                         <div>
-                            <p class="text-sm font-semibold text-gray-800">Zustand:</p>
+                            <p class="text-sm font-semibold text-gray-800">{{ __('condition_label') }}:</p>
                             <p class="text-gray-700">{{ $motorradAd->condition }}</p>
                         </div>
                         @endif

@@ -172,7 +172,7 @@ class ServiceController extends Controller
             abort(403, 'Unauthorized action.');
         }
 
-    $serviceCategoryOptions = [
+   $serviceCategoryOptions = [
     'cleaning',
     'crafts',
     'it',

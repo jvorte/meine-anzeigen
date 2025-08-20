@@ -3,10 +3,10 @@
 
     <x-slot name="header">
         <h2 class="text-3xl font-extrabold text-gray-900 leading-tight mb-2">
-            Neue Motorrad Anzeige erstellen
+            {{ __('Create new motorcycle ad') }}
         </h2>
         <p class="text-md text-gray-700 dark:text-gray-500">
-            Wähle eine passende Marke und fülle die erforderlichen Felder aus, um deine Anzeige zu erstellen.
+            {{ __('Select a suitable category and fill in the required fields to create your ad') }}
         </p>
     </x-slot>
 
@@ -20,20 +20,20 @@
     </div>
 
 
-        <!-- check form fields -->
-         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-    @if ($errors->any())
-    <div class="mb-4 p-4 bg-red-100 text-red-700 rounded">
-        <ul>
-            @foreach ($errors->all() as $error)
+    <!-- check form fields -->
+    <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+        @if ($errors->any())
+        <div class="mb-4 p-4 bg-red-100 text-red-700 rounded">
+            <ul>
+                @foreach ($errors->all() as $error)
                 <li>- {{ $error }}</li>
-            @endforeach
-        </ul>
+                @endforeach
+            </ul>
+        </div>
+        @endif
     </div>
-@endif
- </div>
 
- 
+
     {{-- Main container for the form --}}
     <div class="max-w-6xl mx-auto p-6 bg-white rounded-lg shadow-xl mt-6">
 
@@ -42,38 +42,38 @@
 
             {{-- Vehicle Details Section (Marke & Modell) --}}
             <section class="bg-gray-50 p-6 rounded-lg shadow-inner">
-                <h4 class="text-xl font-semibold text-gray-700 mb-6">Vehicle Details</h4>
+                <h4 class="text-xl font-semibold text-gray-700 mb-6">{{ __('Vehicle details') }}</h4>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
 
                     {{-- Marke --}}
                     <div>
                         <label for="motorcycle_brand_id"
-                            class="block text-sm font-medium text-gray-700 mb-2">Brand</label>
+                            class="block text-sm font-medium text-gray-700 mb-2">{{ __('brand') }}</label>
                         <select name="motorcycle_brand_id" id="motorcycle_brand_id" onchange="loadModels(this.value)"
                             class="form-select w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
-                            <option value="">select</option>
+                            <option value="">{{ __('select') }}</option>
                             @foreach($brands as $id => $name)
-                                <option value="{{ $id }}" {{ old('motorcycle_brand_id') == $id ? 'selected' : '' }}>
-                                    {{ $name }}
-                                </option>
+                            <option value="{{ $id }}" {{ old('motorcycle_brand_id') == $id ? 'selected' : '' }}>
+                                {{ $name }}
+                            </option>
                             @endforeach
                         </select>
                         @error('motorcycle_brand_id')
-                            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                         @enderror
                     </div>
 
                     {{-- Modell --}}
                     <div>
                         <label for="motorcycle_model_id"
-                            class="block text-sm font-medium text-gray-700 mb-2">Model</label>
+                            class="block text-sm font-medium text-gray-700 mb-2">{{ __('model') }}</label>
                         <select name="motorcycle_model_id" id="motorcycle_model_id"
                             class="form-select w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
-                            <option value="">select</option>
+                            <option value="">{{ __('select') }}</option>
                             {{-- Δεν φορτώνουμε μοντέλα server side στο create --}}
                         </select>
                         @error('motorcycle_model_id')
-                            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                         @enderror
                     </div>
 
@@ -118,7 +118,7 @@
                         });
                 }
 
-                document.addEventListener('DOMContentLoaded', function () {
+                document.addEventListener('DOMContentLoaded', function() {
                     const selectedBrandId = document.getElementById('motorcycle_brand_id').value;
                     if (selectedBrandId) {
                         loadModels(selectedBrandId);
@@ -128,60 +128,60 @@
 
             {{-- Basic Data Section (Erstzulassung, Kilometerstand, Leistung) --}}
             <section class="bg-gray-50 p-6 rounded-lg shadow-inner">
-                <h4 class="text-xl font-semibold text-gray-700 mb-6">Basisdaten</h4>
+                <h4 class="text-xl font-semibold text-gray-700 mb-6">{{ __('section_basic_data') }}</h4>
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     <div>
-                        <label for="price" class="block text-sm font-medium text-gray-700 mb-2">Price (€)</label>
+                        <label for="price" class="block text-sm font-medium text-gray-700 mb-2">{{ __('price') }}</label>
                         <input type="number" name="price" id="price" value="{{ old('price') }}" step="0.01" min="0"
                             placeholder="z.B. 5000.00"
                             class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
                         @error('price')
-                            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                         @enderror
                     </div>
 
                     {{-- Erstzulassung --}}
                     <div>
                         <label for="first_registration"
-                            class="block text-sm font-medium text-gray-700 mb-2">Registration Year</label>
+                            class="block text-sm font-medium text-gray-700 mb-2">{{ __('year_of_construction') }}</label>
                         <select name="first_registration" id="first_registration"
                             class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
-                            <option value="">Select Year</option>
+                            <option value="">{{ __('select') }}</option>
                             @php
-                                $currentYear = date('Y');
-                                $startYear = $currentYear - 100; // 50 years back
+                            $currentYear = date('Y');
+                            $startYear = $currentYear - 100; // 50 years back
                             @endphp
                             @for ($year = $currentYear; $year >= $startYear; $year--)
-                                <option value="{{ $year }}" {{ old('first_registration') == $year ? 'selected' : '' }}>
-                                    {{ $year }}
-                                </option>
+                            <option value="{{ $year }}" {{ old('first_registration') == $year ? 'selected' : '' }}>
+                                {{ $year }}
+                            </option>
                             @endfor
                         </select>
                         @error('first_registration')
-                            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                         @enderror
                     </div>
 
 
                     {{-- Kilometerstand --}}
                     <div>
-                        <label for="mileage" class="block text-sm font-medium text-gray-700 mb-2">Kilometerstand (in
+                        <label for="mileage" class="block text-sm font-medium text-gray-700 mb-2">{{ __('Mileage') }} (in
                             km)</label>
                         <input type="number" name="mileage" id="mileage" value="{{ old('mileage') }}"
                             placeholder="z.B. 50.000"
                             class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
                         @error('mileage')
-                            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                         @enderror
                     </div>
 
                     {{-- Leistung (PS) --}}
                     <div>
-                        <label for="power" class="block text-sm font-medium text-gray-700 mb-2">Power (PS)</label>
+                        <label for="power" class="block text-sm font-medium text-gray-700 mb-2">{{ __('Power') }} (PS)</label>
                         <input type="number" name="power" id="power" value="{{ old('power') }}" placeholder="z.B. 150"
                             class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
                         @error('power')
-                            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                         @enderror
                     </div>
                 </div>
@@ -189,40 +189,42 @@
 
             {{-- Type & Condition Section (Farbe & Zustand) --}}
             <section class="bg-gray-50 p-6 rounded-lg shadow-inner">
-                <h4 class="text-xl font-semibold text-gray-700 mb-6">Type & Condition</h4>
+                <h4 class="text-xl font-semibold text-gray-700 mb-6">{{ __('condition_label') }}</h4>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
                     {{-- Farbe --}}
                     <div>
-                        <label for="color" class="block text-sm font-medium text-gray-700 mb-2">Color</label>
+                        <label for="color" class="block text-sm font-medium text-gray-700 mb-2">{{ __('Color') }}</label>
                         <select name="color" id="color"
                             class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
-                            <option value="">Bitte wählen</option>
+                            <option value="">{{ __('select') }}</option>
                             @foreach($colors as $color)
-                                <option value="{{ $color }}" {{ old('color') == $color ? 'selected' : '' }}>{{ $color }}
-                                </option>
+                            <option value="{{ $color }}" {{ old('color') == $color ? 'selected' : '' }}>{{ __($color) }}
+                            </option>
                             @endforeach
                         </select>
                         @error('color')
-                            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                         @enderror
                     </div>
 
                     {{-- Zustand --}}
                     <div>
-                        <label for="condition" class="block text-sm font-medium text-gray-700 mb-2">Condition</label>
+                        <label for="condition" class="block text-sm font-medium text-gray-700 mb-2">{{ __('condition') }}</label>
                         <select name="condition" id="condition"
                             class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
-                            <option value="">Bitte wählen</option>
+                            <option value="">{{ __('select') }}</option>
                             @foreach($conditions as $condition)
-                                <option value="{{ $condition }}" {{ old('condition') == $condition ? 'selected' : '' }}>
-                                    {{ $condition }}
-                                </option>
+                            <option value="{{ $condition }}" {{ old('condition') == $condition ? 'selected' : '' }}>
+                                {{ __($condition) }}
+                            </option>
                             @endforeach
                         </select>
                         @error('condition')
-                            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                         @enderror
                     </div>
+
                 </div>
             </section>
 
@@ -235,7 +237,7 @@
                         placeholder="Aussagekräftiger Titel für deine Anzeige"
                         class="w-full p-3 border border-gray-300 rounded-md shadow-sm bg-white text-gray-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 focus:border-blue-600 transition duration-150 ease-in-out">
                     @error('title')
-                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                    <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                     @enderror
                 </div>
 
@@ -246,38 +248,38 @@
                         placeholder="Gib hier alle wichtigen Details zu deinem Motorrad ein. Je mehr Informationen, desto besser!"
                         class="w-full p-3 border border-gray-300 rounded-md shadow-sm bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-600 transition duration-150 ease-in-out">{{ old('description') }}</textarea>
                     @error('description')
-                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                    <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                     @enderror
                 </div>
             </section>
 
-    {{-- conatct Section --}}
-    <section class="bg-gray-50 p-6 rounded-lg shadow-inner">
-        <h4 class="text-xl font-semibold text-gray-700 mb-6">{{ __('publish_contact_select') }}</h4>
-        <div class="mt-4">
-            <label class="inline-flex items-center">
-                <input type="checkbox" name="show_phone" value="1" class="rounded border-gray-300">
-                <span class="ml-2">Phone</span>
-            </label>
-        </div>
+            {{-- conatct Section --}}
+            <section class="bg-gray-50 p-6 rounded-lg shadow-inner">
+                <h4 class="text-xl font-semibold text-gray-700 mb-6">{{ __('publish_contact_select') }}</h4>
+                <div class="mt-4">
+                    <label class="inline-flex items-center">
+                        <input type="checkbox" name="show_phone" value="1" class="rounded border-gray-300">
+                        <span class="ml-2">Phone</span>
+                    </label>
+                </div>
 
-        <div class="mt-2">
-            <label class="inline-flex items-center">
-                <input type="checkbox" name="show_mobile_phone" value="1" class="rounded border-gray-300">
-                <span class="ml-2">Mobile</span>
-            </label>
-        </div>
-
-
-              <div class="mt-2">
-            <label class="inline-flex items-center">
-                <input type="checkbox" name="show_email" value="1" class="rounded border-gray-300">
-                <span class="ml-2">email</span>
-            </label>
-        </div>
+                <div class="mt-2">
+                    <label class="inline-flex items-center">
+                        <input type="checkbox" name="show_mobile_phone" value="1" class="rounded border-gray-300">
+                        <span class="ml-2">Mobile</span>
+                    </label>
+                </div>
 
 
-    </section>
+                <div class="mt-2">
+                    <label class="inline-flex items-center">
+                        <input type="checkbox" name="show_email" value="1" class="rounded border-gray-300">
+                        <span class="ml-2">email</span>
+                    </label>
+                </div>
+
+
+            </section>
 
             {{-- Photo Upload Section (with Alpine.js for previews) --}}
             <section class="bg-gray-50 p-6 rounded-lg shadow-inner">
@@ -288,10 +290,10 @@
                     <input type="file" name="images[]" multiple @change="addNewFiles($event)"
                         class="block w-full border p-2 rounded" />
                     @error('images')
-                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                    <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                     @enderror
                     @error('images.*')
-                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                    <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                     @enderror
 
                     <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -363,7 +365,7 @@
                 <div class="pt-6 border-t border-gray-200 flex justify-end">
                     <button type="submit"
                         class="bg-blue-600 text-white px-8 py-3 rounded-lg font-semibold text-lg hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-300 transition-all duration-300 shadow-lg">
-                 {{ __('create_ad') }}
+                        {{ __('create_ad') }}
                     </button>
                 </div>
 

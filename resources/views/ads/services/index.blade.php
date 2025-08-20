@@ -8,7 +8,7 @@
                    {{ __('Servises Ads') }}
                 </h1>
                 <p class="mt-1 text-gray-600 max-w-xl">
-                    Περιηγηθείτε σε όλες τις διαθέσιμες αγγελίες υπηρεσιών.
+               {{ __('Connect with skilled experts quickly and easily') }}
                 </p>
             </div>
 
@@ -28,8 +28,8 @@
 
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <x-breadcrumbs :items="[
-            ['label' => 'Όλες οι Αγγελίες', 'url' => route('ads.index')],
-            ['label' => 'Υπηρεσίες', 'url' => route('ads.services.index')],
+            ['label' => __('All ads'), 'url' => route('ads.index')],
+        
         ]" class="mb-6" />
 
         {{-- Filters Section --}}
@@ -40,14 +40,14 @@
             {{-- Text Input for 'Τίτλος' --}}
             <div class="flex-grow min-w-[200px]">
                 <label for="title" class="sr-only">{{ __('search') }}</label>
-                <input type="text" name="title" id="title" value="{{ request('title') }}" placeholder="{{ __('search') }}..." class="w-full rounded-lg border-gray-300 shadow-sm text-sm focus:ring-indigo-500 focus:border-indigo-500">
+                <input type="text" name="title" id="title" value="{{ request('title') }}" placeholder="{{ __('search') }}..." class="w-full rounded-lg p-1 border-gray-300 shadow-sm text-sm focus:ring-indigo-500 focus:border-indigo-500">
             </div>
 
             {{-- Service Type Dropdown --}}
             <div class="flex-grow min-w-[150px]">
-                <label for="service_type" class="sr-only">Τύπος Υπηρεσίας</label>
+                <label for="service_type" class="sr-only">{{ __('Service Type') }}</label>
                 <select name="service_type" id="service_type" class="w-full rounded-lg border-gray-300 shadow-sm text-sm focus:ring-indigo-500 focus:border-indigo-500">
-                    <option value="">Τύπος Υπηρεσίας</option>
+                    <option value="">{{ __('Service Type') }}</option>
                     @foreach($serviceTypes as $serviceType)
                         <option value="{{ $serviceType }}" {{ request('service_type') == $serviceType ? 'selected' : '' }}>{{ $serviceType }}</option>
                     @endforeach
@@ -56,9 +56,9 @@
             
             {{-- Location Dropdown --}}
             <div class="flex-grow min-w-[150px]">
-                <label for="location" class="sr-only">Τοποθεσία</label>
+                <label for="location" class="sr-only">{{ __('location') }}</label>
                 <select name="location" id="location" class="w-full rounded-lg border-gray-300 shadow-sm text-sm focus:ring-indigo-500 focus:border-indigo-500">
-                    <option value="">Τοποθεσία</option>
+                    <option value="">{{ __('location') }}</option>
                     @foreach($locations as $location)
                         <option value="{{ $location }}" {{ request('location') == $location ? 'selected' : '' }}>{{ $location }}</option>
                     @endforeach
@@ -108,12 +108,12 @@
 
                 {{-- Sort By Dropdown --}}
                 <div>
-                    <label for="sort_by" class="block text-sm font-medium text-gray-700">Ταξινόμηση</label>
+                    <label for="sort_by" class="block text-sm font-medium text-gray-700">{{ __('Sort by') }}</label>
                     <select name="sort_by" id="sort_by" class="mt-1 w-full rounded-lg border-gray-300 shadow-sm text-sm focus:ring-indigo-500 focus:border-indigo-500">
                         <option value="">{{ __('select') }}</option>
-                        <option value="latest" {{ request('sort_by') == 'latest' ? 'selected' : '' }}>Τελευταία</option>
-                        <option value="price_asc" {{ request('sort_by') == 'price_asc' ? 'selected' : '' }}>Τιμή: Φθηνότερο πρώτα</option>
-                        <option value="price_desc" {{ request('sort_by') == 'price_desc' ? 'selected' : '' }}>Τιμή: Ακριβότερο πρώτα</option>
+                        <option value="latest" {{ request('sort_by') == 'latest' ? 'selected' : '' }}>{{ __('Last') }}</option>
+                        <option value="price_asc" {{ request('sort_by') == 'price_asc' ? 'selected' : '' }}>{{ __('Price: Cheapest first') }}</option>
+                        <option value="price_desc" {{ request('sort_by') == 'price_desc' ? 'selected' : '' }}>{{ __('Price: Most expensive first') }}</option>
                     </select>
                 </div>
             </div>
@@ -130,23 +130,23 @@
                         <img src="{{ asset('storage/' . $service->images->first()->image_path) }}" alt="{{ $service->title }}" class="w-full h-48 object-cover">
                     @else
                         <div class="w-full h-48 bg-gray-200 flex items-center justify-center text-gray-500">
-                            Δεν υπάρχει εικόνα
+                         {{ __('No image available') }}
                         </div>
                     @endif
 
                     <div class="p-4">
                         <h2 class="text-xl font-semibold text-gray-800 truncate">{{ $service->title }}</h2>
-                        <p class="text-gray-600 mt-1">Είδος: {{ $service->service_type ?? 'Δ/Α' }}</p>
-                        <p class="text-gray-600 mt-1">Τοποθεσία: {{ $service->location ?? 'Δ/Α' }}</p>
+                        <p class="text-gray-600 mt-1">{{ __('Service Type') }}: {{ $service->service_type ?? 'Δ/Α' }}</p>
+                        <p class="text-gray-600 mt-1">{{ __('location') }}: {{ $service->location ?? 'Δ/Α' }}</p>
                         @if($service->price)
                             <p class="text-blue-600 font-semibold mt-2">€ {{ number_format($service->price, 2) }}</p>
                         @else
-                            <p class="text-gray-500 italic mt-2">Τιμή κατόπιν συνεννόησης</p>
+                            <p class="text-gray-500 italic mt-2">{{ __('price_on_request') }}</p>
                         @endif
                     </div>
                 </a>
             @empty
-                <p class="text-gray-600 col-span-full">Δεν βρέθηκαν υπηρεσίες.</p>
+                <p class="text-gray-600 col-span-full">{{ __('No services found.') }}</p>
             @endforelse
         </div>
 

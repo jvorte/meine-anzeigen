@@ -3,7 +3,7 @@
 
     <x-slot name="header">
         <h2 class="text-3xl font-extrabold text-gray-900 leading-tight mb-2">
-        {{ __('Edit Ad') }}: {{ $motorradAd->title }}
+        {{ __('Edit Ad') }}: {{ $motorcycle->title }}
         </h2>
         <p class="text-md text-gray-700 dark:text-gray-500">
            {{ __('Edit the details of your ad or add new photos') }}
@@ -14,7 +14,7 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <x-breadcrumbs :items="[
                 ['label' => 'motorcycles Anzeigen', 'url' => route('categories.motorcycles.index')],
-                ['label' => $motorradAd->title, 'url' => route('ads.motorcycles.index', $motorradAd)],
+                ['label' => $motorcycle->title, 'url' => route('ads.motorcycles.index', $motorcycle)],
                 ['label' => 'Bearbeiten', 'url' => null],
             ]" />
         </div>
@@ -35,7 +35,7 @@
 
     <div class="max-w-6xl mx-auto p-6 bg-white rounded-lg shadow-xl mt-6">
 
-        <form method="POST" action="{{ route('ads.motorrad.update', $motorradAd) }}" enctype="multipart/form-data" class="space-y-8">
+        <form method="POST" action="{{ route('ads.motorcycles.update', $motorcycle) }}" enctype="multipart/form-data" class="space-y-8">
             @csrf
             @method('PUT')
 
@@ -50,7 +50,7 @@
                             class="form-select w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
                             <option value="">Bitte wählen</option>
                             @foreach($brands as $id => $name)
-                            <option value="{{ $id }}" {{ (old('motorcycle_brand_id', $motorradAd->motorcycle_brand_id) == $id) ? 'selected' : '' }}>
+                            <option value="{{ $id }}" {{ (old('motorcycle_brand_id', $motorcycle->motorcycle_brand_id) == $id) ? 'selected' : '' }}>
                                 {{ $name }}
                             </option>
                             @endforeach
@@ -67,7 +67,7 @@
                             class="form-select w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
                             <option value="">Bitte wählen</option>
                             @foreach($initialModels as $id => $name)
-                            <option value="{{ $id }}" {{ (old('motorcycle_model_id', $motorradAd->motorcycle_model_id) == $id) ? 'selected' : '' }}>
+                            <option value="{{ $id }}" {{ (old('motorcycle_model_id', $motorcycle->motorcycle_model_id) == $id) ? 'selected' : '' }}>
                                 {{ $name }}
                             </option>
                             @endforeach
@@ -141,7 +141,7 @@
                         <label for="first_registration" class="block text-sm font-medium text-gray-700 mb-2">{{ __('year_of_construction') }}</label>
                         <input type="number" name="first_registration" id="first_registration"
                             min="1900" max="{{ date('Y') }}"
-                            value="{{ old('first_registration', $motorradAd->first_registration) }}"
+                            value="{{ old('first_registration', $motorcycle->first_registration) }}"
                             class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
                         @error('first_registration')
                         <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
@@ -152,7 +152,7 @@
                     <div>
                         <label for="mileage" class="block text-sm font-medium text-gray-700 mb-2">{{ __('Mileage') }} (in km)</label>
                         <input type="number" name="mileage" id="mileage"
-                            value="{{ old('mileage', $motorradAd->mileage) }}" placeholder="z.B. 50.000"
+                            value="{{ old('mileage', $motorcycle->mileage) }}" placeholder="z.B. 50.000"
                             class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
                         @error('mileage')
                         <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
@@ -161,7 +161,7 @@
 
                     <div>
                         <label for="power" class="block text-sm font-medium text-gray-700 mb-2">{{ __('Power') }} (PS)</label>
-                        <input type="number" name="power" id="power" value="{{ old('power', $motorradAd->power) }}"
+                        <input type="number" name="power" id="power" value="{{ old('power', $motorcycle->power) }}"
                             placeholder="z.B. 150"
                             class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
                         @error('power')
@@ -183,7 +183,7 @@
                             class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
                         
                             @foreach($colors as $color)
-                            <option value="{{ $color }}" {{ old('color', $motorradAd->color) == $color ? 'selected' : '' }}>
+                            <option value="{{ $color }}" {{ old('color', $motorcycle->color) == $color ? 'selected' : '' }}>
                                 {{ $color }}
                             </option>
                             @endforeach
@@ -199,7 +199,7 @@
                             class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
                             <option value="">Bitte wählen</option>
                             @foreach($conditions as $condition)
-                            <option value="{{ $condition }}" {{ old('condition', $motorradAd->condition) == $condition ? 'selected' : '' }}>{{ $condition }}</option>
+                            <option value="{{ $condition }}" {{ old('condition', $motorcycle->condition) == $condition ? 'selected' : '' }}>{{ $condition }}</option>
                             @endforeach
                         </select>
                         @error('condition')
@@ -214,7 +214,7 @@
             <section class="bg-white p-6 rounded-lg shadow">
                 <div class="mb-6">
                     <label for="title" class="block text-sm font-semibold text-gray-800 mb-2">{{ __('title') }}</label>
-                    <input type="text" name="title" id="title" value="{{ old('title', $motorradAd->title) }}"
+                    <input type="text" name="title" id="title" value="{{ old('title', $motorcycle->title) }}"
                         placeholder="Aussagekräftiger Titel für deine Anzeige"
                         class="w-full p-3 border border-gray-300 rounded-md shadow-sm bg-white text-gray-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 focus:border-blue-600 transition duration-150 ease-in-out">
                     @error('title')
@@ -226,7 +226,7 @@
                     <label for="description" class="block text-sm font-medium text-gray-800 mb-2">{{ __('description') }}</label>
                     <textarea name="description" id="description" rows="7"
                         placeholder="Gib hier alle wichtigen Details zu deinem Motorrad ein. Je mehr Informationen, desto besser!"
-                        class="w-full p-3 border border-gray-300 rounded-md shadow-sm bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-600 transition duration-150 ease-in-out">{{ old('description', $motorradAd->description) }}</textarea>
+                        class="w-full p-3 border border-gray-300 rounded-md shadow-sm bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-600 transition duration-150 ease-in-out">{{ old('description', $motorcycle->description) }}</textarea>
                     @error('description')
                     <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                     @enderror
@@ -248,7 +248,7 @@
                             name="show_phone"
                             value="1"
                             class="rounded border-gray-300"
-                            {{ old('show_phone', $motorradAd->show_phone) ? 'checked' : '' }}>
+                            {{ old('show_phone', $motorcycle->show_phone) ? 'checked' : '' }}>
                         <span class="ml-2">Phone</span>
                     </label>
                 </div>
@@ -261,7 +261,7 @@
                             name="show_mobile_phone"
                             value="1"
                             class="rounded border-gray-300"
-                            {{ old('show_mobile_phone', $motorradAd->show_mobile_phone) ? 'checked' : '' }}>
+                            {{ old('show_mobile_phone', $motorcycle->show_mobile_phone) ? 'checked' : '' }}>
                         <span class="ml-2">Mobile</span>
                     </label>
                 </div>
@@ -274,7 +274,7 @@
                             name="show_email"
                             value="1"
                             class="rounded border-gray-300"
-                            {{ old('show_email', $motorradAd->show_email) ? 'checked' : '' }}>
+                            {{ old('show_email', $motorcycle->show_email) ? 'checked' : '' }}>
                         <span class="ml-2">Email</span>
                     </label>
                 </div>
@@ -286,7 +286,7 @@
 
                 {{-- Unified Alpine.js component for both existing and new images --}}
                 <div x-data="multiImageUploader(
-                    {{ json_encode($motorradAd->images->map(fn($image) => [
+                    {{ json_encode($motorcycle->images->map(fn($image) => [
                         'id' => $image->id,
                         'url' => asset('storage/' . $image->image_path),
                         'is_thumbnail' => $image->is_thumbnail ?? false, // Ensure this maps correctly if you use it
@@ -337,11 +337,7 @@
                             newFiles: [], // Newly selected File objects
                             newFilePreviews: [], // URLs for new file previews
 
-                            // `init` is not strictly necessary if `initialImages` is directly assigned
-                            // but good practice if you had complex setup on mount.
-                            // init() {
-                            //    console.log('Alpine component initialized with existing images:', this.existingImages);
-                            // },
+                        
 
                             addNewFiles(event) {
                                 const files = Array.from(event.target.files);

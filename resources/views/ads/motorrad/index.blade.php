@@ -240,7 +240,7 @@
         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 my-5 gap-6">
             @foreach($motorradAds as $motorradAd)
                 <div class="bg-white shadow rounded-lg overflow-hidden">
-                    <a href="{{ route('ads.motorrad.show', $motorradAd->id) }}">
+                    <a href="{{ route('ads.motorcycles.show', $motorradAd->id) }}">
                         @if($motorradAd->images->count())
                             <img src="{{ asset('storage/' . $motorradAd->images->first()->image_path) }}"
                                 alt="{{ $motorradAd->title }}" class="w-full h-48 object-cover">
@@ -254,7 +254,7 @@
 
                     <div class="p-4">
                         <h2 class="text-lg font-semibold">
-                            <a href="{{ route('ads.motorrad.show', $motorradAd->id) }}">
+                            <a href="{{ route('ads.motorcycles.show', $motorradAd->id) }}">
                                 {{ $motorradAd->title }}
                             </a>
                         </h2>

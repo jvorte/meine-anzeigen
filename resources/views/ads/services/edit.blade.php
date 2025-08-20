@@ -3,34 +3,35 @@
 
     <x-slot name="header">
         <h2 class="text-3xl font-extrabold text-gray-900 leading-tight mb-3">
-      {{ __('Edit Ad') }}
+            {{ __('Edit Ad') }}
         </h2>
         <p class="text-md text-gray-700 max-w-3xl">
-          {{ __('Edit the details of your ad or add new photos') }}
+            {{ __('Edit the details of your ad or add new photos') }}
         </p>
     </x-slot>
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-   <x-breadcrumbs :items="[
-    ['label' => 'Alle Anzeigen', 'url' => route('ads.index')],
-    ['label' => 'Dienstleistungen', 'url' => route('categories.services.index')],
+        <x-breadcrumbs :items="[
+
+    ['label' => __('All ads'), 'url' => route('categories.services.index')],
+            ['label' => __('Servises Ads'), 'url' => route('categories.services.show', $service->id)],
     ['label' => $service->title, 'url' => null],
 ]" class="mb-8" />
-</div>
+    </div>
 
 
 
     <!-- check form fields -->
-         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-    @if ($errors->any())
-    <div class="mb-4 p-4 bg-red-100 text-red-700 rounded">
-        <ul>
-            @foreach ($errors->all() as $error)
+    <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+        @if ($errors->any())
+        <div class="mb-4 p-4 bg-red-100 text-red-700 rounded">
+            <ul>
+                @foreach ($errors->all() as $error)
                 <li>- {{ $error }}</li>
-            @endforeach
-        </ul>
+                @endforeach
+            </ul>
+        </div>
+        @endif
     </div>
-@endif
- </div>
 
     <div class="max-w-6xl mx-auto p-8 bg-white rounded-3xl shadow-xl my-6">
         <form method="POST" action="{{ route('ads.services.update', $service->id) }}" enctype="multipart/form-data"
@@ -44,24 +45,27 @@
             {{-- Dienstleistungsdetails --}}
             <section class="bg-gray-50 p-8 rounded-xl shadow-inner border border-gray-300">
                 <h4 class="text-2xl font-semibold text-gray-800 mb-8 tracking-wide border-b border-gray-300 pb-2">
-                    Dienstleistungsdetails
+                    {{ __('Description of the service') }}
                 </h4>
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
 
                     {{-- Dienstleistung Kategorie --}}
+                    {{-- Dienstleistung Kategorie --}}
                     <div>
                         <label for="service_type"
-                            class="block text-sm font-semibold text-gray-700 mb-3">Kategorie</label>
+                            class="block text-sm font-semibold text-gray-700 mb-3">{{ __('Category') }}</label>
                         <select name="service_type" id="service_type"
                             class="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-opacity-50 transition duration-200">
-                        
-                          @foreach($serviceCategoryOptions as $serviceCategoryOption)
-                                <option value="{{ $serviceCategoryOption }}" {{ old('service_type') == $serviceCategoryOption ? 'selected' : '' }}>
-                                    {{ ucfirst($serviceCategoryOption) }}
-                                </option>
+
+                            @foreach($serviceCategoryOptions as $serviceCategoryOption)
+                            <option value="{{ $serviceCategoryOption }}"
+                                {{ (old('service_type') == $serviceCategoryOption || (isset($service) && $service->service_type == $serviceCategoryOption)) ? 'selected' : '' }}>
+                                {{ __($serviceCategoryOption) }}
+                            </option>
                             @endforeach
                         </select>
-                        @error('service_type')<p class="text-red-600 text-sm mt-1 font-semibold">{{ $message }}</p>
+                        @error('service_type')
+                        <p class="text-red-600 text-sm mt-1 font-semibold">{{ $message }}</p>
                         @enderror
                     </div>
 
@@ -76,8 +80,7 @@
 
                     {{-- Region / Ort --}}
                     <div>
-                        <label for="location" class="block text-sm font-semibold text-gray-700 mb-3">Region /
-                            Ort</label>
+                        <label for="location" class="block text-sm font-semibold text-gray-700 mb-3">{{ __('location') }}</label>
                         <input type="text" name="location" id="location" value="{{ old('location', $service->location) }}"
                             placeholder="z.B. Wien, Niederösterreich"
                             class="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-opacity-50 transition duration-200">
@@ -86,8 +89,7 @@
 
                     {{-- Preis (optional) --}}
                     <div>
-                        <label for="price" class="block text-sm font-semibold text-gray-700 mb-3">Preis (in
-                            €/Stunde/Pauschale, optional)</label>
+                        <label for="price" class="block text-sm font-semibold text-gray-700 mb-3">{{ __('price') }}</label>
                         <input type="number" step="0.01" name="price" id="price" value="{{ old('price', $service->price) }}"
                             placeholder="z.B. 50.00"
                             class="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-opacity-50 transition duration-200">
@@ -95,88 +97,90 @@
                     </div>
 
                     {{-- Verfügbarkeit --}}
+                    {{-- Verfügbarkeit --}}
                     <div>
-                        <label for="availability" class="block text-sm font-semibold text-gray-700 mb-3">Verfügbarkeit
-                            (optional)</label>
+                        <label for="availability" class="block text-sm font-semibold text-gray-700 mb-3">
+                            {{ __('Availability') }} (optional)
+                        </label>
                         <select name="availability" id="availability"
                             class="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-opacity-50 transition duration-200">
-                       
-                                  @foreach($availabilityOptions as $availabilityOption)
-                                <option value="{{ $availabilityOption }}" {{ old('condition') == $availabilityOption ? 'selected' : '' }}>
-                                    {{ ucfirst($availabilityOption) }}
-                                </option>
+                            {{-- Default empty option --}}
+                            <option value="" disabled {{ !old('availability') && empty($service->availability) ? 'selected' : '' }}>{{ __('please_select') }}</option>
+
+                            @foreach($availabilityOptions as $availabilityOption)
+                            <option value="{{ $availabilityOption }}" {{ (old('availability') == $availabilityOption || (isset($service) && $service->availability == $availabilityOption)) ? 'selected' : '' }}>
+                                {{ __($availabilityOption) }}
+                            </option>
                             @endforeach
                         </select>
-                        @error('availability')<p class="text-red-600 text-sm mt-1 font-semibold">{{ $message }}</p>
+                        @error('availability')
+                        <p class="text-red-600 text-sm mt-1 font-semibold">{{ $message }}</p>
                         @enderror
                     </div>
-                </div>
 
-                {{-- Beschreibung --}}
-                <div class="mt-8">
-                    <label for="description" class="block text-sm font-semibold text-gray-700 mb-3">{{ __('description') }}</label>
-                    <textarea name="description" id="description" rows="7"
-                        placeholder="Beschreibe hier deine Dienstleistung detailliert. Was bietest du an? Welche Erfahrungen hast du?"
-                        class="w-full p-4 border border-gray-300 rounded-lg shadow-sm resize-none focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-opacity-50 transition duration-200">{{ old('description', $service->description) }}</textarea>
-                    @error('description')<p class="text-red-600 text-sm mt-1 font-semibold">{{ $message }}</p>@enderror
-                </div>
+                    {{-- Beschreibung --}}
+
+                    <div class="mt-8">
+                        <label for="description" class="block text-sm font-semibold text-gray-700 mb-3">{{ __('description') }}</label>
+                        <textarea name="description" id="description" rows="7"
+                            placeholder="Beschreibe hier deine Dienstleistung detailliert. Was bietest du an? Welche Erfahrungen hast du?"
+                            class="w-full p-4 border border-gray-300 rounded-lg shadow-sm resize-none focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-opacity-50 transition duration-200">{{ old('description', $service->description) }}</textarea>
+                        @error('description')<p class="text-red-600 text-sm mt-1 font-semibold">{{ $message }}</p>@enderror
+                    </div>
             </section>
 
 
             {{-- Contact Section --}}
-<section class="bg-gray-50 p-6 rounded-lg shadow-inner">
-    <h4 class="text-xl font-semibold text-gray-700 mb-6">
-     {{ __('publish_contact_select') }}
-    </h4>
+            <section class="bg-gray-50 p-6 rounded-lg shadow-inner">
+                <h4 class="text-xl font-semibold text-gray-700 mb-6">
+                    {{ __('publish_contact_select') }}
+                </h4>
 
-    {{-- Phone --}}
-    <div class="mt-4">
-        <label class="inline-flex items-center">
-            <input 
-                type="checkbox" 
-                name="show_phone" 
-                value="1" 
-                class="rounded border-gray-300"
-                {{ old('show_phone', $service->show_phone) ? 'checked' : '' }}
-            >
-            <span class="ml-2">Phone</span>
-        </label>
-    </div>
+                {{-- Phone --}}
+                <div class="mt-4">
+                    <label class="inline-flex items-center">
+                        <input
+                            type="checkbox"
+                            name="show_phone"
+                            value="1"
+                            class="rounded border-gray-300"
+                            {{ old('show_phone', $service->show_phone) ? 'checked' : '' }}>
+                        <span class="ml-2">Phone</span>
+                    </label>
+                </div>
 
-    {{-- Mobile --}}
-    <div class="mt-2">
-        <label class="inline-flex items-center">
-            <input 
-                type="checkbox" 
-                name="show_mobile_phone" 
-                value="1" 
-                class="rounded border-gray-300"
-                {{ old('show_mobile_phone', $service->show_mobile_phone) ? 'checked' : '' }}
-            >
-            <span class="ml-2">Mobile</span>
-        </label>
-    </div>
+                {{-- Mobile --}}
+                <div class="mt-2">
+                    <label class="inline-flex items-center">
+                        <input
+                            type="checkbox"
+                            name="show_mobile_phone"
+                            value="1"
+                            class="rounded border-gray-300"
+                            {{ old('show_mobile_phone', $service->show_mobile_phone) ? 'checked' : '' }}>
+                        <span class="ml-2">Mobile</span>
+                    </label>
+                </div>
 
-    {{-- Email --}}
-    <div class="mt-2">
-        <label class="inline-flex items-center">
-            <input 
-                type="checkbox" 
-                name="show_email" 
-                value="1" 
-                class="rounded border-gray-300"
-                {{ old('show_email', $service->show_email) ? 'checked' : '' }}
-            >
-            <span class="ml-2">Email</span>
-        </label>
-    </div>
-</section>
+                {{-- Email --}}
+                <div class="mt-2">
+                    <label class="inline-flex items-center">
+                        <input
+                            type="checkbox"
+                            name="show_email"
+                            value="1"
+                            class="rounded border-gray-300"
+                            {{ old('show_email', $service->show_email) ? 'checked' : '' }}>
+                        <span class="ml-2">Email</span>
+                    </label>
+                </div>
+            </section>
 
 
 
 
             {{-- Photos --}}
-                    <section class="bg-gray-50 p-6 rounded-lg shadow-inner">
+            <section class="bg-gray-50 p-6 rounded-lg shadow-inner">
                 <h4 class="text-xl font-semibold text-gray-700 mb-6">{{ __('section_photos') }}</h4>
 
                 {{-- Unified Alpine.js component for both existing and new images --}}
@@ -192,10 +196,10 @@
                     <input type="file" name="images[]" multiple @change="addNewFiles($event)"
                         class="block w-full border p-2 rounded" />
                     @error('images')
-                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                    <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                     @enderror
                     @error('images.*')
-                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                    <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                     @enderror
 
                     <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -283,8 +287,8 @@
             {{-- Submit Button --}}
             <div class="pt-8 border-t border-gray-300 flex justify-end">
                 <button type="submit"
-                    class="bg-gray-700 text-white px-12 py-4 rounded-full font-semibold text-lg shadow-lg hover:bg-gray-800 focus:outline-none focus:ring-4 focus:ring-gray-500 focus:ring-opacity-75 transition transform hover:scale-105">
-                 {{ __('update_listing') }}
+                    class="bg-gray-700 text-white px-10 py-1 rounded-full font-semibold text-lg shadow-lg hover:bg-gray-800 focus:outline-none focus:ring-4 focus:ring-gray-500 focus:ring-opacity-75 transition transform hover:scale-105">
+                    {{ __('update_listing') }}
                 </button>
             </div>
         </form>
