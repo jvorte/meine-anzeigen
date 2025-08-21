@@ -11,13 +11,13 @@
             </div>
 
             <div class="px-4 py-1 md:py-1 flex justify-end items-center">
-                <a href="{{ route('ads.motorcycles.create') }}" class="c-button">
+                <a href="{{ route('ads.motorrads.create') }}" class="c-button">
                     <span class="c-main">
                         <span class="c-ico">
                             <span class="c-blur"></span>
                             <span class="ico-text">+</span>
                         </span>
-                   {{ __('create_ad') }}
+                        {{ __('create_ad') }}
                     </span>
                 </a>
             </div>
@@ -29,11 +29,11 @@
         {{-- Breadcrumbs --}}
         <x-breadcrumbs :items="[
         ['label' => 'Όλες οι Αγγελίες', 'url' => route('ads.index')],
-        ['label' => 'Μοτοσυκλέτες', 'url' => route('ads.motorcycles.index')],
+       ['label' => 'Μοτοσυκλέτες', 'url' => route('ads.motorrads.index')],
     ]" class="mb-8" />
 
         {{-- Filters Section --}}
-        <form action="{{ route('ads.motorcycles.index') }}" method="GET" x-data="{ 
+        <form action="{{ route('ads.motorrads.index') }}" method="GET" x-data="{ 
     motorcycleBrands: {{ json_encode($motorcycleBrands) }},
     motorcycleModels: {{ json_encode($motorcycleModels) }},
     selectedBrand: '{{ request('brand') }}',
@@ -103,7 +103,7 @@
                                     d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                             </svg>
                         </button>
-                        <a href="{{ route('ads.motorcycles.index') }}"
+                        <a href="{{ route('ads.motorrads.index') }}"
                             class="inline-flex items-center justify-center rounded-lg border border-gray-300 shadow-sm px-4 py-2 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
                                 stroke="currentColor" stroke-width="2">
@@ -136,10 +136,10 @@
                 {{-- Secondary Filters (Collapsible) --}}
                 <div x-show="showMoreFilters" x-collapse.duration.300ms class="mt-4 border-t border-gray-200 pt-4">
                     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                      
-                      
-                      
-                      
+
+
+
+
                         {{-- Mileage Range with Input Fields --}}
                         <div class="flex-grow min-w-[150px] relative">
                             <label for="min_mileage" class="block text-sm font-medium text-gray-700">{{ __('Mileage') }}</label>
@@ -239,33 +239,33 @@
 
         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 my-5 gap-6">
             @foreach($motorradAds as $motorradAd)
-                <div class="bg-white shadow rounded-lg overflow-hidden">
-                    <a href="{{ route('ads.motorcycles.show', $motorradAd->id) }}">
-                        @if($motorradAd->images->count())
-                            <img src="{{ asset('storage/' . $motorradAd->images->first()->image_path) }}"
-                                alt="{{ $motorradAd->title }}" class="w-full h-48 object-cover">
-                        @else
-                            <div class="w-full h-48 bg-gray-200 flex items-center justify-center text-gray-500">
-                                No image
-                            </div>
-                        @endif
-                    </a>
-
-
-                    <div class="p-4">
-                        <h2 class="text-lg font-semibold">
-                            <a href="{{ route('ads.motorcycles.show', $motorradAd->id) }}">
-                                {{ $motorradAd->title }}
-                            </a>
-                        </h2>
-                        <p class="text-gray-600 text-sm">
-                            {{ $motorradAd->motorcycleBrand->name ?? '-' }} {{ $motorradAd->motorcycleModel->name ?? '' }}
-                        </p>
-                        <p class="text-gray-900 font-bold mt-2">
-                            €{{ number_format($motorradAd->price, 0, ',', '.') }}
-                        </p>
+            <div class="bg-white shadow rounded-lg overflow-hidden">
+                <a href="{{ route('ads.motorrads.show', $motorradAd->id) }}">
+                    @if($motorradAd->images->count())
+                    <img src="{{ asset('storage/' . $motorradAd->images->first()->image_path) }}"
+                        alt="{{ $motorradAd->title }}" class="w-full h-48 object-cover">
+                    @else
+                    <div class="w-full h-48 bg-gray-200 flex items-center justify-center text-gray-500">
+                        No image
                     </div>
+                    @endif
+                </a>
+
+
+                <div class="p-4">
+                    <h2 class="text-lg font-semibold">
+                        <a href="{{ route('ads.motorrads.show', $motorradAd->id) }}">
+                            {{ $motorradAd->title }}
+                        </a>
+                    </h2>
+                    <p class="text-gray-600 text-sm">
+                        {{ $motorradAd->motorcycleBrand->name ?? '-' }} {{ $motorradAd->motorcycleModel->name ?? '' }}
+                    </p>
+                    <p class="text-gray-900 font-bold mt-2">
+                        €{{ number_format($motorradAd->price, 0, ',', '.') }}
+                    </p>
                 </div>
+            </div>
             @endforeach
         </div>
 

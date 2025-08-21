@@ -70,7 +70,7 @@ Route::prefix('categories')->name('categories.')->group(function () {
     Route::get('/real-estate', [RealEstateController::class, 'index'])->name('real-estate.index');
     Route::get('/services', [ServiceController::class, 'index'])->name('services.index');
     Route::get('/others', [OtherController::class, 'index'])->name('others.index');
-    Route::get('/motorcycles', [MotorradAdController::class, 'index'])->name('motorcycles.index');
+    Route::get('/motorrads', [MotorradAdController::class, 'index'])->name('motorrads.index');
     Route::get('/commercial-vehicles', [CommercialVehicleController::class, 'index'])->name('commercial-vehicles.index');
     Route::get('/campers', [CamperController::class, 'index'])->name('campers.index');
 });
@@ -85,7 +85,7 @@ Route::prefix('categories')->name('categories.')->group(function () {
     Route::get('/real-estate/{realEstate}', [RealEstateController::class, 'show'])->name('real-estate.show');
     Route::get('/services/{service}', [ServiceController::class, 'show'])->name('services.show');
     Route::get('/others/{other}', [OtherController::class, 'show'])->name('others.show');
-    Route::get('/motorcycles/{motorradAd}', [MotorradAdController::class, 'show'])->name('motorcycles.show');
+    Route::get('/motorrads/{motorrad}', [MotorradAdController::class, 'show'])->name('motorrads.show');
     Route::get('/commercial-vehicle/{commercialVehicle}', [CommercialVehicleController::class, 'show'])->name('commercial-vehicles.show');
     Route::get('/campers/{camper}', [CamperController::class, 'show'])->name('campers.show');
 });
@@ -124,7 +124,8 @@ Route::middleware(['auth'])->group(function () {
         Route::resource('commercial-vehicles', CommercialVehicleController::class);
         Route::resource('electronics', ElectronicController::class);
         Route::resource('household', HouseholdItemController::class)->except(['show']); 
-        Route::resource('motorcycles', MotorradAdController::class);
+      
+        Route::resource('motorrads', MotorradAdController::class);
         Route::resource('others', OtherController::class);
         Route::resource('real-estate', RealEstateController::class);
         Route::resource('services', ServiceController::class);

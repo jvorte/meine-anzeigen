@@ -260,7 +260,7 @@
         {{ __('Cars') }}
     </a>
 
-    <a href="{{ route('categories.motorcycles.index') }}"
+    <a href="{{ route('categories.motorrads.index') }}"
        class="px-3 py-1 rounded-full bg-gray-100 hover:bg-indigo-100 text-gray-800 hover:text-indigo-600 transition-colors duration-200">
         {{ __('Motorcycles') }}
     </a>

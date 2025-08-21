@@ -2,10 +2,10 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="text-3xl font-extrabold text-gray-900 leading-tight mb-2">
-         {{ __('Edit Ad') }}: {{ $other->title }}
+            {{ __('Edit Ad') }}: {{ $other->title }}
         </h2>
         <p class="text-md text-gray-700 dark:text-gray-500">
-           {{ __('Edit the details of your ad or add new photos') }}
+            {{ __('Edit the details of your ad or add new photos') }}
         </p>
 
     </x-slot>
@@ -20,20 +20,20 @@
         </div>
     </div>
 
-        <!-- check form fields -->
-         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-    @if ($errors->any())
-    <div class="mb-4 p-4 bg-red-100 text-red-700 rounded">
-        <ul>
-            @foreach ($errors->all() as $error)
+    <!-- check form fields -->
+    <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+        @if ($errors->any())
+        <div class="mb-4 p-4 bg-red-100 text-red-700 rounded">
+            <ul>
+                @foreach ($errors->all() as $error)
                 <li>- {{ $error }}</li>
-            @endforeach
-        </ul>
+                @endforeach
+            </ul>
+        </div>
+        @endif
     </div>
-@endif
- </div>
 
- 
+
     <div class="max-w-6xl mx-auto p-6 bg-white rounded-lg shadow-xl my-6">
 
         <form method="POST" action="{{ route('ads.others.update', $other->id) }}" enctype="multipart/form-data"
@@ -55,7 +55,7 @@
                             placeholder="Aussagekräftiger Titel für deine Anzeige (z.B. Alte Schallplatten Sammlung)"
                             class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
                         @error('title')
-                            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                         @enderror
                     </div>
 
@@ -66,7 +66,7 @@
                             value="{{ old('price', $other->price) }}" placeholder="z.B. 75.00"
                             class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
                         @error('price')
-                            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                         @enderror
                     </div>
 
@@ -76,13 +76,13 @@
                         <select name="condition" id="condition"
                             class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
                             @foreach($conditionOptions as $conditionOption)
-                                <option value="{{ $conditionOption }}" {{ old('condition') == $conditionOption ? 'selected' : '' }}>
-                                    {{ ucfirst($conditionOption) }}
-                                </option>
+                            <option value="{{ $conditionOption }}" {{ old('condition') == $conditionOption ? 'selected' : '' }}>
+                                {{ ucfirst($conditionOption) }}
+                            </option>
                             @endforeach
                         </select>
                         @error('condition')
-                            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                         @enderror
                     </div>
 
@@ -94,7 +94,7 @@
                             placeholder="Gib hier alle wichtigen Details zu deinem Artikel ein, der nicht in andere Kategorien passt."
                             class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">{{ old('description', $other->description) }}</textarea>
                         @error('description')
-                            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                         @enderror
                     </div>
                 </div>
@@ -102,53 +102,50 @@
 
 
             {{-- Contact Section --}}
-<section class="bg-gray-50 p-6 rounded-lg shadow-inner">
-    <h4 class="text-xl font-semibold text-gray-700 mb-6">
-         {{ __('publish_contact_select') }}
-    </h4>
+            <section class="bg-gray-50 p-6 rounded-lg shadow-inner">
+                <h4 class="text-xl font-semibold text-gray-700 mb-6">
+                    {{ __('publish_contact_select') }}
+                </h4>
 
-    {{-- Phone --}}
-    <div class="mt-4">
-        <label class="inline-flex items-center">
-            <input 
-                type="checkbox" 
-                name="show_phone" 
-                value="1" 
-                class="rounded border-gray-300"
-                {{ old('show_phone', $other->show_phone) ? 'checked' : '' }}
-            >
-            <span class="ml-2">Phone</span>
-        </label>
-    </div>
+                {{-- Phone --}}
+                <div class="mt-4">
+                    <label class="inline-flex items-center">
+                        <input
+                            type="checkbox"
+                            name="show_phone"
+                            value="1"
+                            class="rounded border-gray-300"
+                            {{ old('show_phone', $other->show_phone) ? 'checked' : '' }}>
+                        <span class="ml-2">Phone</span>
+                    </label>
+                </div>
 
-    {{-- Mobile --}}
-    <div class="mt-2">
-        <label class="inline-flex items-center">
-            <input 
-                type="checkbox" 
-                name="show_mobile_phone" 
-                value="1" 
-                class="rounded border-gray-300"
-                {{ old('show_mobile_phone', $other->show_mobile_phone) ? 'checked' : '' }}
-            >
-            <span class="ml-2">Mobile</span>
-        </label>
-    </div>
+                {{-- Mobile --}}
+                <div class="mt-2">
+                    <label class="inline-flex items-center">
+                        <input
+                            type="checkbox"
+                            name="show_mobile_phone"
+                            value="1"
+                            class="rounded border-gray-300"
+                            {{ old('show_mobile_phone', $other->show_mobile_phone) ? 'checked' : '' }}>
+                        <span class="ml-2">Mobile</span>
+                    </label>
+                </div>
 
-    {{-- Email --}}
-    <div class="mt-2">
-        <label class="inline-flex items-center">
-            <input 
-                type="checkbox" 
-                name="show_email" 
-                value="1" 
-                class="rounded border-gray-300"
-                {{ old('show_email', $other->show_email) ? 'checked' : '' }}
-            >
-            <span class="ml-2">Email</span>
-        </label>
-    </div>
-</section>
+                {{-- Email --}}
+                <div class="mt-2">
+                    <label class="inline-flex items-center">
+                        <input
+                            type="checkbox"
+                            name="show_email"
+                            value="1"
+                            class="rounded border-gray-300"
+                            {{ old('show_email', $other->show_email) ? 'checked' : '' }}>
+                        <span class="ml-2">Email</span>
+                    </label>
+                </div>
+            </section>
 
 
 
@@ -158,12 +155,12 @@
             <section class="bg-gray-50 p-6 rounded-lg shadow-inner">
                 <div x-data="multiImageUploader(
                             {{ json_encode(
-    $other->images->map(fn($image) => [
-        'id' => $image->id,
-        'url' => asset('storage/' . $image->image_path),
-        'is_thumbnail' => $image->is_thumbnail ?? false,
-    ])
-) }}
+                            $other->images->map(fn($image) => [
+                                'id' => $image->id,
+                                'url' => asset('storage/' . $image->image_path),
+                                'is_thumbnail' => $image->is_thumbnail ?? false,
+                            ])
+                        ) }}
                         )" class="space-y-4">
 
                     <h4 class="text-xl font-semibold text-gray-700 mb-6">{{ __('section_photos') }}</h4>
@@ -293,7 +290,7 @@
             <div class="pt-6 border-t border-gray-200 flex justify-end">
                 <button type="submit"
                     class="bg-blue-600 text-white px-8 py-3 rounded-lg font-semibold text-lg hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-300 transition-all duration-300 shadow-lg">
-                   {{ __('update_listing') }}
+                    {{ __('update_listing') }}
                 </button>
             </div>
 

@@ -3,7 +3,7 @@
     {{-- --------------------------------------------------------------------------------- --}}
     <x-slot name="header">
         <h2 class="text-3xl font-extrabold text-gray-900 leading-tight mb-2">
-          {{ __('Edit Ad') }}: {{ $camper->title }}
+            {{ __('Edit Ad') }}: {{ $camper->title }}
         </h2>
         <p class="text-md text-gray-700 dark:text-gray-500">
             {{ __('Customize the details of your motorhome ad') }}
@@ -380,7 +380,7 @@
             {{-- Contact Section --}}
             <section class="bg-gray-50 p-6 rounded-lg shadow-inner">
                 <h4 class="text-xl font-semibold text-gray-700 mb-6">
-                  {{ __('publish_contact_select') }}
+                    {{ __('publish_contact_select') }}
                 </h4>
 
                 {{-- Phone --}}
@@ -440,7 +440,7 @@
                     </div>
                     @endforeach
                 </div>
-     
+
             </section>
             @endif
 

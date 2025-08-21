@@ -42,7 +42,7 @@
 
 
                 {{-- Motorcycles --}}
-                <a href="{{ route('ads.motorcycles.create') }}"
+                <a href="{{ route('ads.motorrads.create') }}"
                     class="flex flex-col items-center bg-white border border-gray-200 rounded-lg shadow-sm hover:bg-gray-100 transition group">
                     <img src="{{ asset('storage/images/motorcycle.jpg') }}" alt="Motorcycles" class="h-48 w-full object-cover rounded-t-lg">
                     <div class="p-4 text-center">

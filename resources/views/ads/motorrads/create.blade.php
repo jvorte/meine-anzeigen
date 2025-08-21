@@ -13,8 +13,8 @@
     <div class="py-2">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <x-breadcrumbs :items="[
-        ['label' => 'motorcycles ads', 'url' => route('categories.motorcycles.index')],
-        ['label' => 'New motorcycles ads', 'url' => null],
+        ['label' => 'motorrads ads', 'url' => route('categories.motorrads.index')],
+        ['label' => 'New motorrads ads', 'url' => null],
     ]" />
         </div>
     </div>
@@ -37,7 +37,7 @@
     {{-- Main container for the form --}}
     <div class="max-w-6xl mx-auto p-6 bg-white rounded-lg shadow-xl mt-6">
 
-        <form method="POST" action="{{ route('ads.motorcycles.store') }}" enctype="multipart/form-data" class="space-y-8">
+        <form method="POST" action="{{ route('ads.motorrads.store') }}" enctype="multipart/form-data" class="space-y-8">
             @csrf
 
             {{-- Vehicle Details Section (Marke & Modell) --}}

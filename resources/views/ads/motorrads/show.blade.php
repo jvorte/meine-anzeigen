@@ -26,11 +26,13 @@
         </div>
     </x-slot>
 
+    
+
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 p-10">
         {{-- Breadcrumbs component --}}
         <x-breadcrumbs :items="[            
-                ['label' => __('All ads'), 'url' => route('categories.motorcycles.index')],
-                ['label' => $motorradAd->title, 'url' => null],
+                ['label' => __('All ads'), 'url' => route('categories.motorrads.index')],
+                ['label' => $motorrad->title, 'url' => null],
             ]" />
         {{-- Action Buttons and Back link --}}
         <div class="flex flex-col sm:flex-row justify-between my-4 gap-4">
@@ -48,8 +50,8 @@
 
             {{-- Left Column: Images and Thumbnails --}}
             <section x-data="{
-                images: @js($motorradAd->images->pluck('path')),
-                activeImage: '{{ $motorradAd->images->first()->path ?? '' }}',
+                images: @js($motorrad->images->pluck('path')),
+                activeImage: '{{ $motorrad->images->first()->path ?? '' }}',
                 showModal: false,
                 scaleUp: false,
                 currentIndex: 0,
@@ -108,7 +110,7 @@
 
                 {{-- Thumbnails --}}
                 <div class="flex space-x-4 overflow-x-auto no-scrollbar w-full max-w-xl px-2">
-                    @foreach ($motorradAd->images as $image)
+                    @foreach ($motorrad->images as $image)
                     <img src="{{ Storage::url($image->path) }}" alt="Thumbnail"
                         @click="changeImage('{{ $image->path }}')"
                         class="flex-shrink-0 w-20 h-20 rounded-xl object-cover cursor-pointer shadow-md transform transition duration-300 hover:scale-105 ring-2 focus:ring-4 focus:ring-gray-700 focus:outline-none"
@@ -177,13 +179,13 @@
                 {{-- Title and Pricing --}}
                 <div>
                     <h2 class="text-4xl font-extrabold text-gray-900 mb-4 leading-tight">
-                        {{ $motorradAd->title }}
+                        {{ $motorrad->title }}
                     </h2>
 
                     <div class="flex items-baseline space-x-3 mb-6">
-                        @if ($motorradAd->price)
+                        @if ($motorrad->price)
                         <p class="text-3xl text-gray-700 font-extrabold [&>span]:text-base [&>span]:font-normal [&>span]:ml-1">
-                            &euro;{{ number_format($motorradAd->price, 2, ',', '.') }}
+                            &euro;{{ number_format($motorrad->price, 2, ',', '.') }}
                            
                         </p>
                         @else
@@ -192,8 +194,8 @@
                     </div>
 
                     <div class="prose prose-lg max-w-none text-gray-700">
-                        @if ($motorradAd->description)
-                        {!! nl2br(e($motorradAd->description)) !!}
+                        @if ($motorrad->description)
+                        {!! nl2br(e($motorrad->description)) !!}
                         @else
                         <p class="italic text-gray-400">{{ __('No description available') }}</p>
                         @endif
@@ -205,49 +207,49 @@
                 <div class="border-t border-gray-300 pt-6">
                     <h3 class="text-xl font-semibold text-gray-700 mb-3">{{ __('Seller details')}}</h3>
 
-                    @if ($motorradAd->user)
+                    @if ($motorrad->user)
                     <dl class="space-y-2 text-gray-900">
                         <div>
                             <dt class="inline font-semibold">Name:</dt>
-                            <dd class="inline">{{ $motorradAd->user->name }}</dd>
+                            <dd class="inline">{{ $motorrad->user->name }}</dd>
                         </div>
                         <div>
-                            @if($motorradAd->show_phone && !empty($motorradAd->user->phone))
+                            @if($motorrad->show_phone && !empty($motorrad->user->phone))
                             <dt class="inline font-semibold">Phone:</dt>
-                            <dd class="inline">{{ $motorradAd->user->phone }}</dd>
+                            <dd class="inline">{{ $motorrad->user->phone }}</dd>
                             @endif
 
-                            @if($motorradAd->show_mobile_phone && !empty($motorradAd->user->mobile_phone))
+                            @if($motorrad->show_mobile_phone && !empty($motorrad->user->mobile_phone))
                             <dt class="inline font-semibold">Mobile:</dt>
-                            <dd class="inline">{{ $motorradAd->user->mobile_phone }}</dd>
+                            <dd class="inline">{{ $motorrad->user->mobile_phone }}</dd>
                             @endif
                         </div>
 
 
                         <div>
-                            @if($motorradAd->show_email && !empty($motorradAd->user->email))
+                            @if($motorrad->show_email && !empty($motorrad->user->email))
                             <dt class="inline font-semibold">E-Mail:</dt>
-                            <dd class="inline">{{ $motorradAd->user->email }}</dd>
+                            <dd class="inline">{{ $motorrad->user->email }}</dd>
                             @endif
                         </div>
 
-                        @if($motorradAd->user->city)
+                        @if($motorrad->user->city)
                         <div>
                             <dt class="inline font-semibold">{{ __('location') }}:</dt>
-                            <dd class="inline">{{ $motorradAd->user->city }}</dd>
+                            <dd class="inline">{{ $motorrad->user->city }}</dd>
                         </div>
                         @endif
                     </dl>
 
                     <div class="flex flex-wrap justify-center sm:justify-start items-center space-x-0 sm:space-x-3 pt-4 my-3 sm:pt-0">
                         @auth
-                        @if (auth()->id() === $motorradAd->user_id || auth()->user()->isAdmin())
+                        @if (auth()->id() === $motorrad->user_id || auth()->user()->isAdmin())
                         {{-- Edit & Delete --}}
-                        <a href="{{ route('ads.motorcycles.edit', $motorradAd->id) }}"
+                        <a href="{{ route('ads.motorrads.edit', $motorrad->id) }}"
                             class="px-5 py-2 bg-gray-700 hover:bg-gray-800 text-white rounded-full shadow-lg transition transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2">
                           {{ __('Edit Ad') }}
                         </a>
-                        <form action="{{ route('ads.motorcycles.destroy', $motorradAd->id) }}" method="POST"
+                        <form action="{{ route('ads.motorrads.destroy', $motorrad->id) }}" method="POST"
                             onsubmit="return confirm('Sind Sie sicher, dass Sie diese Anzeige löschen möchten? Diese Aktion kann nicht rückgängig gemacht werden.')">
                             @csrf
                             @method('DELETE')
@@ -263,8 +265,8 @@
                         @else
                         {{-- Contact button for logged-in non-owners --}}
                         <a href="{{ route('messages.start.redirect', [
-                                        'ad' => $motorradAd->id,
-                                        'receiver' => $motorradAd->user->id,
+                                        'ad' => $motorrad->id,
+                                        'receiver' => $motorrad->user->id,
                                         'category' => 'motorcycles'
                                     ]) }}"
                             class="mt-6 block w-full text-center bg-red-700 text-white font-semibold py-3 rounded-full shadow-lg hover:bg-gray-800 transition focus:ring-4 focus:ring-gray-500 focus:ring-opacity-75">
@@ -303,47 +305,47 @@
                     {{-- Boat Details Grid --}}
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
 
-                        @if($motorradAd->motorcycleBrand)
+                        @if($motorrad->motorcycleBrand)
                         <div>
                             <p class="text-sm font-semibold text-gray-800">{{ __('brand') }}:</p>
-                            <p class="text-gray-700">{{ $motorradAd->motorcycleBrand->name }}</p>
+                            <p class="text-gray-700">{{ $motorrad->motorcycleBrand->name }}</p>
                         </div>
                         @endif
-                        @if($motorradAd->motorcycleModel)
+                        @if($motorrad->motorcycleModel)
                         <div>
                             <p class="text-sm font-semibold text-gray-800">{{ __('model') }}:</p>
-                            <p class="text-gray-700">{{ $motorradAd->motorcycleModel->name }}</p>
+                            <p class="text-gray-700">{{ $motorrad->motorcycleModel->name }}</p>
                         </div>
                         @endif
-                        @if($motorradAd->first_registration)
+                        @if($motorrad->first_registration)
                         <div>
                             <p class="text-sm font-semibold text-gray-800">{{ __('year_of_construction') }}:</p>
-                            <p class="text-gray-700">{{ $motorradAd->first_registration }}</p>
+                            <p class="text-gray-700">{{ $motorrad->first_registration }}</p>
 
                         </div>
                         @endif
-                        @if(isset($motorradAd->mileage))
+                        @if(isset($motorrad->mileage))
                         <div>
                             <p class="text-sm font-semibold text-gray-800">{{ __('Mileage') }}:</p>
-                            <p class="text-gray-700">{{ number_format($motorradAd->mileage, 0, ',', '.') }} km</p>
+                            <p class="text-gray-700">{{ number_format($motorrad->mileage, 0, ',', '.') }} km</p>
                         </div>
                         @endif
-                        @if($motorradAd->power)
+                        @if($motorrad->power)
                         <div>
                             <p class="text-sm font-semibold text-gray-800">{{ __('Power') }}:</p>
-                            <p class="text-gray-700">{{ $motorradAd->power }} PS</p>
+                            <p class="text-gray-700">{{ $motorrad->power }} PS</p>
                         </div>
                         @endif
-                        @if($motorradAd->color)
+                        @if($motorrad->color)
                         <div>
                             <p class="text-sm font-semibold text-gray-800">{{ __('Color') }}:</p>
-                            <p class="text-gray-700">{{ $motorradAd->color }}</p>
+                            <p class="text-gray-700">{{ $motorrad->color }}</p>
                         </div>
                         @endif
-                        @if($motorradAd->condition)
+                        @if($motorrad->condition)
                         <div>
                             <p class="text-sm font-semibold text-gray-800">{{ __('condition_label') }}:</p>
-                            <p class="text-gray-700">{{ $motorradAd->condition }}</p>
+                            <p class="text-gray-700">{{ $motorrad->condition }}</p>
                         </div>
                         @endif
                     </div>

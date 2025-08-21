@@ -94,7 +94,7 @@ class MotorradAdController extends Controller
         $motorcycleBrands = MotorcycleBrand::all();
         $motorcycleModels = MotorcycleModel::all();
 
-        return view('ads.motorrad.index', compact('motorradAds', 'motorcycleBrands', 'motorcycleModels'));
+        return view('ads.motorrads.index', compact('motorradAds', 'motorcycleBrands', 'motorcycleModels'));
     }
 
     /**
@@ -106,8 +106,6 @@ class MotorradAdController extends Controller
         $brands = MotorcycleBrand::orderBy('name')->pluck('name', 'id');
 
 
-        // dd($brands);
-
         $initialModels = [];
         if (old('motorcycle_brand_id')) {
             $initialModels = MotorcycleModel::where('motorcycle_brand_id', old('motorcycle_brand_id'))
@@ -118,8 +116,12 @@ class MotorradAdController extends Controller
         $colors = ['Black', 'White', 'Red', 'Blue', 'Green', 'Yellow', 'Orange', 'Silver', 'Grey', 'Brown', 'Other'];
         $conditions = ['New', 'Used', 'Accident', 'Damaged'];
 
-        return view('ads.motorrad.create', compact('brands', 'initialModels', 'colors', 'conditions'));
+        return view('ads.motorrads.create', compact('brands', 'initialModels', 'colors', 'conditions'));
     }
+
+
+
+
 
     public function getModels($id)
     {
@@ -130,103 +132,16 @@ class MotorradAdController extends Controller
 
 
 
-    public function store(Request $request)
-    {
-        // dd('fff');
-        $validatedData = $request->validate([
-            'images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg',
-            'title' => 'required|string|max:255',
-            'price' => 'required|numeric|min:0|max:9999999.99',
-            'description' => 'required|string',
-            'motorcycle_brand_id' => 'required|exists:motorcycle_brands,id',
-            'motorcycle_model_id' => [
-                'required',
-                Rule::exists('motorcycle_models', 'id')->where(function ($query) use ($request) {
-                    return $query->where('motorcycle_brand_id', $request->motorcycle_brand_id);
-                }),
-            ],
-            'first_registration' => ['required', 'integer', 'digits:4', 'min:1900', 'max:' . date('Y')],
-            'mileage' => 'required|integer|min:0',
-            'power' => 'required|integer|min:1',
-            'color' => 'required|string|max:50',
-            'condition' => 'required|in:New,Used,Accident,Damaged',
-        ]);
-        // dd($validatedData );
 
-        $motorradAd = new MotorradAd();
-        $motorradAd->user_id = Auth::id();
-        $motorradAd->title = $validatedData['title'];
-        $motorradAd->description = $validatedData['description'];
-        $motorradAd->price = $validatedData['price'];
-        $motorradAd->motorcycle_brand_id = $validatedData['motorcycle_brand_id'];
-        $motorradAd->motorcycle_model_id = $validatedData['motorcycle_model_id'];
-        $motorradAd->first_registration = $validatedData['first_registration'];
-        $motorradAd->mileage = $validatedData['mileage'];
-        $motorradAd->power = $validatedData['power'];
-        $motorradAd->color = $validatedData['color'];
-        $motorradAd->condition = $validatedData['condition'];
-        $motorradAd->show_phone = $request->has('show_phone') ? 1 : 0;
-        $motorradAd->show_mobile_phone = $request->has('show_mobile_phone') ? 1 : 0;
-        $motorradAd->show_email = $request->has('show_email') ? 1 : 0;
 
-        $motorradAd->save();
-
-        if ($request->hasFile('images')) {
-            foreach ($request->file('images') as $image) {
-                $path = $image->store('motorrad_ads_images', 'public');
-                $motorradAd->images()->create([
-                    'image_path' => $path,
-                ]);
-            }
-        }
-
-        return redirect()->route('dashboard')->with('success', 'Motorrad Anzeige erfolgreich erstellt!');
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(MotorradAd $motorradAd)
-    {
-        $motorradAd->load(['motorcycleBrand', 'motorcycleModel', 'user', 'images']);
-        return view('ads.motorrad.show', compact('motorradAd'));
-    }
-
-    /**
-     * Show the form for editing the specified motorrad ad.
-     */
-    public function edit(MotorradAd $motorcycle)
-    {
-       
-
-        $brands = MotorcycleBrand::pluck('name', 'id');
-
-   
-        $initialModels = [];
-        if ($motorcycle->motorcycle_brand_id) {
-            $initialModels = MotorcycleModel::where('motorcycle_brand_id', $motorcycle->motorcycle_brand_id)->pluck('name', 'id');
-        }
-
-        $colors = ['Schwarz', 'Weiß', 'Rot', 'Blau', 'Grün', 'Gelb', 'Orange', 'Silber', 'Grau', 'Braun', 'Andere'];
-        $conditions = ['New', 'Used', 'Accident', 'Damaged'];
-   
-        return view('ads.motorrad.edit', compact('motorcycle', 'brands', 'initialModels', 'colors', 'conditions'));
-    }
-    /**
-     * Update the specified motorrad ad in storage.
-     */
-public function update(Request $request, MotorradAd $motorradAd)
+public function store(Request $request)
 {
-    // Ensure only the owner or an admin can update the ad
-    if (Auth::id() !== $motorradAd->user_id && (!Auth::user() || !Auth::user()->isAdmin())) {
-        abort(403, 'Unauthorized action.');
-    }
-
+    // Step 1: Validate all incoming data from the form.
     $validatedData = $request->validate([
-        'images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+        'images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg',
         'title' => 'required|string|max:255',
-        'description' => 'required|string',
         'price' => 'required|numeric|min:0|max:9999999.99',
+        'description' => 'required|string',
         'motorcycle_brand_id' => 'required|exists:motorcycle_brands,id',
         'motorcycle_model_id' => [
             'required',
@@ -239,28 +154,111 @@ public function update(Request $request, MotorradAd $motorradAd)
         'power' => 'required|integer|min:1',
         'color' => 'required|string|max:50',
         'condition' => 'required|in:New,Used,Accident,Damaged',
+    ]);
+
+    // Step 2: Combine validated data with essential fields
+    // The `auth()->id()` gets the ID of the currently logged-in user.
+    $dataToSave = array_merge($validatedData, [
+        'user_id' => auth()->id(),
+        'show_phone' => $request->has('show_phone'),
+        'show_mobile_phone' => $request->has('show_mobile_phone'),
+        'show_email' => $request->has('show_email'),
+    ]);
+
+    // Step 3: Create and save the new motorcycle ad in one command.
+    $motorrad = MotorradAd::create($dataToSave);
+
+    // Step 4: Handle image uploads
+    if ($request->hasFile('images')) {
+        foreach ($request->file('images') as $image) {
+            $path = $image->store('motorrad_ads_images', 'public');
+            $motorrad->images()->create([
+                'image_path' => $path,
+            ]);
+        }
+    }
+
+    // Step 5: Redirect to the dashboard with a success message.
+    return redirect()->route('ads.motorrads.index')->with('success', 'Motorrad Anzeige erfolgreich erstellt!');
+}
+
+
+
+    public function show(MotorradAd $motorrad)
+    {
+        $motorrad->load(['motorcycleBrand', 'motorcycleModel', 'user', 'images']);
+        return view('ads.motorrads.show', compact('motorrad'));
+    }
+
+
+
+
+
+
+    public function edit(MotorradAd $motorrad)
+    {
+       
+
+        $brands = MotorcycleBrand::pluck('name', 'id');
+
+   
+        $initialModels = [];
+        if ($motorrad->motorcycle_brand_id) {
+            $initialModels = MotorcycleModel::where('motorcycle_brand_id', $motorrad->motorcycle_brand_id)->pluck('name', 'id');
+        }
+
+         $colors = ['Black', 'White', 'Red', 'Blue', 'Green', 'Yellow', 'Orange', 'Silver', 'Grey', 'Brown', 'Other'];
+        $conditions = ['New', 'Used', 'Accident', 'Damaged'];
+   
+        return view('ads.motorrads.edit', compact('motorrad', 'brands', 'initialModels', 'colors', 'conditions'));
+    }
+
+
+    /**
+     * Update the specified motorrad ad in storage.
+     */
+public function update(Request $request, MotorradAd $motorrad)
+{
+    $validatedData = $request->validate([
+        'images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+        'title' => 'required|string|max:255',
+        'description' => 'required|string',
+        'price' => 'required|numeric|min:0|max:9999999.99',
+        'motorcycle_brand_id' => 'required|exists:motorcycle_brands,id',
+        'motorcycle_model_id' => [
+            'required',
+            Rule::exists('motorcycle_models', 'id')->where(function ($query) use ($request) {
+                return $query->where('motorcycle_brand_id', $request->motorcycle_brand_id);
+            }),
+        ],
+        'first_registration' => ['required','integer','digits:4','min:1900','max:'.date('Y')],
+        'mileage' => 'required|integer|min:0',
+        'power' => 'required|integer|min:1',
+        'color' => 'required|string|max:50',
+        'condition' => 'required|in:New,Used,Accident,Damaged',
         'existing_images' => 'nullable|array',
         'existing_images.*' => 'exists:motorrad_ad_images,id',
-        
-        // Add validation rules for checkbox fields
         'show_phone' => 'nullable|boolean',
         'show_mobile_phone' => 'nullable|boolean',
         'show_email' => 'nullable|boolean',
     ]);
-    
-    // Fill the model with the validated data
-    $motorradAd->fill($validatedData);
 
-    // Manually set the boolean checkbox values based on request presence
-    $motorradAd->show_phone = $request->has('show_phone');
-    $motorradAd->show_mobile_phone = $request->has('show_mobile_phone');
-    $motorradAd->show_email = $request->has('show_email');
-    
-    // Save all changes to the database
-    $motorradAd->save();
+    // **ΜΗΝ ΚΑΝΕΙΣ create, απλά fill το υπάρχον**
+    $motorrad->fill($validatedData);
 
-    // Image Deletion Logic
-    $currentImageIds = $motorradAd->images->pluck('id')->toArray();
+    // Φτιάχνουμε τα checkboxes
+    $motorrad->show_phone = $request->has('show_phone');
+    $motorrad->show_mobile_phone = $request->has('show_mobile_phone');
+    $motorrad->show_email = $request->has('show_email');
+
+    // **Σιγουρέψου ότι το user_id δεν χάνεται**
+    $motorrad->user_id = $motorrad->user_id ?? auth()->id();
+
+    // Αποθήκευση
+    $motorrad->save();
+
+    // Διαχείριση εικόνων (existing + new) όπως πριν
+    $currentImageIds = $motorrad->images->pluck('id')->toArray();
     $imagesToKeep = $validatedData['existing_images'] ?? [];
     $imagesToDelete = array_diff($currentImageIds, $imagesToKeep);
 
@@ -272,35 +270,31 @@ public function update(Request $request, MotorradAd $motorradAd)
         }
     }
 
-    // New Image Upload Logic
     if ($request->hasFile('images')) {
         foreach ($request->file('images') as $file) {
             $path = $file->store('motorrad_ads_images', 'public');
-            $motorradAd->images()->create([
-                'image_path' => $path,
-            ]);
+            $motorrad->images()->create(['image_path' => $path]);
         }
     }
 
-    return redirect()->route('ads.motorrad.show', $motorradAd)->with('success', 'Motorrad Anzeige erfolgreich aktualisiert!');
+    return redirect()->route('ads.motorrads.show', $motorrad)->with('success', 'Motorrad Anzeige erfolgreich aktualisiert!');
 }
+
 
     /**
      * Remove the specified motorrad ad from storage.
      */
-    public function destroy(MotorradAd $motorradAd)
+    public function destroy(MotorradAd $motorrad)
     {
-        if (Auth::id() !== $motorradAd->user_id && (!Auth::user() || !Auth::user()->isAdmin())) {
-            abort(403, 'Unauthorized action.');
-        }
+    
 
-        foreach ($motorradAd->images as $image) {
+        foreach ($motorrad->images as $image) {
             Storage::disk('public')->delete($image->image_path);
         }
 
-        $motorradAd->delete();
+        $motorrad->delete();
 
-        return redirect()->route('dashboard')->with('success', 'Motorrad Anzeige erfolgreich gelöscht!');
+        return redirect()->route('ads.motorrads.index')->with('success', 'Motorrad Anzeige erfolgreich gelöscht!');
     }
 
     /**

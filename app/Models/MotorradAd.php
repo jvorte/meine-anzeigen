@@ -13,6 +13,7 @@ class MotorradAd extends Model
     protected $fillable = [
         'user_id',
         'title',
+        'price',
         'description',
         'motorcycle_brand_id',
         'motorcycle_model_id',

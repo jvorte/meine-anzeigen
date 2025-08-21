@@ -39,7 +39,7 @@
                         'real-estate' => asset('storage/images/real-estate.jpg'),
                         'services' => asset('storage/images/store.jpg'),
                         'others' => asset('storage/images/room.jpg'),
-                        'motorcycles' => asset('storage/images/motorcycle.jpg'),
+                        'motorrads' => asset('storage/images/motorcycle.jpg'),
                         'commercial-vehicles' => asset('storage/images/trucks.jpg'),
                         'campers' => asset('storage/images/camper.jpg'),
                     ];
@@ -82,7 +82,7 @@
                                                 elseif ($ad instanceof \App\Models\CommercialVehicle) { $adRouteName = 'categories.commercial-vehicles.show'; $adParamName = 'commercialVehicle'; }
                                                 elseif ($ad instanceof \App\Models\Electronic) { $adRouteName = 'categories.electronics.show'; $adParamName = 'electronic'; }
                                                 elseif ($ad instanceof \App\Models\HouseholdItem) { $adRouteName = 'categories.household.show'; $adParamName = 'householdItem'; }
-                                                elseif ($ad instanceof \App\Models\MotorradAd) { $adRouteName = 'categories.motorcycles.show'; $adParamName = 'motorradAd'; }
+                                                elseif ($ad instanceof \App\Models\MotorradAd) { $adRouteName = 'categories.motorrads.show'; $adParamName = 'motorrad'; }
                                                 elseif ($ad instanceof \App\Models\Other) { $adRouteName = 'categories.others.show'; $adParamName = 'other'; }
                                                 elseif ($ad instanceof \App\Models\RealEstate) { $adRouteName = 'categories.real-estate.show'; $adParamName = 'realEstate'; }
                                                 elseif ($ad instanceof \App\Models\Service) { $adRouteName = 'categories.services.show'; $adParamName = 'service'; }
