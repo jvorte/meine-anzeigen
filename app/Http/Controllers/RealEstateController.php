@@ -118,12 +118,9 @@ class RealEstateController extends Controller
         $constructionTypeOptions = ['solid construction', 'prefabricated house', 'timber construction', 'brick construction', 'reinforced concrete'];
         $conditions = ['New building', 'Renovated', 'Needs renovation', 'Old building'];
         $propertyTypeOptions = ['Apartment', 'House', 'Land', 'Commercial Property', 'Garage', 'Other'];
-        $objekttyps = ['Buy', 'Rent'];
-        // $propertyTypeOptions = RealEstate::distinct()->pluck('propertyTypeOptions')->filter()->toArray();
+        $objekttyps = ['Buy', 'Rent'];     
         $objekttypen = RealEstate::distinct()->pluck('objekttyp')->filter()->toArray();
         $postcodes = RealEstate::distinct()->pluck('postcode')->filter()->toArray();
-        // $zustaende = RealEstate::distinct()->pluck('condition')->filter()->toArray();
-        // $bautypen = RealEstate::distinct()->pluck('propertyTypeOptions')->filter()->toArray();
         $locations = RealEstate::distinct()->pluck('location')->filter()->toArray();
         $heatingOptions = ['Central heating', 'floor heating', 'underfloor heating', 'district heating', 'gas heating', 'oil heating', 'electric heating', 'fireplace/stove'];
 
