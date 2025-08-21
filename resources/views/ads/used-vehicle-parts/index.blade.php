@@ -3,10 +3,10 @@
         <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center px-4 py-2">
             <div>
                 <h1 class="text-4xl font-extrabold text-gray-900 leading-tight">
-                    Όλα τα Ανταλλακτικά
+                    {{ __('Vehicle spare parts') }}
                 </h1>
                 <p class="mt-1 text-gray-600 max-w-xl">
-                    Περιηγηθείτε σε όλες τις διαθέσιμες αγγελίες για ανταλλακτικά.
+                  {{ __('Browse all available ads for spare parts.') }}
                 </p>
             </div>
 
@@ -28,8 +28,8 @@
 
         {{-- Breadcrumbs --}}
         <x-breadcrumbs :items="[
-            ['label' => 'Όλες οι Αγγελίες', 'url' => route('ads.index')],
-            ['label' => 'Ανταλλακτικά Οχημάτων', 'url' => route('ads.vehicles-parts.index')],
+   
+            ['label' => __('All ads'), 'url' => route('ads.vehicles-parts.index')],
         ]" class="mb-8" />
 
         {{-- Filters Section --}}
@@ -94,11 +94,11 @@
 
         {{-- Part Category --}}
                     <div>
-                                <label for="part_category" class="block text-sm font-medium text-gray-700">Κατηγορία</label>
+                                <label for="part_category" class="block text-sm font-medium text-gray-700">{{ __('Category') }}</label>
                     <select name="part_category" id="part_category" class="mt-1 w-full rounded-lg border-gray-300 shadow-sm text-sm focus:ring-indigo-500 focus:border-indigo-500">
                             <option value="">{{ __('select') }}</option>
                             @foreach($partCategories as $category)
-                                <option value="{{ $category }}" {{ old('part_category') == $category ? 'selected' : '' }}>{{ $category }}</option>
+                                <option value="{{ $category }}" {{ old('part_category') == $category ? 'selected' : '' }}>{{ __($category) }}</option>
                             @endforeach
                         </select>
                         @error('part_category')
@@ -110,35 +110,35 @@
 
                 {{-- Vehicle Type Dropdown --}}
                 <div>
-                    <label for="vehicle_type" class="block text-sm font-medium text-gray-700">Τύπος Οχήματος</label>
+                    <label for="vehicle_type" class="block text-sm font-medium text-gray-700">{{ __('Τype') }}</label>
                     <select name="vehicle_type" id="vehicle_type" class="mt-1 w-full rounded-lg border-gray-300 shadow-sm text-sm focus:ring-indigo-500 focus:border-indigo-500">
                         <option value="">{{ __('select') }}</option>
                          @foreach($vehicleTypes as $category)
-                                <option value="{{ $category }}" {{ old('part_category') == $category ? 'selected' : '' }}>{{ $category }}</option>
+                                <option value="{{ $category }}" {{ old('part_category') == $category ? 'selected' : '' }}>{{ __($category) }}</option>
                             @endforeach
                     </select>
                 </div>
                 
                 {{-- Condition Dropdown --}}
                 <div>
-                    <label for="condition" class="block text-sm font-medium text-gray-700">Κατάσταση</label>
+                    <label for="condition" class="block text-sm font-medium text-gray-700">{{ __('condition') }}</label>
                     <select name="condition" id="condition" class="mt-1 w-full rounded-lg border-gray-300 shadow-sm text-sm focus:ring-indigo-500 focus:border-indigo-500">
                         <option value="">{{ __('select') }}</option>
-                        <option value="new" {{ request('condition') == 'new' ? 'selected' : '' }}>Καινούργιο</option>
-                        <option value="used" {{ request('condition') == 'used' ? 'selected' : '' }}>Μεταχειρισμένο</option>
-                         <option value="refurbished" {{ request('condition') == 'refurbished' ? 'selected' : '' }}>refurbished</option>
-                        <option value="broken" {{ request('condition') == 'broken' ? 'selected' : '' }}>broken</option>
+                        <option value="new" {{ request('condition') == 'new' ? 'selected' : '' }}>{{ __('new') }}</option>
+                        <option value="used" {{ request('condition') == 'used' ? 'selected' : '' }}>{{ __('used') }}</option>
+                         <option value="refurbished" {{ request('condition') == 'refurbished' ? 'selected' : '' }}>{{ __('Accident vehicle') }}</option>
+                        <option value="broken" {{ request('condition') == 'broken' ? 'selected' : '' }}>{{ __('Damaged vehicle') }}</option>
                     </select>
                 </div>
                 
                 {{-- Sort By Dropdown --}}
                 <div>
-                    <label for="sort_by" class="block text-sm font-medium text-gray-700">Ταξινόμηση</label>
+                    <label for="sort_by" class="block text-sm font-medium text-gray-700">{{ __('Sort by') }}</label>
                     <select name="sort_by" id="sort_by" class="mt-1 w-full rounded-lg border-gray-300 shadow-sm text-sm focus:ring-indigo-500 focus:border-indigo-500">
                         <option value="">{{ __('select') }}</option>
-                        <option value="latest" {{ request('sort_by') == 'latest' ? 'selected' : '' }}>Τελευταία</option>
-                        <option value="price_asc" {{ request('sort_by') == 'price_asc' ? 'selected' : '' }}>Τιμή: Φθηνότερο πρώτα</option>
-                        <option value="price_desc" {{ request('sort_by') == 'price_desc' ? 'selected' : '' }}>Τιμή: Ακριβότερο πρώτα</option>
+                        <option value="latest" {{ request('sort_by') == 'latest' ? 'selected' : '' }}>{{ __('Last') }}</option>
+                        <option value="price_asc" {{ request('sort_by') == 'price_asc' ? 'selected' : '' }}>{{ __('Price: Cheapest first') }}</option>
+                        <option value="price_desc" {{ request('sort_by') == 'price_desc' ? 'selected' : '' }}>{{ __('Price: Most expensive first') }}</option>
                     </select>
                 </div>
             </div>
@@ -149,7 +149,7 @@
         {{-- Parts Grid --}}
         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 my-5 gap-6">
             @foreach ($usedVehicleParts as $usedVehiclePart)
-                <a href="{{ route('ads.used-vehicle-parts.show', $usedVehiclePart->id) }}" class="block bg-white border rounded-lg shadow hover:shadow-lg transition overflow-hidden">
+                <a href="{{ route('ads.vehicles-parts.show', $usedVehiclePart->id) }}" class="block bg-white border rounded-lg shadow hover:shadow-lg transition overflow-hidden">
                     @if($usedVehiclePart->images && $usedVehiclePart->images->first())
                         <img src="{{ asset('storage/' . $usedVehiclePart->images->first()->image_path) }}"
                              alt="{{ $usedVehiclePart->title }}"

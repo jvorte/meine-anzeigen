@@ -3,10 +3,10 @@
         <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center px-4 py-2">
             <div>
                 <h1 class="text-4xl font-extrabold text-gray-900 leading-tight">
-                    All Motorcycles
+                    {{ __('All Motorcycles') }}
                 </h1>
                 <p class="mt-1 text-gray-600 max-w-xl">
-                    Browse all available motorcycle ads.
+                    {{ __('Browse all available motorcycle ads.') }}
                 </p>
             </div>
 
@@ -28,8 +28,8 @@
 
         {{-- Breadcrumbs --}}
         <x-breadcrumbs :items="[
-        ['label' => 'Όλες οι Αγγελίες', 'url' => route('ads.index')],
-       ['label' => 'Μοτοσυκλέτες', 'url' => route('ads.motorrads.index')],
+        ['label' => __('All ads'), 'url' => route('ads.index')],
+     
     ]" class="mb-8" />
 
         {{-- Filters Section --}}
@@ -170,7 +170,7 @@
 
                         {{-- Power Range with Input Fields --}}
                         <div class="flex-grow min-w-[150px] relative">
-                            <label for="min_power" class="block text-sm font-medium text-gray-700">Ιπποδύναμη</label>
+                            <label for="min_power" class="block text-sm font-medium text-gray-700">{{ __('Power') }}</label>
                             <div class="flex items-center mt-1">
                                 <input type="number" name="min_power" value="{{ request('min_power') }}"
                                     placeholder="Από"
@@ -183,53 +183,52 @@
 
                         {{-- Condition Filter --}}
                         <div>
-                            <label for="condition" class="block text-sm font-medium text-gray-700">Κατάσταση</label>
+                            <label for="condition" class="block text-sm font-medium text-gray-700">{{ __('condition') }}</label>
                             <select name="condition" id="condition"
                                 class="mt-1 w-full rounded-lg border-gray-300 shadow-sm text-sm focus:ring-indigo-500 focus:border-indigo-500">
                                 <option value="">{{ __('select') }}</option>
-                                <option value="new" {{ request('condition') == 'new' ? 'selected' : '' }}>Καινούργια
+                                <option value="new" {{ request('condition') == 'new' ? 'selected' : '' }}>{{ __('new') }}
                                 </option>
-                                <option value="used" {{ request('condition') == 'used' ? 'selected' : '' }}>Μεταχειρισμένη
+                                <option value="used" {{ request('condition') == 'used' ? 'selected' : '' }}>{{ __('used') }}
                                 </option>
                             </select>
                         </div>
 
                         {{-- Color Filter --}}
                         <div>
-                            <label for="color" class="block text-sm font-medium text-gray-700">Χρώμα</label>
+                            <label for="color" class="block text-sm font-medium text-gray-700">{{ __('Color') }}</label>
                             <select name="color" id="color"
                                 class="mt-1 w-full rounded-lg border-gray-300 shadow-sm text-sm focus:ring-indigo-500 focus:border-indigo-500">
                                 <option value="">{{ __('select') }}</option>
-
-                                <option value="black" {{ request('color') == 'black' ? 'selected' : '' }}>Black</option>
-                                <option value="white" {{ request('color') == 'white' ? 'selected' : '' }}>White</option>
-                                <option value="red" {{ request('color') == 'red' ? 'selected' : '' }}>Red</option>
-                                <option value="blue" {{ request('color') == 'blue' ? 'selected' : '' }}>Blue</option>
-                                <option value="green" {{ request('color') == 'green' ? 'selected' : '' }}>Green</option>
-                                <option value="yellow" {{ request('color') == 'yellow' ? 'selected' : '' }}>Yellow
-                                </option>
-                                <option value="orange" {{ request('color') == 'orange' ? 'selected' : '' }}>Orange
-                                </option>
-                                <option value="silver" {{ request('color') == 'silver' ? 'selected' : '' }}>Silver
-                                </option>
-                                <option value="grey" {{ request('color') == 'grey' ? 'selected' : '' }}>Grey</option>
-                                <option value="brown" {{ request('color') == 'brown' ? 'selected' : '' }}>Brown</option>
-                                <option value="other" {{ request('color') == 'other' ? 'selected' : '' }}>Other</option>
+    <option value="black" {{ request('color') == 'black' ? 'selected' : '' }}>{{ __('Black') }}</option>
+    <option value="white" {{ request('color') == 'white' ? 'selected' : '' }}>{{ __('White') }}</option>
+    <option value="gray" {{ request('color') == 'gray' ? 'selected' : '' }}>{{ __('Gray') }}</option>
+    <option value="silver" {{ request('color') == 'silver' ? 'selected' : '' }}>{{ __('Silver') }}</option>
+    <option value="blue" {{ request('color') == 'blue' ? 'selected' : '' }}>{{ __('Blue') }}</option>
+    <option value="red" {{ request('color') == 'red' ? 'selected' : '' }}>{{ __('Red') }}</option>
+    <option value="green" {{ request('color') == 'green' ? 'selected' : '' }}>{{ __('Green') }}</option>
+    <option value="yellow" {{ request('color') == 'yellow' ? 'selected' : '' }}>{{ __('Yellow') }}</option>
+    <option value="orange" {{ request('color') == 'orange' ? 'selected' : '' }}>{{ __('Orange') }}</option>
+    <option value="brown" {{ request('color') == 'brown' ? 'selected' : '' }}>{{ __('Brown') }}</option>
+    <option value="beige" {{ request('color') == 'beige' ? 'selected' : '' }}>{{ __('Beige') }}</option>
+    <option value="gold" {{ request('color') == 'gold' ? 'selected' : '' }}>{{ __('Gold') }}</option>
+    <option value="purple" {{ request('color') == 'purple' ? 'selected' : '' }}>{{ __('Purple') }}</option>
+    <option value="pink" {{ request('color') == 'pink' ? 'selected' : '' }}>{{ __('Pink') }}</option>
+    <option value="other" {{ request('color') == 'other' ? 'selected' : '' }}>{{ __('Other') }}</option>
                             </select>
                         </div>
 
                         {{-- Sort By Dropdown --}}
                         <div>
-                            <label for="sort_by" class="block text-sm font-medium text-gray-700">Ταξινόμηση</label>
+                            <label for="sort_by" class="block text-sm font-medium text-gray-700">{{ __('Sort by') }}</label>
                             <select name="sort_by" id="sort_by"
                                 class="mt-1 w-full rounded-lg border-gray-300 shadow-sm text-sm focus:ring-indigo-500 focus:border-indigo-500">
                                 <option value="">{{ __('select') }}</option>
-                                <option value="latest" {{ request('sort_by') == 'latest' ? 'selected' : '' }}>Τελευταία
+                                <option value="latest" {{ request('sort_by') == 'latest' ? 'selected' : '' }}>{{ __('Last') }}
                                 </option>
-                                <option value="price_asc" {{ request('sort_by') == 'price_asc' ? 'selected' : '' }}>Τιμή:
-                                    Φθηνότερο πρώτα</option>
+                                <option value="price_asc" {{ request('sort_by') == 'price_asc' ? 'selected' : '' }}>{{ __('Price: Cheapest first') }}</option>
                                 <option value="price_desc" {{ request('sort_by') == 'price_desc' ? 'selected' : '' }}>
-                                    Τιμή: Ακριβότερο πρώτα</option>
+                                   {{ __('Price: Most expensive first') }}</option>
                             </select>
                         </div>
                     </div>

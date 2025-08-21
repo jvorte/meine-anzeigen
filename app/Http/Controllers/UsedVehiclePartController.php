@@ -95,9 +95,7 @@ class UsedVehiclePartController extends Controller
         ];
         return view('ads.used-vehicle-parts.index', compact('usedVehicleParts', 'partCategories', 'vehicleTypes'));
     }
-    /**
-     * Show the form for creating a new used vehicle part ad.
-     */
+ 
     public function create()
     {
 
@@ -198,10 +196,8 @@ class UsedVehiclePartController extends Controller
      */
     public function edit(UsedVehiclePart $usedVehiclePart)
     {
-        if (Auth::id() !== $usedVehiclePart->user_id) {
-            abort(403, 'Unauthorized action.');
-        }
-
+      
+//    dd($usedVehiclePart);
         // Make sure images are loaded for the view
         $usedVehiclePart->load('images');
 
@@ -251,6 +247,8 @@ class UsedVehiclePartController extends Controller
      */
     public function update(Request $request, UsedVehiclePart $usedVehiclePart)
     {
+
+    
         // Policy check: Ensure the authenticated user owns this ad
         if (Auth::id() !== $usedVehiclePart->user_id) {
             abort(403, 'Unauthorized action.');
@@ -322,7 +320,7 @@ class UsedVehiclePartController extends Controller
             }
         }
 
-        return redirect()->route('ads.used-vehicle-parts.show', $usedVehiclePart)
+        return redirect()->route('ads.vehicles-parts.show', $usedVehiclePart)
             ->with('success', 'Anzeige erfolgreich aktualisiert!');
     }
 

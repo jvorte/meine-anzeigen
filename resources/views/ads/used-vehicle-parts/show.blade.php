@@ -6,10 +6,10 @@
             {{-- Main page title and description --}}
             <div>
                 <h2 class="text-3xl font-extrabold text-gray-900 leading-tight mb-2">
-                    Gebrauchtfahrzeugteile Anzeige
+                    {{ __('Vehicle spare parts') }}
                 </h2>
                 <p class="text-md text-gray-700 dark:text-gray-500">
-                    Detaillierte Ansicht Ihrer Gebrauchtfahrzeugteile-Anzeige.
+                    {{ __('Detailed view of your used vehicle parts ad') }}
                 </p>
             </div>
 
@@ -20,7 +20,7 @@
                             <span class="c-blur"></span>
                             <span class="ico-text">+</span>
                         </span>
-                      {{ __('new_ad') }}
+                        {{ __('new_ad') }}
                     </span>
                 </a>
             </div>
@@ -31,8 +31,8 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             {{-- Breadcrumbs component --}}
             <x-breadcrumbs :items="[
-    ['label' => 'Alle Anzeigen', 'url' => route('ads.index')],
-    ['label' => 'Gebrauchtfahrzeugteile', 'url' => route('categories.vehicles-parts.index')], // Use the new route name
+    ['label' => __('All ads'), 'url' => route('categories.vehicles-parts.index')],
+
     ['label' => $usedVehiclePart->title, 'url' => null],
 ]" />
 
@@ -98,7 +98,7 @@
                     this.modalActiveImage = this.images[this.currentIndex];
                 }
             }" class="space-y-4">
-                        <h3 class="sr-only">Bildergalerie</h3> {{-- Screen reader only heading --}}
+                  
                         @if (isset($usedVehiclePart->images) && $usedVehiclePart->images->count() > 0)
 
 
@@ -111,7 +111,7 @@
 
                             <div x-cloak x-show="!activeImage"
                                 class="absolute inset-0 flex items-center justify-center text-gray-500">
-                                Kein Bild verfügbar
+                           {{ __('No image available') }}
                             </div>
                         </div>
 
@@ -167,7 +167,7 @@
                         </div>
                         @else
                         <div class="flex items-center justify-center h-96 bg-gray-100 rounded-lg text-gray-500">
-                            <p>Keine Bilder für dieses Ersatzteil verfügbar.</p>
+                            <p>{{ __('No image available') }}</p>
                         </div>
                         @endif
                     </section>
@@ -186,7 +186,7 @@
                                 <p
                                     class="text-3xl text-gray-700 font-extrabold [&>span]:text-base [&>span]:font-normal [&>span]:ml-1">
                                     &euro;{{ number_format($usedVehiclePart->price, 2, ',', '.') }}
-                                    <span> / Einheit</span>
+                              
                                 </p>
                                 @else
                                 <p class="text-xl italic text-gray-500">{{ __('price_on_request') }}</p>
@@ -244,11 +244,11 @@
                                 @auth
                                 @if (auth()->id() === $usedVehiclePart->user_id || auth()->user()->isAdmin())
                                 {{-- Edit & Delete --}}
-                                <a href="{{ route('ads.used-vehicle-parts.edit', $usedVehiclePart->id) }}"
+                                <a href="{{ route('ads.vehicles-parts.edit', $usedVehiclePart->id) }}"
                                     class="px-5 py-2 bg-gray-700 hover:bg-gray-800 text-white rounded-full shadow-lg transition transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2">
-                                  {{ __('Edit Ad') }}
+                                    {{ __('Edit Ad') }}
                                 </a>
-                                <form action="{{ route('ads.used-vehicle-parts.destroy', $usedVehiclePart->id) }}" method="POST"
+                                <form action="{{ route('ads.vehicles-parts.destroy', $usedVehiclePart->id) }}" method="POST"
                                     onsubmit="return confirm('Sind Sie sicher, dass Sie diese Anzeige löschen möchten? Diese Aktion kann nicht rückgängig gemacht werden.')">
                                     @csrf
                                     @method('DELETE')
@@ -258,7 +258,7 @@
                                             <path d="M6 8a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1z" />
                                             <path fill-rule="evenodd" d="M4 5a2 2 0 012-2h8a2 2 0 012 2v10a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm2 0v10h8V5H6z" clip-rule="evenodd" />
                                         </svg>
-                                     <span>{{ __('Delete Ad') }}</span>
+                                        <span>{{ __('Delete Ad') }}</span>
                                     </button>
                                 </form>
                                 @else
@@ -269,7 +269,7 @@
                                         'category' => 'vehicles-parts'
                                     ]) }}"
                                     class="mt-6 block w-full text-center bg-red-700 text-white font-semibold py-3 rounded-full shadow-lg hover:bg-gray-800 transition focus:ring-4 focus:ring-gray-500 focus:ring-opacity-75">
-                                 {{ __('Contact with seller') }}
+                                    {{ __('Contact with seller') }}
                                 </a>
                                 @endif
                                 @endauth
@@ -278,7 +278,7 @@
                                 {{-- Contact button for guests --}}
                                 <a href="{{ route('login') }}"
                                     class="mt-6 block w-full text-center bg-blue-600 text-white font-semibold py-3 rounded-full shadow-lg hover:bg-blue-800 transition focus:ring-4 focus:ring-blue-500 focus:ring-opacity-75">
-                                {{ __('Contact with seller') }}
+                                    {{ __('Contact with seller') }}
                                 </a>
 
                                 @endguest
@@ -286,7 +286,7 @@
 
                             @else
                             {{-- No user data --}}
-                         <p class="italic text-red-600">{{ __('Seller information not available') }}</p>
+                            <p class="italic text-red-600">{{ __('Seller information not available') }}</p>
                             @endif
                         </div>
 
@@ -298,46 +298,39 @@
 
                 <hr class="my-8 border-gray-200" />
 
-                {{-- Description Section --}}
-                {{-- <section class="bg-gray-50 p-6 rounded-lg shadow-inner mb-8">
-            <h4 class="text-xl font-semibold text-gray-700 mb-6">Beschreibung</h4>
-            <div>
-                <p class="text-gray-700 leading-relaxed">{{ $usedVehiclePart->description ?? 'Keine Beschreibung verfügbar.' }}</p>
-            </div>
-            </section> --}}
 
             {{-- Part Details Section (Updated for broader vehicle types) --}}
             <section class="bg-gray-50 p-6 rounded-lg shadow-inner mb-8">
-                <h4 class="text-xl font-semibold text-gray-700 mb-6">Teiledetails</h4>
+                <h4 class="text-xl font-semibold text-gray-700 mb-6">{{ __('Part details') }}</h4>
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     @if ($usedVehiclePart->part_name)
                     <div>
-                        <p class="text-sm font-semibold text-gray-800">Teilname:</p>
+                        <p class="text-sm font-semibold text-gray-800">{{ __('title') }}:</p>
                         <p class="text-gray-700">{{ $usedVehiclePart->part_name }}</p>
                     </div>
                     @endif
                     @if ($usedVehiclePart->part_category)
                     <div>
-                        <p class="text-sm font-semibold text-gray-800">Teilekategorie:</p>
+                        <p class="text-sm font-semibold text-gray-800">{{ __('Category') }}:</p>
                         {{-- Assuming part_category is now a relationship to a PartCategory model --}}
                         <p class="text-gray-700">{{ $usedVehiclePart->part_category->name ?? $usedVehiclePart->part_category }}</p>
                     </div>
                     @endif
                     @if ($usedVehiclePart->manufacturer_part_number)
                     <div>
-                        <p class="text-sm font-semibold text-gray-800">Hersteller-Teilenummer:</p>
+                        <p class="text-sm font-semibold text-gray-800">{{ __('Manufacturer part number') }}:</p>
                         <p class="text-gray-700">{{ $usedVehiclePart->manufacturer_part_number }}</p>
                     </div>
                     @endif
                     @if ($usedVehiclePart->condition)
                     <div>
-                        <p class="text-sm font-semibold text-gray-800">Zustand:</p>
+                        <p class="text-sm font-semibold text-gray-800">{{ __('condition') }}:</p>
                         <p class="text-gray-700">{{ $usedVehiclePart->condition }}</p>
                     </div>
                     @endif
                     @if ($usedVehiclePart->manufacturer)
                     <div>
-                        <p class="text-sm font-semibold text-gray-800">Hersteller:</p>
+                        <p class="text-sm font-semibold text-gray-800">{{ __('brand') }}:</p>
                         <p class="text-gray-700">{{ $usedVehiclePart->manufacturer }}</p>
                     </div>
                     @endif
@@ -345,33 +338,33 @@
                     {{-- Vehicle Compatibility Details --}}
                     @if ($usedVehiclePart->compatible_brand_id)
                     <div>
-                        <p class="text-sm font-semibold text-gray-800">Kompatible Marke:</p>
+                        <p class="text-sm font-semibold text-gray-800">{{ __('Compatible brand') }}:</p>
                         {{-- Assuming compatible_brand_id now relates to a Brand model --}}
                         <p class="text-gray-700">{{ $usedVehiclePart->compatibleBrand->name ?? $usedVehiclePart->compatible_brand_id }}</p>
                     </div>
                     @endif
                     @if ($usedVehiclePart->compatible_model_id) {{-- Renamed from compatible_car_model_id --}}
                     <div>
-                        <p class="text-sm font-semibold text-gray-800">Kompatibles Modell:</p>
+                        <p class="text-sm font-semibold text-gray-800">{{ __('Compatible model') }}:</p>
                         {{-- Assuming compatible_model_id now relates to a Model model --}}
                         <p class="text-gray-700">{{ $usedVehiclePart->compatibleModel->name ?? $usedVehiclePart->compatible_model_id }}</p>
                     </div>
                     @endif
                     @if ($usedVehiclePart->compatible_year_from)
                     <div>
-                        <p class="text-sm font-semibold text-gray-800">Kompatibles Baujahr (von):</p>
+                        <p class="text-sm font-semibold text-gray-800">{{ __('Year of construction from') }}:</p>
                         <p class="text-gray-700">{{ $usedVehiclePart->compatible_year_from }}</p>
                     </div>
                     @endif
                     @if ($usedVehiclePart->compatible_year_to)
                     <div>
-                        <p class="text-sm font-semibold text-gray-800">Kompatibles Baujahr (bis):</p>
+                        <p class="text-sm font-semibold text-gray-800">{{ __('Year of construction up to') }}:</p>
                         <p class="text-gray-700">{{ $usedVehiclePart->compatible_year_to }}</p>
                     </div>
                     @endif
                     @if ($usedVehiclePart->vehicle_type) {{-- New field for general vehicle type --}}
                     <div>
-                        <p class="text-sm font-semibold text-gray-800">Fahrzeugtyp:</p>
+                        <p class="text-sm font-semibold text-gray-800">{{ __('Τype') }}:</p>
                         <p class="text-gray-700">{{ ucfirst($usedVehiclePart->vehicle_type) }}</p>
                     </div>
                     @endif
