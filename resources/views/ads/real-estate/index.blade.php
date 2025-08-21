@@ -5,10 +5,10 @@
         <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center px-4 py-2">
             <div>
                 <h1 class="text-4xl font-extrabold text-gray-900 leading-tight">
-                    Real Estate
+                  {{ __('Real Estate') }}
                 </h1>
                 <p class="mt-1 text-gray-600 max-w-xl">
-                    Real Estate Ads
+                   {{ __('Find your new home – simply advertise and discover properties.') }}
                 </p>
             </div>
 
@@ -29,8 +29,8 @@
 
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <x-breadcrumbs :items="[
-            ['label' => 'Όλες οι Αγγελίες', 'url' => route('ads.index')],
-            ['label' => 'Ακίνητα', 'url' => route('ads.real-estate.index')],
+            ['label' => __('All ads'), 'url' => route('ads.index')],
+    
         ]" class="mb-6" />
 
         {{-- Filters Section --}}
@@ -48,9 +48,9 @@
 
                     {{-- buy or rent--}}
                     <div class="flex-grow min-w-[150px]">
-                        <label for="objekttyp" class="sr-only">options</label>
+                        <label for="objekttyp" class="sr-only">{{ __('Property for') }}</label>
                         <select name="objekttyp" id="objekttyp" class="w-full rounded-lg border-gray-300 shadow-sm text-sm focus:ring-indigo-500 focus:border-indigo-500">
-                            <option value="">Property options</option>
+                            <option value="">{{ __('Property for') }}</option>
                             @foreach($objekttyps as $objekttyp)
                             <option value="{{ $objekttyp }}" {{ request('propertyTypeOption') == $objekttyp ? 'selected' : '' }}>{{ $objekttyp }}</option>
                             @endforeach
@@ -61,9 +61,9 @@
 
                     {{-- Property Type Dropdown --}}
                     <div class="flex-grow min-w-[150px]">
-                        <label for="propertyTypeOptions" class="sr-only">property type</label>
+                        <label for="propertyTypeOptions" class="sr-only">{{ __('Real Estate type') }}e</label>
                         <select name="propertyTypeOptions" id="propertyTypeOptions" class="w-full rounded-lg border-gray-300 shadow-sm text-sm focus:ring-indigo-500 focus:border-indigo-500">
-                            <option value="">Property type</option>
+                            <option value="">{{ __('Real Estate type') }}</option>
                             @foreach($propertyTypeOptions as $propertyTypeOption)
                             <option value="{{ $propertyTypeOption }}" {{ request('propertyTypeOption') == $propertyTypeOption ? 'selected' : '' }}>{{ $propertyTypeOption }}</option>
                             @endforeach
@@ -121,7 +121,7 @@
 
                {{-- Location --}}
                         <div class="flex-grow min-w-[150px]">
-                            <label for="location" class="block text-sm font-medium text-gray-700">Location</label>
+                            <label for="location" class="block text-sm font-medium text-gray-700">{{ __('location') }}</label>
                             <select name="location" id="location" class="w-full rounded-lg border-gray-300 shadow-sm text-sm focus:ring-indigo-500 focus:border-indigo-500">
                                 <option value="">{{ __('select') }}</option>
                                 @foreach($locations as $location)
@@ -134,7 +134,7 @@
 
                           {{-- Postcode --}}
                         <div class="flex-grow min-w-[150px]">
-                            <label for="postcode" class="block text-sm font-medium text-gray-700">Postcode</label>
+                            <label for="postcode" class="block text-sm font-medium text-gray-700">{{ __('Postal code') }}</label>
                             <select name="postcode" id="postcode" class="w-full rounded-lg border-gray-300 shadow-sm text-sm focus:ring-indigo-500 focus:border-indigo-500">
                                 <option value="">{{ __('select') }}</option>
                                 @foreach($postcodes as $postcode)
@@ -148,12 +148,12 @@
 
                                         {{-- condition --}}
                         <div class="flex-grow min-w-[150px]">
-                            <label for="condition" class="block text-sm font-medium text-gray-700">Condition</label>
+                            <label for="condition" class="block text-sm font-medium text-gray-700">{{ __('condition') }}</label>
                             <select name="condition" id="condition" class="w-full rounded-lg border-gray-300 shadow-sm text-sm focus:ring-indigo-500 focus:border-indigo-500">
                                 <option value="">{{ __('select') }}</option>
                                 @foreach($conditions as $condition)
                                 <option value="{{ $condition }}" {{ request('condition') == $condition ? 'selected' : '' }}>
-                                    {{ $condition }}
+                                    {{ __($condition) }}
                                 </option>
                                 @endforeach
                             </select>
@@ -163,12 +163,12 @@
 
                                        {{-- constructionTypeOptions --}}
                         <div class="flex-grow min-w-[150px]">
-                            <label for="constructionTypeOption" class="block text-sm font-medium text-gray-700">Construction Type</label>
+                            <label for="constructionTypeOption" class="block text-sm font-medium text-gray-700">{{ __('ConstructionType') }}</label>
                             <select name="constructionTypeOption" id="condition" class="w-full rounded-lg border-gray-300 shadow-sm text-sm focus:ring-indigo-500 focus:border-indigo-500">
                                 <option value="">{{ __('select') }}</option>
                                 @foreach($constructionTypeOptions as $constructionTypeOption)
                                 <option value="{{ $constructionTypeOption }}" {{ request('constructionTypeOption') == $condition ? 'selected' : '' }}>
-                                    {{ $constructionTypeOption }}
+                                    {{ __($constructionTypeOption) }}
                                 </option>
                                 @endforeach
                             </select>
@@ -178,7 +178,7 @@
 
                         {{-- Number of Rooms Filter --}}
                         <div>
-                            <label for="anzahl_zimmer" class="block text-sm font-medium text-gray-700">Number of Rooms</label>
+                            <label for="anzahl_zimmer" class="block text-sm font-medium text-gray-700">{{ __('Number of Rooms') }}</label>
                             <select name="anzahl_zimmer" id="anzahl_zimmer" class="mt-1 w-full rounded-lg border-gray-300 shadow-sm text-sm focus:ring-indigo-500 focus:border-indigo-500">
                                 <option value="">{{ __('select') }}</option>
                                 <option value="1" {{ request('anzahl_zimmer') == '1' ? 'selected' : '' }}>1</option>
@@ -192,12 +192,12 @@
 
                                  {{--  heating --}}
                         <div class="flex-grow min-w-[150px]">
-                            <label for="heatingOptions" class="block text-sm font-medium text-gray-700">Ηeating</label>
+                            <label for="heatingOptions" class="block text-sm font-medium text-gray-700">{{ __('Heating Options') }}</label>
                             <select name="heatingOptions" id="heatingOptions" class="w-full rounded-lg border-gray-300 shadow-sm text-sm focus:ring-indigo-500 focus:border-indigo-500">
                                 <option value="">{{ __('select') }}</option>
                                 @foreach($heatingOptions as $heatingOption)
                                 <option value="{{ $heatingOption }}" {{ request('heatingOptions') == $heatingOption ? 'selected' : '' }}>
-                                    {{ $heatingOption }}
+                                    {{ __($heatingOption) }}
                                 </option>
                                 @endforeach
                             </select>
@@ -207,12 +207,12 @@
 
                         {{-- Pet Friendly --}}
                         <div class="flex-grow min-w-[150px]">
-                            <label for="petFriendlyOption" class="block text-sm font-medium text-gray-700">Pet Friendly</label>
+                            <label for="petFriendlyOption" class="block text-sm font-medium text-gray-700">{{ __('Pet Friendly') }}</label>
                             <select name="petFriendlyOption" id="petFriendlyOption" class="w-full rounded-lg border-gray-300 shadow-sm text-sm focus:ring-indigo-500 focus:border-indigo-500">
                                 <option value="">{{ __('select') }}</option>
                                 @foreach($petFriendlyOptions as $petFriendlyOption)
                                 <option value="{{ $petFriendlyOption }}" {{ request('petFriendlyOption') == $petFriendlyOption ? 'selected' : '' }}>
-                                    {{ $petFriendlyOption }}
+                                    {{ __($petFriendlyOption) }}
                                 </option>
                                 @endforeach
                             </select>
@@ -221,7 +221,7 @@
 
                         {{-- Area Range with Input Fields --}}
                         <div class="flex-grow min-w-[150px] relative">
-                            <label for="min_area" class="block text-sm font-medium text-gray-700">Living space</label>
+                            <label for="min_area" class="block text-sm font-medium text-gray-700">{{ __('Living space') }}</label>
                             <div class="flex items-center mt-1">
                                 <input type="number" name="min_area" value="{{ request('min_area') }}" placeholder="from" class="w-1/2 rounded-l-lg border-gray-300 shadow-sm text-sm focus:ring-indigo-500 focus:border-indigo-500" />
                                 <input type="number" name="max_area" value="{{ request('max_area') }}" placeholder="to" class="w-1/2 rounded-r-lg border-gray-300 shadow-sm text-sm focus:ring-indigo-500 focus:border-indigo-500" />
@@ -230,7 +230,7 @@
 
                         {{-- Year of Construction Filter yearConstraction --}}
                         <div class="flex-grow min-w-[150px] relative">
-                            <label for="min_area" class="block text-sm font-medium text-gray-700">Year Constraction</label>
+                            <label for="min_area" class="block text-sm font-medium text-gray-700">{{ __('Year of construction of property') }}</label>
                             <div class="flex items-center mt-1">
                                 <input type="number" name="min_year" value="{{ request('min_year') }}" placeholder="from" class="w-1/2 rounded-l-lg border-gray-300 shadow-sm text-sm focus:ring-indigo-500 focus:border-indigo-500" />
                                 <input type="number" name="max_year" value="{{ request('max_year') }}" placeholder="to" class="w-1/2 rounded-r-lg border-gray-300 shadow-sm text-sm focus:ring-indigo-500 focus:border-indigo-500" />
@@ -242,12 +242,12 @@
 
                         {{-- Sort By Dropdown --}}
                         <div>
-                            <label for="sort_by" class="block text-sm font-medium text-gray-700">Ταξινόμηση</label>
+                            <label for="sort_by" class="block text-sm font-medium text-gray-700">{{ __('Sort by') }}</label>
                             <select name="sort_by" id="sort_by" class="mt-1 w-full rounded-lg border-gray-300 shadow-sm text-sm focus:ring-indigo-500 focus:border-indigo-500">
                                 <option value="">{{ __('select') }}</option>
-                                <option value="latest" {{ request('sort_by') == 'latest' ? 'selected' : '' }}>Τελευταία</option>
-                                <option value="price_asc" {{ request('sort_by') == 'price_asc' ? 'selected' : '' }}>Τιμή: Φθηνότερο πρώτα</option>
-                                <option value="price_desc" {{ request('sort_by') == 'price_desc' ? 'selected' : '' }}>Τιμή: Ακριβότερο πρώτα</option>
+                                <option value="latest" {{ request('sort_by') == 'latest' ? 'selected' : '' }}>{{ __('Last') }}</option>
+                                <option value="price_asc" {{ request('sort_by') == 'price_asc' ? 'selected' : '' }}>{{ __('Price: Cheapest first') }}</option>
+                                <option value="price_desc" {{ request('sort_by') == 'price_desc' ? 'selected' : '' }}>{{ __('Price: Most expensive first') }}</option>
                             </select>
                         </div>
                     </div>
@@ -276,12 +276,12 @@
                     @if($realEstate->price)
                     <p class="text-blue-600 font-semibold mt-2">€ {{ number_format($realEstate->price, 2) }}</p>
                     @else
-                    <p class="text-gray-500 italic mt-2">Τιμή κατόπιν συνεννόησης</p>
+                    <p class="text-gray-500 italic mt-2">{{ __('price_on_request') }}</p>
                     @endif
                 </div>
             </a>
             @empty
-            <p class="text-gray-600 col-span-full">Δεν βρέθηκαν αγγελίες ακινήτων.</p>
+            <p class="text-gray-600 col-span-full">{{ __('No real estate ads found.') }}</p>
             @endforelse
         </div>
 
