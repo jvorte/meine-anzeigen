@@ -174,7 +174,7 @@
 
                     {{-- Year of Construction --}}
                     <div class="mb-4">
-                        <label for="year_of_construction" class="block font-medium text-gray-700 mb-1">{{ __('year_of_construction') }}(optional)</label>
+                        <label for="year_of_construction" class="block font-medium text-gray-700 mb-1">{{ __('Year of construction of property') }}(optional)</label>
                         <input
                             type="number"
                             name="year_of_construction"
@@ -305,7 +305,7 @@
 
                     {{-- Ort --}}
                     <div>
-                        <label for="location" class="block text-sm font-medium text-gray-700 mb-2">{{ __('location') }}</label>
+                        <label for="location" class="block text-sm font-medium text-gray-700 mb-2">{{ __('Town') }}</label>
                         <input type="text" name="location" id="location" value="{{ old('location') }}" placeholder="z.B. Wien"
                             class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
                         @error('location')

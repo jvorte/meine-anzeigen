@@ -45,7 +45,7 @@
 
             {{-- Basisdaten Section --}}
             <section class="bg-gray-50 p-6 rounded-lg shadow-inner">
-                <h4 class="text-xl font-semibold text-gray-700 mb-6">Basisdaten</h4>
+                <h4 class="text-xl font-semibold text-gray-700 mb-6">{{ __('Basic data') }}</h4>
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     {{-- Titel --}}
                     <div class="lg:col-span-3">
@@ -60,12 +60,12 @@
 
                     {{-- Immobilientyp --}}
                     <div>
-                        <label for="propertyTypeOptions" class="block text-sm font-medium text-gray-700 mb-2">Immobilientyp</label>
+                        <label for="propertyTypeOptions" class="block text-sm font-medium text-gray-700 mb-2">{{ __('Real Estate type') }}</label>
                         <select name="propertyTypeOptions" id="immobilientyp"
                             class="form-select w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
                             @foreach($propertyTypeOptions as $propertyTypeOption)
                             <option value="{{ $propertyTypeOption }}" {{ old('condition') == $propertyTypeOption ? 'selected' : '' }}>
-                                {{ ucfirst($propertyTypeOption) }}
+                                {{ __($propertyTypeOption) }}
                             </option>
                             @endforeach
                         </select>
@@ -76,12 +76,12 @@
 
                     {{-- Objekttyp --}}
                     <div>
-                        <label for="objekttyp" class="block text-sm font-medium text-gray-700 mb-2">Objekttyp (optional)</label>
+                        <label for="objekttyp" class="block text-sm font-medium text-gray-700 mb-2">{{ __('Object type') }} (optional)</label>
                         <select name="objekttyp" id="objekttyp"
                             class="form-select w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
                             @foreach($objectTypeOptions as $objectTypeOption )
                             <option value="{{ $objectTypeOption }}" {{ old('condition') == $objectTypeOption ? 'selected' : '' }}>
-                                {{ ucfirst($objectTypeOption) }}
+                                {{ __($objectTypeOption) }}
                             </option>
                             @endforeach
                         </select>
@@ -92,13 +92,13 @@
 
                     {{-- Zustand --}}
                     <div>
-                        <label for="condition" class="block text-sm font-medium text-gray-700 mb-2">Zustand (optional)</label>
+                        <label for="condition" class="block text-sm font-medium text-gray-700 mb-2">{{ __('condition') }} (optional)</label>
                         <select name="condition" id="condition"
                             class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
 
                             @foreach($stateOptions as $stateOption )
                             <option value="{{ $stateOption }}" {{ old('condition') == $stateOption ? 'selected' : '' }}>
-                                {{ ucfirst($stateOption) }}
+                                {{ __($stateOption) }}
                             </option>
                             @endforeach
                         </select>
@@ -109,7 +109,7 @@
 
                     {{-- Anzahl Zimmer --}}
                     <div>
-                        <label for="anzahl_zimmer" class="block text-sm font-medium text-gray-700 mb-2">Anzahl Zimmer (optional)</label>
+                        <label for="anzahl_zimmer" class="block text-sm font-medium text-gray-700 mb-2">{{ __('Number of Rooms') }} (optional)</label>
                         <input type="number" step="0.5" name="anzahl_zimmer" id="anzahl_zimmer" value="{{ old('anzahl_zimmer', $realEstate->anzahl_zimmer) }}" placeholder="z.B. 3.5" min="0.5"
                             class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
                         @error('anzahl_zimmer')
@@ -119,12 +119,12 @@
 
                     {{-- Bautyp --}}
                     <div>
-                        <label for="bautyp" class="block text-sm font-medium text-gray-700 mb-2">Bautyp (optional)</label>
+                        <label for="bautyp" class="block text-sm font-medium text-gray-700 mb-2">{{ __('Object type') }} (optional)</label>
                         <select name="bautyp" id="bautyp"
                             class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
                             @foreach($constructionTypeOptions as $constructionTypeOption )
                             <option value="{{ $constructionTypeOption }}" {{ old('condition') == $constructionTypeOption ? 'selected' : '' }}>
-                                {{ ucfirst($constructionTypeOption) }}
+                                {{ __($constructionTypeOption) }}
                             </option>
                             @endforeach
                         </select>
@@ -135,12 +135,12 @@
 
                     {{-- Verfügbarkeit --}}
                     <div>
-                        <label for="verfugbarkeit" class="block text-sm font-medium text-gray-700 mb-2">AvailabilityOptions (optional)</label>
+                        <label for="verfugbarkeit" class="block text-sm font-medium text-gray-700 mb-2">{{ __('Availability') }} (optional)</label>
                         <select name="verfugbarkeit" id="verfugbarkeit"
                             class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
                             @foreach($availabilityOptions as $availabilityOption )
                             <option value="{{ $availabilityOption }}" {{ old('condition') == $availabilityOption ? 'selected' : '' }}>
-                                {{ ucfirst($availabilityOption) }}
+                                {{ __($availabilityOption) }}
                             </option>
                             @endforeach
                         </select>
@@ -151,12 +151,12 @@
 
                     {{-- Befristung --}}
                     <div>
-                        <label for="befristung" class="block text-sm font-medium text-gray-700 mb-2">Befristung (optional)</label>
+                        <label for="befristung" class="block text-sm font-medium text-gray-700 mb-2">{{ __('Term Contract Option') }} (optional)</label>
                         <select name="befristung" id="befristung"
                             class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
                             @foreach($fixedTermContractOptions as $fixedTermContractOption )
                             <option value="{{ $fixedTermContractOption }}" {{ old('condition') == $fixedTermContractOption ? 'selected' : '' }}>
-                                {{ ucfirst($fixedTermContractOption) }}
+                                {{ __($fixedTermContractOption) }}
                             </option>
                             @endforeach
                         </select>
@@ -167,7 +167,7 @@
 
                     {{-- Year of Construction --}}
                     <div>
-                        <label for="year_of_construction" class="block text-sm font-medium text-gray-700 mb-2">Year of Construction (optional)</label>
+                        <label for="year_of_construction" class="block text-sm font-medium text-gray-700 mb-2">{{ __('Year of construction of property') }} (optional)</label>
                         <input
                             type="number"
                             name="year_of_construction"
@@ -184,14 +184,14 @@
 
                     {{-- Pet Friendly --}}
                     <div class="mt-4">
-                        <label for="pet_friendly" class="block text-sm font-medium text-gray-700 mb-2">Pet Friendly</label>
+                        <label for="pet_friendly" class="block text-sm font-medium text-gray-700 mb-2">{{ __('Pet Friendly') }}</label>
                         <select
                             name="pet_friendly"
                             id="pet_friendly"
                             class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
-                            <option value="">Please select</option>
-                            <option value="Yes" {{ old('pet_friendly', $realEstate->pet_friendly) === 'Yes' ? 'selected' : '' }}>Yes</option>
-                            <option value="No" {{ old('pet_friendly', $realEstate->pet_friendly) === 'No' ? 'selected' : '' }}>No</option>
+                            <option value="">{{ __('select') }}</option>
+                            <option value="Yes" {{ old('pet_friendly', $realEstate->pet_friendly) === 'Yes' ? 'selected' : '' }}>{{ __('yes') }}</option>
+                            <option value="No" {{ old('pet_friendly', $realEstate->pet_friendly) === 'No' ? 'selected' : '' }}>{{ __('no') }}</option>
                         </select>
                         @error('pet_friendly')
                         <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
@@ -203,11 +203,11 @@
                     {{-- Befristung Ende --}}
                     <div>
                         <label for="befristung_ende" class="block text-sm font-medium text-gray-700 mb-2">
-                            Befristung Ende (optional)
+                           {{ __('End of term') }}(optional)
                         </label>
                         @if($realEstate->befristung_ende)
                         <p class="text-sm text-gray-500 mb-1">
-                            Aktuelles gespeichertes Datum:
+                           {{ __('Current saved date:') }}
                             <span class="font-medium text-gray-700">
                                 {{ \Carbon\Carbon::parse($realEstate->befristung_ende)->format('d.m.Y') }}
                             </span>
@@ -231,11 +231,11 @@
 
             {{-- Beschreibung Section --}}
             <section class="bg-gray-50 p-6 rounded-lg shadow-inner">
-                <h4 class="text-xl font-semibold text-gray-700 mb-6">Beschreibung</h4>
+                <h4 class="text-xl font-semibold text-gray-700 mb-6">{{ __('description') }}</h4>
                 <div class="space-y-6">
                     {{-- Hauptbeschreibung --}}
                     <div>
-                        <label for="description" class="block text-sm font-medium text-gray-700 mb-2">Hauptbeschreibung</label>
+                        <label for="description" class="block text-sm font-medium text-gray-700 mb-2">{{ __('Main description') }}</label>
                         <textarea name="description" id="description" rows="5"
                             placeholder="Gib hier die Hauptbeschreibung deiner Immobilie ein."
                             class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">{{ old('description', $realEstate->description) }}</textarea>
@@ -246,7 +246,7 @@
 
                     {{-- Objektbeschreibung --}}
                     <div>
-                        <label for="objektbeschreibung" class="block text-sm font-medium text-gray-700 mb-2">Objektbeschreibung (optional)</label>
+                        <label for="objektbeschreibung" class="block text-sm font-medium text-gray-700 mb-2">{{ __('Property description') }} (optional)</label>
                         <textarea name="objektbeschreibung" id="objektbeschreibung" rows="3"
                             placeholder="Detaillierte Beschreibung des Objekts."
                             class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">{{ old('objektbeschreibung', $realEstate->objektbeschreibung) }}</textarea>
@@ -257,7 +257,7 @@
 
                     {{-- Lage --}}
                     <div>
-                        <label for="lage" class="block text-sm font-medium text-gray-700 mb-2">Lage (optional)</label>
+                        <label for="lage" class="block text-sm font-medium text-gray-700 mb-2">{{ __('Position') }} (optional)</label>
                         <textarea name="lage" id="lage" rows="3"
                             placeholder="Beschreibung der Lage und Umgebung."
                             class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">{{ old('lage', $realEstate->lage) }}</textarea>
@@ -268,7 +268,7 @@
 
                     {{-- Sonstiges --}}
                     <div>
-                        <label for="sonstiges" class="block text-sm font-medium text-gray-700 mb-2">Sonstiges (optional)</label>
+                        <label for="sonstiges" class="block text-sm font-medium text-gray-700 mb-2">{{ __('Miscellaneous') }} (optional)</label>
                         <textarea name="sonstiges" id="sonstiges" rows="3"
                             placeholder="Weitere allgemeine Informationen."
                             class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">{{ old('sonstiges', $realEstate->sonstiges) }}</textarea>
@@ -279,7 +279,7 @@
 
                     {{-- Zusatzinformation --}}
                     <div>
-                        <label for="zusatzinformation" class="block text-sm font-medium text-gray-700 mb-2">Zusatzinformation (optional)</label>
+                        <label for="zusatzinformation" class="block text-sm font-medium text-gray-700 mb-2">{{ __('Additional information') }} (optional)</label>
                         <textarea name="zusatzinformation" id="zusatzinformation" rows="3"
                             placeholder="Zusätzliche Informationen, die für den Käufer/Mieter relevant sein könnten."
                             class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">{{ old('zusatzinformation', $realEstate->zusatzinformation) }}</textarea>
@@ -292,11 +292,11 @@
 
             {{-- Standort Section --}}
             <section class="bg-gray-50 p-6 rounded-lg shadow-inner">
-                <h4 class="text-xl font-semibold text-gray-700 mb-6">Standort</h4>
+                <h4 class="text-xl font-semibold text-gray-700 mb-6">{{ __('location') }}</h4>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     {{-- Land --}}
                     <div>
-                        <label for="land" class="block text-sm font-medium text-gray-700 mb-2">Land</label>
+                        <label for="land" class="block text-sm font-medium text-gray-700 mb-2">{{ __('Country') }}</label>
                         <input type="text" name="land" id="land" value="{{ old('land', $realEstate->land) ?? 'Österreich' }}" placeholder="z.B. Österreich"
                             class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
                         @error('land')
@@ -306,7 +306,7 @@
 
                     {{-- PLZ --}}
                     <div>
-                        <label for="postcode" class="block text-sm font-medium text-gray-700 mb-2">Postleitzahl</label>
+                        <label for="postcode" class="block text-sm font-medium text-gray-700 mb-2">{{ __('Postal code') }}</label>
                         <input type="text" name="postcode" id="postcode" value="{{ old('postcode', $realEstate->postcode) }}" placeholder="z.B. 1010"
                             class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
                         @error('postcode')
@@ -316,7 +316,7 @@
 
                     {{-- Ort --}}
                     <div>
-                        <label for="location" class="block text-sm font-medium text-gray-700 mb-2">Ort</label>
+                        <label for="location" class="block text-sm font-medium text-gray-700 mb-2">{{ __('Town') }}</label>
                         <input type="text" name="location" id="location" value="{{ old('location', $realEstate->location) }}" placeholder="z.B. Wien"
                             class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
                         @error('location')
@@ -326,7 +326,7 @@
 
                     {{-- Straße --}}
                     <div>
-                        <label for="strasse" class="block text-sm font-medium text-gray-700 mb-2">Straße (optional)</label>
+                        <label for="strasse" class="block text-sm font-medium text-gray-700 mb-2">{{ __('Street') }} (optional)</label>
                         <input type="text" name="strasse" id="strasse" value="{{ old('strasse', $realEstate->strasse) }}" placeholder="z.B. Musterstraße 123"
                             class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
                         @error('strasse')
@@ -338,11 +338,11 @@
 
             {{-- Preise & Flächen Section --}}
             <section class="bg-gray-50 p-6 rounded-lg shadow-inner">
-                <h4 class="text-xl font-semibold text-gray-700 mb-6">Preise & Flächen</h4>
+                <h4 class="text-xl font-semibold text-gray-700 mb-6">{{ __('Price & area information') }}</h4>
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     {{-- Gesamtmiete --}}
                     <div>
-                        <label for="price" class="block text-sm font-medium text-gray-700 mb-2">Price (in €)</label>
+                        <label for="price" class="block text-sm font-medium text-gray-700 mb-2">{{ __('price') }}</label>
                         <input type="number" step="0.01" name="price" id="price" value="{{ old('price', $realEstate->price) }}" placeholder="z.B. 1200.00"
                             class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
                         @error('price')
@@ -352,7 +352,7 @@
 
                     {{-- Wohnfläche --}}
                     <div>
-                        <label for="livingSpace" class="block text-sm font-medium text-gray-700 mb-2">Wohnfläche (in m²)</label>
+                        <label for="livingSpace" class="block text-sm font-medium text-gray-700 mb-2">{{ __('Living space') }} (in m²)</label>
                         <input type="number" step="0.01" name="livingSpace" id="livingSpace" value="{{ old('livingSpace', $realEstate->livingSpace) }}" placeholder="z.B. 90.50"
                             class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
                         @error('livingSpace')
@@ -362,7 +362,7 @@
 
                     {{-- Grundfläche --}}
                     <div>
-                        <label for="grundflaeche" class="block text-sm font-medium text-gray-700 mb-2">Grundfläche (in m²)</label>
+                        <label for="grundflaeche" class="block text-sm font-medium text-gray-700 mb-2">{{ __('Floor area') }} (in m²)</label>
                         <input type="number" step="0.01" name="grundflaeche" id="grundflaeche" value="{{ old('grundflaeche', $realEstate->grundflaeche) }}" placeholder="z.B. 500.00"
                             class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
                         @error('grundflaeche')
@@ -372,7 +372,7 @@
 
                     {{-- Kaution --}}
                     <div>
-                        <label for="kaution" class="block text-sm font-medium text-gray-700 mb-2">Kaution (in €)</label>
+                        <label for="kaution" class="block text-sm font-medium text-gray-700 mb-2">{{ __('Warranty') }} (in €)</label>
                         <input type="number" step="0.01" name="kaution" id="kaution" value="{{ old('kaution', $realEstate->kaution) }}" placeholder="z.B. 3600.00"
                             class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
                         @error('kaution')
@@ -382,7 +382,7 @@
 
                     {{-- Maklerprovision --}}
                     <div>
-                        <label for="maklerprovision" class="block text-sm font-medium text-gray-700 mb-2">Maklerprovision (in €)</label>
+                        <label for="maklerprovision" class="block text-sm font-medium text-gray-700 mb-2">{{ __('Brokerage commission') }} (in €)</label>
                         <input type="number" step="0.01" name="maklerprovision" id="maklerprovision" value="{{ old('maklerprovision', $realEstate->maklerprovision) }}" placeholder="z.B. 2400.00"
                             class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
                         @error('maklerprovision')
@@ -392,7 +392,7 @@
 
                     {{-- Ablöse --}}
                     <div>
-                        <label for="abloese" class="block text-sm font-medium text-gray-700 mb-2">Ablöse (in €)</label>
+                        <label for="abloese" class="block text-sm font-medium text-gray-700 mb-2">{{ __('Transfer fee') }} (in €)</label>
                         <input type="number" step="0.01" name="abloese" id="abloese" value="{{ old('abloese', $realEstate->abloese) }}" placeholder="z.B. 5000.00"
                             class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
                         @error('abloese')
@@ -404,16 +404,16 @@
 
             {{-- Ausstattung & Heizung Section --}}
             <section class="bg-gray-50 p-6 rounded-lg shadow-inner">
-                <h4 class="text-xl font-semibold text-gray-700 mb-6">Ausstattung & Heizung</h4>
+                <h4 class="text-xl font-semibold text-gray-700 mb-6">{{ __('Equipment & Heating') }}</h4>
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     {{-- Heizung --}}
                     <div>
-                        <label for="heating" class="block text-sm font-medium text-gray-700 mb-2">Heizung (optional)</label>
+                        <label for="heating" class="block text-sm font-medium text-gray-700 mb-2">{{ __('Heating Options') }} (optional)</label>
                         <select name="heating" id="heating"
                             class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
                             @foreach($heatingOptions as $heatingOption )
                             <option value="{{ $heatingOption }}" {{ old('condition') == $heatingOption ? 'selected' : '' }}>
-                                {{ ucfirst($heatingOption) }}
+                                {{ __($heatingOption) }}
                             </option>
                             @endforeach
                         </select>
@@ -474,10 +474,10 @@
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {{-- Grundriss --}}
                 <div>
-                    <label for="grundriss_path" class="block text-sm font-medium text-gray-700 mb-2">Grundriss (PDF/Bild, optional)</label>
+                    <label for="grundriss_path" class="block text-sm font-medium text-gray-700 mb-2">{{ __('Floor plan') }} (PDF/Img, optional)</label>
                     @if ($realEstate->grundriss_path)
-                    <p class="mb-2 text-sm text-gray-600">Aktuelle Datei:
-                        <a href="{{ Storage::url($realEstate->grundriss_path) }}" target="_blank" class="text-blue-600 hover:underline">Anzeigen</a>
+                    <p class="mb-2 text-sm text-gray-600">{{ __('Current file:') }}
+                        <a href="{{ Storage::url($realEstate->grundriss_path) }}" target="_blank" class="text-blue-600 hover:underline">{{ __('Show') }}</a>
                         <input type="checkbox" name="delete_grundriss" value="1" class="ml-2 rounded border-gray-300 text-red-600 shadow-sm focus:ring-red-500"> <span class="text-sm text-gray-600">Löschen</span>
                     </p>
                     @endif
@@ -490,10 +490,10 @@
 
                 {{-- Energieausweis --}}
                 <div>
-                    <label for="energieausweis_path" class="block text-sm font-medium text-gray-700 mb-2">Energieausweis (PDF/Bild, optional)</label>
+                    <label for="energieausweis_path" class="block text-sm font-medium text-gray-700 mb-2">{{ __('Energy certificate') }} (PDF/Img, optional)</label>
                     @if ($realEstate->energieausweis_path)
-                    <p class="mb-2 text-sm text-gray-600">Aktuelle Datei:
-                        <a href="{{ Storage::url($realEstate->energieausweis_path) }}" target="_blank" class="text-blue-600 hover:underline">Anzeigen</a>
+                    <p class="mb-2 text-sm text-gray-600">{{ __('Current file:') }}
+                        <a href="{{ Storage::url($realEstate->energieausweis_path) }}" target="_blank" class="text-blue-600 hover:underline">{{ __('Show') }}</a>
                         <input type="checkbox" name="delete_energieausweis" value="1" class="ml-2 rounded border-gray-300 text-red-600 shadow-sm focus:ring-red-500"> <span class="text-sm text-gray-600">Löschen</span>
                     </p>
                     @endif
@@ -506,7 +506,7 @@
 
                 {{-- Rundgang Link --}}
                 <div>
-                    <label for="rundgang_link" class="block text-sm font-medium text-gray-700 mb-2">360° Rundgang Link (optional)</label>
+                    <label for="rundgang_link" class="block text-sm font-medium text-gray-700 mb-2">{{ __('360° Tour Link') }} (optional)</label>
                     <input type="url" name="rundgang_link" id="rundgang_link" value="{{ old('rundgang_link', $realEstate->rundgang_link) }}" placeholder="https://..."
                         class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
                     @error('rundgang_link')
@@ -516,7 +516,7 @@
 
                 {{-- Objektinformationen Link --}}
                 <div>
-                    <label for="objektinformationen_link" class="block text-sm font-medium text-gray-700 mb-2">Objektinformationen Link (optional)</label>
+                    <label for="objektinformationen_link" class="block text-sm font-medium text-gray-700 mb-2">{{ __('Status report link') }} (optional)</label>
                     <input type="url" name="objektinformationen_link" id="objektinformationen_link" value="{{ old('objektinformationen_link', $realEstate->objektinformationen_link) }}" placeholder="https://..."
                         class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
                     @error('objektinformationen_link')
@@ -526,7 +526,7 @@
 
                 {{-- Zustandsbericht Link --}}
                 <div>
-                    <label for="zustandsbericht_link" class="block text-sm font-medium text-gray-700 mb-2">Zustandsbericht Link (optional)</label>
+                    <label for="zustandsbericht_link" class="block text-sm font-medium text-gray-700 mb-2">{{ __('Status report link') }} (optional)</label>
                     <input type="url" name="zustandsbericht_link" id="zustandsbericht_link" value="{{ old('zustandsbericht_link', $realEstate->zustandsbericht_link) }}" placeholder="https://..."
                         class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
                     @error('zustandsbericht_link')
@@ -536,7 +536,7 @@
 
                 {{-- Verkaufsbericht Link --}}
                 <div>
-                    <label for="verkaufsbericht_link" class="block text-sm font-medium text-gray-700 mb-2">Verkaufsbericht Link (optional)</label>
+                    <label for="verkaufsbericht_link" class="block text-sm font-medium text-gray-700 mb-2">{{ __('Sales Report Link') }} (optional)</label>
                     <input type="url" name="verkaufsbericht_link" id="verkaufsbericht_link" value="{{ old('verkaufsbericht_link', $realEstate->verkaufsbericht_link) }}" placeholder="https://..."
                         class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
                     @error('verkaufsbericht_link')
@@ -548,11 +548,11 @@
 
             {{-- Kontakt Section --}}
             <section class="bg-gray-50 p-6 rounded-lg shadow-inner">
-                <h4 class="text-xl font-semibold text-gray-700 mb-6">Kontaktinformationen</h4>
+                <h4 class="text-xl font-semibold text-gray-700 mb-6">{{ __('Contact information') }}</h4>
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     {{-- Contact Name --}}
                     <div>
-                        <label for="contact_name" class="block text-sm font-medium text-gray-700 mb-2">Name des Ansprechpartners</label>
+                        <label for="contact_name" class="block text-sm font-medium text-gray-700 mb-2">{{ __('Name of contact person') }}</label>
                         <input type="text" name="contact_name" id="contact_name" value="{{ old('contact_name', $realEstate->contact_name) }}" placeholder="Max Mustermann"
                             class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
                         @error('contact_name')
@@ -562,7 +562,7 @@
 
                     {{-- Homepage --}}
                     <div>
-                        <label for="homepage" class="block text-sm font-medium text-gray-700 mb-2">Homepage (optional)</label>
+                        <label for="homepage" class="block text-sm font-medium text-gray-700 mb-2">{{ __('Homepage') }} (optional)</label>
                         <input type="url" name="homepage" id="homepage" value="{{ old('homepage', $realEstate->homepage) }}" placeholder="https://www.example.com"
                             class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
                         @error('homepage')
@@ -724,7 +724,7 @@
             {{-- Submit Button --}}
             <div class="pt-6 border-t border-gray-200 flex justify-end">
                 <button type="submit"
-                    class="bg-blue-600 text-white px-8 py-3 rounded-lg font-semibold text-lg hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-300 transition-all duration-300 shadow-lg">
+                    class="bg-blue-600 text-white px-8 py-1 rounded-lg font-semibold text-lg hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-300 transition-all duration-300 shadow-lg">
                 {{ __('update_listing') }}
                 </button>
             </div>

@@ -1,16 +1,15 @@
-{{-- resources/views/ads/boats/show.blade.php --}}
+{{-- resources/views/ads/real-estate/show.blade.php --}}
 
 <x-app-layout>
     <x-slot name="header">
         {{-- Header with "Neu Anzeige" button on top right --}}
         <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center px-4 py-2">
             <div>
-                {{-- Changed "Immobilie" to "Real Estate" for consistency, assuming future refactor --}}
                 <h1 class="text-4xl font-extrabold text-gray-900 leading-tight">
-                    Real Estate
+                    {{ __('Real Estate') }}
                 </h1>
                 <p class="mt-1 text-gray-600 max-w-xl">
-                    View Real Estate Listing
+                    {{ __('Find your new home – simply advertise and discover properties.') }}
                 </p>
             </div>
             <div class="px-4 py-1 md:py-1 flex justify-end items-center">
@@ -20,7 +19,7 @@
                             <span class="c-blur"></span>
                             <span class="ico-text">+</span>
                         </span>
-                    {{ __('new_ad') }}
+                        {{ __('new_ad') }}
                     </span>
                 </a>
             </div>
@@ -30,8 +29,7 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 p-3">
         {{-- Breadcrumbs component --}}
         <x-breadcrumbs :items="[
-            {{-- Changed "Immobilien Anzeigen" to "Real Estate Listings" --}}
-            ['label' => 'Real Estate Listings', 'url' => route('categories.real-estate.index')],
+            ['label' => __('All ads'), 'url' => route('categories.real-estate.index')],
             ['label' => $realEstate->title, 'url' => null],
         ]" />
     </div>
@@ -41,18 +39,17 @@
         {{-- Action Buttons and Back link --}}
         <div class="flex flex-col sm:flex-row justify-between my-4 gap-4">
             <a href="javascript:history.back()"
-                class="inline-flex items-center text-gray-700 hover:text-gray-900 transition duration-300 font-medium space-x-1">
+               class="inline-flex items-center text-gray-700 hover:text-gray-900 transition duration-300 font-medium space-x-1">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M15 19l-7-7 7-7"></path>
                 </svg>
                 <span>{{ __('back') }}</span>
             </a>
-
         </div>
     </div> {{-- End of new wrapper div --}}
 
     {{-- Main content article - This is where all the detail sections should live --}}
-    <article class="max-w-7xl mx-auto bg-white rounded-2xl shadow-2xl p-8 lg:p-14 py-8">
+    <article class="max-w-6xl mx-auto bg-white rounded-2xl shadow-2xl p-8 lg:p-14 py-8">
         <div class="grid grid-cols-1 md:grid-cols-2 gap-12"> {{-- This div now wraps the two main columns --}}
 
             {{-- Left Column: Images and Thumbnails --}}
@@ -90,7 +87,7 @@
                     }
                 }
             }" x-init="init" @keydown.escape.window="closeModal"
-                class="flex flex-col items-center space-y-6">
+            class="flex flex-col items-center space-y-6">
 
                 {{-- Main Image Container --}}
                 <div class="relative w-full rounded-3xl cursor-pointer shadow-lg overflow-hidden" @click="openModal"
@@ -178,18 +175,18 @@
                         <p
                             class="text-3xl text-gray-700 font-extrabold [&>span]:text-base [&>span]:font-normal [&>span]:ml-1">
                             &euro;{{ number_format($realEstate->price, 2, ',', '.') }}
-                            <span> / Einheit</span>
                         </p>
                         @else
                         <p class="text-xl italic text-gray-500">{{ __('price_on_request') }}</p>
                         @endif
                     </div>
 
+                    {{-- Main Description --}}
                     <div class="prose prose-lg max-w-none text-gray-700">
                         @if ($realEstate->description)
-                        {!! nl2br(e($realEstate->description)) !!}
+                            {!! nl2br(e($realEstate->description)) !!}
                         @else
-                        <p class="italic text-gray-400">{{ __('No description available') }}</p>
+                            <p class="italic text-gray-400">{{ __('No description available') }}</p>
                         @endif
                     </div>
                 </div>
@@ -204,7 +201,7 @@
                             <dt class="inline font-semibold">Name:</dt>
                             <dd class="inline">{{ $realEstate->user->name }}</dd>
                         </div>
-                  
+
                         <div>
                             @if($realEstate->show_phone && !empty($realEstate->user->phone))
                             <dt class="inline font-semibold">Phone:</dt>
@@ -216,7 +213,6 @@
                             <dd class="inline">{{ $realEstate->user->mobile_phone }}</dd>
                             @endif
                         </div>
-
 
                         <div>
                             @if($realEstate->show_email && !empty($realEstate->user->email))
@@ -237,31 +233,31 @@
                         @if (auth()->id() === $realEstate->user_id || auth()->user()->isAdmin())
                         {{-- Edit & Delete --}}
                         <a href="{{ route('ads.real-estate.edit', $realEstate->id) }}"
-                            class="px-5 py-2 bg-gray-700 hover:bg-gray-800 text-white rounded-full shadow-lg transition transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2">
-                           {{ __('Edit Ad') }}
+                           class="px-5 py-2 bg-gray-700 hover:bg-gray-800 text-white rounded-full shadow-lg transition transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2">
+                            {{ __('Edit Ad') }}
                         </a>
                         <form action="{{ route('ads.real-estate.destroy', $realEstate->id) }}" method="POST"
-                            onsubmit="return confirm('Sind Sie sicher, dass Sie diese Anzeige löschen möchten? Diese Aktion kann nicht rückgängig gemacht werden.')">
+                              onsubmit="return confirm('Sind Sie sicher, dass Sie diese Anzeige löschen möchten? Diese Aktion kann nicht rückgängig gemacht werden.')">
                             @csrf
                             @method('DELETE')
                             <button type="submit"
-                                class="px-5 py-2 bg-red-600 hover:bg-gray-700 text-white rounded-full shadow-lg transition transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 flex items-center space-x-1">
+                                    class="px-5 py-2 bg-red-600 hover:bg-gray-700 text-white rounded-full shadow-lg transition transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 flex items-center space-x-1">
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20" class="w-5 h-5">
                                     <path d="M6 8a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1z" />
                                     <path fill-rule="evenodd" d="M4 5a2 2 0 012-2h8a2 2 0 012 2v10a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm2 0v10h8V5H6z" clip-rule="evenodd" />
                                 </svg>
-                            <span>{{ __('Delete Ad') }}</span>
+                                <span>{{ __('Delete Ad') }}</span>
                             </button>
                         </form>
                         @else
                         {{-- Contact button for logged-in non-owners --}}
                         <a href="{{ route('messages.start.redirect', [
-                                        'ad' => $realEstate->id,
-                                        'receiver' => $realEstate->user->id,
-                                        'category' => 'real-estate'
-                                    ]) }}"
-                            class="mt-6 block w-full text-center bg-red-700 text-white font-semibold py-3 rounded-full shadow-lg hover:bg-gray-800 transition focus:ring-4 focus:ring-gray-500 focus:ring-opacity-75">
-                        {{ __('Contact with seller') }}
+                                     'ad' => $realEstate->id,
+                                     'receiver' => $realEstate->user->id,
+                                     'category' => 'real-estate'
+                                 ]) }}"
+                           class="mt-6 block w-full text-center bg-red-700 text-white font-semibold py-3 rounded-full shadow-lg hover:bg-gray-800 transition focus:ring-4 focus:ring-gray-500 focus:ring-opacity-75">
+                            {{ __('Contact with seller') }}
                         </a>
                         @endif
                         @endauth
@@ -269,290 +265,245 @@
                         @guest
                         {{-- Contact button for guests --}}
                         <a href="{{ route('login') }}"
-                            class="mt-6 block w-full text-center bg-blue-600 text-white font-semibold py-3 rounded-full shadow-lg hover:bg-blue-800 transition focus:ring-4 focus:ring-blue-500 focus:ring-opacity-75">
-                          {{ __('Contact with seller') }}
+                           class="mt-6 block w-full text-center bg-blue-600 text-white font-semibold py-3 rounded-full shadow-lg hover:bg-blue-800 transition focus:ring-4 focus:ring-blue-500 focus:ring-opacity-75">
+                            {{ __('Contact with seller') }}
                         </a>
                         @endguest
                     </div>
-
                     @else
                     {{-- No user data --}}
-                   <p class="italic text-red-600">{{ __('Seller information not available') }}</p>
+                    <p class="italic text-red-600">{{ __('Seller information not available') }}</p>
                     @endif
                 </div>
-
-
-
             </section> {{-- End of Right Column --}}
         </div> {{-- End of grid wrapper div --}}
 
-        {{-- These sections were previously outside the main article, now correctly placed inside it --}}
+        <hr class="my-8 border-t border-gray-300">
 
-        {{-- Description Section --}}
-
-        <section class="bg-gray-50 p-6 rounded-lg shadow-inner mt-8">
-            <div>
-
-
-                <h4 class="text-xl font-semibold text-gray-700 mb-6">Main description</h4>
-                <p class="text-gray-700 leading-relaxed">{{ $realEstate->description }}</p>
-            </div>
-        </section>
-
-
-        {{-- Location Section --}}
-        <section class="bg-gray-50 p-6 rounded-lg shadow-inner mt-8">
-            <h4 class="text-xl font-semibold text-gray-700 mb-6">Location</h4>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                    <p class="text-sm font-semibold text-gray-800">Land:</p>
-                    <p class="text-gray-700">{{ $realEstate->land }}</p>
-                </div>
-                <div>
-                    <p class="text-sm font-semibold text-gray-800">Postal code:</p>
-                    <p class="text-gray-700">{{ $realEstate->postcode }}</p>
-                </div>
-                <div>
-                    <p class="text-sm font-semibold text-gray-800">Location:</p>
-                    <p class="text-gray-700">{{ $realEstate->location }}</p>
-                </div>
-                @if ($realEstate->strasse)
-                <div>
-                    <p class="text-sm font-semibold text-gray-800">Street:</p>
-                    <p class="text-gray-700">{{ $realEstate->strasse }}</p>
-                </div>
-                @endif
-            </div>
-        </section>
-
-
-        
-        {{-- Prices & Areas Section --}}
-        <section class="bg-gray-50 p-6 rounded-lg shadow-inner mt-8"> {{-- Added mt-8 for spacing --}}
-            <h4 class="text-xl font-semibold text-gray-700 mb-6">Prices & Spaces</h4>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {{-- Consolidated Details Section --}}
+        <section>
+            <h4 class="text-2xl font-bold text-gray-800 mb-6 border-b-2 pb-2">{{ __('Details') }}</h4>
+            <dl class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-12 gap-y-6">
+                {{-- Price & Area --}}
                 @if ($realEstate->price)
                 <div>
-                    <p class="text-sm font-semibold text-gray-800">Total rent:</p>
-                    <p class="text-gray-700">&euro;{{ number_format($realEstate->price, 2, ',', '.') }}</p>
+                    <dt class="font-semibold text-gray-800">{{ __('price') }}:</dt>
+                    <dd class="text-gray-700 mt-1">&euro;{{ number_format($realEstate->price, 2, ',', '.') }}</dd>
                 </div>
                 @endif
                 @if ($realEstate->livingSpace)
                 <div>
-                    <p class="text-sm font-semibold text-gray-800">Living space:</p>
-                    <p class="text-gray-700">{{ number_format($realEstate->livingSpace, 2, ',', '.') }} m&sup2;</p>
+                    <dt class="font-semibold text-gray-800">{{ __('Living space') }}:</dt>
+                    <dd class="text-gray-700 mt-1">{{ number_format($realEstate->livingSpace, 2, ',', '.') }} m&sup2;</dd>
                 </div>
                 @endif
                 @if ($realEstate->grundflaeche)
                 <div>
-                    <p class="text-sm font-semibold text-gray-800">Floor area:</p>
-                    <p class="text-gray-700">{{ number_format($realEstate->grundflaeche, 2, ',', '.') }} m&sup2;</p>
+                    <dt class="font-semibold text-gray-800">{{ __('Floor area') }}:</dt>
+                    <dd class="text-gray-700 mt-1">{{ number_format($realEstate->grundflaeche, 2, ',', '.') }} m&sup2;</dd>
                 </div>
                 @endif
                 @if ($realEstate->kaution)
                 <div>
-                    <p class="text-sm font-semibold text-gray-800">guarantee:</p>
-                    <p class="text-gray-700">&euro;{{ number_format($realEstate->kaution, 2, ',', '.') }}</p>
+                    <dt class="font-semibold text-gray-800">{{ __('Warranty') }}:</dt>
+                    <dd class="text-gray-700 mt-1">&euro;{{ number_format($realEstate->kaution, 2, ',', '.') }}</dd>
                 </div>
                 @endif
                 @if ($realEstate->maklerprovision)
                 <div>
-                    <p class="text-sm font-semibold text-gray-800">Brokerage commission:</p>
-                    <p class="text-gray-700">&euro;{{ number_format($realEstate->maklerprovision, 2, ',', '.') }}</p>
+                    <dt class="font-semibold text-gray-800">{{ __('Brokerage commission') }}:</dt>
+                    <dd class="text-gray-700 mt-1">&euro;{{ number_format($realEstate->maklerprovision, 2, ',', '.') }}</dd>
                 </div>
                 @endif
                 @if ($realEstate->abloese)
                 <div>
-                    <p class="text-sm font-semibold text-gray-800">transfer fee:</p>
-                    <p class="text-gray-700">&euro;{{ number_format($realEstate->abloese, 2, ',', '.') }}</p>
+                    <dt class="font-semibold text-gray-800">{{ __('Transfer fee') }}:</dt>
+                    <dd class="text-gray-700 mt-1">&euro;{{ number_format($realEstate->abloese, 2, ',', '.') }}</dd>
                 </div>
                 @endif
-            </div>
-        </section>
+            </dl>
+            
 
+            <hr class="my-8 border-t border-gray-300">
 
-        <section class="bg-gray-50 p-6 rounded-lg shadow-inner mt-8">
-            <h4 class="text-xl font-semibold text-gray-700 mb-6">Description</h4>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-
-                @if ($realEstate->befristung)
+            <dl class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-12 gap-y-6">
+                {{-- Basic Data --}}
+                @if ($realEstate->year_of_construction)
                 <div>
-                    <p class="text-sm font-semibold text-gray-800">Year Constraction</p>
-                    <p class="text-gray-700">{{ $realEstate->year_of_construction }}</p>
+                    <dt class="font-semibold text-gray-800">{{ __('Year of construction of property') }}</dt>
+                    <dd class="text-gray-700 mt-1">{{ $realEstate->year_of_construction }}</dd>
                 </div>
                 @endif
 
-                @if ($realEstate->objektbeschreibung)
+                @if ($realEstate->propertyTypeOptions)
                 <div>
-                    <p class="text-sm font-semibold text-gray-800">Property special infos:</p>
-                    <p class="text-gray-700 leading-relaxed">{{ $realEstate->objektbeschreibung }}</p>
+                    <dt class="font-semibold text-gray-800">{{ __('Object type') }}</dt>
+                    {{-- THIS LINE IS UPDATED --}}
+                    <dd class="text-gray-700 mt-1">{{ __($realEstate->propertyTypeOptions) }}</dd>
                 </div>
                 @endif
-                @if ($realEstate->lage)
-                <div>
-                    <p class="text-sm font-semibold text-gray-800">Location description:</p>
-                    <p class="text-gray-700 leading-relaxed">{{ $realEstate->lage }}</p>
-                </div>
-                @endif
-                @if ($realEstate->sonstiges)
-                <div>
-                    <p class="text-sm font-semibold text-gray-800">Other:</p>
-                    <p class="text-gray-700 leading-relaxed">{{ $realEstate->sonstiges }}</p>
-                </div>
-                @endif
-                @if ($realEstate->zusatzinformation)
-                <div>
-                    <p class="text-sm font-semibold text-gray-800">Additional information:</p>
-                    <p class="text-gray-700 leading-relaxed">{{ $realEstate->zusatzinformation }}</p>
-                </div>
-                @endif
-                <h4 class="text-xl font-semibold text-gray-700 mb-6">Basic data</h4>
-                <div>
-                    <p class="text-sm font-semibold text-gray-800">Property type:</p>
-                    <p class="text-gray-700">{{ $realEstate->propertyTypeOptions }}</p>
-                </div>
                 @if ($realEstate->objekttyp)
                 <div>
-                    <p class="text-sm font-semibold text-gray-800">Object type:</p>
-                    <p class="text-gray-700">{{ $realEstate->objekttyp }}</p>
+                    <dt class="font-semibold text-gray-800">{{ __('Options') }}</dt>
+                    {{-- THIS LINE IS UPDATED --}}
+                    <dd class="text-gray-700 mt-1">{{ __($realEstate->objekttyp) }}</dd>
                 </div>
                 @endif
                 @if ($realEstate->condition)
                 <div>
-                    <p class="text-sm font-semibold text-gray-800">Condition:</p>
-                    <p class="text-gray-700">{{ $realEstate->condition }}</p>
+                    <dt class="font-semibold text-gray-800">{{ __('condition') }}</dt>
+                    {{-- THIS LINE IS UPDATED --}}
+                    <dd class="text-gray-700 mt-1">{{ __($realEstate->condition) }}</dd>
                 </div>
                 @endif
                 @if ($realEstate->anzahl_zimmer)
                 <div>
-                    <p class="text-sm font-semibold text-gray-800">Number of rooms:</p>
-                    <p class="text-gray-700">{{ $realEstate->anzahl_zimmer }}</p>
+                    <dt class="font-semibold text-gray-800">{{ __('Number of Rooms') }}</dt>
+                    <dd class="text-gray-700 mt-1">{{ $realEstate->anzahl_zimmer }}</dd>
                 </div>
                 @endif
-                @if ($realEstate->propertyTypeOptions)
+                @if ($realEstate->constructionTypeOption)
                 <div>
-                    <p class="text-sm font-semibold text-gray-800">Construction type:</p>
-                    <p class="text-gray-700">{{ $realEstate->constructionTypeOption }}</p>
+                    <dt class="font-semibold text-gray-800">{{ __('ConstructionType') }}</dt>
+                    {{-- THIS LINE IS UPDATED --}}
+                    <dd class="text-gray-700 mt-1">{{ __($realEstate->constructionTypeOption) }}</dd>
                 </div>
                 @endif
                 @if ($realEstate->verfugbarkeit)
                 <div>
-                    <p class="text-sm font-semibold text-gray-800">Availability:</p>
-                    <p class="text-gray-700">{{ $realEstate->verfugbarkeit }}</p>
+                    <dt class="font-semibold text-gray-800">{{ __('Availability') }}</dt>
+                    {{-- THIS LINE IS UPDATED --}}
+                    <dd class="text-gray-700 mt-1">{{ __($realEstate->verfugbarkeit) }}</dd>
                 </div>
                 @endif
                 @if ($realEstate->befristung)
                 <div>
-                    <p class="text-sm font-semibold text-gray-800">limitation:</p>
-                    <p class="text-gray-700">{{ $realEstate->befristung }}</p>
+                    <dt class="font-semibold text-gray-800">{{ __('Term Contract Option') }}</dt>
+                    {{-- THIS LINE IS UPDATED --}}
+                    <dd class="text-gray-700 mt-1">{{ __($realEstate->befristung) }}</dd>
                 </div>
                 @endif
-
                 @if (!is_null($realEstate->pet_friendly))
                 <div>
-                    <p class="text-sm font-semibold text-gray-800">Pet Friendly:</p>
-                    <p class="text-gray-700">
-                        {{ $realEstate->pet_friendly }}
-                    </p>
+                    <dt class="font-semibold text-gray-800">{{ __('Pet Friendly') }}</dt>
+                    {{-- THIS LINE IS UPDATED --}}
+                    <dd class="text-gray-700 mt-1">{{ $realEstate->pet_friendly ? __('Yes') : __('No') }}</dd>
                 </div>
                 @endif
-
                 @if ($realEstate->befristung_ende)
                 <div>
-                    <p class="text-sm font-semibold text-gray-800">End of term:</p>
-                    <p class="text-gray-700">{{ \Carbon\Carbon::parse($realEstate->befristung_ende)->format('d.m.Y') }}</p>
+                    <dt class="font-semibold text-gray-800">{{ __('End of term') }}</dt>
+                    <dd class="text-gray-700 mt-1">{{ \Carbon\Carbon::parse($realEstate->befristung_ende)->format('d.m.Y') }}</dd>
                 </div>
                 @endif
-            </div>
+            </dl>
 
+            <hr class="my-8 border-t border-gray-300">
 
-        </section>
+            {{-- Location Details --}}
+            <h4 class="text-2xl font-bold text-gray-800 mb-6 border-b-2 pb-2">{{ __('Location') }}</h4>
+            <dl class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-12 gap-y-6">
+                <div>
+                    <dt class="font-semibold text-gray-800">{{ __('Country') }}:</dt>
+                    <dd class="text-gray-700 mt-1">{{ $realEstate->land }}</dd>
+                </div>
+                <div>
+                    <dt class="font-semibold text-gray-800">{{ __('Postal code') }}:</dt>
+                    <dd class="text-gray-700 mt-1">{{ $realEstate->postcode }}</dd>
+                </div>
+                <div>
+                    <dt class="font-semibold text-gray-800">{{ __('location') }}:</dt>
+                    <dd class="text-gray-700 mt-1">{{ $realEstate->location }}</dd>
+                </div>
+                @if ($realEstate->strasse)
+                <div>
+                    <dt class="font-semibold text-gray-800">{{ __('Street') }}:</dt>
+                    <dd class="text-gray-700 mt-1">{{ $realEstate->strasse }}</dd>
+                </div>
+                @endif
+            </dl>
+            
+            <hr class="my-8 border-t border-gray-300">
 
-
-
-        {{-- Ausstattung & Heating Section --}}
-        <section class="bg-gray-50 p-6 rounded-lg shadow-inner mt-8"> {{-- Added mt-8 for spacing --}}
-            <h4 class="text-xl font-semibold text-gray-700 mb-6">Equipment & Heating</h4>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {{-- Equipment & Heating --}}
+            <h4 class="text-2xl font-bold text-gray-800 mb-6 border-b-2 pb-2">{{ __('Equipment & Heating') }}</h4>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-12 gap-y-6">
                 @if ($realEstate->heating)
                 <div>
-                    <p class="text-sm font-semibold text-gray-800">Heizung:</p>
-                    <p class="text-gray-700">{{ $realEstate->heating }}</p>
+                    <dt class="font-semibold text-gray-800">{{ __('Heating Options') }}:</dt>
+                    {{-- THIS LINE IS UPDATED --}}
+                    <dd class="text-gray-700 mt-1">{{ __($realEstate->heating) }}</dd>
                 </div>
                 @endif
-
                 @if ($realEstate->ausstattung && count($realEstate->ausstattung) > 0)
                 <div class="md:col-span-2 lg:col-span-3">
-                    <p class="text-sm font-semibold text-gray-800 mb-2">Heating:</p>
+                    <dt class="font-semibold text-gray-800 mb-2">{{ __('Equipment') }}:</dt>
                     <ul class="list-disc list-inside text-gray-700 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-1">
                         @foreach ($realEstate->ausstattung as $item)
-                        <li>{{ $item }}</li>
+                            {{-- THIS LINE IS UPDATED --}}
+                            <li>{{ __($item) }}</li>
                         @endforeach
                     </ul>
                 </div>
                 @endif
             </div>
-        </section>
 
-        {{-- Photos & Documents Section --}}
-        <section class="bg-gray-50 p-6 rounded-lg shadow-inner mt-8"> {{-- Added mt-8 for spacing --}}
-            <h4 class="text-xl font-semibold text-gray-700 mb-6">Documents</h4>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-
-
+            <hr class="my-8 border-t border-gray-300">
+            
+            {{-- Documents --}}
+            <h4 class="text-2xl font-bold text-gray-800 mb-6 border-b-2 pb-2">{{ __('Documents') }}</h4>
+            <dl class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-12 gap-y-6">
                 @if ($realEstate->grundriss_path)
                 <div>
-                    <p class="text-sm font-semibold text-gray-800">Grundriss:</p>
-                    <a href="{{ Storage::url($realEstate->grundriss_path) }}" target="_blank"
-                        class="text-blue-600 hover:underline">View (PDF/Bild)</a>
+                    <dt class="font-semibold text-gray-800">{{ __('Floor plan') }}:</dt>
+                    <dd class="text-gray-700 mt-1">
+                        <a href="{{ Storage::url($realEstate->grundriss_path) }}" target="_blank" class="text-blue-600 hover:underline"> (PDF/Bild)</a>
+                    </dd>
                 </div>
                 @endif
-
                 @if ($realEstate->energieausweis_path)
                 <div>
-                    <p class="text-sm font-semibold text-gray-800">Energieausweis:</p>
-                    <a href="{{ Storage::url($realEstate->energieausweis_path) }}" target="_blank"
-                        class="text-blue-600 hover:underline">View (PDF/Bild)</a>
+                    <dt class="font-semibold text-gray-800">{{ __('Energy certificate') }}:</dt>
+                    <dd class="text-gray-700 mt-1">
+                        <a href="{{ Storage::url($realEstate->energieausweis_path) }}" target="_blank" class="text-blue-600 hover:underline">(PDF/Bild)</a>
+                    </dd>
                 </div>
                 @endif
-
                 @if ($realEstate->rundgang_link)
                 <div>
-                    <p class="text-sm font-semibold text-gray-800">360° tour Link:</p>
-                    <a href="{{ $realEstate->rundgang_link }}" target="_blank"
-                        class="text-blue-600 hover:underline">{{ $realEstate->rundgang_link }}</a>
+                    <dt class="font-semibold text-gray-800">{{ __('360° Tour Link') }}:</dt>
+                    <dd class="text-gray-700 mt-1">
+                        <a href="{{ $realEstate->rundgang_link }}" target="_blank" class="text-blue-600 hover:underline">{{ $realEstate->rundgang_link }}</a>
+                    </dd>
                 </div>
                 @endif
-
                 @if ($realEstate->objektinformationen_link)
                 <div>
-                    <p class="text-sm font-semibold text-gray-800">Property information Link:</p>
-                    <a href="{{ $realEstate->objektinformationen_link }}" target="_blank"
-                        class="text-blue-600 hover:underline">{{ $realEstate->objektinformationen_link }}</a>
+                    <dt class="font-semibold text-gray-800">{{ __('Property information link') }}:</dt>
+                    <dd class="text-gray-700 mt-1">
+                        <a href="{{ $realEstate->objektinformationen_link }}" target="_blank" class="text-blue-600 hover:underline">{{ $realEstate->objektinformationen_link }}</a>
+                    </dd>
                 </div>
                 @endif
-
                 @if ($realEstate->zustandsbericht_link)
                 <div>
-                    <p class="text-sm font-semibold text-gray-800">Status report Link:</p>
-                    <a href="{{ $realEstate->zustandsbericht_link }}" target="_blank"
-                        class="text-blue-600 hover:underline">{{ $realEstate->zustandsbericht_link }}</a>
+                    <dt class="font-semibold text-gray-800">{{ __('Status report link') }}:</dt>
+                    <dd class="text-gray-700 mt-1">
+                        <a href="{{ $realEstate->zustandsbericht_link }}" target="_blank" class="text-blue-600 hover:underline">{{ $realEstate->zustandsbericht_link }}</a>
+                    </dd>
                 </div>
                 @endif
-
                 @if ($realEstate->verkaufsbericht_link)
                 <div>
-                    <p class="text-sm font-semibold text-gray-800">Sales report Link:</p>
-                    <a href="{{ $realEstate->verkaufsbericht_link }}" target="_blank"
-                        class="text-blue-600 hover:underline">{{ $realEstate->verkaufsbericht_link }}</a>
+                    <dt class="font-semibold text-gray-800">{{ __('Sales Report Link') }}:</dt>
+                    <dd class="text-gray-700 mt-1">
+                        <a href="{{ $realEstate->verkaufsbericht_link }}" target="_blank" class="text-blue-600 hover:underline">{{ $realEstate->verkaufsbericht_link }}</a>
+                    </dd>
                 </div>
                 @endif
-            </div>
+            </dl>
         </section>
-
-
-    </article> {{-- End of main content article --}}
-
+    </article>
 
     <style>
         .no-scrollbar::-webkit-scrollbar {

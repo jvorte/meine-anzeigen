@@ -318,6 +318,7 @@ class RealEstateController extends Controller
      */
     public function show(RealEstate $realEstate)
     {
+        
         return view('ads.real-estate.show', compact('realEstate'));
     }
 
