@@ -358,6 +358,20 @@ CREATE TABLE `commercial_vehicles` (
   CONSTRAINT `commercial_vehicles_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `contact_messages`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `contact_messages` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) NOT NULL,
+  `email` varchar(255) NOT NULL,
+  `subject` varchar(255) NOT NULL,
+  `message` text NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `conversations`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
@@ -643,6 +657,18 @@ CREATE TABLE `motorrad_ads` (
   CONSTRAINT `motorrad_ads_motorcycle_brand_id_foreign` FOREIGN KEY (`motorcycle_brand_id`) REFERENCES `motorcycle_brands` (`id`) ON DELETE SET NULL,
   CONSTRAINT `motorrad_ads_motorcycle_model_id_foreign` FOREIGN KEY (`motorcycle_model_id`) REFERENCES `motorcycle_models` (`id`) ON DELETE SET NULL,
   CONSTRAINT `motorrad_ads_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `newsletter_subscribers`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `newsletter_subscribers` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `email` varchar(255) NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `newsletter_subscribers_email_unique` (`email`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `other_images`;
@@ -999,3 +1025,5 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (67,'2025_08_12_100
 INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (68,'2025_08_12_103606_add_show_fields_to_real_estates_table',24);
 INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (69,'2025_08_12_104326_add_show_fields_to_services_table',25);
 INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (70,'2025_08_12_105244_add_show_fields_to_used_vehicle_parts_table',26);
+INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (71,'2025_08_12_115630_create_contact_messages_table',27);
+INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (72,'2025_08_12_134811_create_newsletter_subscribers_table',28);

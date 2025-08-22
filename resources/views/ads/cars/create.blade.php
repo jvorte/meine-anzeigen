@@ -263,7 +263,7 @@
                         <label for="drive" class="block text-sm font-medium text-gray-700 mb-2">{{ __('Wheel drive') }}</label>
                         <select name="drive" id="drive" class="w-full border rounded p-2">
                             <option value="">{{ __('Select Drive') }}</option>
-                            <option value="front" {{ old('drive', request('drive')) == 'front' ? 'selected' : '' }}>{{ __('') }}</option>
+                            <option value="front" {{ old('drive', request('drive')) == 'front' ? 'selected' : '' }}>{{ __('Front-wheel drive') }}</option>
                             <option value="rear" {{ old('drive', request('drive'))  == 'rear'  ? 'selected' : '' }}>{{ __('Rear-wheel drive') }}</option>
                             <option value="all" {{ old('drive', request('drive'))   == 'all'   ? 'selected' : '' }}>{{ __('All-wheel drive') }}</option>
                         </select>

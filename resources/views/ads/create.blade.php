@@ -9,10 +9,10 @@
             </div>
         </div>
         <h2 class="text-3xl font-extrabold text-gray-900 leading-tight mb-2">
-            Neue Anzeige erstellen
+                {{ __('Create a new ad') }}
         </h2>
         <p class="text-md text-gray-700 dark:text-gray-500">
-            Wähle eine passende Kategorie und fülle die erforderlichen Felder aus, um deine Anzeige zu erstellen.
+            {{ __('Choose an appropriate Category and fill out the required fields to create your Anzeige.') }}
         </p>
     </x-slot>
 
@@ -34,9 +34,9 @@
                                 <path d="M3 15h6" />
                                 <path d="M6 12v6" />
                             </svg>
-                            Cars
+                             {{ __('Cars') }}
                         </h3>
-                        <p class="text-sm text-gray-500">Verkaufe oder suche ein Auto.</p>
+                        <p class="text-sm text-gray-500">{{ __('Turn your car into cash fast.') }}</p>
                     </div>
                 </a>
 
@@ -55,9 +55,9 @@
                                 <path d="M3 15h6" />
                                 <path d="M6 12v6" />
                             </svg>
-                            Motorcycles
+                            {{ __('Motorcycles') }}
                         </h3>
-                        <p class="text-sm text-gray-500">Finde dein neues Motorrad.</p>
+                        <p class="text-sm text-gray-500">{{ __('Post your bike — sell it quicker.') }}</p>
                     </div>
                 </a>
 
@@ -74,9 +74,10 @@
                                 <path d="M14 2v4a2 2 0 0 0 2 2h4" />
                                 <path d="M3 15h6" />
                                 <path d="M6 12v6" />
-                            </svg>Commercial Vehicles
+                            </svg>
+                             {{ __('Commercial Vehicles') }}
                         </h3>
-                        <p class="text-sm text-gray-500">Anzeigen für Transporter und LKW.</p>
+                        <p class="text-sm text-gray-500">{{ __('Post your van and find buyers fast.') }}</p>
                     </div>
                 </a>
 
@@ -93,9 +94,9 @@
                                 <path d="M14 2v4a2 2 0 0 0 2 2h4" />
                                 <path d="M3 15h6" />
                                 <path d="M6 12v6" />
-                            </svg>Campers
+                            </svg> {{ __('Campers') }}
                         </h3>
-                        <p class="text-sm text-gray-500">Verkaufe oder miete ein Wohnmobil.</p>
+                        <p class="text-sm text-gray-500">{{ __('List your camper — buyers are waiting.') }}</p>
                     </div>
                 </a>
 
@@ -112,9 +113,9 @@
                                 <path d="M14 2v4a2 2 0 0 0 2 2h4" />
                                 <path d="M3 15h6" />
                                 <path d="M6 12v6" />
-                            </svg>Vehicle Parts
+                            </svg>{{ __('Vehicle Parts') }}
                         </h3>
-                        <p class="text-sm text-gray-500">Teile und Zubehör für dein Fahrzeug.</p>
+                        <p class="text-sm text-gray-500">{{ __('Post parts — find buyers quick.') }}</p>
                     </div>
                 </a>
 
@@ -131,9 +132,9 @@
                                 <path d="M14 2v4a2 2 0 0 0 2 2h4" />
                                 <path d="M3 15h6" />
                                 <path d="M6 12v6" />
-                            </svg>Boats
+                            </svg>{{ __('Boats') }}
                         </h3>
-                        <p class="text-sm text-gray-500">Geräte, Zubehör und mehr.</p>
+                        <p class="text-sm text-gray-500">{{ __('Sell your boat fast and easy.') }}</p>
                     </div>
                 </a>
 
@@ -150,9 +151,9 @@
                                 <path d="M14 2v4a2 2 0 0 0 2 2h4" />
                                 <path d="M3 15h6" />
                                 <path d="M6 12v6" />
-                            </svg>Electronics
+                            </svg>{{ __('Electronics') }}
                         </h3>
-                        <p class="text-sm text-gray-500">Geräte, Zubehör und mehr.</p>
+                        <p class="text-sm text-gray-500">{{ __('Devices, accessories and more.') }}</p>
                     </div>
                 </a>
 
@@ -169,9 +170,9 @@
                                 <path d="M14 2v4a2 2 0 0 0 2 2h4" />
                                 <path d="M3 15h6" />
                                 <path d="M6 12v6" />
-                            </svg>Household
+                            </svg>{{ __('Household') }}
                         </h3>
-                        <p class="text-sm text-gray-500">Geräte, Zubehör und mehr.</p>
+                        <p class="text-sm text-gray-500">{{ __('Sell furniture & devices easily.') }}</p>
                     </div>
                 </a>
 
@@ -188,9 +189,9 @@
                                 <path d="M14 2v4a2 2 0 0 0 2 2h4" />
                                 <path d="M3 15h6" />
                                 <path d="M6 12v6" />
-                            </svg>Real Estate
+                            </svg> {{ __('Real Estate') }}
                         </h3>
-                        <p class="text-sm text-gray-500">Geräte, Zubehör und mehr.</p>
+                        <p class="text-sm text-gray-500">{{ __('Rent or sell your property fast.') }}</p>
                     </div>
                 </a>
 
@@ -207,9 +208,9 @@
                                 <path d="M14 2v4a2 2 0 0 0 2 2h4" />
                                 <path d="M3 15h6" />
                                 <path d="M6 12v6" />
-                            </svg>Services
+                            </svg>{{ __('Services') }}
                         </h3>
-                        <p class="text-sm text-gray-500">Geräte, Zubehör und mehr.</p>
+                        <p class="text-sm text-gray-500">{{ __('List your services — find customers quickly.') }}</p>
                     </div>
                 </a>
 
@@ -226,9 +227,9 @@
                                 <path d="M14 2v4a2 2 0 0 0 2 2h4" />
                                 <path d="M3 15h6" />
                                 <path d="M6 12v6" />
-                            </svg>Others
+                            </svg>{{ __('Others') }}
                         </h3>
-                        <p class="text-sm text-gray-500">Geräte, Zubehör und mehr.</p>
+                        <p class="text-sm text-gray-500">{{ __('Turn your stuff into cash.') }}</p>
                     </div>
                 </a>
 
