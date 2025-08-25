@@ -54,4 +54,12 @@ class HouseholdItem extends Model
     {
         return $this->hasMany(HouseholdItemImage::class);
     }
+
+       public function favoritedBy(): MorphMany
+    {
+        // This method defines the polymorphic relationship.
+        // The first argument is the related model (Favorite).
+        // The second argument is the "morph name" (the prefix for the columns).
+        return $this->morphMany(Favorite::class, 'favoriteable');
+    }
 }

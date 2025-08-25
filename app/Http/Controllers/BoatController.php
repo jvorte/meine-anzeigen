@@ -8,6 +8,7 @@ use App\Models\Boat;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\BoatImage;
+use App\Models\Favorite;
 
 
 class BoatController extends Controller
@@ -222,4 +223,56 @@ class BoatController extends Controller
         return redirect()->route('dashboard') // ή όπου θέλεις να πας μετά
             ->with('success', 'Anzeige erfolgreich gelöscht.');
     }
+
+
+public function favorite(Boat $boat)
+{
+    $user = auth()->user();
+
+    // Check if the user has already favorited this specific ad.
+    // The `where()` clauses must match the polymorphic columns in your favorites table.
+    $existingFavorite = $user->favorites()
+                             ->where('favoriteable_id', $boat->id)
+                             ->where('favoriteable_type', get_class($boat))
+                             ->first();
+
+    if ($existingFavorite) {
+        // If the favorite exists, delete it.
+        $existingFavorite->delete();
+        $message = 'Ad removed from favorites!';
+    } else {
+        // If the favorite does not exist, create a new one.
+        $favorite = new Favorite();
+        $favorite->user_id = $user->id;
+        $favorite->favoriteable_id = $boat->id;
+        $favorite->favoriteable_type = get_class($boat);
+        $favorite->save();
+        $message = 'Ad added to favorites!';
+    }
+
+    return back()->with('status', $message);
+}
+
+
+
+
+public function share(Boat $boat)
+{
+    // A simple approach is to get the full URL and pass it to the view
+    $shareableUrl = route('ads.boats.show', $boat);
+    
+    // You can then return to the previous page with the URL or a view that displays sharing options.
+    return view('ads.boats.show', ['boat' => $boat, 'shareUrl' => $shareableUrl]);
+}
+
+public function print(Boat $boat)
+{
+    // The show method already handles fetching the ad and related data.
+    // The print method can use the same logic but return a different view.
+    return view('ads.boats.print', [
+        'boat' => $boat,
+    ]);
+}
+
+
 }

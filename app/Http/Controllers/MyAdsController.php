@@ -43,4 +43,16 @@ class MyAdsController extends Controller
     ));
 }
 
+
+    public function favorites()
+    {
+        $user = Auth::user();
+        
+        // This line gets all the favorite records from the `favorites` table for the user.
+        $favorites = $user->favorites;
+
+        // Pass the favorites to the view.
+        return view('my-ads.favorites', compact('favorites'));
+    }
+
 }

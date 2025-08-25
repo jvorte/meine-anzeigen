@@ -6,11 +6,12 @@ use App\Models\Camper;
 use App\Models\CamperImage;
 use App\Models\CamperBrand;
 use App\Models\CamperModel;
-
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
+use App\Models\Favorite;
+
 
 
 class CamperController extends Controller
@@ -343,4 +344,58 @@ public function store(Request $request)
 
         return redirect()->route('dashboard')->with('success', 'Wohnmobil Anzeige erfolgreich gelöscht!');
     }
+
+
+    
+public function favorite(Camper $camper)
+{
+    $user = auth()->user();
+
+    // Check if the user has already favorited this specific ad.
+    // The `where()` clauses must match the polymorphic columns in your favorites table.
+    $existingFavorite = $user->favorites()
+                             ->where('favoriteable_id', $camper->id)
+                             ->where('favoriteable_type', get_class($camper))
+                             ->first();
+
+    if ($existingFavorite) {
+        // If the favorite exists, delete it.
+        $existingFavorite->delete();
+        $message = 'Ad removed from favorites!';
+    } else {
+        // If the favorite does not exist, create a new one.
+        $favorite = new Favorite();
+        $favorite->user_id = $user->id;
+        $favorite->favoriteable_id = $camper->id;
+        $favorite->favoriteable_type = get_class($camper);
+        $favorite->save();
+        $message = 'Ad added to favorites!';
+    }
+
+    return back()->with('status', $message);
+}
+
+
+
+
+public function share(Camper $camper)
+{
+    // A simple approach is to get the full URL and pass it to the view
+    $shareableUrl = route('ads.campers.show', $camper);
+    
+    // You can then return to the previous page with the URL or a view that displays sharing options.
+    return view('ads.campers.show', ['boat' => $camper, 'shareUrl' => $shareableUrl]);
+}
+
+public function print(Camper $camper)
+{
+    // The show method already handles fetching the ad and related data.
+    // The print method can use the same logic but return a different view.
+    return view('ads.camper.print', [
+        'camper' => $camper,
+    ]);
+}
+
+
+
 }

@@ -3,8 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Other; // Ensure this is App\Models\Other
-use App\Models\OtherImage; // Ensure this is App\Models\OtherImage
+use App\Models\Other; 
+use App\Models\Favorite; 
+use App\Models\OtherImage;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Arr;
@@ -266,4 +267,56 @@ class OtherController extends Controller
             return back()->with('error', 'Fehler beim Löschen der Anzeige: ' . $e->getMessage());
         }
     }
+
+
+
+public function favorite(Other $other)
+{
+    $user = auth()->user();
+
+    // Check if the user has already favorited this specific ad.
+    // The `where()` clauses must match the polymorphic columns in your favorites table.
+    $existingFavorite = $user->favorites()
+                             ->where('favoriteable_id', $other->id)
+                             ->where('favoriteable_type', get_class($other))
+                             ->first();
+
+    if ($existingFavorite) {
+        // If the favorite exists, delete it.
+        $existingFavorite->delete();
+        $message = 'Ad removed from favorites!';
+    } else {
+        // If the favorite does not exist, create a new one.
+        $favorite = new Favorite();
+        $favorite->user_id = $user->id;
+        $favorite->favoriteable_id = $other->id;
+        $favorite->favoriteable_type = get_class($other);
+        $favorite->save();
+        $message = 'Ad added to favorites!';
+    }
+
+    return back()->with('status', $message);
+}
+
+
+
+
+public function share(Other $other)
+{
+    // A simple approach is to get the full URL and pass it to the view
+    $shareableUrl = route('ads.others.show', $other);
+    
+    // You can then return to the previous page with the URL or a view that displays sharing options.
+    return view('ads.others.show', ['boat' => $other, 'shareUrl' => $shareableUrl]);
+}
+
+public function print(Other $other)
+{
+    
+    return view('ads.others.print', [
+        'other' => $other,
+    ]);
+}
+
+
 }

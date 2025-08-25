@@ -8,6 +8,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Database\Eloquent\Relations\MorphToMany;
 
 class User extends Authenticatable
 {
@@ -110,6 +111,24 @@ public function receivedMessages()
 {
     return $this->hasMany(Message::class, 'receiver_id');
 }
+
+
+  public function favorites()
+    {
+        // This should return the collection of favorited ads.
+        return $this->hasMany(Favorite::class);
+    }
+    
+    public function hasFavorited($ad)
+    {
+        // The `where()` clause needs to correctly check the polymorphic columns.
+        // It's more reliable to use a single query than to load the entire collection.
+        return $this->favorites()
+                    ->where('favoriteable_id', $ad->id)
+                    ->where('favoriteable_type', get_class($ad))
+                    ->exists();
+    }
+
 
 
 }

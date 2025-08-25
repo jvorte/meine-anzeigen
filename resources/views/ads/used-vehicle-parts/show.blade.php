@@ -175,6 +175,60 @@
                     {{-- Right Column: Details & Seller info and other sections --}}
                     <section class="flex flex-col justify-between gap-10">
 
+
+                    <!-- print/share/fav -->
+
+                <div class="flex flex-col sm:flex-row justify-between my-4 gap-4">
+                    <div class="flex items-center space-x-3">
+                        @auth
+                        <form action="{{ route('ads.vehicles-parts.favorite', $usedVehiclePart) }}" method="POST">
+                            @csrf
+                            <button type="submit" class="p-2 rounded-full transition duration-300">
+                                @if (auth()->user()->hasFavorited($usedVehiclePart))
+                                {{-- Show a filled red heart if the user has favorited this ad --}}
+                                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-heart-minus-icon lucide-heart-minus">
+                                    <path d="m14.876 18.99-1.368 1.323a2 2 0 0 1-3 .019L5 15c-1.5-1.5-3-3.2-3-5.5a5.5 5.5 0 0 1 9.591-3.676.56.56 0 0 0 .818 0A5.49 5.49 0 0 1 22 9.5a5.2 5.2 0 0 1-.244 1.572" />
+                                    <path d="M15 15h6" />
+                                </svg>
+
+                          
+                                @else
+                                {{-- Show an outlined heart if the user has not favorited this ad --}}
+                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-heart-plus-icon lucide-heart-plus">
+                                    <path d="m14.479 19.374-.971.939a2 2 0 0 1-3 .019L5 15c-1.5-1.5-3-3.2-3-5.5a5.5 5.5 0 0 1 9.591-3.676.56.56 0 0 0 .818 0A5.49 5.49 0 0 1 22 9.5a5.2 5.2 0 0 1-.219 1.49" />
+                                    <path d="M15 15h6" />
+                                    <path d="M18 12v6" />
+                                </svg>
+                                @endif
+                            </button>
+                        </form>
+                        @endauth
+
+
+                        <a href="{{ route('ads.vehicles-parts.print', $usedVehiclePart) }}" target="_blank" class="print-button">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-printer-check-icon lucide-printer-check">
+                                <path d="M13.5 22H7a1 1 0 0 1-1-1v-6a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v.5" />
+                                <path d="m16 19 2 2 4-4" />
+                                <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v2" />
+                                <path d="M6 9V3a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v6" />
+                            </svg>
+                        </a>
+
+                        <button onclick="shareItem('{{ route('ads.vehicles-parts.show', $usedVehiclePart) }}', '{{ $usedVehiclePart->title }}')" class="p-2 rounded-full text-gray-600 hover:text-green-500 transition duration-300">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-share2-icon lucide-share-2">
+                                <circle cx="18" cy="5" r="3" />
+                                <circle cx="6" cy="12" r="3" />
+                                <circle cx="18" cy="19" r="3" />
+                                <line x1="8.59" x2="15.42" y1="13.51" y2="17.49" />
+                                <line x1="15.41" x2="8.59" y1="6.51" y2="10.49" />
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+
+                
+
+                <!--end  print/share/fav -->
                         {{-- Title and Pricing --}}
                         <div>
                             <h2 class="text-4xl font-extrabold text-gray-900 mb-4 leading-tight">
@@ -372,4 +426,30 @@
             </section>
 
         </div>
+
+
+        
+<script>
+    function shareItem(url, title) {
+        if (navigator.share) {
+            navigator.share({
+                title: title,
+                url: url
+            }).then(() => {
+                console.log('Thanks for sharing!');
+            }).catch(console.error);
+        } else {
+            // Fallback for browsers that don't support the Web Share API
+            navigator.clipboard.writeText(url)
+                .then(() => {
+                    alert('Share link copied to clipboard!');
+                })
+                .catch(err => {
+                    console.error('Could not copy text: ', err);
+                });
+        }
+    }
+</script>
+
+
 </x-app-layout>

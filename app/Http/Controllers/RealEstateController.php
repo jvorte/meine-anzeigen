@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\RealEstate;
+use App\Models\Favorite;
 use App\Models\RealEstateImage; // Import the RealEstateImage Model
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Auth;
@@ -545,4 +546,59 @@ class RealEstateController extends Controller
 
         return redirect()->route('dashboard')->with('success', 'Immobilien Anzeige erfolgreich gelöscht!');
     }
+
+
+
+
+    
+public function favorite(RealEstate $realEstate)
+{
+    $user = auth()->user();
+
+    // Check if the user has already favorited this specific ad.
+    // The `where()` clauses must match the polymorphic columns in your favorites table.
+    $existingFavorite = $user->favorites()
+                             ->where('favoriteable_id', $realEstate->id)
+                             ->where('favoriteable_type', get_class($realEstate))
+                             ->first();
+
+    if ($existingFavorite) {
+        // If the favorite exists, delete it.
+        $existingFavorite->delete();
+        $message = 'Ad removed from favorites!';
+    } else {
+        // If the favorite does not exist, create a new one.
+        $favorite = new Favorite();
+        $favorite->user_id = $user->id;
+        $favorite->favoriteable_id = $realEstate->id;
+        $favorite->favoriteable_type = get_class($realEstate);
+        $favorite->save();
+        $message = 'Ad added to favorites!';
+    }
+
+    return back()->with('status', $message);
+}
+
+
+
+
+public function share(RealEstate $realEstate)
+{
+    // A simple approach is to get the full URL and pass it to the view
+    $shareableUrl = route('ads.real-estate.show', $realEstate);
+    
+    // You can then return to the previous page with the URL or a view that displays sharing options.
+    return view('ads.real-estate.show', ['real-estate' => $realEstate, 'shareUrl' => $shareableUrl]);
+}
+
+public function print(RealEstate $realEstate)
+{
+    // The show method already handles fetching the ad and related data.
+    // The print method can use the same logic but return a different view.
+    return view('ads.real-estate.print', [
+        'realEstate' => $realEstate,
+    ]);
+}
+
+
 }

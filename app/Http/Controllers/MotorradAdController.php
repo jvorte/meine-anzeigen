@@ -6,6 +6,7 @@ use App\Models\MotorradAd;
 use App\Models\MotorcycleBrand;
 use App\Models\MotorcycleModel;
 use App\Models\MotorradAdImage;
+use App\Models\Favorite;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Auth;
@@ -308,4 +309,57 @@ public function update(Request $request, MotorradAd $motorrad)
         // dd($models); // <--- THIS LINE IS COMMENTED OUT
         return response()->json($models);
     }
+
+
+
+    
+public function favorite(MotorradAd $motorrad)
+{
+    $user = auth()->user();
+
+    // Check if the user has already favorited this specific ad.
+    // The `where()` clauses must match the polymorphic columns in your favorites table.
+    $existingFavorite = $user->favorites()
+                             ->where('favoriteable_id', $motorrad->id)
+                             ->where('favoriteable_type', get_class($motorrad))
+                             ->first();
+
+    if ($existingFavorite) {
+        // If the favorite exists, delete it.
+        $existingFavorite->delete();
+        $message = 'Ad removed from favorites!';
+    } else {
+        // If the favorite does not exist, create a new one.
+        $favorite = new Favorite();
+        $favorite->user_id = $user->id;
+        $favorite->favoriteable_id = $motorrad->id;
+        $favorite->favoriteable_type = get_class($motorrad);
+        $favorite->save();
+        $message = 'Ad added to favorites!';
+    }
+
+    return back()->with('status', $message);
+}
+
+
+
+
+public function share(MotorradAd $motorrad)
+{
+    // A simple approach is to get the full URL and pass it to the view
+    $shareableUrl = route('ads.motorrads.show', $motorrad);
+    
+    // You can then return to the previous page with the URL or a view that displays sharing options.
+    return view('ads.motorrads.show', ['motorrads' => $motorrad, 'shareUrl' => $shareableUrl]);
+}
+
+public function print(MotorradAd $motorrad)
+{
+    // The show method already handles fetching the ad and related data.
+    // The print method can use the same logic but return a different view.
+    return view('ads.motorrads.print', [
+        'motorrad' => $motorrad,
+    ]);
+}
+
 }

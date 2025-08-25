@@ -1,5 +1,5 @@
 <nav x-data="{ open: false }" class="bg-white dark:border-gray-700">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="max-w-8xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between h-16">
             <div class="flex">
                 <div class="shrink-0 flex items-center">
@@ -50,6 +50,18 @@
                         {{ __('My Ads') }}
                     </x-nav-link>
 
+
+                    <x-nav-link :href="route('my-ads.favorites')" :active="request()->routeIs('my-ads.favorites')">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 28 26" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-calendar-heart-icon lucide-calendar-heart">
+                            <path d="M12.127 22H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v5.125" />
+                            <path d="M14.62 18.8A2.25 2.25 0 1 1 18 15.836a2.25 2.25 0 1 1 3.38 2.966l-2.626 2.856a.998.998 0 0 1-1.507 0z" />
+                            <path d="M16 2v4" />
+                            <path d="M3 10h18" />
+                            <path d="M8 2v4" />
+                        </svg>
+                        {{ __('Favorites') }}
+                    </x-nav-link>
+
                     <x-nav-link :href="route('messages.index')" :active="request()->routeIs('messages.index')" class="relative flex items-center space-x-1">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 28 26" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-message-square-text-icon lucide-message-square-text">
                             <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
@@ -71,7 +83,11 @@
                 <x-dropdown align="right" width="48">
                     <x-slot name="trigger">
                         <button class="inline-flex items-center px-3 py-2 border border-transparent text-sm font-medium rounded-md text-gray-500 dark:text-gray-400 bg-white hover:text-gray-700 dark:hover:text-gray-300 focus:outline-none transition ease-in-out duration-150">
-                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 28 26" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-globe-icon lucide-globe"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/></svg>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 28 26" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-globe-icon lucide-globe">
+                                <circle cx="12" cy="12" r="10" />
+                                <path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20" />
+                                <path d="M2 12h20" />
+                            </svg>
                             <span class="ms-2 uppercase">{{ app()->getLocale() }}</span>
                             <div class="ms-1">
                                 <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
@@ -211,7 +227,7 @@
         </div>
     </div>
 
-    <div class="max-w-7xl mx-auto py-2 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-8xl mx-auto py-2 px-4 sm:px-6 lg:px-8">
         {{-- Updated Header Section with Gradient and Prominent CTA --}}
         <div class="relative flex flex-col md:flex-row items-center justify-between space-y-4 md:space-y-0 md:space-x-4 p-6 bg-cover bg-center shadow-lg rounded-lg"
             style="background-image: url('/storage/images/real-estate.jpg');">
@@ -220,10 +236,10 @@
 
             {{-- Main Heading and Description (ensure z-index to be above overlay) --}}
             <div class="relative z-10 text-center md:text-left flex-grow">
-                <h2 class="text-3xl font-extrabold text-gray-900 dark:text-gray-100 leading-tight mb-2">
+                <h2 class="text-3xl font-extrabold text-white leading-tight mb-2">
                     {{ __('Find your next ad') }}
                 </h2>
-                <p class="text-md text-gray-600 dark:text-gray-100">
+                <p class="text-md text-white">
                     {{ __('Browse thousands of ads or create your own.') }}
                 </p>
             </div>
@@ -245,70 +261,72 @@
             </div>
         </div>
 
+        <!-- 
+-----------------------------------------------------------------         -->
 
-        
 
-   
-{{-- Category Navigation Links --}}
-<nav class="p-2 mt-4 pb-2 border-b border-gray-200 dark:border-gray-700
-            flex flex-wrap gap-2 justify-center md:justify-start">
+        {{-- Category Navigation Links --}}
+        <nav class="p-2 mt-4 pb-2 border-b border-gray-200 dark:border-gray-700
+            flex flex-wrap gap-2 justify-center">
 
-    <a href="{{ route('categories.cars.index') }}"
-       class="px-3 py-1 rounded-full bg-gray-100 hover:bg-indigo-100 text-gray-800 hover:text-indigo-600 transition-colors duration-200">
-        {{ __('Cars') }}
-    </a>
+            <a href="{{ route('categories.cars.index') }}"
+                class="px-3 py-1 rounded-full bg-gray-100 text-black md:text-gray-800 font-bold md:font-normal hover:bg-indigo-100 hover:text-indigo-600 transition-colors duration-200">
+                {{ __('Cars') }}
+            </a>
 
-    <a href="{{ route('categories.motorrads.index') }}"
-       class="px-3 py-1 rounded-full bg-gray-100 hover:bg-indigo-100 text-gray-800 hover:text-indigo-600 transition-colors duration-200">
-        {{ __('Motorcycles') }}
-    </a>
+            <a href="{{ route('categories.motorrads.index') }}"
+                class="px-3 py-1 rounded-full bg-gray-100 text-black md:text-gray-800 font-bold md:font-normal hover:bg-indigo-100 hover:text-indigo-600 transition-colors duration-200">
+                {{ __('Motorcycles') }}
+            </a>
 
-    <a href="{{ route('categories.commercial-vehicles.index') }}"
-       class="px-3 py-1 rounded-full bg-gray-100 hover:bg-indigo-100 text-gray-800 hover:text-indigo-600 transition-colors duration-200">
-        {{ __('Commercial Vehicles') }}
-    </a>
+            <a href="{{ route('categories.commercial-vehicles.index') }}"
+                class="px-3 py-1 rounded-full bg-gray-100 text-black md:text-gray-800 font-bold md:font-normal hover:bg-indigo-100 hover:text-indigo-600 transition-colors duration-200">
+                {{ __('Commercial Vehicles') }}
+            </a>
 
-    <a href="{{ route('categories.campers.index') }}"
-       class="px-3 py-1 rounded-full bg-gray-100 hover:bg-indigo-100 text-gray-800 hover:text-indigo-600 transition-colors duration-200">
-        {{ __('Campers') }}
-    </a>
+            <a href="{{ route('categories.campers.index') }}"
+                class="px-3 py-1 rounded-full bg-gray-100 text-black md:text-gray-800 font-bold md:font-normal hover:bg-indigo-100 hover:text-indigo-600 transition-colors duration-200">
+                {{ __('Campers') }}
+            </a>
 
-    <a href="{{ route('categories.vehicles-parts.index') }}"
-       class="px-3 py-1 rounded-full bg-gray-100 hover:bg-indigo-100 text-gray-800 hover:text-indigo-600 transition-colors duration-200">
-        {{ __('Vehicle Parts') }}
-    </a>
+            <a href="{{ route('categories.vehicles-parts.index') }}"
+                class="px-3 py-1 rounded-full bg-gray-100 text-black md:text-gray-800 font-bold md:font-normal hover:bg-indigo-100 hover:text-indigo-600 transition-colors duration-200">
+                {{ __('Vehicle Parts') }}
+            </a>
 
-    <a href="{{ route('categories.boats.index') }}"
-       class="px-3 py-1 rounded-full bg-gray-100 hover:bg-indigo-100 text-gray-800 hover:text-indigo-600 transition-colors duration-200">
-        {{ __('Boats') }}
-    </a>
+            <a href="{{ route('categories.boats.index') }}"
+                class="px-3 py-1 rounded-full bg-gray-100 text-black md:text-gray-800 font-bold md:font-normal hover:bg-indigo-100 hover:text-indigo-600 transition-colors duration-200">
+                {{ __('Boats') }}
+            </a>
 
-    <a href="{{ route('categories.electronics.index') }}"
-       class="px-3 py-1 rounded-full bg-gray-100 hover:bg-indigo-100 text-gray-800 hover:text-indigo-600 transition-colors duration-200">
-        {{ __('Electronics') }}
-    </a>
+            <a href="{{ route('categories.electronics.index') }}"
+                class="px-3 py-1 rounded-full bg-gray-100 text-black md:text-gray-800 font-bold md:font-normal hover:bg-indigo-100 hover:text-indigo-600 transition-colors duration-200">
+                {{ __('Electronics') }}
+            </a>
 
-    <a href="{{ route('categories.household.index') }}"
-       class="px-3 py-1 rounded-full bg-gray-100 hover:bg-indigo-100 text-gray-800 hover:text-indigo-600 transition-colors duration-200">
-        {{ __('Household') }}
-    </a>
+            <a href="{{ route('categories.household.index') }}"
+                class="px-3 py-1 rounded-full bg-gray-100 text-black md:text-gray-800 font-bold md:font-normal hover:bg-indigo-100 hover:text-indigo-600 transition-colors duration-200">
+                {{ __('Household') }}
+            </a>
 
-    <a href="{{ route('categories.real-estate.index') }}"
-       class="px-3 py-1 rounded-full bg-gray-100 hover:bg-indigo-100 text-gray-800 hover:text-indigo-600 transition-colors duration-200">
-        {{ __('Real Estate') }}
-    </a>
+            <a href="{{ route('categories.real-estate.index') }}"
+                class="px-3 py-1 rounded-full bg-gray-100 text-black md:text-gray-800 font-bold md:font-normal hover:bg-indigo-100 hover:text-indigo-600 transition-colors duration-200">
+                {{ __('Real Estate') }}
+            </a>
 
-    <a href="{{ route('categories.services.index') }}"
-       class="px-3 py-1 rounded-full bg-gray-100 hover:bg-indigo-100 text-gray-800 hover:text-indigo-600 transition-colors duration-200">
-        {{ __('Services') }}
-    </a>
+            <a href="{{ route('categories.services.index') }}"
+                class="px-3 py-1 rounded-full bg-gray-100 text-black md:text-gray-800 font-bold md:font-normal hover:bg-indigo-100 hover:text-indigo-600 transition-colors duration-200">
+                {{ __('Services') }}
+            </a>
 
-    <a href="{{ route('categories.others.index') }}"
-       class="px-3 py-1 rounded-full bg-gray-100 hover:bg-indigo-100 text-gray-800 hover:text-indigo-600 transition-colors duration-200">
-        {{ __('Others') }}
-    </a>
+            <a href="{{ route('categories.others.index') }}"
+                class="px-3 py-1 rounded-full bg-gray-100 text-black md:text-gray-800 font-bold md:font-normal hover:bg-indigo-100 hover:text-indigo-600 transition-colors duration-200">
+                {{ __('Others') }}
+            </a>
 
-</nav>
+        </nav>
+
+
 
 
     </div>

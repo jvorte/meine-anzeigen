@@ -11,6 +11,7 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
+use App\Models\Favorite;
 
 class CarController extends Controller
 {
@@ -399,4 +400,57 @@ class CarController extends Controller
      * @param  \App\Models\CarBrand  $brand The CarBrand model instance resolved by route model binding.
      * @return \Illuminate\Http\JsonResponse
      */
+
+
+
+    
+public function favorite(Car $car)
+{
+    $user = auth()->user();
+
+    // Check if the user has already favorited this specific ad.
+    // The `where()` clauses must match the polymorphic columns in your favorites table.
+    $existingFavorite = $user->favorites()
+                             ->where('favoriteable_id', $car->id)
+                             ->where('favoriteable_type', get_class($car))
+                             ->first();
+
+    if ($existingFavorite) {
+        // If the favorite exists, delete it.
+        $existingFavorite->delete();
+        $message = 'Ad removed from favorites!';
+    } else {
+        // If the favorite does not exist, create a new one.
+        $favorite = new Favorite();
+        $favorite->user_id = $user->id;
+        $favorite->favoriteable_id = $car->id;
+        $favorite->favoriteable_type = get_class($car);
+        $favorite->save();
+        $message = 'Ad added to favorites!';
+    }
+
+    return back()->with('status', $message);
+}
+
+
+
+
+public function share(Car $car)
+{
+    // A simple approach is to get the full URL and pass it to the view
+    $shareableUrl = route('ads.boats.show', $car);
+    
+    // You can then return to the previous page with the URL or a view that displays sharing options.
+    return view('ads.boats.show', ['boat' => $car, 'shareUrl' => $shareableUrl]);
+}
+
+public function print(Car $car)
+{
+    // The show method already handles fetching the ad and related data.
+    // The print method can use the same logic but return a different view.
+    return view('ads.cars.print', [
+        'car' => $car,
+    ]);
+}
+
 }

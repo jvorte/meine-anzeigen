@@ -1,53 +1,21 @@
-{{-- resources/views/ads/boats/show.blade.php --}}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Print Ad: {{ $householdItem->title }}</title>
+            <!-- Fonts -->
+        <link rel="preconnect" href="https://fonts.bunny.net">
+        <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
 
-<x-app-layout>
-    <x-slot name="header">
-        {{-- Header with "Neu Anzeige" button on top right --}}
-        <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center px-4 py-2">
-            <div>
-                <h1 class="text-4xl font-extrabold text-gray-900 leading-tight">
-                    {{ __('Household ads') }}
-                </h1>
-                <p class="mt-1 text-gray-600 max-w-xl">
-                   {{ __('Everything about household and living – simply advertise and browse.') }}
-                </p>
-            </div>
+        <!-- Scripts -->
+        @vite(['resources/css/app.css', 'resources/js/app.js'])
 
-            <div class="px-4 py-1 md:py-1 flex justify-end items-center">
-                <a href="{{ route('ads.create') }}" class="c-button">
-                    <span class="c-main">
-                        <span class="c-ico">
-                            <span class="c-blur"></span>
-                            <span class="ico-text">+</span>
-                        </span>
-                        {{ __('new_ad') }}
-                    </span>
-                </a>
-            </div>
+</head>
+<body>
+    <button class="print-button" onclick="window.print()">Print this page</button>
 
-        </div>
-    </x-slot>
-
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 p-10">
-        {{-- Breadcrumbs --}}
-        <x-breadcrumbs :items="[
-                ['label' => __('Household ads'), 'url' => route('categories.household.index')],
-                ['label' => $householdItem->title, 'url' => null],
-            ]" />
-        {{-- Action Buttons and Back link --}}
-        <div class="flex flex-col sm:flex-row justify-between my-4 gap-4">
-            <a href="javascript:history.back()"
-                class="inline-flex items-center text-gray-700 hover:text-gray-900 transition duration-300 font-medium space-x-1">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M15 19l-7-7 7-7"></path>
-                </svg>
-                <span>{{ __('back') }}</span>
-            </a>
-
-
-        </div>
-
-        <article class="bg-white rounded-2xl shadow-2xl p-8 lg:p-14 grid grid-cols-1 md:grid-cols-2 gap-12">
+      <article class="bg-white rounded-2xl shadow-2xl p-8 lg:p-14 grid grid-cols-1 md:grid-cols-2 gap-12">
 
             {{-- Left Column: Images and Thumbnails --}}
             <section x-data="{
@@ -173,63 +141,6 @@
 
             {{-- Right Column: Details & Seller info --}}
             <section class="flex flex-col justify-between gap-10">
-
-
-            <!-- print/share/fav -->
-
-                <div class="flex flex-col sm:flex-row justify-between my-4 gap-4">
-                    <div class="flex items-center space-x-3">
-                        
-                        @auth
-                        <form action="{{ route('ads.household.favorite', $householdItem) }}" method="POST">
-                            @csrf
-                            <button type="submit" class="p-2 rounded-full transition duration-300">
-                                @if (auth()->user()->hasFavorited($householdItem))
-                                {{-- Show a filled red heart if the user has favorited this ad --}}
-                                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-heart-minus-icon lucide-heart-minus">
-                                    <path d="m14.876 18.99-1.368 1.323a2 2 0 0 1-3 .019L5 15c-1.5-1.5-3-3.2-3-5.5a5.5 5.5 0 0 1 9.591-3.676.56.56 0 0 0 .818 0A5.49 5.49 0 0 1 22 9.5a5.2 5.2 0 0 1-.244 1.572" />
-                                    <path d="M15 15h6" />
-                                </svg>
-
-                          
-                                @else
-                                {{-- Show an outlined heart if the user has not favorited this ad --}}
-                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-heart-plus-icon lucide-heart-plus">
-                                    <path d="m14.479 19.374-.971.939a2 2 0 0 1-3 .019L5 15c-1.5-1.5-3-3.2-3-5.5a5.5 5.5 0 0 1 9.591-3.676.56.56 0 0 0 .818 0A5.49 5.49 0 0 1 22 9.5a5.2 5.2 0 0 1-.219 1.49" />
-                                    <path d="M15 15h6" />
-                                    <path d="M18 12v6" />
-                                </svg>
-                                @endif
-                            </button>
-                        </form>
-                        @endauth
-
-
-                        <a href="{{ route('ads.household.print', $householdItem) }}" target="_blank" class="print-button">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-printer-check-icon lucide-printer-check">
-                                <path d="M13.5 22H7a1 1 0 0 1-1-1v-6a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v.5" />
-                                <path d="m16 19 2 2 4-4" />
-                                <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v2" />
-                                <path d="M6 9V3a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v6" />
-                            </svg>
-                        </a>
-
-                        <button onclick="shareItem('{{ route('ads.household.show', $householdItem) }}', '{{ $householdItem->title }}')" class="p-2 rounded-full text-gray-600 hover:text-green-500 transition duration-300">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-share2-icon lucide-share-2">
-                                <circle cx="18" cy="5" r="3" />
-                                <circle cx="6" cy="12" r="3" />
-                                <circle cx="18" cy="19" r="3" />
-                                <line x1="8.59" x2="15.42" y1="13.51" y2="17.49" />
-                                <line x1="15.41" x2="8.59" y1="6.51" y2="10.49" />
-                            </svg>
-                        </button>
-                    </div>
-                </div>
-
-                
-
-                <!--end  print/share/fav -->
-
 
                 {{-- Title and Pricing --}}
                 <div>
@@ -402,42 +313,13 @@
                 </div>
             </section>
         </article>
-    </div>
-
-    {{-- Styles for no-scrollbar --}}
-    <style>
-        .no-scrollbar::-webkit-scrollbar {
-            display: none;
-        }
-
-        .no-scrollbar {
-            -ms-overflow-style: none;
-            scrollbar-width: none;
-        }
-    </style>
-
-
-<script>
-    function shareItem(url, title) {
-        if (navigator.share) {
-            // Use the Web Share API if available
-            navigator.share({
-                title: title,
-                url: url,
-            }).then(() => {
-                console.log('Successfully shared');
-            }).catch((error) => {
-                console.log('Error sharing:', error);
-            });
-        } else {
-            // Fallback for browsers that don't support the Web Share API
-            navigator.clipboard.writeText(url).then(() => {
-                alert('Link copied to clipboard!');
-            }).catch(err => {
-                console.error('Failed to copy text: ', err);
-            });
-        }
-    }
-</script>
-
-</x-app-layout>
+        
+                    
+    <script>
+        // Automatically trigger the print dialog when the page loads
+        window.onload = function() {
+            window.print();
+        };
+    </script>
+</body>
+</html>

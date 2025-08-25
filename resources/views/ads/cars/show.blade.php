@@ -6,42 +6,42 @@
         <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center px-4 py-2">
             <div>
                 <h1 class="text-4xl font-extrabold text-gray-900 leading-tight">
-                       {{ __('Cars Ads') }}
+                    {{ __('Cars Ads') }}
                 </h1>
                 <p class="mt-1 text-gray-600 max-w-xl">
-               {{ __('Browse all available cars listings') }}
+                    {{ __('Browse all available cars listings') }}
                 </p>
             </div>
-          <div class="px-4 py-1 md:py-1 flex justify-end items-center">
-        <a href="{{ route('ads.create') }}" class="c-button">
-            <span class="c-main">
-                <span class="c-ico">
-                    <span class="c-blur"></span>
-                    <span class="ico-text">+</span>
-                </span>
-         {{ __('new_ad') }}
-            </span>
-        </a>
-    </div>
+            <div class="px-4 py-1 md:py-1 flex justify-end items-center">
+                <a href="{{ route('ads.create') }}" class="c-button">
+                    <span class="c-main">
+                        <span class="c-ico">
+                            <span class="c-blur"></span>
+                            <span class="ico-text">+</span>
+                        </span>
+                        {{ __('new_ad') }}
+                    </span>
+                </a>
+            </div>
         </div>
     </x-slot>
 
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 p-10"> 
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 p-10">
         {{-- Breadcrumbs --}}
-       <x-breadcrumbs :items="[
+        <x-breadcrumbs :items="[
                 ['label' => __('Cars Ads'), 'url' => route('categories.cars.index')], {{-- Adjusted URL to category show --}}
                 ['label' => $car->title, 'url' => null], {{-- Dynamic label using car title --}}
             ]" />
 
-           {{-- Action Buttons and Back link --}}
-   <div class="flex flex-col sm:flex-row justify-between my-4 gap-4">
-    <a href="javascript:history.back()" 
-        class="inline-flex items-center text-gray-700 hover:text-gray-900 transition duration-300 font-medium space-x-1">
-        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M15 19l-7-7 7-7"></path>
-        </svg>
-        <span>{{ __('back') }}</span>
-    </a>
+        {{-- Action Buttons and Back link --}}
+        <div class="flex flex-col sm:flex-row justify-between my-4 gap-4">
+            <a href="javascript:history.back()"
+                class="inline-flex items-center text-gray-700 hover:text-gray-900 transition duration-300 font-medium space-x-1">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M15 19l-7-7 7-7"></path>
+                </svg>
+                <span>{{ __('back') }}</span>
+            </a>
 
 
         </div>
@@ -82,24 +82,22 @@
                         this.changeImage(this.images[--this.currentIndex]);
                     }
                 }
-            }" 
-            x-init="init"
-            @keydown.escape.window="closeModal"
-            class="flex flex-col items-center space-y-6"
-            >
+            }"
+                x-init="init"
+                @keydown.escape.window="closeModal"
+                class="flex flex-col items-center space-y-6">
 
                 {{-- Main Image Container --}}
                 <div class="relative w-full rounded-3xl cursor-pointer shadow-lg overflow-hidden" @click="openModal" style="aspect-ratio: 4 / 3;">
                     <template x-if="activeImage">
-                        <img 
-                            :src="'{{ Storage::url('') }}' + activeImage" 
+                        <img
+                            :src="'{{ Storage::url('') }}' + activeImage"
                             alt="Hauptbild"
                             class="object-cover w-full h-full transition-transform duration-700 ease-in-out rounded-3xl"
                             :class="{ 'scale-105 opacity-100': scaleUp, 'opacity-0': !scaleUp }"
                             @load="scaleUp = true"
                             loading="lazy"
-                            draggable="false"
-                        >
+                            draggable="false">
                     </template>
 
                     {{-- Overlay icon for fullscreen preview (magnifier) --}}
@@ -112,63 +110,58 @@
 
                 {{-- Thumbnails --}}
                 <div class="flex space-x-4 overflow-x-auto no-scrollbar w-full max-w-xl px-2">
-                         @foreach ($car->images as $image)
-                <img 
-                    src="{{ Storage::url($image->image_path) }}" 
-                    @click="changeImage('{{ $image->image_path }}')" 
-                    class="w-24 h-24 object-cover rounded cursor-pointer border-2 transition" 
-                    :class="{ 'border-rose-500': activeImage === '{{ $image->path }}' }"
-                    alt="Thumb"
-                >
-            @endforeach
+                    @foreach ($car->images as $image)
+                    <img
+                        src="{{ Storage::url($image->image_path) }}"
+                        @click="changeImage('{{ $image->image_path }}')"
+                        class="w-24 h-24 object-cover rounded cursor-pointer border-2 transition"
+                        :class="{ 'border-rose-500': activeImage === '{{ $image->path }}' }"
+                        alt="Thumb">
+                    @endforeach
                 </div>
 
                 {{-- Fullscreen Modal --}}
-                <div 
-                    x-show="showModal" 
+                <div
+                    x-show="showModal"
                     x-transition.opacity
                     class="fixed inset-0 z-[60] bg-white bg-opacity-95 flex items-center justify-center p-4"
                     style="display: none;"
-                    aria-modal="true" role="dialog"
-                    >
+                    aria-modal="true" role="dialog">
 
                     {{-- Close Button --}}
-                    <button @click="closeModal" aria-label="Schließen" 
+                    <button @click="closeModal" aria-label="Schließen"
                         class="absolute top-8 right-8 text-gray-700 text-4xl font-extrabold hover:text-gray-900 transition focus:outline-none focus:ring-4 focus:ring-gray-400 rounded">
                         &times;
                     </button>
 
                     {{-- Previous Button --}}
-                    <button 
-                        @click="prevImage" 
+                    <button
+                        @click="prevImage"
                         :disabled="currentIndex === 0"
                         :class="{'opacity-50 cursor-not-allowed': currentIndex === 0}"
                         aria-label="Vorheriges Bild"
-                        class="absolute left-6 top-1/2 -translate-y-1/2 text-gray-700 bg-white rounded-full p-3 shadow-md hover:bg-gray-100 disabled:pointer-events-none transition focus:outline-none focus:ring-4 focus:ring-gray-400"
-                    >
+                        class="absolute left-6 top-1/2 -translate-y-1/2 text-gray-700 bg-white rounded-full p-3 shadow-md hover:bg-gray-100 disabled:pointer-events-none transition focus:outline-none focus:ring-4 focus:ring-gray-400">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" class="w-7 h-7">
-                            <path d="M15 19l-7-7 7-7"/>
+                            <path d="M15 19l-7-7 7-7" />
                         </svg>
                     </button>
 
                     {{-- Image in Modal --}}
-                    <img 
-                        :src="'{{ Storage::url('') }}' + activeImage" 
+                    <img
+                        :src="'{{ Storage::url('') }}' + activeImage"
                         alt="Vergrößertes Bild"
                         class="max-h-[90vh] max-w-full rounded-3xl shadow-xl object-contain select-none"
-                        draggable="false"
-                    >
+                        draggable="false">
 
                     {{-- Next Button --}}
-                    <button 
-                        @click="nextImage" 
+                    <button
+                        @click="nextImage"
                         :disabled="currentIndex === images.length - 1"
                         :class="{'opacity-50 cursor-not-allowed': currentIndex === images.length - 1}"
                         aria-label="Nächstes Bild"
-                        class="absolute right-6 top-1/2 -translate-y-1/2 text-gray-700 bg-white rounded-full p-3 shadow-md hover:bg-gray-100 disabled:pointer-events-none transition focus:outline-none focus:ring-4 focus:ring-gray-400"
-                    >
+                        class="absolute right-6 top-1/2 -translate-y-1/2 text-gray-700 bg-white rounded-full p-3 shadow-md hover:bg-gray-100 disabled:pointer-events-none transition focus:outline-none focus:ring-4 focus:ring-gray-400">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" class="w-7 h-7">
-                            <path d="M9 5l7 7-7 7"/>
+                            <path d="M9 5l7 7-7 7" />
                         </svg>
                     </button>
                 </div>
@@ -179,7 +172,61 @@
             <section class="flex flex-col justify-between gap-10">
 
 
-     
+            
+<!-- print/share/fav -->
+
+                <div class="flex flex-col sm:flex-row justify-between my-4 gap-4">
+                    <div class="flex items-center space-x-3">
+                        @auth
+                        <form action="{{ route('ads.cars.favorite', $car) }}" method="POST">
+                            @csrf
+                            <button type="submit" class="p-2 rounded-full transition duration-300">
+                                @if (auth()->user()->hasFavorited($car))
+                                {{-- Show a filled red heart if the user has favorited this ad --}}
+                                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-heart-minus-icon lucide-heart-minus">
+                                    <path d="m14.876 18.99-1.368 1.323a2 2 0 0 1-3 .019L5 15c-1.5-1.5-3-3.2-3-5.5a5.5 5.5 0 0 1 9.591-3.676.56.56 0 0 0 .818 0A5.49 5.49 0 0 1 22 9.5a5.2 5.2 0 0 1-.244 1.572" />
+                                    <path d="M15 15h6" />
+                                </svg>
+
+                          
+                                @else
+                                {{-- Show an outlined heart if the user has not favorited this ad --}}
+                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-heart-plus-icon lucide-heart-plus">
+                                    <path d="m14.479 19.374-.971.939a2 2 0 0 1-3 .019L5 15c-1.5-1.5-3-3.2-3-5.5a5.5 5.5 0 0 1 9.591-3.676.56.56 0 0 0 .818 0A5.49 5.49 0 0 1 22 9.5a5.2 5.2 0 0 1-.219 1.49" />
+                                    <path d="M15 15h6" />
+                                    <path d="M18 12v6" />
+                                </svg>
+                                @endif
+                            </button>
+                        </form>
+                        @endauth
+
+
+                        <a href="{{ route('ads.cars.print', $car) }}" target="_blank" class="print-button">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-printer-check-icon lucide-printer-check">
+                                <path d="M13.5 22H7a1 1 0 0 1-1-1v-6a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v.5" />
+                                <path d="m16 19 2 2 4-4" />
+                                <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v2" />
+                                <path d="M6 9V3a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v6" />
+                            </svg>
+                        </a>
+
+                        <button onclick="shareItem('{{ route('ads.cars.show', $car) }}', '{{ $car->title }}')" class="p-2 rounded-full text-gray-600 hover:text-green-500 transition duration-300">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-share2-icon lucide-share-2">
+                                <circle cx="18" cy="5" r="3" />
+                                <circle cx="6" cy="12" r="3" />
+                                <circle cx="18" cy="19" r="3" />
+                                <line x1="8.59" x2="15.42" y1="13.51" y2="17.49" />
+                                <line x1="15.41" x2="8.59" y1="6.51" y2="10.49" />
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+
+                
+
+                <!--end  print/share/fav -->
+
                 {{-- Title and Pricing --}}
                 <div>
                     <h2 class="text-4xl font-extrabold text-gray-900 mb-4 leading-tight">
@@ -188,37 +235,37 @@
 
                     <div class="flex items-baseline space-x-3 mb-6">
                         @if ($car->price)
-                            <p class="text-3xl text-gray-700 font-extrabold [&>span]:text-base [&>span]:font-normal [&>span]:ml-1">
-                                &euro;{{ number_format($car->price, 2, ',', '.') }}
-                                <span> </span>
-                            </p>
+                        <p class="text-3xl text-gray-700 font-extrabold [&>span]:text-base [&>span]:font-normal [&>span]:ml-1">
+                            &euro;{{ number_format($car->price, 2, ',', '.') }}
+                            <span> </span>
+                        </p>
                         @else
-                            <p class="text-xl italic text-gray-500">{{ __('price_on_request') }}</p>
+                        <p class="text-xl italic text-gray-500">{{ __('price_on_request') }}</p>
                         @endif
                     </div>
 
                     <div class="prose prose-lg max-w-none text-gray-700">
                         @if ($car->description)
-                            {!! nl2br(e($car->description)) !!}
+                        {!! nl2br(e($car->description)) !!}
                         @else
-                            <p class="italic text-gray-400">{{ __('No description available') }}.</p>
+                        <p class="italic text-gray-400">{{ __('No description available') }}.</p>
                         @endif
                     </div>
                 </div>
 
-          {{-- Seller / Anbieter Info --}}
-<div class="border-t border-gray-300 pt-6 mt-3">
-    <h3 class="text-xl font-semibold text-gray-700 mb-3">{{ __('Seller details')}}</h3>
+                {{-- Seller / Anbieter Info --}}
+                <div class="border-t border-gray-300 pt-6 mt-3">
+                    <h3 class="text-xl font-semibold text-gray-700 mb-3">{{ __('Seller details')}}</h3>
 
-    @if ($car->user)
-        <dl class="space-y-2 text-gray-900">
-            <div>
-                <dt class="inline font-semibold">Name:</dt>
-                <dd class="inline">{{ $car->user->name }}</dd>
-            </div>
-       
-            
-                 <div>
+                    @if ($car->user)
+                    <dl class="space-y-2 text-gray-900">
+                        <div>
+                            <dt class="inline font-semibold">Name:</dt>
+                            <dd class="inline">{{ $car->user->name }}</dd>
+                        </div>
+
+
+                        <div>
                             @if($car->show_phone && !empty($car->user->phone))
                             <dt class="inline font-semibold">Phone:</dt>
                             <dd class="inline">{{ $car->user->phone }}</dd>
@@ -237,168 +284,167 @@
                             <dd class="inline">{{ $car->user->email }}</dd>
                             @endif
                         </div>
-                        
 
 
+                        @if($car->user->city)
+                        <div>
+                            <dt class="inline font-semibold">{{ __('location') }}:</dt>
+                            <dd class="inline">{{ $car->user->city }}</dd>
+                        </div>
+                        @endif
+                    </dl>
 
-
-            @if($car->user->city)
-                <div>
-                    <dt class="inline font-semibold">{{ __('location') }}:</dt>
-                    <dd class="inline">{{ $car->user->city }}</dd>
-                </div>
-            @endif
-        </dl>
-
-        <div class="flex flex-wrap justify-center sm:justify-start items-center space-x-0 sm:space-x-3 my-4 sm:pt-0">
-            @auth
-                @if (auth()->id() === $car->user_id || auth()->user()->isAdmin())
-                    {{-- Edit & Delete --}}
-                    <a href="{{ route('ads.cars.edit', $car->id) }}" 
-                        class="px-5 py-2 bg-gray-700 hover:bg-gray-800 text-white rounded-full shadow-lg transition transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2">
-                       {{ __('Edit Ad') }}
-                    </a>
-                    <form action="{{ route('ads.cars.destroy', $car->id) }}" method="POST"
-                        onsubmit="return confirm('Sind Sie sicher, dass Sie diese Anzeige löschen möchten? Diese Aktion kann nicht rückgängig gemacht werden.')">
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit" 
-                            class="px-5 py-2 bg-red-600 hover:bg-gray-700 text-white rounded-full shadow-lg transition transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 flex items-center space-x-1">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20" class="w-5 h-5">
-                                <path d="M6 8a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1z" />
-                                <path fill-rule="evenodd" d="M4 5a2 2 0 012-2h8a2 2 0 012 2v10a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm2 0v10h8V5H6z" clip-rule="evenodd" />
-                            </svg>
-                            <span>{{ __('Delete Ad') }}</span>
-                        </button>
-                    </form>
-                @else
-                                {{-- Contact button for logged-in non-owners --}}
-                <a href="{{ route('messages.start.redirect', [
+                    <div class="flex flex-wrap justify-center sm:justify-start items-center space-x-0 sm:space-x-3 my-4 sm:pt-0">
+                        @auth
+                        @if (auth()->id() === $car->user_id || auth()->user()->isAdmin())
+                        {{-- Edit & Delete --}}
+                        <a href="{{ route('ads.cars.edit', $car->id) }}"
+                            class="px-5 py-2 bg-gray-700 hover:bg-gray-800 text-white rounded-full shadow-lg transition transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2">
+                            {{ __('Edit Ad') }}
+                        </a>
+                        <form action="{{ route('ads.cars.destroy', $car->id) }}" method="POST"
+                            onsubmit="return confirm('Sind Sie sicher, dass Sie diese Anzeige löschen möchten? Diese Aktion kann nicht rückgängig gemacht werden.')">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit"
+                                class="px-5 py-2 bg-red-600 hover:bg-gray-700 text-white rounded-full shadow-lg transition transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 flex items-center space-x-1">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20" class="w-5 h-5">
+                                    <path d="M6 8a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1z" />
+                                    <path fill-rule="evenodd" d="M4 5a2 2 0 012-2h8a2 2 0 012 2v10a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm2 0v10h8V5H6z" clip-rule="evenodd" />
+                                </svg>
+                                <span>{{ __('Delete Ad') }}</span>
+                            </button>
+                        </form>
+                        @else
+                        {{-- Contact button for logged-in non-owners --}}
+                        <a href="{{ route('messages.start.redirect', [
                                                     'ad' => $car->id,
                                                     'receiver' => $car->user->id,
                                                     'category' => 'cars'
                                                 ]) }}"
-                        class="mt-6 block w-full text-center bg-red-700 text-white font-semibold py-3 rounded-full shadow-lg hover:bg-gray-800 transition focus:ring-4 focus:ring-gray-500 focus:ring-opacity-75">
-                   {{ __('Contact with seller') }}
-                    </a>
+                            class="mt-6 block w-full text-center bg-red-700 text-white font-semibold py-3 rounded-full shadow-lg hover:bg-gray-800 transition focus:ring-4 focus:ring-gray-500 focus:ring-opacity-75">
+                            {{ __('Contact with seller') }}
+                        </a>
 
-                @endif
-            @endauth
+                        @endif
+                        @endauth
 
-            @guest
-                {{-- Contact button for guests --}}
-        <a href="{{ route('login') }}" 
-       class="mt-6 block w-full text-center bg-blue-600 text-white font-semibold py-3 rounded-full shadow-lg hover:bg-blue-800 transition focus:ring-4 focus:ring-blue-500 focus:ring-opacity-75">
-       {{ __('Contact with seller') }}
-    </a>
+                        @guest
+                        {{-- Contact button for guests --}}
+                        <a href="{{ route('login') }}"
+                            class="mt-6 block w-full text-center bg-blue-600 text-white font-semibold py-3 rounded-full shadow-lg hover:bg-blue-800 transition focus:ring-4 focus:ring-blue-500 focus:ring-opacity-75">
+                            {{ __('Contact with seller') }}
+                        </a>
 
-            @endguest
-        </div>
+                        @endguest
+                    </div>
 
-    @else
-        {{-- No user data --}}
-        <p class="italic text-red-600">{{ __('Seller information not available') }}</p>
-    @endif
-</div>
+                    @else
+                    {{-- No user data --}}
+                    <p class="italic text-red-600">{{ __('Seller information not available') }}</p>
+                    @endif
+                </div>
 
 
 
-        {{-- Vehicle Details Section --}}
-        <section class="bg-gray-50 p-6 rounded-lg shadow-inner mb-8">
-            <h4 class="text-xl font-semibold text-gray-700 mb-6">{{ __('Vehicle details') }}</h4>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                @if($car->carBrand)
-                <div>
-                    <p class="text-sm font-semibold text-gray-800">{{ __('brand') }}:</p>
-                    <p class="text-gray-700">{{ $car->carBrand->name }}</p>
-                </div>
-                @endif
-                @if($car->carModel)
-                <div>
-                    <p class="text-sm font-semibold text-gray-800">{{ __('model') }}:</p>
-                    <p class="text-gray-700">{{ $car->carModel->name }}</p>
-                </div>
-                @endif
-                @if($car->registration)
-                <div>
-                    <p class="text-sm font-semibold text-gray-800">{{ __('year_of_construction') }}:</p>
-                    <p class="text-gray-700">{{ $car->registration }}</p>
-                </div>
-                @endif
-                @if($car->mileage)
-                <div>
-                    <p class="text-sm font-semibold text-gray-800">{{ __('Mileage') }}:</p>
-                    <p class="text-gray-700">{{ number_format($car->mileage, 0, ',', '.') }} km</p>
-                </div>
-                @endif
-                @if($car->vehicle_type)
-                <div>
-                    <p class="text-sm font-semibold text-gray-800">{{ __('Τype') }}:</p>
-                    <p class="text-gray-700">{{ $car->vehicle_type }}</p>
-                </div>
-                @endif
-                @if($car->condition)
-                <div>
-                    <p class="text-sm font-semibold text-gray-800">{{ __('condition') }}:</p>
-                    <p class="text-gray-700">{{ $car->condition }}</p>
-                </div>
-                @endif
-                <div>
-                    <p class="text-sm font-semibold text-gray-800">{{ __('Warranty') }}:</p>
-                    <p class="text-gray-700">{{ $car->warranty ? 'Ja' : 'Nein' }}</p>
-                </div>
-                @if($car->power)
-                <div>
-                    <p class="text-sm font-semibold text-gray-800">{{ __('Power') }}:</p>
-                    <p class="text-gray-700">{{ $car->power }} PS</p>
-                </div>
-                @endif
-                @if($car->fuel_type)
-                <div>
-                    <p class="text-sm font-semibold text-gray-800">{{ __('fuel') }}:</p>
-                    <p class="text-gray-700">{{ $car->fuel_type }}</p>
-                </div>
-                @endif
-                @if($car->transmission)
-                <div>
-                    <p class="text-sm font-semibold text-gray-800">{{ __('gearbox') }}:</p>
-                    <p class="text-gray-700">{{ $car->transmission }}</p>
-                </div>
-                @endif
-                @if($car->drive)
-                <div>
-                    <p class="text-sm font-semibold text-gray-800">{{ __('Wheel drive') }}:</p>
-                    <p class="text-gray-700">{{ $car->drive }}</p>
-                </div>
-                @endif
-                @if($car->color)
-                <div>
-                    <p class="text-sm font-semibold text-gray-800">{{ __('Color') }}:</p>
-                    <p class="text-gray-700">{{ $car->color }}</p>
-                </div>
-                @endif
-                @if($car->doors)
-                <div>
-                    <p class="text-sm font-semibold text-gray-800">{{ __('Doors') }}:</p>
-                    <p class="text-gray-700">{{ $car->doors }}</p>
-                </div>
-                @endif
-                @if($car->seats)
-                <div>
-                    <p class="text-sm font-semibold text-gray-800">{{ __('Seats') }}:</p>
-                    <p class="text-gray-700">{{ $car->seats }}</p>
-                </div>
-                @endif
-                @if($car->seller_type)
-                <div>
-                    <p class="text-sm font-semibold text-gray-800">{{ __('Provider') }}:</p>
-                    <p class="text-gray-700">{{ $car->seller_type }}</p>
-                </div>
-                @endif
-            </div>
-        </section>
 
-        
+
+                {{-- Vehicle Details Section --}}
+                <section class="bg-gray-50 p-6 rounded-lg shadow-inner mb-8">
+                    <h4 class="text-xl font-semibold text-gray-700 mb-6">{{ __('Vehicle details') }}</h4>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        @if($car->carBrand)
+                        <div>
+                            <p class="text-sm font-semibold text-gray-800">{{ __('brand') }}:</p>
+                            <p class="text-gray-700">{{ $car->carBrand->name }}</p>
+                        </div>
+                        @endif
+                        @if($car->carModel)
+                        <div>
+                            <p class="text-sm font-semibold text-gray-800">{{ __('model') }}:</p>
+                            <p class="text-gray-700">{{ $car->carModel->name }}</p>
+                        </div>
+                        @endif
+                        @if($car->registration)
+                        <div>
+                            <p class="text-sm font-semibold text-gray-800">{{ __('year_of_construction') }}:</p>
+                            <p class="text-gray-700">{{ $car->registration }}</p>
+                        </div>
+                        @endif
+                        @if($car->mileage)
+                        <div>
+                            <p class="text-sm font-semibold text-gray-800">{{ __('Mileage') }}:</p>
+                            <p class="text-gray-700">{{ number_format($car->mileage, 0, ',', '.') }} km</p>
+                        </div>
+                        @endif
+                        @if($car->vehicle_type)
+                        <div>
+                            <p class="text-sm font-semibold text-gray-800">{{ __('Τype') }}:</p>
+                            <p class="text-gray-700">{{ $car->vehicle_type }}</p>
+                        </div>
+                        @endif
+                        @if($car->condition)
+                        <div>
+                            <p class="text-sm font-semibold text-gray-800">{{ __('condition') }}:</p>
+                            <p class="text-gray-700">{{ $car->condition }}</p>
+                        </div>
+                        @endif
+                        <div>
+                            <p class="text-sm font-semibold text-gray-800">{{ __('Warranty') }}:</p>
+                            <p class="text-gray-700">{{ $car->warranty ? 'Ja' : 'Nein' }}</p>
+                        </div>
+                        @if($car->power)
+                        <div>
+                            <p class="text-sm font-semibold text-gray-800">{{ __('Power') }}:</p>
+                            <p class="text-gray-700">{{ $car->power }} PS</p>
+                        </div>
+                        @endif
+                        @if($car->fuel_type)
+                        <div>
+                            <p class="text-sm font-semibold text-gray-800">{{ __('fuel') }}:</p>
+                            <p class="text-gray-700">{{ $car->fuel_type }}</p>
+                        </div>
+                        @endif
+                        @if($car->transmission)
+                        <div>
+                            <p class="text-sm font-semibold text-gray-800">{{ __('gearbox') }}:</p>
+                            <p class="text-gray-700">{{ $car->transmission }}</p>
+                        </div>
+                        @endif
+                        @if($car->drive)
+                        <div>
+                            <p class="text-sm font-semibold text-gray-800">{{ __('Wheel drive') }}:</p>
+                            <p class="text-gray-700">{{ $car->drive }}</p>
+                        </div>
+                        @endif
+                        @if($car->color)
+                        <div>
+                            <p class="text-sm font-semibold text-gray-800">{{ __('Color') }}:</p>
+                            <p class="text-gray-700">{{ $car->color }}</p>
+                        </div>
+                        @endif
+                        @if($car->doors)
+                        <div>
+                            <p class="text-sm font-semibold text-gray-800">{{ __('Doors') }}:</p>
+                            <p class="text-gray-700">{{ $car->doors }}</p>
+                        </div>
+                        @endif
+                        @if($car->seats)
+                        <div>
+                            <p class="text-sm font-semibold text-gray-800">{{ __('Seats') }}:</p>
+                            <p class="text-gray-700">{{ $car->seats }}</p>
+                        </div>
+                        @endif
+                        @if($car->seller_type)
+                        <div>
+                            <p class="text-sm font-semibold text-gray-800">{{ __('Provider') }}:</p>
+                            <p class="text-gray-700">{{ $car->seller_type }}</p>
+                        </div>
+                        @endif
+                    </div>
+                </section>
+
+
 
         </article>
     </div>
@@ -408,9 +454,34 @@
         .no-scrollbar::-webkit-scrollbar {
             display: none;
         }
+
         .no-scrollbar {
             -ms-overflow-style: none;
             scrollbar-width: none;
         }
     </style>
+
+
+<script>
+    function shareItem(url, title) {
+        if (navigator.share) {
+            navigator.share({
+                title: title,
+                url: url
+            }).then(() => {
+                console.log('Thanks for sharing!');
+            }).catch(console.error);
+        } else {
+            // Fallback for browsers that don't support the Web Share API
+            navigator.clipboard.writeText(url)
+                .then(() => {
+                    alert('Share link copied to clipboard!');
+                })
+                .catch(err => {
+                    console.error('Could not copy text: ', err);
+                });
+        }
+    }
+</script>
+
 </x-app-layout>

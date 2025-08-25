@@ -16,10 +16,10 @@
             ['title' => 'real_estate', 'items' => $realEstates, 'route' => 'ads.real-estate.show'],
             ['title' => 'services', 'items' => $services, 'route' => 'ads.services.show'],
             ['title' => 'others', 'items' => $others, 'route' => 'ads.others.show'],
-            ['title' => 'motorcycles', 'items' => $motorcycles, 'route' => 'ads.motorcycles.show'],
+            ['title' => 'motorrads', 'items' => $motorcycles, 'route' => 'ads.motorrads.show'],
             ['title' => 'commercial_vehicles', 'items' => $commercialVehicles, 'route' => 'ads.commercial-vehicles.show'],
             ['title' => 'campers', 'items' => $campers, 'route' => 'ads.campers.show'],
-            ['title' => 'used_vehicle_parts', 'items' => $usedVehicleParts, 'route' => 'ads.used-vehicle-parts.show'],
+            ['title' => 'used-vehicle-parts', 'items' => $usedVehicleParts, 'route' => 'ads.vehicles-parts.show'],
         ];
         @endphp
 
