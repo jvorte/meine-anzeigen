@@ -134,7 +134,7 @@
                     </div>
                 </a>
             @empty
-                <p class="text-gray-600 col-span-full">Δεν βρέθηκαν λοιπές αγγελίες.</p>
+                <p class="text-gray-600 col-span-full">{{ __('No related ads found') }}</p>
             @endforelse
         </div>
 

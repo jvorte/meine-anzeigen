@@ -183,6 +183,7 @@
             @forelse($boatAds as $boat)
                 <a href="{{ route('ads.boats.show', $boat->id) }}"
                     class="block bg-white shadow rounded-lg overflow-hidden hover:shadow-lg transition duration-300">
+                    
                     @if($boat->images->count())
                         <img src="{{ asset('storage/' . $boat->images->first()->path) }}" alt="{{ $boat->title }}"
                             class="w-full h-48 object-cover">
@@ -202,8 +203,8 @@
                         @endif
                     </div>
                 </a>
-            @empty
-                <p>Keine Boote gefunden.</p>
+            @empty            
+          {{ __('No related ads found') }}
             @endforelse
         </div>
 
