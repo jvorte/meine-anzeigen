@@ -43,14 +43,14 @@
                     </div>
                 </div>
             @empty
-                <p class="text-gray-500 text-center text-lg mt-10">Δεν υπάρχουν μηνύματα.</p>
+                <p class="text-gray-500 text-center text-lg mt-10">{{__('There are no messages.')}}</p>
             @endforelse
         </div>
 
         {{-- Message Input Form --}}
         <form action="{{ route('messages.store', $conversation) }}" method="POST" class="flex items-center space-x-3 p-4 bg-gray-100 rounded-lg shadow-inner">
             @csrf
-            <input type="text" name="body" placeholder="Γράψε μήνυμα..." required
+            <input type="text" name="body" placeholder="{{ __('Write a message...' }}" required
                 class="flex-grow border-0 rounded-full px-5 py-3 focus:outline-none focus:ring-2 focus:ring-indigo-600 transition duration-150 ease-in-out">
             <button type="submit"
                 class="bg-indigo-600 text-white p-3 rounded-full hover:bg-indigo-700 transition duration-150 ease-in-out">

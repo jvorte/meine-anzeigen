@@ -488,6 +488,22 @@ CREATE TABLE `failed_jobs` (
   UNIQUE KEY `failed_jobs_uuid_unique` (`uuid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `favorites`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `favorites` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `user_id` bigint(20) unsigned NOT NULL,
+  `favoriteable_type` varchar(255) NOT NULL,
+  `favoriteable_id` bigint(20) unsigned NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `user_favoriteable_unique` (`user_id`,`favoriteable_id`,`favoriteable_type`),
+  KEY `favorites_favoriteable_type_favoriteable_id_index` (`favoriteable_type`,`favoriteable_id`),
+  CONSTRAINT `favorites_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `household_item_images`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
@@ -1027,3 +1043,6 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (69,'2025_08_12_104
 INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (70,'2025_08_12_105244_add_show_fields_to_used_vehicle_parts_table',26);
 INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (71,'2025_08_12_115630_create_contact_messages_table',27);
 INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (72,'2025_08_12_134811_create_newsletter_subscribers_table',28);
+INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (73,'2025_08_25_052225_create_favorites_table',29);
+INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (74,'2025_08_25_060456_create_favorites_table',30);
+INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (75,'2025_08_25_071125_create_favorites_table',31);
