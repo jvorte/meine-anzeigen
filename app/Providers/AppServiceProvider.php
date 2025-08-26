@@ -27,22 +27,22 @@ class AppServiceProvider extends ServiceProvider
 
 public function boot()
 {
-    // View::composer('layouts.navigation', function ($view) {
-    //     $userId = Auth::id();
+    View::composer('layouts.navigation', function ($view) {
+        $userId = Auth::id();
 
-    //     $categories = Category::all();
+        $categories = Category::all();
 
-    //     $unreadMessagesCount = 0;
-    //     if ($userId) {
-    //         $unreadMessagesCount = Message::whereNull('read_at')
-    //             ->where('user_id', '!=', $userId)
-    //             ->whereHas('conversation', function ($query) use ($userId) {
-    //                 $query->where('sender_id', $userId)
-    //                       ->orWhere('receiver_id', $userId);
-    //             })->count();
-    //     }
+        $unreadMessagesCount = 0;
+        if ($userId) {
+            $unreadMessagesCount = Message::whereNull('read_at')
+                ->where('user_id', '!=', $userId)
+                ->whereHas('conversation', function ($query) use ($userId) {
+                    $query->where('sender_id', $userId)
+                          ->orWhere('receiver_id', $userId);
+                })->count();
+        }
 
-    //     $view->with(compact('categories', 'unreadMessagesCount'));
-    // });
+        $view->with(compact('categories', 'unreadMessagesCount'));
+    });
 }
 }

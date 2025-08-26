@@ -33,6 +33,8 @@ use Illuminate\Support\Facades\Session;
 |
 */
 
+
+
 Route::get('/lang/{locale}', function (string $locale) {
     if (! in_array($locale, ['en', 'de'])) {
         abort(400); // Invalid locale provided
