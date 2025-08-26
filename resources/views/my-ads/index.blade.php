@@ -67,7 +67,7 @@
                     @php
                     $modelName = class_basename($ad);
                     $route = $routeMap[$modelName] ?? null;
-                    $imagePathColumn = $imagePathMap[$modelName] ?? 'path'; // Get the correct column name
+                    $imagePathColumn = $imagePathMap[$modelName] ?? 'path'; 
                     @endphp
 
                     @if ($route)

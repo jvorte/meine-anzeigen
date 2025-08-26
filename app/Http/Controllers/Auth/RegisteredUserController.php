@@ -12,6 +12,8 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
 use Illuminate\View\View;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Session;
+
 
 class RegisteredUserController extends Controller
 {
@@ -69,6 +71,8 @@ class RegisteredUserController extends Controller
         event(new Registered($user));
 
         Auth::login($user);
+     Session::flash('success', __('Registration completed successfully!'));
+
 
         return redirect(route('dashboard', absolute: false));
     }

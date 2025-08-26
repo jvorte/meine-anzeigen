@@ -158,54 +158,68 @@ class BoatController extends Controller
 
         return view('ads.boats.edit', compact('boat', 'conditions', 'boatTypes', 'materials', 'engineTypes'));
     }
-    public function update(Request $request, $id)
-    {
-        $boat = Boat::findOrFail($id);
+  public function update(Request $request, $id)
+{
+    $boat = Boat::findOrFail($id);
 
-        $validated = $request->validate([
-            'title' => 'required|string|max:255',
-            'brand_name' => 'nullable|string|max:255',
-            'model_name' => 'nullable|string|max:255',
-            'year_of_construction' => 'nullable|integer|min:1900|max:' . (date('Y') + 1),
-            'condition' => 'nullable|string|max:100',
-            'boat_type' => 'required|string|max:100',
-            'material' => 'nullable|string|max:100',
-            'total_length' => 'nullable|numeric|min:0',
-            'total_width' => 'nullable|numeric|min:0',
-            'berths' => 'nullable|integer|min:0',
-            'engine_type' => 'nullable|string|max:100',
-            'engine_power' => 'nullable|integer|min:0',
-            'operating_hours' => 'nullable|integer|min:0',
-            'last_service' => 'nullable|date',
-            'description' => 'nullable|string',
-            'price' => 'nullable|numeric|min:0',
-            'country' => 'nullable|string|max:255',
-            'zip_code' => 'nullable|string|max:20',
-            'city' => 'nullable|string|max:255',
-            'street' => 'nullable|string|max:255',
-            'images.*' => 'nullable|image|max:2048',
-            'deleted_images' => 'nullable|string',
-        ]);
+    $validated = $request->validate([
+        'title' => 'required|string|max:255',
+        'brand_name' => 'nullable|string|max:255',
+        'model_name' => 'nullable|string|max:255',
+        'year_of_construction' => 'nullable|integer|min:1900|max:' . (date('Y') + 1),
+        'condition' => 'nullable|string|max:100',
+        'boat_type' => 'required|string|max:100',
+        'material' => 'nullable|string|max:100',
+        'total_length' => 'nullable|numeric|min:0',
+        'total_width' => 'nullable|numeric|min:0',
+        'berths' => 'nullable|integer|min:0',
+        'engine_type' => 'nullable|string|max:100',
+        'engine_power' => 'nullable|integer|min:0',
+        'operating_hours' => 'nullable|integer|min:0',
+        'last_service' => 'nullable|date',
+        'description' => 'nullable|string',
+        'price' => 'nullable|numeric|min:0',
+        'country' => 'nullable|string|max:255',
+        'zip_code' => 'nullable|string|max:20',
+        'city' => 'nullable|string|max:255',
+        'street' => 'nullable|string|max:255',
+        'images.*' => 'nullable|image|max:2048',
+        'deleted_images' => 'nullable|string',
+    ]);
 
+    // Ανάθεση τιμών
+    $boat->fill($validated);
+    $boat->show_phone = $request->has('show_phone') ? 1 : 0;
+    $boat->show_mobile_phone = $request->has('show_mobile_phone') ? 1 : 0;
+    $boat->show_email = $request->has('show_email') ? 1 : 0;
+    $boat->save();
 
-        // Ανάθεσε τιμές
-        $boat->fill($validated);
-        $boat->show_phone = $request->has('show_phone') ? 1 : 0;
-        $boat->show_mobile_phone = $request->has('show_mobile_phone') ? 1 : 0;
-        $boat->show_email = $request->has('show_email') ? 1 : 0;
+    // Διαγραφή εικόνων αν υπάρχουν
+    if (!empty($validated['deleted_images'])) {
+        $imageIds = explode(',', $validated['deleted_images']);
+        $images = BoatImage::whereIn('id', $imageIds)->get();
 
-        $boat->save();
-
-        // Επεξεργασία διαγραφής εικόνων αν χρειάζεται
-        if (!empty($validated['deleted_images'])) {
-            $imageIds = explode(',', $validated['deleted_images']);
-            // Διαγραφή εικόνων logic εδώ (delete files + records)
+        foreach ($images as $img) {
+            // Διαγραφή αρχείου από storage
+            if (Storage::disk('public')->exists($img->image_path)) {
+                Storage::disk('public')->delete($img->image_path);
+            }
+            // Διαγραφή εγγραφής
+            $img->delete();
         }
-
-        // Διαχείριση νέων εικόνων upload...
-
-        return redirect()->route('dashboard', $boat->id)->with('success', 'Anzeige aktualisiert!');
     }
+
+    // Upload νέων εικόνων
+    if ($request->hasFile('images')) {
+        foreach ($request->file('images') as $file) {
+            $path = $file->store('boats', 'public');
+            $boat->images()->create(['image_path' => $path]);
+        }
+    }
+
+    return redirect()->route('dashboard')->with('success', 'Anzeige aktualisiert!');
+}
+
     public function destroy($id)
     {
         $boat = Boat::findOrFail($id);

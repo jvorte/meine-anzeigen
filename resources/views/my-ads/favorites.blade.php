@@ -4,6 +4,7 @@
         <h2 class="text-3xl md:text-3xl font-extrabold text-gray-900 dark:text-gray-800">
             {{ __('Meine Favoriten') }}
         </h2>
+           <p class="mt-2 text-gray-600 dark:text-gray-700">{{ __('my_fav_intro') }}</p>
     </x-slot>
 
     <div class="py-12">
@@ -52,12 +53,12 @@
                                 <div class="absolute inset-0 bg-black bg-opacity-40 flex flex-col justify-center items-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                                     <a href="{{ route('categories.' . $routeBaseName . '.show', $ad) }}" 
                                        class="mb-2 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 font-medium">
-                                        {{ __('Anzeige ansehen') }}
+                                        {{ __('View ad') }}
                                     </a>
                                     <form action="{{ route('ads.' . $routeBaseName . '.favorite', $ad) }}" method="POST">
                                         @csrf
                                         <button type="submit" class="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 font-medium">
-                                            {{ __('Aus Favoriten entfernen') }}
+                                            {{ __('Remove from favorites') }}
                                         </button>
                                     </form>
                                 </div>

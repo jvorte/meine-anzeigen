@@ -1,5 +1,24 @@
 <x-app-layout>
 
+
+@if(session('success'))
+    <div 
+        x-data="{ show: true }" 
+        x-show="show"
+        x-transition
+        x-init="setTimeout(() => show = false, 5000)"
+        class="fixed inset-0 flex items-center justify-center z-50"
+    >
+        <div class="bg-green-100 border border-green-400 text-green-800 px-6 py-4 rounded-lg shadow-lg flex items-center space-x-4">
+            <span class="font-medium">{{ session('success') }}</span>
+            <button @click="show = false" class="text-green-800 hover:text-green-900 text-xl font-bold">&times;</button>
+        </div>
+    </div>
+@endif
+
+
+
+
     {{-- Header Section --}}
     <x-slot name="header">
    
